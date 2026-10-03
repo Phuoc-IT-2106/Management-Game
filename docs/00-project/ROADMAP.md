@@ -1,5 +1,9 @@
 # HIGH-LEVEL ROADMAP
 
+Current phase: **P4 — Technical Foundation**
+
+Completed gates: P0 ✅ · P1 ✅ · P2 ✅ · P3 ✅
+
 ## P0 — Discovery
 Goal:
 Define the product, player role, strategic fantasy, constraints, and major risks.
