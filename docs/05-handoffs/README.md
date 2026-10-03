@@ -6,6 +6,7 @@ Handoffs transfer bounded work between project roles. They do not override accep
 - Phase 1 Product Foundation handoffs: completed.
 - Phase 2 Core Loop & Simulation handoff: completed.
 - Economy and Competition specialist outputs: integrated under `docs/07-specialist-specs`.
-- **Current active handoff:** [Prototype Build & Verify](PROTOTYPE_BUILD_VERIFY_HANDOFF.md).
+- Prototype Build & Verify handoff: completed; Phase 3 gate passed.
+- Phase 4 Technical Foundation: authorized; specialist planning/specification is next.
 
 Always check `PROJECT_STATE.md` and `DECISION_LOG.md` before acting on a handoff.
