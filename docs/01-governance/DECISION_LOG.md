@@ -748,3 +748,56 @@ Affected Systems:
 - economy
 - testing
 - project roadmap
+
+---
+
+### DEC-021 — Minimal Simulation Prototype Gate Passed
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Phase 3 implemented the approved deterministic headless prototype and returned measured BUILD / VERIFY evidence for scenarios A–M and acceptance criteria AC-01 through AC-13. Project Director reviewed the implementation, verification reports, regression tests, representative traces, reproducibility evidence, and stated limitations.
+
+Decision:
+Close Phase 3 — Headless / Minimal Prototype with **PASS PROTOTYPE GATE** and authorize **Phase 4 — Technical Foundation**.
+
+The pass means the bounded prototype provides sufficient evidence that the core company-management thesis can create meaningful, context-dependent, explainable decisions through interacting competition, economy, information, delegation, rival, organizational-pressure, and recovery systems.
+
+The pass does **not** approve the prototype implementation, numerical calibration, fictional discipline, or balance values as production canon.
+
+Alternatives:
+- ITERATE Phase 3 before opening Technical Foundation.
+- STOP / REDESIGN the core management model.
+- Begin the production Vertical Slice immediately without a Technical Foundation phase.
+
+Reasoning:
+The final Phase 3 evidence reports:
+- scenarios A–M PASS;
+- AC-01 through AC-13 PASS;
+- 32/32 automated regression tests PASS;
+- 1,664/1,664 repeated seeded scenario pairs with matching final-state hashes;
+- 13/13 representative full-trace replays matched;
+- manual/delegated parity across 128/128 paired verification runs while delegation reduced approval burden.
+
+The remaining limitations concern bounded-horizon balance, market breadth, underused information/coach fields, recovery breadth, and production engineering. They do not invalidate the core prototype thesis and are more appropriately handled during Technical Foundation, Vertical Slice design, or later validation.
+
+Consequences:
+- Phase 3 is closed.
+- Phase 4 PLAN / SPEC is authorized.
+- Engine / framework and production architecture may now be evaluated.
+- Production Vertical Slice BUILD is still blocked until the Phase 4 exit gate passes.
+- Prototype code under `prototypes/` remains a validation reference and test asset, not automatic production architecture.
+- Prototype coefficients, Currency Units, exact 84-day horizon, exact rival count, exact match count, and fictional 5v5 test discipline remain noncanonical.
+- Validated concepts such as explicit state ownership, deterministic testing, cross-system outcome boundaries, and causal observability should inform Phase 4 unless a documented technical/design reason justifies a change.
+
+Affected Systems:
+- project roadmap
+- technical architecture
+- engine / framework selection
+- simulation architecture
+- persistence / save-load
+- data model
+- testing / tooling
+- UI technical foundation
+- prototype disposition
+
