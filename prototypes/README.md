@@ -1,5 +1,9 @@
 # Headless company simulation prototype
 
+## Governance status
+
+**Phase 3 is closed — PASS PROTOTYPE GATE.** This code remains a bounded validation/reference asset. It is not automatically the production architecture or final balance model.
+
 Python **3.14**, standard library only. Run commands from the repository root. No package installation is required.
 
 ## Run and verify
@@ -59,4 +63,4 @@ One company, six players, one coach, four rivals, at most three talent candidate
 
 Replay embeds version, calibration, initial state, seed and decisions. It requires the matching simulation/fixture version. Match randomness is keyed separately from information and world randomness. Monetary units are integer CU; continuous mutations use fixed rounding. Python's ties-to-even `round` is used for offer prices. Runtime timing is excluded from gameplay hashes.
 
-Only curated reports, per-seed metrics and 13 representative traces are tracked. Disposable runs under `reports/generated/` and Python caches are ignored. See the handoff for measured limits, simplification proposals and the gate recommendation. Technical Foundation remains outside this implementation.
+Only curated reports, per-seed metrics and 13 representative traces are tracked. Disposable runs under `reports/generated/` and Python caches are ignored. See the handoff for measured limits, simplification proposals and the gate recommendation. Technical Foundation is now authorized under DEC-021, but remains outside this prototype implementation.
