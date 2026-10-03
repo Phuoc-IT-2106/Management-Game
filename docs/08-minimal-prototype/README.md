@@ -1,32 +1,39 @@
 # MINIMAL SIMULATION PROTOTYPE
 
-Status: **APPROVED SPECIFICATION — READY FOR BUILD / VERIFY**
+Status: **PHASE 3 CLOSED — PASS PROTOTYPE GATE**
 
 The prototype is a validation instrument, not a production vertical slice.
 
-## Primary validation question
-Does the simulation repeatedly create meaningful management decisions where the preferred choice changes with company state, competitive conditions, information, commitments, rivals, and risk without relying mainly on scripted novelty?
+## Gate result
 
-## Approved validation envelope
-- 1 player company;
-- 1 fictional 5v5 role-based test discipline;
-- 1 primary team;
-- 5 starters + 1 flex substitute;
-- 1 Head Coach;
-- up to 4 bounded rivals;
-- tiny talent market;
-- limited sponsor/commercial loop;
-- one simple financing mechanism;
-- default maximum integrated horizon of 84 calendar days;
-- deterministic seeded execution and causal traces.
+The implemented prototype completed the approved BUILD / VERIFY scope.
 
-All exact values are test calibration and remain noncanonical.
+Evidence:
+- scenarios A–M: PASS;
+- AC-01 through AC-13: PASS;
+- 32/32 regression tests: PASS;
+- deterministic repeated-seed and replay checks: PASS;
+- representative causal trace review: PASS.
 
-## Documents
-- [Approved Prototype Specification](MINIMAL_SIMULATION_PROTOTYPE_SPEC.md)
-- [Project Director Review](DIRECTOR_REVIEW.md)
+See:
+- [Prototype specification](MINIMAL_SIMULATION_PROTOTYPE_SPEC.md)
+- [Director specification review](DIRECTOR_REVIEW.md)
+- [Engineering / verification handoff](../../prototypes/reports/PROJECT_DIRECTOR_HANDOFF.md)
+- [Verification report](../../prototypes/reports/verification/VERIFICATION.md)
 
-## Next step
-Use the [Prototype BUILD / VERIFY Handoff](../05-handoffs/PROTOTYPE_BUILD_VERIFY_HANDOFF.md).
+## Interpretation
 
-Do not begin Technical Foundation until prototype evidence has been reviewed by Project Director.
+The gate validates the bounded management-simulation thesis.
+
+It does **not** make the following production canon:
+- exact 84-day horizon;
+- four-rival count;
+- fictional 5v5 test discipline;
+- current ratings, Currency Units, coefficients, thresholds or balance;
+- Python prototype architecture.
+
+## Next phase
+
+Proceed to [Phase 4 — Technical Foundation](../09-technical-foundation/README.md).
+
+Do not begin the production Vertical Slice until the Phase 4 exit gate is approved.
