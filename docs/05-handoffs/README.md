@@ -1,9 +1,11 @@
-# Handoffs
+# HANDOFFS
 
-Status: HISTORICAL HANDOFFS — summaries and requests, not approval records.
+Handoffs transfer bounded work between project roles. They do not override accepted project decisions.
 
-- `PRODUCT_SPECIALIST_HANDOFF.md` is the draft Discovery-to-product-specialist brief.
-- `PROJECT_DIRECTOR_HANDOFF_PHASE1.md` reports the Phase 1 specialist output, claimed accepted directions, proposed work, dependencies, and questions for Director review.
-- `PROJECT_DIRECTOR_HANDOFF_PHASE2.md` reports the Phase 2 simulation proposals, dependencies, risks, and recommended specialist follow-up.
+## Current flow
+- Phase 1 Product Foundation handoffs: completed.
+- Phase 2 Core Loop & Simulation handoff: completed.
+- Economy and Competition specialist outputs: integrated under `docs/07-specialist-specs`.
+- **Current active handoff:** [Prototype Build & Verify](PROTOTYPE_BUILD_VERIFY_HANDOFF.md).
 
-Both Phase 1 and Phase 2 handoffs claim inherited approvals that are not synchronized with the supplied formal decision log. Verify approval before recording those directions as Accepted. See `docs/01-governance/DECISION_LOG_UPDATES_PROPOSED.md`.
+Always check `PROJECT_STATE.md` and `DECISION_LOG.md` before acting on a handoff.
