@@ -35,16 +35,716 @@ Affected Systems:
 ## Current Decisions
 
 ### DEC-001 — Esports as Initial Product Domain
-Status: Proposed
+Date: 2026-10-03
+Status: Accepted
 
 Context:
-The long-term game may become a broad company strategy simulator.
+The long-term game may become a broad strategic-company simulator, but the project needs a narrow initial domain that can validate the management model.
 
-Proposal:
-Use professional esports as the initial vertical slice and validation domain.
+Decision:
+Use professional esports as the initial product, first major domain, and vertical-slice validation environment.
+
+Alternatives:
+- Begin as a generic company simulator with no specific operating domain.
+- Begin with multiple sports / business domains at once.
+- Limit the final product permanently to esports.
 
 Reasoning:
-A narrow starting domain reduces scope while still exercising people, contracts, finance, competition, sponsorship, reputation, and growth systems.
+Esports is narrow enough for early scope control while still exercising people, contracts, finance, competition, sponsorship, reputation, audience, uncertainty, and organizational growth.
 
-Important:
-This does not mean the final game is permanently limited to esports.
+Consequences:
+- Early gameplay and prototypes should be validated through one esports discipline.
+- Future expansion must not justify implementing many industries early.
+- Esports-specific systems may exist, but should not force the entire future company model to become esports-only.
+
+Affected Systems:
+- product scope
+- competition
+- people
+- contracts
+- finance
+- sponsorship
+- reputation
+- future expansion
+
+---
+
+### DEC-002 — Player Role and Authority
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The project could become an esports GM game, CEO simulator, tactical coach game, or a mixture of all three unless the player's authority is bounded.
+
+Decision:
+The player primarily acts as the organization's CEO / executive while remaining directly involved in important management decisions.
+
+Primary control layers:
+- executive
+- management
+
+Operational control is secondary and should usually be abstracted, simplified, or delegated when it does not create meaningful strategic value.
+
+Alternatives:
+- Pure executive simulation.
+- Pure roster / general-manager simulation.
+- Operational micromanagement as the primary experience.
+
+Reasoning:
+Executive + management control supports the intended company fantasy while preserving meaningful involvement in roster, staff, contracts, sponsors, scouting direction, preparation priorities, and departmental resource allocation.
+
+Consequences:
+- UI and future systems should prioritize high-value decisions over daily chores.
+- Growth should increase the importance of delegation.
+- Operational detail requires explicit gameplay justification before being added.
+
+Affected Systems:
+- player role
+- UI / information design
+- delegation
+- people
+- competition
+- finance
+- organization
+
+---
+
+### DEC-003 — Company Success as Strategic Center
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The project needs to clarify whether winning competitions is the final objective or one major component of a broader company strategy.
+
+Decision:
+Long-term company success is the primary strategic objective. Competitive performance remains a major priority because it can generate business leverage and future competitive capacity.
+
+Competitive success may create:
+- reputation
+- fandom / audience
+- sponsor value
+- commercial opportunities
+- brand value
+- talent attraction
+- partnership opportunities
+
+Short-term competitive performance may be sacrificed when doing so is strategically justified by stronger long-term company outcomes.
+
+Alternatives:
+- Winning as the sole dominant success condition.
+- Competition as a minor background activity.
+
+Reasoning:
+This preserves esports importance while making competition interact with finance, brand, audience, people, risk, and expansion rather than becoming an isolated match-results loop.
+
+Consequences:
+- Competitive results should feed into company systems.
+- Business decisions may legitimately conflict with short-term sporting performance.
+- The economy must prevent automatic infinite growth from repeated success.
+
+Affected Systems:
+- competition
+- finance
+- reputation
+- audience / fandom
+- sponsorship
+- brand
+- progression
+- risk
+
+---
+
+### DEC-004 — Scalable Competitive Control
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Competitive management needs enough depth to matter without forcing every player to micromanage every match, especially as the company grows.
+
+Decision:
+Competitive management should support both:
+1. direct player involvement in meaningful preparation / tactical decisions; and
+2. delegation to coaches and competitive staff operating within assigned authority.
+
+The player may accept, modify, override, or delegate recommendations and decisions.
+
+Alternatives:
+- Fully abstract match resolution.
+- Mandatory deep manual coaching for every match.
+- Fully automated competitive operations with no meaningful player intervention.
+
+Reasoning:
+This keeps competitive gameplay available to players who want depth while allowing organizational scale and delegation to become part of management gameplay.
+
+Consequences:
+- Coach / manager capability and information quality may become meaningful simulation inputs.
+- Different esports disciplines may later expose different domain-specific tactical interfaces.
+- Exact tactical granularity and match simulation mechanics remain a later specification problem.
+
+Affected Systems:
+- competition
+- staff
+- delegation
+- people AI
+- information / analytics
+- UI
+
+---
+
+### DEC-005 — Simulation Philosophy
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+A management simulation can become either too shallow to sustain decisions or too detailed to remain readable and maintainable.
+
+Decision:
+Use medium simulation depth by default, with selective deeper simulation only where added detail creates meaningful strategic decisions, emergent behavior, useful uncertainty, or important long-term consequences.
+
+Design rule:
+**Deep where decisions matter. Simple where detail becomes repetitive work.**
+
+Alternatives:
+- Accessible abstraction across nearly all systems.
+- Heavy simulation fidelity across most systems.
+
+Reasoning:
+This balances depth with clarity, scalability, balance, maintainability, UI readability, and AI-assisted development consistency.
+
+Consequences:
+- Real-world detail is not sufficient justification for simulation detail.
+- Low-value operational detail should be abstracted, simplified, or delegated.
+- Deeper systems require explicit gameplay value and later validation.
+
+Affected Systems:
+- all simulation systems
+- UI / UX
+- balancing
+- content
+- AI-assisted development
+
+---
+
+### DEC-006 — Evolving Rival Organizations
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Long campaigns need pressure and change that do not depend only on the player's own growth or scripted events.
+
+Decision:
+The world should contain multiple rival organizations that evolve over time and compete with the player across relevant competitive and business dimensions.
+
+Rivals may change teams, leadership, strategy, sponsors, markets, staff, and organizational direction as appropriate to the supported simulation depth.
+
+Alternatives:
+- Static background competitors.
+- Player-only economy with externally generated match opponents.
+
+Reasoning:
+Evolving rivals support adaptation, market pressure, talent competition, sponsor competition, and a world that feels active without requiring every situation to be manually scripted.
+
+Consequences:
+- Competitor state must eventually persist and change over time.
+- World simulation needs bounded but meaningful rival behavior.
+- Exact world size and competitor-AI fidelity remain unspecified.
+
+Affected Systems:
+- world simulation
+- competition
+- talent market
+- staff market
+- sponsorship
+- audience / brand
+- commercial opportunities
+
+---
+
+### DEC-007 — Structural Failure and Recovery
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+If poor strategic and financial decisions cannot create serious consequences, debt, risk, and organizational trade-offs lose weight.
+
+Decision:
+The company can face genuine structural failure. Financial distress should generally create recovery and restructuring gameplay before terminal game over when practical.
+
+Potential structural failure sources include insolvency, sustained inability to meet obligations, or failure to recover from severe loss of company viability.
+
+Debt is a strategic instrument and must create repayment pressure, risk, and reduced flexibility.
+
+Alternatives:
+- No terminal failure; setbacks only slow progression.
+- Immediate game over when a financial threshold is crossed.
+
+Reasoning:
+Real downside preserves strategic tension while a recovery window creates more gameplay than abrupt failure.
+
+Consequences:
+- Finance must eventually model obligations and distress states.
+- Downsizing, asset / contract sales, refinancing, sponsor loss, or restructuring may become recovery tools.
+- Exact insolvency, debt, valuation, and termination formulas remain unresolved.
+
+Affected Systems:
+- finance
+- debt
+- valuation
+- contracts
+- staff
+- sponsors
+- reputation
+- progression / campaign state
+
+---
+
+### DEC-008 — Long-Term Company-First Identity
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The project needs to determine whether esports is the permanent product boundary or the first business domain of a broader strategic-company simulator.
+
+Decision:
+The long-term product is company-first. Esports is the starting business domain, not the permanent boundary.
+
+Future business divisions may include other sports, media, advertising, events, merchandising, talent management, partnerships, investments, or other strategically justified domains.
+
+Future divisions should reuse shared company concepts where appropriate and add only domain-specific rules needed to create new strategic decisions.
+
+Alternatives:
+- Esports-first forever.
+- Multi-title esports ecosystem only.
+
+Reasoning:
+The desired long-term fantasy is to build, operate, adapt, and protect a growing multi-division company while preserving a narrow early implementation path.
+
+Consequences:
+- Architecture may later support a shared company core plus domain modules, but this does not authorize premature implementation of future industries.
+- New divisions must create new strategic decisions rather than act as passive revenue multipliers.
+- The first playable product remains deliberately esports-focused.
+
+Affected Systems:
+- product identity
+- company core
+- expansion
+- finance
+- organization
+- future domain modules
+
+---
+
+### DEC-009 — Time Progression Model
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The simulation needs a common chronology for competition, contracts, finance, preparation, rivals, and delayed consequences without turning the player experience into daily micromanagement.
+
+Decision:
+Use one calendar day as the authoritative smallest simulation tick. Player-facing progression is organized around meaningful checkpoints and material decisions. Multiple days may advance automatically when no executive- or management-relevant interruption is required.
+
+Alternatives:
+- Weekly-only simulation ticks.
+- Event-only time with no shared daily chronology.
+- Mandatory manual advancement and decisions every day.
+
+Reasoning:
+A daily chronology is fine-grained enough for obligations and competition timing while checkpoint-driven interaction preserves the executive-management fantasy.
+
+Consequences:
+- Daily simulation does not imply daily player micromanagement.
+- Time advancement must be interruptible by meaningful checkpoints.
+- Final season pacing remains a later balance question.
+
+Affected Systems:
+- core loop
+- finance
+- contracts
+- competition
+- preparation
+- rivals / world simulation
+- delayed consequences
+
+---
+
+### DEC-010 — Authoritative Company State and World State Ownership
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Interacting systems require explicit state ownership to avoid duplicated authority and simulation drift.
+
+Decision:
+Company State is authoritative for the player-controlled company and its owned entities. World State is authoritative for external organizations, markets, competition environment, and other external simulation state. Each durable fact should have one authoritative owner.
+
+Alternatives:
+- Shared mutable state with no explicit ownership.
+- Independent copies of the same facts inside each subsystem.
+
+Reasoning:
+Explicit ownership improves explainability, testing, and later technical design while reducing simulation coupling.
+
+Consequences:
+- Systems may consume views of state they do not own.
+- Derived values must not silently become competing sources of truth.
+- No third overlapping top-level authoritative state should be introduced without Director review.
+
+Affected Systems:
+- company simulation
+- world simulation
+- competition
+- economy
+- people
+- contracts
+- testing
+
+---
+
+### DEC-011 — Primary Resource Model
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The first simulation needs a small set of decision-relevant resources that support company strategy without creating a dashboard of redundant currencies.
+
+Decision:
+Use five primary resource concepts for the initial simulation model:
+- Cash
+- Organizational Capacity
+- Reputation
+- Audience / Fandom
+- Information Quality
+
+Commercial Value, Financial Pressure, Strategic Flexibility, Company Value, Competitive Capability, and Preparation Capacity are derived concepts rather than additional primary spendable resource pools.
+
+Alternatives:
+- Money as the only meaningful resource.
+- A larger set of independent meters for every useful concept.
+
+Reasoning:
+The five-resource model captures liquidity, organizational limits, external standing, market attention, and uncertainty while keeping the model understandable.
+
+Consequences:
+- Derived concepts may still be visible as estimates, warnings, or categories.
+- Organizational Capacity must not become a generic mana/action-point currency.
+- Information Quality may have bounded domains rather than one universal scalar.
+
+Affected Systems:
+- economy
+- organization
+- reputation
+- audience
+- information / scouting
+- competition
+- sponsorship
+
+---
+
+### DEC-012 — Stored vs Derived Simulation State Rule
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The simulation contains many aggregate concepts that can be calculated from more fundamental causes.
+
+Decision:
+Store durable causes and authoritative facts. Derive aggregate interpretations whenever practical.
+
+Examples of derived concepts include Commercial Value, Financial Pressure, Strategic Flexibility, Company Value, Competitive Capability, Preparation Capacity, decision-specific confidence, and overload severity.
+
+Alternatives:
+- Persist every displayed value independently.
+- Recompute every state including durable commitments from transient formulas.
+
+Reasoning:
+This minimizes duplicate authority and makes causal behavior easier to test and explain.
+
+Consequences:
+- Persistence of a derived concept requires explicit justification.
+- Historical snapshots may be stored for reporting without becoming the authoritative current value.
+
+Affected Systems:
+- all simulation systems
+- debugging
+- save/load requirements later
+- analytics / UI later
+
+---
+
+### DEC-013 — Canonical Simulation Cycle and Consequence Timing
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The Product Foundation proposed a management loop that Phase 2 refined into an executable simulation rhythm.
+
+Decision:
+Use the canonical management cycle:
+Observe → Prioritize → Decide → Commit → Delegate / Intervene → Advance Time → Resolve → Review → Adapt.
+
+The simulation must support both immediate and delayed consequences. Delayed effects should remain traceable to their originating decisions or events.
+
+Alternatives:
+- Immediate resolution of all consequences.
+- Separate disconnected loops for economy and competition.
+
+Reasoning:
+Delayed and cross-system consequences create long-horizon trade-offs while the common cycle keeps the game coherent.
+
+Consequences:
+- Review/debug feedback must explain material state changes.
+- Systems must share chronology without becoming disconnected mini-games.
+
+Affected Systems:
+- core loop
+- economy
+- competition
+- organization
+- world simulation
+- feedback / observability
+
+---
+
+### DEC-014 — Bounded Delegation Through Authority Envelopes
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The player is an executive with selective hands-on authority, so operational delegation must reduce burden without removing accountability.
+
+Decision:
+Delegated domains use a bounded Authority Envelope. A supported domain may be Player Controlled, Coach/Staff Recommends and Player Approves, or Coach/Staff Autonomous. Staff operate from the same underlying simulation state as manual control, subject to their information, capability, tendencies, and explicit constraints.
+
+Alternatives:
+- Binary AI on/off delegation.
+- Mandatory manual control.
+- Omniscient automation with hidden bonuses.
+
+Reasoning:
+Bounded authority makes delegation itself a management decision and supports organizational scale.
+
+Consequences:
+- Manual control receives no hidden performance bonus.
+- Delegated staff must not receive hidden omniscience.
+- The first prototype requires one meaningful Head Coach role; deeper staff hierarchy is deferred.
+
+Affected Systems:
+- staff
+- competition
+- delegation
+- information
+- player authority
+
+---
+
+### DEC-015 — Bounded Rival Simulation
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Rivals must create real external pressure, but simulating every rival at player-company fidelity would violate early scope and fidelity goals.
+
+Decision:
+World State owns rival organizations. Rivals evolve and compete for relevant scarce opportunities, but may use a compressed lower-fidelity model than the player company.
+
+Alternatives:
+- Static rivals used only as match opponents.
+- Full player-equivalent company simulation for every rival.
+
+Reasoning:
+A bounded model is sufficient to create competitive, talent, sponsor, and opportunity pressure while protecting prototype scope.
+
+Consequences:
+- Rival state must materially affect at least some player decisions.
+- Rival fidelity should be removed or reduced when variables do not create observable pressure.
+
+Affected Systems:
+- world simulation
+- competition
+- talent market
+- sponsorship
+- information
+
+---
+
+### DEC-016 — Structural Failure State Progression
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The project already requires genuine failure with recovery gameplay before terminal failure where practical.
+
+Decision:
+Use the conceptual progression:
+Stable → Warning → Distress → Restructuring → Stabilized or Terminal.
+
+Structural failure is evaluated from company conditions such as liquidity, obligations, leverage, recurring costs, expected inflows, and credible recovery options rather than from a single match result or a single arbitrary negative number.
+
+Alternatives:
+- Instant bankruptcy at one threshold.
+- No structural failure.
+
+Reasoning:
+A staged model creates earlier decisions, costly recovery, and clearer causality.
+
+Consequences:
+- Exact insolvency and terminal game-over thresholds remain unresolved until prototype evidence exists.
+- Recovery actions must sacrifice another valuable capability or opportunity.
+
+Affected Systems:
+- finance
+- debt
+- contracts
+- roster / staff
+- sponsorship
+- progression
+
+---
+
+### DEC-017 — Cross-System Outcome Boundary
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Direct cross-system mutation would create unclear ownership and fragile simulation coupling.
+
+Decision:
+Systems emit domain outcomes/signals that owning systems interpret. They do not directly mutate authoritative state owned by another domain.
+
+Competition therefore emits a CompetitiveOutcome containing consequence-relevant context. Company/economy/reputation/audience/commercial processes interpret that outcome and apply their own state changes.
+
+Alternatives:
+- Competition directly changes Cash, Reputation, Audience, sponsor value, and Company Value.
+
+Reasoning:
+Outcome boundaries preserve ownership, explainability, testing, and later architecture flexibility.
+
+Consequences:
+- Cross-system interfaces need explicit producer/consumer responsibility.
+- Duplicate application of the same causal effect must be prevented.
+
+Affected Systems:
+- competition
+- economy
+- reputation
+- audience
+- sponsorship
+- debugging
+
+---
+
+### DEC-018 — Preparation and Information Integration
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Competitive preparation and imperfect information need to connect to company resources without introducing redundant primary currencies.
+
+Decision:
+Preparation Capacity is a derived short-horizon capability based on factors such as available preparation time, relevant staff capability, information, and organizational pressure. It is allocated among Team Execution, Opponent-Specific Preparation, and Meta Adaptation.
+
+Information capability is domain-aware. Subsystems consume decision-specific estimates and confidence/uncertainty rather than omniscient hidden truth. Better information improves decision quality, not the underlying asset or opponent strength.
+
+Alternatives:
+- Preparation Points as a sixth primary resource.
+- One global information accuracy buff.
+
+Reasoning:
+This preserves scarcity and uncertainty while keeping primary resource count bounded.
+
+Consequences:
+- The three preparation priorities must create real opportunity cost or be simplified after testing.
+- Information domains that do not change decisions should be merged or removed.
+
+Affected Systems:
+- competition
+- information / scouting
+- staff
+- organizational capacity
+- preparation
+
+---
+
+### DEC-019 — Bounded Competitive Resolution for the Initial Simulation
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+Competition needs enough depth to affect company decisions without becoming a full tactical esports simulator.
+
+Decision:
+Resolve competition using the conceptual dimensions:
+- Base Competitive Capability
+- Preparation Advantage
+- Strategic Matchup
+- Adaptation
+- bounded competitive variance
+
+The first simulation supports high-leverage preparation, lineup exceptions, strategic posture, and coach delegation. A single Head Coach is the only mandatory deep competitive staff role.
+
+Alternatives:
+- Pure roster-rating roll.
+- Full action-level or tactical match simulator.
+
+Reasoning:
+The model makes roster quality matter while preserving value for preparation, information, coaching, matchup, and adaptation.
+
+Consequences:
+- Stronger teams are advantaged but not guaranteed to win.
+- Exact coefficients and balance are prototype calibration, not canonical production rules.
+- Detailed drafting, action simulation, deep analysts, and repeated mid-match intervention are outside the initial prototype requirement.
+
+Affected Systems:
+- competition
+- roster
+- Head Coach
+- information
+- preparation
+- rivals
+
+---
+
+### DEC-020 — Minimal Simulation Prototype Validation Envelope
+Date: 2026-10-03
+Status: Accepted
+
+Context:
+The project now needs a bounded headless/minimal-presentation prototype to test the management model before Technical Foundation.
+
+Decision:
+Authorize a prototype validation envelope consisting of:
+- 1 player-controlled company;
+- 1 fictional 5v5 role-based esports test discipline;
+- 1 primary team with 5 starters + 1 flex substitute;
+- 1 Head Coach;
+- 4 bounded rival organizations;
+- a tiny talent market;
+- 1 active sponsor plus a bounded sponsor-opportunity pool;
+- 1 simple financing mechanism;
+- a default integrated-run horizon of up to 84 calendar days;
+- a 5-organization competition cycle using a double round-robin, with the proposed small playoff layer permitted if needed for validation.
+
+All numeric starting values, coefficient values, Currency Units, exact match counts, and exact duration are prototype calibration parameters, not production balance decisions. They may be reduced or tuned when a smaller test produces equivalent evidence.
+
+Alternatives:
+- Begin production vertical-slice implementation immediately.
+- Use a broad multi-discipline or multi-team prototype.
+- Delay all simulation validation until after production architecture is chosen.
+
+Reasoning:
+The envelope is large enough to test competition-business feedback, delegation, information uncertainty, rival adaptation, financial commitments, overload, debt, and recovery while remaining intentionally disposable and bounded.
+
+Consequences:
+- The fictional discipline is a test abstraction, not a production content commitment.
+- Prototype implementation must remain headless or minimal-presentation and deterministic/testable.
+- Passing the prototype gate validates the management model, not final balance or production architecture.
+- Technical Foundation begins only after prototype BUILD/VERIFY evidence is reviewed by Project Director.
+
+Affected Systems:
+- prototype scope
+- simulation
+- competition
+- economy
+- testing
+- project roadmap
