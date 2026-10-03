@@ -1,0 +1,43 @@
+{
+  "version": "calibration-1",
+  "status": "NONCANONICAL TEST CALIBRATION",
+  "rationale": "Use the approved starting roster; expose commitment risk without requiring wins for baseline solvency.",
+  "horizon": 84,
+  "cash": 420,
+  "reputation": 45,
+  "audience": 35,
+  "capacity": 100,
+  "load": 74,
+  "information": {"talent": 50, "opponent": 45, "commercial": 50},
+  "players": [
+    ["P1", "A", 67, 55, 72, 92, 25],
+    ["P2", "B", 64, 63, 66, 90, 22],
+    ["P3", "C", 69, 58, 61, 88, 26],
+    ["P4", "D", 63, 72, 64, 93, 22],
+    ["P5", "E", 66, 60, 70, 91, 25],
+    ["P6", "BD", 59, 76, 62, 95, 10]
+  ],
+  "coach": {"preparation": 68, "analysis": 64, "judgment": 63, "lineup": 67, "adaptability": 61, "reliability": 70},
+  "finance": {"period": 28, "coach_pay": 10, "operations": 10, "sponsor_pay": 140, "star_fee": 230, "star_salary": 100, "prospect_fee": 45, "prospect_salary": 12, "star_sale": 140, "replacement_fee": 30, "bridge_principal": 180, "bridge_fee": 22, "distress_bridge_fee": 54, "bridge_term": 56, "information_cost": 70, "support_cost": 90, "support_cost_per_period": 15, "investment_delay": 14},
+  "competition": {"preparation_days": 3, "preparation_scale": 9, "execution_weight": 1.0, "opponent_weight": 1.5, "meta_weight": 1.7, "rival_preparation": 4.0, "adaptation_weight": 6.0, "variance_conservative": 9.0, "variance_balanced": 12.0, "variance_aggressive": 16.0, "probability_floor": 0.03, "probability_ceiling": 0.97, "information_error": 16.0, "posture_information_error": 1.5, "familiarity_days": 21, "integration_penalty": 4.0, "readiness_recovery": 0.4, "readiness_cost": 3.0},
+  "preparation_options": [[0.7,0.15,0.15],[0.15,0.7,0.15],[0.15,0.15,0.7],[0.34,0.33,0.33]],
+  "organization": {"overload_slope": 1.0, "minimum_efficiency": 0.3, "star_load": 18, "information_load": 12, "support_gain": 25},
+  "commercial": {"offer_days": [14,35,56], "offer_base": 100, "value_coefficient": 1.5, "offer_ceiling": 230, "offer_duration": 56, "offer_ttl": 7, "premium_increment": 25, "premium_load": 18, "standard_load": 5, "premium_rep_requirement": 45, "breach_penalty": 15},
+  "consequences": {"reputation_delay": 1, "audience_delay": 2, "reputation_win": 2.5, "reputation_loss": 1.5, "surprise_weight": 2.0, "audience_rate": 0.12, "audience_decay": 0.015},
+  "coach_rules": {"confidence_threshold": 0.3, "close_score": 0.005, "bias_weight": 0.025},
+  "distress": {"forecast_days": 14, "grace_days": 14, "stabilization_days": 3, "maximum_recovery_load_ratio": 1.2},
+  "rivals": [
+    ["R1", "Contender", 70, 85, 85, "Balanced"],
+    ["R2", "Aggressor", 66, 60, 55, "Aggressive"],
+    ["R3", "Developer", 59, 70, 40, "Balanced"],
+    ["R4", "Stable", 64, 55, 65, "Conservative"]
+  ],
+  "meta_schedule": {"32": 1, "60": -1},
+  "calendar": {"round_days": [7,14,21,28,35,42,49,56,63,70], "development_days": [21,42,63], "talent_claim_day": 18},
+  "formula": {"readiness_base": 0.6, "readiness_weight": 0.4, "coordination_baseline": 90, "coordination_integration_loss": 65, "execution_coordination_scale": 25, "mistargeted_preparation": 0.05, "posture_adaptability_center": 60, "posture_adaptability_weight": 0.08, "meta_posture_weight": 1.5, "posture_coordination_center": 80, "posture_coordination_weight": 0.06, "posture_interaction_weight": 0.5},
+  "information_rules": {"posture_base_accuracy": 0.35, "posture_quality_weight": 0.6, "investment_gain": 20, "maximum_quality": 95},
+  "world_rules": {"developer_gain": 0.6, "other_development_range": 0.6, "rival_match_scale": 24, "meta_memory_days": 21},
+  "economy_rules": {"commercial_reputation_weight": 0.55, "commercial_audience_weight": 0.45, "audience_visibility_weight": 0.5, "new_player_consistency": 65, "new_player_readiness": 90, "replacement_execution": 58, "replacement_adaptability": 68, "cancellation_refund_divisor": 3},
+  "policy_rules": {"growth_sponsor_threshold": 190, "information_cash_threshold": 350, "renewal_window": 28, "sponsor_condition_risk_cost": 25},
+  "talent": {"star_execution":85,"star_adaptability":65,"prospect_execution":60,"prospect_adaptability":80}
+}

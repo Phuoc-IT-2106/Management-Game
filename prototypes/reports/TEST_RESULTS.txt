@@ -1,0 +1,43 @@
+Python: 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
+Command: python -m unittest discover -s prototypes/tests -v
+Date: 2026-10-03
+
+test_commercial_value_and_unsigned_offers_are_not_cash (test_simulation.SimulationTests.test_commercial_value_and_unsigned_offers_are_not_cash) ... ok
+test_competition_is_pure_and_emits_no_cash (test_simulation.SimulationTests.test_competition_is_pure_and_emits_no_cash) ... ok
+test_delayed_consequences_apply_once (test_simulation.SimulationTests.test_delayed_consequences_apply_once) ... ok
+test_duplicate_decision_rejected (test_simulation.SimulationTests.test_duplicate_decision_rejected) ... ok
+test_envelope_blocks_disallowed_posture_and_protects_player (test_simulation.SimulationTests.test_envelope_blocks_disallowed_posture_and_protects_player) ... ok
+test_every_representative_scenario_runs_and_replays (test_simulation.SimulationTests.test_every_representative_scenario_runs_and_replays) ... ok
+test_expensive_financing_has_real_obligation_beyond_horizon (test_simulation.SimulationTests.test_expensive_financing_has_real_obligation_beyond_horizon) ... ok
+test_impossible_envelope_and_low_confidence_escalate (test_simulation.SimulationTests.test_impossible_envelope_and_low_confidence_escalate) ... ok
+test_impossible_envelope_pauses_runner_without_illegal_plan (test_simulation.SimulationTests.test_impossible_envelope_pauses_runner_without_illegal_plan) ... ok
+test_information_does_not_change_true_capability_or_resolution_draw (test_simulation.SimulationTests.test_information_does_not_change_true_capability_or_resolution_draw) ... ok
+test_information_narrows_errors_across_development_seeds (test_simulation.SimulationTests.test_information_narrows_errors_across_development_seeds) ... ok
+test_invalid_decision_is_atomic (test_simulation.SimulationTests.test_invalid_decision_is_atomic) ... ok
+test_late_cash_does_not_erase_missed_due_fact (test_simulation.SimulationTests.test_late_cash_does_not_erase_missed_due_fact) ... ok
+test_lineup_eligibility (test_simulation.SimulationTests.test_lineup_eligibility) ... ok
+test_manual_and_autonomous_same_plans_same_competition (test_simulation.SimulationTests.test_manual_and_autonomous_same_plans_same_competition) ... ok
+test_observation_contains_estimate_not_true_opponent_or_future (test_simulation.SimulationTests.test_observation_contains_estimate_not_true_opponent_or_future) ... ok
+test_overload_affects_process_not_base_capability (test_simulation.SimulationTests.test_overload_affects_process_not_base_capability) ... ok
+test_pause_after_due_finance_does_not_repeat_settlement (test_simulation.SimulationTests.test_pause_after_due_finance_does_not_repeat_settlement) ... ok
+test_pause_resume_and_replay_are_identical (test_simulation.SimulationTests.test_pause_resume_and_replay_are_identical) ... ok
+test_payments_idempotent_and_receipts_first (test_simulation.SimulationTests.test_payments_idempotent_and_receipts_first) ... ok
+test_recovery_has_a_cost_and_retains_valid_roster (test_simulation.SimulationTests.test_recovery_has_a_cost_and_retains_valid_roster) ... ok
+test_replacement_preserves_six_players_and_old_due_obligations (test_simulation.SimulationTests.test_replacement_preserves_six_players_and_old_due_obligations) ... ok
+test_replay_detects_tampering_and_missing_actions (test_simulation.SimulationTests.test_replay_detects_tampering_and_missing_actions) ... ok
+test_rival_update_consumes_finite_opportunity (test_simulation.SimulationTests.test_rival_update_consumes_finite_opportunity) ... ok
+test_round_robin_has_eight_player_and_twenty_world_matches (test_simulation.SimulationTests.test_round_robin_has_eight_player_and_twenty_world_matches) ... ok
+test_sponsor_replacement_load_and_one_decision_per_offer_round (test_simulation.SimulationTests.test_sponsor_replacement_load_and_one_decision_per_offer_round) ... ok
+test_calibration_rejects_negative_financing (test_verification.VerificationTests.test_calibration_rejects_negative_financing) ... ok
+test_debt_useful_for_timing_but_not_free_net_value (test_verification.VerificationTests.test_debt_useful_for_timing_but_not_free_net_value) ... ok
+test_preparation_choices_change_with_reachable_coordination_and_meta (test_verification.VerificationTests.test_preparation_choices_change_with_reachable_coordination_and_meta) ... ok
+test_run_actions_replay_cli_and_error_exit_codes (test_verification.VerificationTests.test_run_actions_replay_cli_and_error_exit_codes) ... ok
+test_seed_ranges_inclusive_and_reject_inversion (test_verification.VerificationTests.test_seed_ranges_inclusive_and_reject_inversion) ... ok
+test_trace_review_rejects_different_calibration (test_verification.VerificationTests.test_trace_review_rejects_different_calibration) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.751s
+
+OK
+
+Exit code: 0

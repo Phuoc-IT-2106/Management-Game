@@ -1,0 +1,15 @@
+{
+  "A": {"name":"Conservative sustainable company","policy":"conservative","initial":{}},
+  "B": {"name":"Aggressive star signing","policy":"aggressive","initial":{}},
+  "C": {"name":"Stronger roster faces preparation and matchup risk","policy":"fixed","initial":{"execution_bonus":8,"coach_preparation":30}},
+  "D": {"name":"Reasonable decision under imperfect information","policy":"adaptive","initial":{"opponent_information":10}},
+  "E": {"name":"Coherent coach delegation","policy":"adaptive","initial":{"mode":"autonomous","opponent_information":90,"coach_judgment":90}},
+  "F": {"name":"Manual decision parity","policy":"adaptive","initial":{"mode":"manual","opponent_information":90,"coach_judgment":90}},
+  "G": {"name":"Repeated strategy becomes exposed","policy":"fixed","initial":{}},
+  "H": {"name":"Meta changes preparation choice","policy":"adaptive","initial":{}},
+  "I": {"name":"Organizational overload","policy":"conservative","initial":{"extra_load":80}},
+  "J": {"name":"Debt-funded investment","policy":"financed","initial":{"cash":250}},
+  "K": {"name":"Recoverable financial distress","policy":"recovery","initial":{"cash":70,"crisis":true}},
+  "L": {"name":"Costly restructuring","policy":"recovery","initial":{"cash":70,"crisis":true}},
+  "M": {"name":"Success snowball stress","policy":"adaptive","initial":{"execution_bonus":15,"reputation":85,"audience":80}}
+}

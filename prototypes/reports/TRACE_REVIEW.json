@@ -1,0 +1,87 @@
+{
+  "calibration_hash": "1c0de0bece63bc5d0fc977ed58708c87c83e4de71995c6e28e06ee234cbb60f3",
+  "date": "2026-10-03",
+  "method": "Inspected representative seed 1000 decisions, observations, match factors, delayed causal IDs, financial item histories, state/trace hashes and a complete cash-transition reconciliation for A-M; cross-checked paired mechanism evidence. Review certifies trace explainability, not production balance.",
+  "reviewer": "Codex engineering trace inspection",
+  "scenarios": {
+    "A": {
+      "finding": "Cash audit reconciles 420 to 541 CU across 27 explicit transactions. Day 28 signed receipts settle before payroll and the match; match:4:1 then changes Reputation on day 29 and Audience on day 30. Those IDs feed offer:35:premium, its agreement and later settlement. No match or unsigned offer deposits cash. Eight matches, six players and day-112 obligations remain visible.",
+      "state_hash": "52953c490c4c4b1180953dc250fcdfb3bf3393aae695f46d6d4c669e04909be5",
+      "status": "PASS",
+      "trace_hash": "52ba9562665b49940d10910fa8a5b7b66e20bd3ab1c7ad7ac5508a7727b5d1e5"
+    },
+    "B": {
+      "finding": "Signing S on day 1 costs 230 CU and changes role-A execution 67 to 85; outstanding obligations increase 600 to 900 CU. Preparation later carries the 110/100 load ratio. Final cash 92 versus A 541, with 225 CU post-horizon obligations, records the cost of seven wins. Replaced future payments are waived; the new contract owns referenced financial item IDs.",
+      "state_hash": "d16361c34f67df987d486cf98f48909c0a71c6eb8eb4ef4180621abc863eb656",
+      "status": "PASS",
+      "trace_hash": "3d228f9edb4689027d7cd7d5ebcb2bec271a96630c8f6fdec8e2281b3a47f143"
+    },
+    "C": {
+      "finding": "The stronger team loses match:10:1 on day 70 with positive base advantage 3.197126 but adaptation -4.335, rival preparation -4 and matchup -1.972; win probability is 0.42252 before the variance draw. The isolated poor/better-plan probe also moves probability 0.392227 to 0.96. Selection is the fixed policy; the recorded checkpoint reason describes the coach recommendation, which that policy can override.",
+      "state_hash": "d607b8bd436733f8a5ded84dc61778ab541ee4ca54a2de35062267c85bd65f96",
+      "status": "PASS",
+      "trace_hash": "bc8f72939fc54e67c57d140a974420344a8907ee2d96bc64c5a4c6ca6b6808ac"
+    },
+    "D": {
+      "finding": "The day-11 observation estimates rival strength 50.867206 at confidence 0.10 before the day-14 match. Chosen-plan forecast 0.97 differs from resolved probability 0.675722 and the team loses. Day-18 mistaken Aggressive targeting reduces actual opponent preparation to 0.3213. Beliefs and chosen plans are recorded before results, and true-state diagnostics are confined to verification.",
+      "state_hash": "9700aa71ad5d546021fbe39eb318f6084fbdbcd3ae0d202035c770845a808f8e",
+      "status": "PASS",
+      "trace_hash": "025b343515daa4fba8b6bd529d6402ee1cf030950ea19cf43ba61810db075837"
+    },
+    "E": {
+      "finding": "Seed 1000 delegates eight competitive decisions and needs four management approvals. Plans use observed profiles, estimates and explicit risk/protected-player constraints; all six-player role constraints hold. Low-confidence and impossible-envelope regression tests check escalation. Across 128 seeds approval reduction is measured without granting a competitive bonus.",
+      "state_hash": "67c5021896d60377628fd32202361042bd960b0ad04cc218cf110c9732e566fa",
+      "status": "PASS",
+      "trace_hash": "b5e885ad639354d68b750dcc56355022ebbcf46884189725a06fbc2faee58446"
+    },
+    "F": {
+      "finding": "Seed 1000 manually approves the same eight plans with twelve total approvals. World results and Company gameplay facts equal E exactly after excluding only the authority mode configuration. Cash 477, seven wins and every match factor agree; full state hashes differ because the envelopes are intentionally part of state. Separate replay hashes match within each control mode.",
+      "state_hash": "109e00e27e044ad602f3c89bbac6e785a00d5daad1710a1a2ab26b8f50a7210f",
+      "status": "PASS",
+      "trace_hash": "c8f34fa962caa2547d150bf45f6926a5bcecbc5ca24e37809f04564de293fb89"
+    },
+    "G": {
+      "finding": "Repeated Aggressive plans produce exposure from completed history. Day-35 informed rival adaptation is -3.25125, with the factor separately recorded from variance. The ablation reduces mean probability by 0.05781743 across seeds and changes adaptive-policy plans in 101/128 paired cases. Finite market claims are visible, though long-term talent market pressure is not established by this short fixture.",
+      "state_hash": "47032207fd7d29d3aad95bf58f4eae27505933bc3b68b919f1695fa36849ac9c",
+      "status": "PASS",
+      "trace_hash": "d35384153a86b6d379da10ba5a0133c2f2bbed3c77a845f9815c8b7f1210c474"
+    },
+    "H": {
+      "finding": "Meta changes 0 to 1 on day 32 and 1 to -1 on day 60 precede same-day checkpoints. Plans switch to 70% meta preparation on days 32, 46, 60 and 67 in this trace; day-35 meta contribution is 7.2828. All 128 paired meta-off campaigns choose a different allocation sequence. No narrative event assigns a win or policy choice.",
+      "state_hash": "2adf3d85a03a7bfcb67343dc833837d90cd2f1e66ae5369acc30e2fb98671065",
+      "status": "PASS",
+      "trace_hash": "5a49f70504996cf1c54515ed8a10b47a56db20c936e7d5156a033408b95a3d59"
+    },
+    "I": {
+      "finding": "Load 154 and capacity 100 convert raw daily preparation 2.04 to 0.9384 exactly once at efficiency 0.46. Base capability matches the unoverloaded fixture; the pure match formula applies no second workload multiplier. Sponsor offers are declined under workload constraints. The adaptive overload-off comparison changes plans in all 128 cases.",
+      "state_hash": "9e4571151dabd44dd6b5c6fd8f63447720e93fdfa7c8d11a0d5fdf003de12317",
+      "status": "PASS",
+      "trace_hash": "597a5755af81ab5fdb514aaa79f0f8d1c0de4c40a0171b4162ccb0296b3e2795"
+    },
+    "J": {
+      "finding": "Day-1 financing adds 180 CU and records 202 due day 57. The missed obligation remains identified with missed_day=57 even after payment on day 84. Another bridge on day 84 adds 180 with 234 due day 140; cash ends 80 but committed cash is -181 and post-horizon obligations are 459. End-date viability therefore does not imply sustainable solvency. The separate timing-gap probe shows on-time payment at a 22 CU cost.",
+      "state_hash": "6104104d723857ab5244ca0a43d6b56017c6e050091128a7bf004d545d8d966d",
+      "status": "PASS",
+      "trace_hash": "4a6f0c3b4b208299192ceb85161018c6ac9a039e4f106e6ece793cdcb00d2e15"
+    },
+    "K": {
+      "finding": "Legacy 150 CU due day 7 exceeds cash 70, producing Warning then Distress. Day-8 sale adds 140, replacement costs 30, and the overdue obligation is explicitly paid without erasing its missed date. Restructuring reaches Stabilized on day 11. Recovery viability is 128/128 against 0/128 when intervention is withheld.",
+      "state_hash": "71ec9a2bf34e28ba47a6a297e684f7eef0b0fa0c83581521e73ad12e6500a58b",
+      "status": "PASS",
+      "trace_hash": "4efb2aacfac24cfde28cf19dccfa1ce5054437ded9e0f56b626ecc7d367bc6dd"
+    },
+    "L": {
+      "finding": "This intentionally shares K initial conditions and decisions to inspect sacrifice separately. Role-A execution falls 85 to 58, four future salary commitments fall in total from 1050 to 698 before settling the legacy item, and star load is removed. Six players and valid role coverage remain. The liquidity improvement is purchased with lower competitive capability, not free debt deletion.",
+      "state_hash": "71ec9a2bf34e28ba47a6a297e684f7eef0b0fa0c83581521e73ad12e6500a58b",
+      "status": "PASS",
+      "trace_hash": "4efb2aacfac24cfde28cf19dccfa1ce5054437ded9e0f56b626ecc7d367bc6dd"
+    },
+    "M": {
+      "finding": "The strong company remains near the 0.97 match-probability ceiling, but positive Reputation increments are around 0.34-0.41 before clamps and payroll still costs 450 over the campaign. The diminishing-return ablation measures 17.009275 fewer raw positive Reputation points on average. Scarce claims and future obligations remain visible. This demonstrates active growth limits, not long-horizon competitive balance or effective talent scarcity.",
+      "state_hash": "34c383b4c32d2dfc9441b68f37d5b0b56d547e2528b947cc39e71842eba6ec36",
+      "status": "PASS",
+      "trace_hash": "1900890669a9a2adc7503edbdd671b487ec2f83489838a02bcfc2b3f562a7b0e"
+    }
+  },
+  "simulation_version": "prototype-1.0"
+}

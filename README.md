@@ -1,6 +1,6 @@
 # Strategic Company Simulator
 
-Status: **Phase 3 — Headless / Minimal Prototype. Prototype specification approved; ready for BUILD / VERIFY.**
+Status: **Phase 3 — Headless / Minimal Prototype. CLI implemented; verification evidence prepared for Project Director review.**
 
 ## What is this project?
 
@@ -39,6 +39,8 @@ The exact numbers, 84-day horizon, rival count, ratings and coefficients are **p
 6. [Specialist Specifications](docs/07-specialist-specs/README.md)
 7. [Minimal Simulation Prototype](docs/08-minimal-prototype/README.md)
 8. [Prototype BUILD / VERIFY Handoff](docs/05-handoffs/PROTOTYPE_BUILD_VERIFY_HANDOFF.md)
+9. [Run the implemented prototype](prototypes/README.md)
+10. [Prototype engineering results and Director handoff](prototypes/reports/PROJECT_DIRECTOR_HANDOFF.md)
 
 ## Development sequence
 
