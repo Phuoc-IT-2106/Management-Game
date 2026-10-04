@@ -859,10 +859,12 @@ Affected Systems:
 
 ### DEC-023 — Company-First UX Architecture
 Date: 2026-10-04
-Status: Proposed
+Status: Accepted
+Acceptance date: 2026-10-05 (Asia/Saigon).
 Approval owner: Project Director.
-Authority: Director's bounded Phase 5 UX foundation brief authorizes PLAN / SPEC
-and a draft decision. Detailed architecture acceptance is not inferred.
+Authority: Director's explicit Phase 5 UX Stage 2 instruction accepts DEC-023
+and authorizes the Company-first UX Foundation as the presentation architecture
+for subsequent Phase 5 UX development.
 
 Context:
 DEC-003/008 already establish company success and company-first long-term identity.
@@ -870,7 +872,7 @@ The current Phase 5 client presents dashboard/team/function tabs and lacks a ful
 player-defined organization identity contract. Future presentation needs durable
 company context without expanding the current gameplay envelope.
 
-Proposed decision:
+Decision:
 - The player-controlled company is the highest presentation context; competitive
   teams are owned operating units.
 - Organization name, abbreviation, emblem reference and primary/secondary identity
@@ -900,11 +902,14 @@ one-company/one-development-discipline/one-primary-team Phase 5 scope. Reusable
 semantics and optional art are practical for one developer and AI-assisted work.
 
 Consequences:
-If accepted, the [UX foundation package](../10-vertical-slice/ui-ux-foundation/README.md)
+The [UX foundation package](../10-vertical-slice/ui-ux-foundation/README.md)
 governs subsequent presentation blueprints. Identity/read-model gaps, fixture
 renaming and versioned persistence effects require bounded follow-up implementation.
-No future division, final balance, full branding editor, UI demo or production
-redesign is implemented by this documentation task. This proposal supersedes no
+Acceptance does not approve future business modules, final art direction, final
+palette/font, scope expansion or a production esports discipline, and does not
+close Phase 5. The bounded Stage 2 task authorizes a provisional development theme,
+minimal UI Kit and internal UI Lab, not a full company-first redesign.
+This decision supersedes no
 accepted decision, reopens no Phase 4 gate and changes no QG result or DV obligation.
 Migration/reversal cost is contained by retaining the internal client and unchanged
 Application commands until presentation replacements are verified.
