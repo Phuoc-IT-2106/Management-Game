@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "managementgame.application": {
+        "type": "Project",
+        "dependencies": {
+          "ManagementGame.Domain": "[1.0.0, )"
+        }
+      },
+      "managementgame.domain": {
+        "type": "Project"
+      }
+    }
+  }
+}
