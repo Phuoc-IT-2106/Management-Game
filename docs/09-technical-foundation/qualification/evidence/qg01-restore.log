@@ -1,0 +1,5 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe restore C:\Management Game\qualification\Host/Host.csproj --disable-parallel
+  Determining projects to restore...
+C:\Management Game\qualification\Host\Host.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+  All projects are up-to-date for restore.
+EXIT: 0

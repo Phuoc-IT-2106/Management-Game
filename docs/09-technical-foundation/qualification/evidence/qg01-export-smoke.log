@@ -1,0 +1,11 @@
+﻿COMMAND: C:\Management Game\qualification/artifacts/windows/Qualification.exe --headless -- --smoke
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+QG01_RUNTIME .NET 10.0.12
+QG01_RUNTIME_DIRECTORY C:\Management Game\qualification\artifacts\windows\data_Host_windows_x86_64\
+QG01_INTERACTION_PASS
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+
+EXIT: 0

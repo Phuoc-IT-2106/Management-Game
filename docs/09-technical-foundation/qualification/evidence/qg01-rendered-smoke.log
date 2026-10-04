@@ -1,0 +1,18 @@
+﻿COMMAND: C:\Management Game\qualification/artifacts/windows/Qualification.exe -- --smoke --capture
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+QG01_RUNTIME .NET 10.0.12
+QG01_RUNTIME_DIRECTORY C:\Management Game\qualification\artifacts\windows\data_Host_windows_x86_64\
+QG01_INTERACTION_PASS
+
+ERROR: Condition "hr != ((HRESULT)0x00000000)" is true. Returning: ERR_CANT_OPEN
+   at: audio_device_init (drivers/wasapi/audio_driver_wasapi.cpp:275)
+ERROR: WASAPI: init_output_device error.
+   at: init (drivers/wasapi/audio_driver_wasapi.cpp:600)
+WARNING: All audio drivers failed, falling back to the dummy driver.
+   at: initialize (servers/audio/audio_server.cpp:258)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+
+EXIT: 0

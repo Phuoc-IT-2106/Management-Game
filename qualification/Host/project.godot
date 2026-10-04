@@ -1,0 +1,17 @@
+config_version=5
+
+[application]
+config/name="Phase 4B Foundation Qualification"
+run/main_scene="res://Main.tscn"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[dotnet]
+project/assembly_name="Host"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
