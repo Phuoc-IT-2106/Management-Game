@@ -1,0 +1,13 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe --path C:\Management Game\qualification\Host --audio-driver Dummy -- --ui --benchmark
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+QG02_DATASET 1000 query_p95_ms=61.463 frame_p95_ms=82.994 controls=11
+QG02_DATASET 10000 query_p95_ms=52.633 frame_p95_ms=80.428 controls=11
+QG02_DATASET 100000 query_p95_ms=221.382 frame_p95_ms=75.334 controls=11
+QG02_CHECKS_PASS 36
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+
+EXIT: 0

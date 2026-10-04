@@ -230,7 +230,7 @@ public partial class DenseUi : VBoxContainer
                     GetWindow().Size=new[] { new Vector2I(1280,720),new Vector2I(1920,1080),new Vector2I(2560,1440) }[(iteration/30)%3];
                     GetWindow().ContentScaleFactor=new[] {1f,1.25f,1.5f,2f}[(iteration/30)%4];
                 }
-                _table.ScrollToItem(_table.GetRoot().GetFirstChild());
+                _table.ScrollToItem(_table.GetRoot().GetChild(iteration%2==0?0:PageSize-1));
                 await ToSignal(GetTree().CreateTimer(.08),SceneTreeTimer.SignalName.Timeout);
             }
             _measuring=false;
@@ -249,7 +249,12 @@ public partial class DenseUi : VBoxContainer
             await ToSignal(RenderingServer.Singleton,RenderingServer.SignalName.FramePostDraw);
             GetViewport().GetTexture().GetImage().SavePng("user://qg02-render.png");
         }
-        System.IO.File.WriteAllText(ProjectSettings.GlobalizePath("user://qg02.json"),JsonSerializer.Serialize(new { fixture="synthetic-arithmetic-v1",checks=_checks,results=_results }, new JsonSerializerOptions { WriteIndented=true }));
+        System.IO.File.WriteAllText(ProjectSettings.GlobalizePath("user://qg02.json"),JsonSerializer.Serialize(new {
+            fixture="synthetic-arithmetic-v1", debugBuild=OS.IsDebugBuild(),
+            godot=Engine.GetVersionInfo()["string"].AsString(),
+            runtime=System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+            display=DisplayServer.GetName(), checks=_checks,results=_results
+        }, new JsonSerializerOptions { WriteIndented=true }));
         GD.Print($"QG02_CHECKS_PASS {_checks.Count}"); GetTree().Quit();
     }
 

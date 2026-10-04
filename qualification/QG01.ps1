@@ -1,7 +1,7 @@
 . "$PSScriptRoot/Environment.ps1"
 Invoke-Recorded 'qg01-sdk' $Dotnet @('--info')
 Invoke-Recorded 'qg01-godot' $Godot @('--version')
-Invoke-Recorded 'qg01-build' $Dotnet @('build', "$HostProject/Host.csproj", '-c', 'Debug')
+Invoke-Recorded 'qg01-build' $Dotnet @('build', "$HostProject/Host.csproj", '-c', 'Debug', '-m:1')
 Invoke-Recorded 'qg01-import' $Godot @('--headless', '--path', $HostProject, '--editor', '--quit')
 Invoke-Recorded 'qg01-debug-smoke' $Godot @('--headless', '--path', $HostProject, '--', '--smoke')
 New-Item -ItemType Directory -Force "$PSScriptRoot/artifacts/windows" | Out-Null

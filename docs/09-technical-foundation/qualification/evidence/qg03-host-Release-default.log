@@ -1,4 +1,4 @@
-﻿COMMAND: C:\Management Game\qualification/artifacts/windows/Qualification.exe --audio-driver Dummy --max-fps 30 -- --determinism --output=C:\Management Game\qualification\..\docs\09-technical-foundation\qualification\evidence\qg03/host-Release-default.json
+﻿COMMAND: C:\Management Game\qualification/artifacts/windows/Qualification.exe --audio-driver Dummy --max-fps 30 -- --determinism --output=C:\Management Game\qualification\artifacts\replay-ae7812fce56f4d258c4df113f6e3555c/host-Release-default.json
 Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
 OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
 

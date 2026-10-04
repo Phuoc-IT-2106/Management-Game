@@ -44,6 +44,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File qualification/QG03.ps1
 Exact expanded commands are in `evidence/qg03-*.log`; replay hashes are in
 `evidence/qg03/`. Script compares initial/final identity, sequence length and every
 transition, reporting the first divergent index on failure.
+The final audit changed output collection to a unique ignored directory per run,
+requires exactly eight freshly produced files, and copies evidence only after
+comparison. That full workflow was executed again successfully; no stale result
+file is needed to establish the reported matches.
 
 | Executed lane | Variants | Result |
 | --- | --- | --- |
@@ -69,6 +73,12 @@ completed outside it without source changes. Initial failure logs are retained;
 this supports an execution-environment explanation, not a proven MSBuild root cause.
 The export error scan caught Godot's misleading zero exit on managed publish
 failure and prevented testing stale output.
+
+Final build audit found `Optimize` unset for plain Microsoft.NET.Sdk projects
+under Godot's custom `ExportRelease` configuration (the Godot host SDK already
+sets it). `Directory.Build.props` now explicitly enables it for that configuration.
+`qg03-domain-export-optimization.log` records `true`; the full parity matrix and
+contract checks were rerun after this correction, retaining the same hashes.
 
 **FACT:** No second qualified Windows machine, CPU architecture matrix or runtime
 upgrade was tested; those checks remain INCONCLUSIVE. Resume tests use immutable

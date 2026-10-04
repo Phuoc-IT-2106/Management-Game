@@ -1,4 +1,4 @@
-﻿COMMAND: C:\Management Game\qualification\.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe --headless --path C:\Management Game\qualification\Host --max-fps 144 -- --determinism --output=C:\Management Game\qualification\..\docs\09-technical-foundation\qualification\evidence\qg03/host-Debug-varied.json --tr --log --reverse
+﻿COMMAND: C:\Management Game\qualification\.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe --headless --path C:\Management Game\qualification\Host --max-fps 144 -- --determinism --output=C:\Management Game\qualification\artifacts\replay-ae7812fce56f4d258c4df113f6e3555c/host-Debug-varied.json --tr --log --reverse
 Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
 
 revision=1 hash=a2204502351059df10dae898d03f8900a2af923484b18a6852143a845d98c2d0

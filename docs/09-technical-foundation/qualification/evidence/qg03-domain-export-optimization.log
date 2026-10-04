@@ -1,0 +1,5 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe msbuild C:\Management Game\qualification/Domain/Domain.csproj -p:Configuration=ExportRelease -getProperty:Optimize
+true
+
+
+EXIT: 0

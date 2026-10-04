@@ -1,4 +1,4 @@
-﻿COMMAND: C:\Management Game\qualification\.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe --headless --path C:\Management Game\qualification\Host --max-fps 15 -- --determinism --output=C:\Management Game\qualification\..\docs\09-technical-foundation\qualification\evidence\qg03/host-Debug-default.json
+﻿COMMAND: C:\Management Game\qualification\.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe --headless --path C:\Management Game\qualification\Host --max-fps 15 -- --determinism --output=C:\Management Game\qualification\artifacts\replay-ae7812fce56f4d258c4df113f6e3555c/host-Debug-default.json
 Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
 
 QG03_HOST_PASS 32 a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa

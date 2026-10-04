@@ -17,12 +17,12 @@
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Application.dll",
         "Bytes":  8192,
-        "SHA256":  "709623610040F637B6CE14BFD8607C591E2EC8B953B0AEF6DF98A25445F29E1A"
+        "SHA256":  "FF424E4498758F635FB25CF3DF8C49897043CFE22B4A18D3D24B146719E264F7"
     },
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Application.pdb",
-        "Bytes":  12236,
-        "SHA256":  "A1C257738579F13CA8CA2666CEFB8C145DB1A8EB195DC8D7144F2140B54BCC8B"
+        "Bytes":  12296,
+        "SHA256":  "6AFCB9E75B4CE89280251F673CFFAFA08FBEC5DC1E565DA4D0AE17DE0C3A9FD9"
     },
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\clretwrc.dll",
@@ -57,12 +57,12 @@
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Domain.dll",
         "Bytes":  20992,
-        "SHA256":  "A90BE8DD9E13D35520A7BF821617C0AF3EE1F5F4BB4B7DEBC16634A6C1455C0C"
+        "SHA256":  "D929801E8823A98BE381A80514ABA381CB2FA8A833F25F202BF81809BD4733BF"
     },
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Domain.pdb",
-        "Bytes":  14488,
-        "SHA256":  "75197C73780A8294B8763AEB6176B05D7138B6965832486B2F7E61750E1CB728"
+        "Bytes":  14808,
+        "SHA256":  "73C118FB4E4DC393DAB8F5935C6A0CD03E3E44FFADF6E1FF60130942F42E385B"
     },
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\GodotSharp.dll",
@@ -77,12 +77,12 @@
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.dll",
         "Bytes":  64000,
-        "SHA256":  "4784454798D84E84E94919021B2155EF71529472BB92C364DA503EE2EF178CB7"
+        "SHA256":  "DE55989488DB1C3942A1573ACE3E859FD60E0C556274AC329DCD42C9CB9CF848"
     },
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.pdb",
         "Bytes":  34956,
-        "SHA256":  "1ED387FAE0CCB56B496CFBB4368A6EA47FA68765D3826ADB0B958D3EF595D8D3"
+        "SHA256":  "23D242F68FC72E8E302FB8A004A1005CE3E19BC557D84D6AE8A064188CB4CB95"
     },
     {
         "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.runtimeconfig.json",

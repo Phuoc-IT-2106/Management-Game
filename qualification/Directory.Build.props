@@ -4,5 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Deterministic>true</Deterministic>
+    <!-- Plain Microsoft.NET.Sdk projects also receive Godot's configuration name. -->
+    <Optimize Condition="'$(Configuration)' == 'ExportRelease'">true</Optimize>
   </PropertyGroup>
 </Project>

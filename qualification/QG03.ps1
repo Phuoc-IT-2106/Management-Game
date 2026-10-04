@@ -1,5 +1,5 @@
 . "$PSScriptRoot/Environment.ps1"
-$resultsDir = Join-Path $Evidence 'qg03'
+$resultsDir = Join-Path "$PSScriptRoot/artifacts" ('replay-' + [Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force $resultsDir | Out-Null
 foreach ($configuration in @('Debug','Release')) {
     Invoke-Recorded "qg03-build-$configuration" $Dotnet @('build', "$PSScriptRoot/Runner/Runner.csproj", '-c', $configuration, '-m:1')
@@ -26,6 +26,7 @@ foreach ($variant in @('default','varied')) {
     Invoke-Recorded "qg03-host-Release-$variant" "$PSScriptRoot/artifacts/windows/Qualification.exe" $options
 }
 $baseline=Get-Content -Raw "$resultsDir/runner-Debug-default.json" | ConvertFrom-Json
+if (@(Get-ChildItem $resultsDir -Filter '*.json').Count -ne 8) { throw 'Expected exactly eight fresh replay results' }
 $comparison = foreach ($file in Get-ChildItem $resultsDir -Filter '*.json') {
     $result=Get-Content -Raw $file.FullName | ConvertFrom-Json
     if ($result.InitialHash -ne $baseline.InitialHash -or $result.FinalHash -ne $baseline.FinalHash -or $result.Hashes.Count -ne 32) { throw "Replay identity mismatch: $($file.Name)" }
@@ -33,4 +34,9 @@ $comparison = foreach ($file in Get-ChildItem $resultsDir -Filter '*.json') {
     [pscustomobject]@{Run=$file.Name;Transitions=32;Match=$true;FinalHash=$result.FinalHash}
 }
 $comparison | ConvertTo-Json | Out-File -Encoding utf8 "$Evidence/qg03-comparison.json"
+New-Item -ItemType Directory -Force "$Evidence/qg03" | Out-Null
+Copy-Item "$resultsDir/*.json" "$Evidence/qg03/"
+Get-ChildItem "$PSScriptRoot/artifacts/windows" -Recurse -File | ForEach-Object {
+    [pscustomobject]@{Path=$_.FullName.Substring($PSScriptRoot.Length+1);Bytes=$_.Length;SHA256=(Get-FileHash $_.FullName -Algorithm SHA256).Hash}
+} | ConvertTo-Json | Out-File -Encoding utf8 "$Evidence/qg03-artifact-manifest.json"
 $comparison | Format-Table

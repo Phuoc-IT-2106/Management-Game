@@ -1,4 +1,4 @@
-﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe C:\Management Game\qualification/Runner/bin/Release/net10.0/Runner.dll --output=C:\Management Game\qualification\..\docs\09-technical-foundation\qualification\evidence\qg03/runner-Release-default.json
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe C:\Management Game\qualification/Runner/bin/Release/net10.0/Runner.dll --output=C:\Management Game\qualification\artifacts\replay-ae7812fce56f4d258c4df113f6e3555c/runner-Release-default.json
 QG03_RUN en-US a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa
 
 

@@ -1,4 +1,4 @@
-﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe C:\Management Game\qualification/Runner/bin/Debug/net10.0/Runner.dll --output=C:\Management Game\qualification\..\docs\09-technical-foundation\qualification\evidence\qg03/runner-Debug-varied.json --tr --log --reverse
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe C:\Management Game\qualification/Runner/bin/Debug/net10.0/Runner.dll --output=C:\Management Game\qualification\artifacts\replay-ae7812fce56f4d258c4df113f6e3555c/runner-Debug-varied.json --tr --log --reverse
 QG03_RUN tr-TR a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa
 
 revision=1 hash=a2204502351059df10dae898d03f8900a2af923484b18a6852143a845d98c2d0
