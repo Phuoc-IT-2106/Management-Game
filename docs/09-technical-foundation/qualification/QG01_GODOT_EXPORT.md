@@ -107,3 +107,86 @@ prerequisites and debugger workflow before closing this gate.
 - Local ignored binaries under `qualification/artifacts/windows`; downloads under
   `qualification/.tools`. Later gates may regenerate this output; the committed
   QG-01 manifest and gate commit identify this earlier artifact precisely.
+
+## Director follow-up — 2026-10-04
+
+This section supplements the historical evidence above. The user explicitly
+limited this follow-up to the existing laptop; no external machine is available.
+**QG-01 remains INCONCLUSIVE.**
+
+### Clean-machine investigation
+
+`evidence/followup-environment*.log` records Windows 10 Pro build 19044,
+Dell Vostro 3400, i5-1135G7 (4 cores / 8 logical processors), 8,299,257,856 bytes
+physical RAM, Iris Xe driver 32.0.101.7080 and 1920x1080 / 60 Hz display.
+Windows Sandbox, VirtualBox and VMware executables were absent. HypervisorPresent
+and a running vmcompute service do **not** demonstrate an available clean Windows
+guest. System runtimes include .NET 8, 9 and 10; this host is not clean.
+
+No artifact was copied to a separate machine, no network adapter was disconnected,
+and no clean-machine launch, screenshot or exit result exists. Those fields are
+**NOT RUN / INCONCLUSIVE**, not inferred from development-host execution. The
+follow-up artifact inventory is recorded separately from historical manifests.
+
+### Debugger investigation
+
+The actual Debug build succeeded with zero warnings/errors; see
+`evidence/followup-qg01-debug-build.log`. This is build evidence only.
+Installed Visual Studio Community 2022 and Preview report 17.14.36119.2;
+VS Code reports 1.140.0, commit 07f806f999227108933c2e30515b26eecc1fda74.
+No installed VS Code C# / C# Dev Kit extension was found. Microsoft documents
+that targeting net10.0 in Visual Studio requires version 18.0 or later; this
+machine's VS 17 installation is not the supported IDE configuration for this
+candidate. No unsupported compatibility override was attempted.
+
+External debugger launch/attach, breakpoint hit, variable inspection, stepping
+and continue were **NOT RUN**. All five debugger checks remain **INCONCLUSIVE**.
+No debugger version is claimed as exercised. A supported VS Code C# debugger or
+a matching Visual Studio installation and an actual recorded session remain
+required; installation presence or a successful build cannot substitute for it.
+
+### Runtime disposition
+
+**Recommendation:** retain Godot 4.7.2.stable.mono.official.ed1daf0bf, matching
+Windows x64 templates, SDK 10.0.401 / MSBuild 18.9.11, bundled runtime 10.0.12 and
+net10.0 as the exact **qualification reproduction pin**. This recommendation is
+based on executed Debug/Release fixture compatibility and the existing QG-03/04
+evidence, not on .NET 10 being newer. No alternate target was executed in this
+follow-up, so there is no comparative evidence to select one.
+Microsoft's policy at review lists .NET 10 as LTS through November 14, 2028
+(current patch 10.0.12), whereas .NET 8/9 end support in November 2026. That
+servicing horizon is a secondary reason to continue qualifying this already-tested
+candidate; it does not establish Godot-specific compatibility or a production pin.
+
+**Production pinning is NOT recommended now.** Remaining risks are clean Windows
+native prerequisites and deployment, external debugger support, and the supported
+OS matrix. Local operation on Windows 10 Pro 19044 does not establish a supported
+production OS/toolchain combination. Reconcile the selected OS edition/build
+with Microsoft's current support matrix before acceptance; this laptop is not an
+approved target PC. Published tool support and executed fixture compatibility are
+separate claims. No SDK/runtime/build configuration has been changed.
+The current .NET 10 matrix lists Windows 10 21H2 only for Enterprise/IoT editions,
+not this Pro edition. A supported Windows 11 x64 target is a candidate for the
+pending clean-machine test, not an environment verified in this follow-up.
+
+Primary references checked during this follow-up:
+
+- [Godot C# setup and external debugger workflows](https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_basics.html).
+- [Microsoft SDK / MSBuild / Visual Studio requirements](https://learn.microsoft.com/en-us/dotnet/core/porting/versioning-sdk-msbuild-vs).
+- [.NET 10 supported operating systems](https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md).
+- [.NET support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core).
+
+See [FOLLOWUP_SUMMARY.md](FOLLOWUP_SUMMARY.md) for the final artifact, local smoke
+result, regression scope and Director disposition. None closes the clean-machine
+or debugger sub-check.
+
+The final local follow-up smoke executed
+`qualification/artifacts/followup/Qualification.exe --audio-driver Dummy -- --smoke --capture`.
+It rendered, loaded .NET 10.0.12 from its own `data_Host_windows_x86_64` directory,
+emitted `QG01_INTERACTION_PASS` after the C# write/read, and exited 0. The inspected
+`evidence/followup-reuse-smoke.png` displays **Read-back verified**. Exact command,
+runtime directory and exit are in `followup-reuse-smoke.log`; 199 files totaling
+195,918,925 bytes are inventoried in `followup-reuse-manifest.json`.
+This additional development-host evidence does not change QG-01's INCONCLUSIVE
+status. No separate-machine copied inventory, launch, offline run or debugger
+breakpoint evidence is claimed.

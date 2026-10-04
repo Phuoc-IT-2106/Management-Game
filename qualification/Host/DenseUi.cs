@@ -14,6 +14,9 @@ public partial class DenseUi : VBoxContainer
     private HFlowContainer _toolbar = null!;
     private int _page, _column, _queryVersion, _boundVersion, _selected;
     private bool _descending, _binding;
+    private bool _reuseRows;
+    private readonly List<TreeItem> _pageItems = new(PageSize);
+    private readonly List<string[]> _pageCells = new(PageSize);
     private string _search = "";
     private readonly List<double> _frames = [];
     private readonly List<object> _results = [];
@@ -27,6 +30,8 @@ public partial class DenseUi : VBoxContainer
     {
         try
         {
+            // Reference arm retained only for reproducible qualification A/B runs.
+            _reuseRows = !OS.GetCmdlineUserArgs().Contains("--rebuild-rows");
             SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
             AddChild(new Label { Text = "QG-02 | Synthetic data only | 100 rows per page | click headings to sort", AutowrapMode=TextServer.AutowrapMode.WordSmart });
             var toolbar = _toolbar = new HFlowContainer();
@@ -55,6 +60,7 @@ public partial class DenseUi : VBoxContainer
             MakeTable();
             _rows = SyntheticTable.Generate(1000);
             await Refresh();
+            if (OS.GetCmdlineUserArgs().Contains("--profile")) await ProfileWorkflows();
             if (OS.GetCmdlineUserArgs().Contains("--benchmark")) await Benchmark();
             if (OS.GetCmdlineUserArgs().Contains("--layout-check")) await LayoutCheck();
         }
@@ -63,6 +69,7 @@ public partial class DenseUi : VBoxContainer
 
     private void MakeTable()
     {
+        _pageItems.Clear(); _pageCells.Clear();
         _table = new Tree { Columns = 12, HideRoot = true, ColumnTitlesVisible = true,
             SelectMode = Tree.SelectModeEnum.Row, SizeFlagsVertical = SizeFlags.ExpandFill,
             SizeFlagsHorizontal = SizeFlags.ExpandFill };
@@ -98,7 +105,7 @@ public partial class DenseUi : VBoxContainer
         _table.ItemActivated -= Act;
     }
 
-    public override void _Process(double delta) { if (_measuring) _frames.Add(delta * 1000); }
+    public override void _Process(double delta) { if (_measuring) _frames.Add(delta * 1000); ProfileFrame(delta); }
     private async void Sort(long column, long mouse) { _descending = _column == (int)column && !_descending; _column=(int)column; _page=0; await Refresh(); }
     private async void SearchChanged(string text) { _search=text; _page=0; await Refresh(150); }
     private async void FilterChanged(bool enabled) { _page=0; await Refresh(); }
@@ -113,7 +120,12 @@ public partial class DenseUi : VBoxContainer
         var time = Stopwatch.StartNew();
         if (delay > 0) await Task.Delay(delay);
         if (!IsInsideTree() || version != _queryVersion) return time.Elapsed.TotalMilliseconds;
-        var view = await Task.Run(() => SyntheticTable.Query(rows,column,descending,search,active));
+        var view = await Task.Run(() => {
+            long started = Stopwatch.GetTimestamp();
+            var result = SyntheticTable.Query(rows,column,descending,search,active);
+            if (_profileActive && !_profileLight) _profileQueryMs.Add(Stopwatch.GetElapsedTime(started).TotalMilliseconds);
+            return result;
+        });
         if (!IsInsideTree() || version != _queryVersion) return time.Elapsed.TotalMilliseconds;
         _view=view; _boundVersion=version;
         Bind();
@@ -122,20 +134,39 @@ public partial class DenseUi : VBoxContainer
 
     private void Bind()
     {
+        long bindStarted = _profileActive ? Stopwatch.GetTimestamp() : 0;
+        long bindAllocated = _profileActive ? GC.GetAllocatedBytesForCurrentThread() : 0;
         _binding=true;
-        _table.Clear();
-        var root=_table.CreateItem();
-        foreach (var row in _view.Skip(_page*PageSize).Take(PageSize))
+        if (!_reuseRows) { _table.Clear(); _pageItems.Clear(); _pageCells.Clear(); }
+        var root=_table.GetRoot() ?? _table.CreateItem();
+        _table.DeselectAll();
+        int visibleCount=Math.Min(PageSize,Math.Max(0,_view.Length-_page*PageSize));
+        while (_pageItems.Count>visibleCount) {
+            int last=_pageItems.Count-1;
+            _pageItems[last].Free(); _pageItems.RemoveAt(last); _pageCells.RemoveAt(last);
+        }
+        for(int index=0;index<visibleCount;index++)
         {
-            var item=_table.CreateItem(root);
+            var row=_view[_page*PageSize+index];
+            if(index==_pageItems.Count) { _pageItems.Add(_table.CreateItem(root)); _pageCells.Add([]); }
+            var item=_pageItems[index];
             string[] cells=row.Cells();
-            for (int c=0;c<12;c++) { item.SetText(c,cells[c]); item.SetTooltipText(c,cells[c]); }
+            string[] previous=_pageCells[index];
+            for (int c=0;c<12;c++) {
+                if(previous.Length==0 || previous[c]!=cells[c]) { item.SetText(c,cells[c]); item.SetTooltipText(c,cells[c]); }
+            }
+            _pageCells[index]=cells;
             item.SetMetadata(0,row.Id);
             if (row.Id==_selected) item.Select(0);
         }
+        if(visibleCount>0) _table.ScrollToItem(_pageItems[0]);
         _binding=false;
         _action.Disabled = _boundVersion != _queryVersion || !_view.Any(r=>r.Id==_selected);
         _status.Text=$"{_view.Length:N0} results / page {_page+1} / selected ID {_selected} / revision {_boundVersion}";
+        if (_profileActive && !_profileLight) {
+            _profileBindMs.Add(Stopwatch.GetElapsedTime(bindStarted).TotalMilliseconds);
+            _profileBindBytes.Add(GC.GetAllocatedBytesForCurrentThread()-bindAllocated);
+        }
     }
 
     private void Selected()
@@ -196,6 +227,15 @@ public partial class DenseUi : VBoxContainer
             Input.ParseInputEvent(new InputEventKey { Keycode=Key.Enter, Pressed=true });
             Input.ParseInputEvent(new InputEventKey { Keycode=Key.Enter, Pressed=false });
             await Frames(); Check(_lastActionId==1 && _actionCount==before+1,$"{count}: keyboard activation exactly once");
+            _page=1; Bind();
+            Check(_table.GetSelected()==null,$"{count}: reused slot does not inherit off-page selection");
+            Check((int)_table.GetRoot().GetFirstChild().GetMetadata(0)==101 && _table.GetRoot().GetFirstChild().GetText(0)=="101",$"{count}: reused text and identity match page");
+            _search="Fixture 000017"; _page=0; await Refresh();
+            Check(_table.GetRoot().GetChildCount()==1 && (int)_table.GetRoot().GetFirstChild().GetMetadata(0)==17,$"{count}: shrinking page has no ghost rows");
+            _search="does-not-exist"; await Refresh();
+            Check(_table.GetRoot().GetChildCount()==0,$"{count}: empty result removes selectable rows");
+            _search=""; await Refresh();
+            Check(_table.GetRoot().GetChildCount()==PageSize,$"{count}: repopulated page remains bounded");
             var timings=new List<double>();
             _frames.Clear(); _measuring=true;
             for(int i=0;i<30;i++) { _column=i%12; _descending=i%2==0; _filter.SetPressedNoSignal(i%3==0); timings.Add(await Refresh()); await Frames(); }

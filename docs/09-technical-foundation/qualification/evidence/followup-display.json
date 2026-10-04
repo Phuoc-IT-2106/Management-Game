@@ -1,0 +1,8 @@
+{
+    "Dpi":  144,
+    "ScalePercent":  150,
+    "MonitorCount":  1,
+    "Source":  "GetDpiForSystem with per-monitor-aware thread; no OS settings changed",
+    "PhysicalInput":  "NOT RUN",
+    "MixedMonitor":  "Unavailable: one monitor"
+}

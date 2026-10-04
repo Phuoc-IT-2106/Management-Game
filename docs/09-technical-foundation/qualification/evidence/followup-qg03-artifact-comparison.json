@@ -1,0 +1,798 @@
+﻿[
+    {
+        "Path":  "artifacts\\windows\\Qualification.console.exe",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\Qualification.exe",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\Qualification.pck",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Application.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Application.pdb",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\clretwrc.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\clrgc.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\clrgcexp.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\clrjit.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\coreclr.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\createdump.exe",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Domain.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Domain.pdb",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\GodotSharp.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.deps.json",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.pdb",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Host.runtimeconfig.json",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\hostfxr.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\hostpolicy.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Microsoft.CSharp.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Microsoft.DiaSymReader.Native.amd64.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Microsoft.VisualBasic.Core.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Microsoft.VisualBasic.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Microsoft.Win32.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\Microsoft.Win32.Registry.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\mscordaccore.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\mscordaccore_amd64_amd64_10.0.1226.42308.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\mscordbi.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\mscorlib.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\mscorrc.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\msquic.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\netstandard.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.AppContext.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Buffers.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Collections.Concurrent.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Collections.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Collections.Immutable.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Collections.NonGeneric.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Collections.Specialized.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ComponentModel.Annotations.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ComponentModel.DataAnnotations.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ComponentModel.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ComponentModel.EventBasedAsync.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ComponentModel.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ComponentModel.TypeConverter.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Configuration.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Console.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Core.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Data.Common.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Data.DataSetExtensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Data.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.Contracts.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.Debug.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.DiagnosticSource.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.FileVersionInfo.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.Process.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.StackTrace.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.TextWriterTraceListener.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.Tools.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.TraceSource.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Diagnostics.Tracing.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Drawing.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Drawing.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Dynamic.Runtime.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Formats.Asn1.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Formats.Tar.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Globalization.Calendars.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Globalization.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Globalization.Extensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Compression.Brotli.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Compression.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Compression.FileSystem.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Compression.Native.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Compression.ZipFile.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.FileSystem.AccessControl.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.FileSystem.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.FileSystem.DriveInfo.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.FileSystem.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.FileSystem.Watcher.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.IsolatedStorage.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.MemoryMappedFiles.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Pipelines.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Pipes.AccessControl.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.Pipes.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.IO.UnmanagedMemoryStream.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Linq.AsyncEnumerable.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Linq.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Linq.Expressions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Linq.Parallel.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Linq.Queryable.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Memory.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Http.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Http.Json.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.HttpListener.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Mail.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.NameResolution.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.NetworkInformation.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Ping.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Quic.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Requests.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Security.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.ServerSentEvents.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.ServicePoint.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.Sockets.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.WebClient.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.WebHeaderCollection.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.WebProxy.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.WebSockets.Client.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Net.WebSockets.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Numerics.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Numerics.Vectors.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ObjectModel.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Private.CoreLib.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Private.DataContractSerialization.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Private.Uri.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Private.Xml.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Private.Xml.Linq.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.DispatchProxy.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.Emit.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.Emit.ILGeneration.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.Emit.Lightweight.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.Extensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.Metadata.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Reflection.TypeExtensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Resources.Reader.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Resources.ResourceManager.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Resources.Writer.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.CompilerServices.Unsafe.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.CompilerServices.VisualC.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Extensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Handles.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.InteropServices.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.InteropServices.JavaScript.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.InteropServices.RuntimeInformation.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Intrinsics.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Loader.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Numerics.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Serialization.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Serialization.Formatters.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Serialization.Json.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Serialization.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Runtime.Serialization.Xml.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.AccessControl.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Claims.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.Algorithms.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.Cng.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.Csp.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.Encoding.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.OpenSsl.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.Primitives.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Cryptography.X509Certificates.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Principal.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.Principal.Windows.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Security.SecureString.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ServiceModel.Web.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ServiceProcess.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Text.Encoding.CodePages.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Text.Encoding.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Text.Encoding.Extensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Text.Encodings.Web.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Text.Json.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Text.RegularExpressions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.AccessControl.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Channels.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Overlapped.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Tasks.Dataflow.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Tasks.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Tasks.Extensions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Tasks.Parallel.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Thread.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.ThreadPool.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Threading.Timer.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Transactions.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Transactions.Local.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.ValueTuple.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Web.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Web.HttpUtility.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Windows.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.Linq.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.ReaderWriter.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.Serialization.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.XDocument.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.XmlDocument.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.XmlSerializer.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.XPath.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\System.Xml.XPath.XDocument.dll",
+        "Match":  true
+    },
+    {
+        "Path":  "artifacts\\windows\\data_Host_windows_x86_64\\WindowsBase.dll",
+        "Match":  true
+    }
+]

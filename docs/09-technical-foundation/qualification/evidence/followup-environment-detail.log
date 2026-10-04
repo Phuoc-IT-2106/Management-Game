@@ -1,0 +1,153 @@
+
+
+Manufacturer        : Dell Inc.
+Model               : Vostro 3400
+TotalPhysicalMemory : 8299257856
+HypervisorPresent   : True
+
+
+
+
+
+Name                      : 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz
+NumberOfCores             : 4
+NumberOfLogicalProcessors : 8
+
+
+
+
+
+Name                        : Intel(R) Iris(R) Xe Graphics
+DriverVersion               : 32.0.101.7080
+CurrentHorizontalResolution : 1920
+CurrentVerticalResolution   : 1080
+CurrentRefreshRate          : 60
+
+
+
+VM tooling
+
+
+Path   : C:\Windows\System32\WindowsSandbox.exe
+Exists : False
+
+
+
+
+
+Path   : C:\Program Files\Oracle\VirtualBox\VBoxManage.exe
+Exists : False
+
+
+
+
+
+Path   : C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe
+Exists : False
+
+
+
+
+
+Name   : vmcompute
+Status : Running
+
+
+
+Windows DPI registry
+
+
+Win8DpiScaling : 0
+PSPath         : Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\Control Panel\Desktop
+PSParentPath   : Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\Control Panel
+PSChildName    : Desktop
+PSDrive        : HKCU
+PSProvider     : Microsoft.PowerShell.Core\Registry
+
+
+
+
+
+DpiValue     : 1
+PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\Control Panel\Desktop\PerMonitorSettings\BOE097C0_1A_07E4_44^CC1605897CDBF021CE476C475F8C288F
+PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_CURRENT_USER\Control Panel\Desktop\PerMonitorSettings
+PSChildName  : BOE097C0_1A_07E4_44^CC1605897CDBF021CE476C475F8C288F
+PSProvider   : Microsoft.PowerShell.Core\Registry
+
+
+
+Debugger files
+AppCapabilitiesDesigner
+Architecture Tools
+Asal
+CallHierarchy
+ClientDiagnostics
+CMake
+CodeAnalysis
+Commands
+Connected
+CS
+DesignTools
+Diagnostics
+EBF
+Editor
+Editorconfig
+Editors
+EFTools
+ErrorList
+Extensibility
+ExtensibilityProject
+External Tools
+FSharp
+FSharpSdk
+HotReload
+IceCap
+Identity
+IdentityGS
+IntelliTrace
+Interactive
+InteractiveWindow
+JSDiagnostics
+Language
+LanguageServer
+Linux
+Markdown
+MDD
+Microsoft.VisualStudio.Copilot.Contracts
+NavigateTo
+NuGet
+NuGetRecommender
+ObjectBrowser
+OpenFolder
+OpenTelemetry
+Performance Tools
+ProductUpdate
+Project
+ProjectServices
+ProjectSystemQuery
+ProjectWizards
+RazorLanguageServices
+ReferenceManager
+Search
+ServiceHub
+TeamFoundation
+Terminal
+TestGeneration
+TestWindow
+TextMate
+TSServer
+TypeScript
+VBCSharp
+VC
+VisualStudio
+VSLog
+VSReliability
+VSTelemetry
+Web
+WebClient
+Windows Forms Designer Services
+Windows Forms Designer UI
+Windows Forms Integration Design
+Windows.Forms
+XamlDiagnostics
+XamlLanguageService

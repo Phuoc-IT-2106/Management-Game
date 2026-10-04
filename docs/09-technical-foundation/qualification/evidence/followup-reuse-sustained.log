@@ -1,0 +1,11 @@
+﻿COMMAND: C:\Management Game\qualification\artifacts\followup\Qualification.exe --audio-driver Dummy -- --ui --benchmark
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+QG02_DATASET 1000 query_p95_ms=33.153 frame_p95_ms=23.258 controls=11
+QG02_DATASET 10000 query_p95_ms=54.963 frame_p95_ms=22.222 controls=11
+QG02_DATASET 100000 query_p95_ms=124.021 frame_p95_ms=24.265 controls=11
+QG02_CHECKS_PASS 51
+
+
+EXIT: 0

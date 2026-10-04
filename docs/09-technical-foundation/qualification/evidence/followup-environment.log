@@ -1,0 +1,79 @@
+
+Caption                  Version    BuildNumber
+-------                  -------    -----------
+Microsoft Windows 10 Pro 10.0.19044 19044
+
+
+
+Microsoft.AspNetCore.App 8.0.16 [C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App]
+Microsoft.AspNetCore.App 9.0.5 [C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App]
+Microsoft.NETCore.App 8.0.16 [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]
+Microsoft.NETCore.App 8.0.23 [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]
+Microsoft.NETCore.App 9.0.5 [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]
+Microsoft.NETCore.App 9.0.7 [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]
+Microsoft.NETCore.App 10.0.11 [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]
+Microsoft.WindowsDesktop.App 8.0.16 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]
+Microsoft.WindowsDesktop.App 8.0.23 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]
+Microsoft.WindowsDesktop.App 9.0.5 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]
+Microsoft.WindowsDesktop.App 9.0.7 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]
+Microsoft.WindowsDesktop.App 10.0.11 [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]
+[
+  {
+    "instanceId": "0a45d9ef",
+    "installDate": "2025-05-22T04:00:00Z",
+    "installationName": "VisualStudio/17.14.1+36119.2",
+    "installationPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community",
+    "installationVersion": "17.14.36119.2",
+    "productId": "Microsoft.VisualStudio.Product.Community",
+    "productPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
+    "state": 4294967295,
+    "isComplete": true,
+    "isLaunchable": true,
+    "isPrerelease": false,
+    "isRebootRequired": false,
+    "displayName": "Visual Studio Community 2022",
+    "description": "Powerful IDE, free for students, open-source contributors, and individuals",
+    "channelId": "VisualStudio.17.Release",
+    "channelUri": "https://aka.ms/vs/17/release/channel",
+    "enginePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\resources\\app\\ServiceHub\\Services\\Microsoft.VisualStudio.Setup.Service",
+    "installedChannelId": "VisualStudio.17.Release",
+    "installedChannelUri": "https://aka.ms/vs/17/release/channel",
+    "releaseNotes": "https://docs.microsoft.com/en-us/visualstudio/releases/2022/release-notes-v17.14#17.14.1",
+    "resolvedInstallationPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community",
+    "thirdPartyNotices": "https://go.microsoft.com/fwlink/?LinkId=661288",
+    "updateDate": "2025-05-22T04:00:00.2203522Z",
+    "catalog": {
+      "buildBranch": "d17.14",
+      "buildVersion": "17.14.36119.2",
+      "id": "VisualStudio/17.14.1+36119.2",
+      "localBuild": "build-lab",
+      "manifestName": "VisualStudio",
+      "manifestType": "installer",
+      "productDisplayVersion": "17.14.1",
+      "productLine": "Dev17",
+      "productLineVersion": "2022",
+      "productMilestone": "RTW",
+      "productMilestoneIsPreRelease": "False",
+      "productName": "Visual Studio",
+      "productPatchVersion": "1",
+      "productPreReleaseMilestoneSuffix": "1.0",
+      "productSemanticVersion": "17.14.1+36119.2",
+      "requiredEngineVersion": "3.14.2075.50697"
+    },
+    "properties": {
+      "campaignId": "2060:82a1ffe078bb419fa46cb4a4122bcb53",
+      "channelManifestId": "VisualStudio.17.Release/17.14.1+36119.2",
+      "includeRecommended": "1",
+      "nickname": "",
+      "setupEngineFilePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\setup.exe"
+    }
+  }
+]
+
+
+
+Community
+Preview
+1.140.0
+07f806f999227108933c2e30515b26eecc1fda74
+x64

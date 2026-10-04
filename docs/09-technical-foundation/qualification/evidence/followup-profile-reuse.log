@@ -1,0 +1,32 @@
+﻿COMMAND: C:\Management Game\qualification\artifacts\followup\Qualification.exe --audio-driver Dummy -- --ui --profile --profile-output=C:\Management Game\qualification\..\docs\09-technical-foundation\qualification\evidence/followup-profile-reuse.json
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+PROFILE 1000 idle delta_p95=16.667 wall_p95=17.140 bind_p95=0.000
+PROFILE 1000 paging delta_p95=16.667 wall_p95=18.707 bind_p95=17.248
+PROFILE 1000 scrolling delta_p95=16.667 wall_p95=17.241 bind_p95=0.000
+PROFILE 1000 sorting delta_p95=16.667 wall_p95=33.656 bind_p95=28.764
+PROFILE 1000 filtering delta_p95=31.332 wall_p95=49.207 bind_p95=32.799
+PROFILE 1000 search-binding delta_p95=16.667 wall_p95=19.329 bind_p95=0.537
+PROFILE 1000 row-rebuild-binding delta_p95=16.667 wall_p95=17.014 bind_p95=0.679
+PROFILE 1000 resize-layout delta_p95=16.667 wall_p95=21.700 bind_p95=0.000
+PROFILE 10000 idle delta_p95=16.667 wall_p95=18.031 bind_p95=0.000
+PROFILE 10000 paging delta_p95=16.667 wall_p95=18.455 bind_p95=14.980
+PROFILE 10000 scrolling delta_p95=16.667 wall_p95=17.521 bind_p95=0.000
+PROFILE 10000 sorting delta_p95=16.667 wall_p95=33.442 bind_p95=19.163
+PROFILE 10000 filtering delta_p95=16.667 wall_p95=33.545 bind_p95=29.352
+PROFILE 10000 search-binding delta_p95=16.667 wall_p95=19.605 bind_p95=0.840
+PROFILE 10000 row-rebuild-binding delta_p95=16.667 wall_p95=17.075 bind_p95=0.752
+PROFILE 10000 resize-layout delta_p95=17.863 wall_p95=23.669 bind_p95=0.000
+PROFILE 100000 idle delta_p95=16.667 wall_p95=17.012 bind_p95=0.000
+PROFILE 100000 paging delta_p95=21.186 wall_p95=34.901 bind_p95=29.915
+PROFILE 100000 scrolling delta_p95=16.667 wall_p95=17.081 bind_p95=0.000
+PROFILE 100000 sorting delta_p95=18.519 wall_p95=46.197 bind_p95=32.806
+PROFILE 100000 filtering delta_p95=30.703 wall_p95=48.358 bind_p95=31.493
+PROFILE 100000 search-binding delta_p95=16.667 wall_p95=19.943 bind_p95=2.743
+PROFILE 100000 row-rebuild-binding delta_p95=16.667 wall_p95=17.109 bind_p95=2.053
+PROFILE 100000 resize-layout delta_p95=17.121 wall_p95=23.960 bind_p95=0.000
+QG02_PROFILE_COMPLETE
+
+
+EXIT: 0

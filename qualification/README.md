@@ -14,6 +14,11 @@ recommendation. No production runtime choice is made by these fixtures.
 
 Entry point: [Director qualification summary](../docs/09-technical-foundation/qualification/QUALIFICATION_SUMMARY.md).
 
+Bounded QG-01/QG-02 follow-up: [Director follow-up summary](../docs/09-technical-foundation/qualification/FOLLOWUP_SUMMARY.md).
+Use `Followup.ps1` for separate follow-up evidence; `AuditFollowup.py` verifies the
+locally retained evidence/artifact statistics and hashes. The historical gate
+scripts above/below retain their original evidence names.
+
 ```powershell
 ./Provision.ps1
 ./QG01.ps1
