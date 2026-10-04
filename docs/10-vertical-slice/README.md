@@ -17,3 +17,12 @@ approved a labeled fictional 5v5 development fixture in this task.
 Documents: [scope](VERTICAL_SLICE_SCOPE.md), [plan](IMPLEMENTATION_PLAN.md),
 [architecture](ARCHITECTURE_MAPPING.md), [content](DATA_SCOPE.md),
 [tests](TEST_PLAN.md), [evidence](VERIFICATION.md), [questions](OPEN_QUESTIONS.md).
+
+## Company UX foundation — Director review
+
+The [company UX foundation](ui-ux-foundation/README.md) is a documentation-only
+Phase 5 proposal: company identity and context, separate corporate functions and
+operating portfolio, contextual decisions, component/design-system governance
+and incremental presentation migration. DEC-023 is PROPOSED; DEC-001–022 remain
+canonical. The existing functional client remains an internal engineering path.
+This package neither implements the redesign nor changes gameplay or QG history.

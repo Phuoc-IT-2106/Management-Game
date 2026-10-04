@@ -855,3 +855,64 @@ Affected Systems:
 - distribution and release gates
 - prototype disposition
 
+---
+
+### DEC-023 — Company-First UX Architecture
+Date: 2026-10-04
+Status: Proposed
+Approval owner: Project Director.
+Authority: Director's bounded Phase 5 UX foundation brief authorizes PLAN / SPEC
+and a draft decision. Detailed architecture acceptance is not inferred.
+
+Context:
+DEC-003/008 already establish company success and company-first long-term identity.
+The current Phase 5 client presents dashboard/team/function tabs and lacks a full
+player-defined organization identity contract. Future presentation needs durable
+company context without expanding the current gameplay envelope.
+
+Proposed decision:
+- The player-controlled company is the highest presentation context; competitive
+  teams are owned operating units.
+- Organization name, abbreviation, emblem reference and primary/secondary identity
+  colors are configurable campaign data exposed through approved read models.
+  The game prescribes no canonical player-company name, logo or color scheme.
+- Corporate functions and operating portfolios are distinct, connected axes.
+  Esports is the first operating domain, not the permanent presentation root.
+- Primary UX uses company context, situations, contextual workspaces,
+  entities/documents, affairs/time and meaningful commitments. Tables and charts
+  remain tools; dashboards/card grids do not define every domain.
+- Shared semantic tokens, components and reviewed screen blueprints govern UI.
+  Player branding cannot replace system status, focus or readability semantics.
+- Production workflows work with text/symbols and do not require bespoke character
+  art or AI-generated portraits. Final aesthetic choices require separate review.
+- Existing Domain/Application, gameplay, deterministic execution, ownership,
+  outcomes and save/load remain valid unless separately superseded. Current UI
+  remains internal until each replacement is verified.
+
+Alternatives:
+- Retain dashboard/tab navigation as the permanent product identity.
+- Require an illustrated or 3D headquarters.
+- Build all future corporate modules or a generic UI/graph framework immediately.
+
+Reasoning:
+The proposed model expresses accepted CEO/company-first direction while preserving
+one-company/one-development-discipline/one-primary-team Phase 5 scope. Reusable
+semantics and optional art are practical for one developer and AI-assisted work.
+
+Consequences:
+If accepted, the [UX foundation package](../10-vertical-slice/ui-ux-foundation/README.md)
+governs subsequent presentation blueprints. Identity/read-model gaps, fixture
+renaming and versioned persistence effects require bounded follow-up implementation.
+No future division, final balance, full branding editor, UI demo or production
+redesign is implemented by this documentation task. This proposal supersedes no
+accepted decision, reopens no Phase 4 gate and changes no QG result or DV obligation.
+Migration/reversal cost is contained by retaining the internal client and unchanged
+Application commands until presentation replacements are verified.
+
+Affected Systems:
+- product information architecture and navigation
+- company identity presentation and future campaign initialization/DTO extension
+- UI design tokens, component contracts and AI implementation workflow
+- affairs, documents, decision workspaces and visual verification
+- incremental Phase 5 presentation migration
+
