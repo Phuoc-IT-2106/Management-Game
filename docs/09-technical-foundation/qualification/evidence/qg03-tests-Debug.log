@@ -1,0 +1,82 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe C:\Management Game\qualification/Runner/bin/Debug/net10.0/Runner.dll --tests
+PASS RNG independent SHA256 golden vector
+PASS logging and insertion ordering
+PASS culture invariance
+PASS seed changes outcome
+PASS exact retry idempotent
+PASS conflicting receipt rejected
+PASS stale command rejected
+PASS rejections preserve committed state
+PASS overflow aborts whole transaction
+PASS immutable boundary resume 0
+PASS immutable boundary resume 1
+PASS immutable boundary resume 2
+PASS immutable boundary resume 3
+PASS immutable boundary resume 4
+PASS immutable boundary resume 5
+PASS immutable boundary resume 6
+PASS immutable boundary resume 7
+PASS immutable boundary resume 8
+PASS immutable boundary resume 9
+PASS immutable boundary resume 10
+PASS immutable boundary resume 11
+PASS immutable boundary resume 12
+PASS immutable boundary resume 13
+PASS immutable boundary resume 14
+PASS immutable boundary resume 15
+PASS immutable boundary resume 16
+PASS immutable boundary resume 17
+PASS immutable boundary resume 18
+PASS immutable boundary resume 19
+PASS immutable boundary resume 20
+PASS immutable boundary resume 21
+PASS immutable boundary resume 22
+PASS immutable boundary resume 23
+PASS immutable boundary resume 24
+PASS immutable boundary resume 25
+PASS immutable boundary resume 26
+PASS immutable boundary resume 27
+PASS immutable boundary resume 28
+PASS immutable boundary resume 29
+PASS immutable boundary resume 30
+PASS immutable boundary resume 31
+PASS immutable boundary resume 32
+PASS Domain assembly reference allowlist
+DOMAIN_REFERENCES System.Collections,System.Collections.Immutable,System.Linq,System.Memory,System.Runtime,System.Security.Cryptography,System.Text.Json
+RNG_VECTOR 15711650815429184693
+QG03_TESTS_PASS 43
+
+revision=1 hash=a2204502351059df10dae898d03f8900a2af923484b18a6852143a845d98c2d0
+revision=2 hash=800d6c329ab9e3d1f25f88e570b63d895a0bb6443d68cc67d4ea83b59c8f9a91
+revision=3 hash=a6625fffe4c429a8b2a780ec855520fb41c902793a9c92838b5baa05ad3af770
+revision=4 hash=c23209f408333cda49a8ae4c9605e3ff5d3a8d12d61c6ac65e702a0e94fc3063
+revision=5 hash=8c9aae6c86111e21fceec798114fdf11dc7a3cf4bec3c8027bac6bcfc7e68d9e
+revision=6 hash=57c674d0e123471a538120d86a5168ca611b731d8380f7b30d032c90694a4586
+revision=7 hash=74fb4bef76ecd7b758bf2cdaf36068752972e5b17c13e797c494921976860ed8
+revision=8 hash=ad3df4aa11d135767cb611adce70a5d5f1ad36687749afadeeb5fe18decf3276
+revision=9 hash=ac03998443659fa140e04bd46f4e84bfddb41192b344eeb0f80aaaeb7334d123
+revision=10 hash=6cbaa69335a3f17c385d602c18e31a2abba0db11da99b807d272449e78bf95a3
+revision=11 hash=5042d5a7dc0ed79dff5cadff7a436f44caae0d8bbf72e8bb8c26f5a08bf090a2
+revision=12 hash=a02764f5d7aed9f127a7dbe7733f5fcd89111dbd0aa88c2de787a5db0c9f1282
+revision=13 hash=14e6afa327482188ffce7b756ed36b36d36b3a2cf89110783493a9c2b5b60676
+revision=14 hash=6021446ad8a87357ac875d21040e3615a19cc3067d6a409f25133f6c89c91537
+revision=15 hash=cd3b6cca0136f39748361d8757d3a1b03fd71fb4d1a882786745a41c2743f3cc
+revision=16 hash=ec538cfce8a6bc9b7d4046c81df118224ce106eb7b76ad65a6606cdcbed8b7e3
+revision=17 hash=4053a19b438866cc87328d8d94e58dce02474327ca944e7f9113b8e63894dbdb
+revision=18 hash=0aabcc20311ea33a5fe2db60878d78b0e7032421929a828f0ef83a3a1c0833ef
+revision=19 hash=13c68ff0fec1d77e72e4b0148ab5124653345bc360646b612147eb7bf2385b9e
+revision=20 hash=334c74e65eaca9b798367a6d6d8bb9e4d78302e6ac793286a22ad498c6464e9a
+revision=21 hash=a38ae9a57c3a46908db04caeaac7bc76e53a2f337ed66e686354c6b3dcdfef33
+revision=22 hash=c0b9b8a2c8ff0015e29919b8fbb15b9abf84ca1aea64771f9422b972d84cc2b6
+revision=23 hash=abbf303e1b1b2b96aea9649858ab0c7a56eabefc515408313210c4af9c9da839
+revision=24 hash=ccef7c446cf302edf17c5d94ac7eb46c7b07caa510da659ada96a8b933c68a8f
+revision=25 hash=48c6dd4ac54012d3be3605f5f43320c507ed09f16ecadcb7dc231c867a9abb1a
+revision=26 hash=08c17d7d304846ddabacf43d3e2d7226a4279418c53f08ff2194b6adf110fe56
+revision=27 hash=78cc6bd12aa1dd49dcf52f436c3407708e3f080c2f18ce2e49eb688a80159e73
+revision=28 hash=34adc8f03513aaa1f275fa9886d6a2d585a85fa719356f24ba308a82e0214762
+revision=29 hash=0e0c0d39914632739db2c9746a9a03f4bd4b8503e58f8b0011c3448235f6c9aa
+revision=30 hash=28d05cf53596dd8f5d6c36647624247221d8a30eb1a5afe12b4e59aa0b5c746b
+revision=31 hash=02f37b3834b475317c465693c4b3667bff46c10920b92385c3a44c4c08750e3c
+revision=32 hash=a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa
+
+EXIT: 0

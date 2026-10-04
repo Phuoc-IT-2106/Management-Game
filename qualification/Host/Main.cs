@@ -6,6 +6,11 @@ public partial class Main : Control
     private Label _status = null!;
     public override async void _Ready()
     {
+        if (OS.GetCmdlineUserArgs().Contains("--determinism"))
+        {
+            AddChild(new DeterminismHost());
+            return;
+        }
         if (OS.GetCmdlineUserArgs().Contains("--ui"))
         {
             var ui = new DenseUi();

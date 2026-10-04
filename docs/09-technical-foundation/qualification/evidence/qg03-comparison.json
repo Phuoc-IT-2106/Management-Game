@@ -1,0 +1,50 @@
+﻿[
+    {
+        "Run":  "host-Debug-default.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "host-Debug-varied.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "host-Release-default.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "host-Release-varied.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "runner-Debug-default.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "runner-Debug-varied.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "runner-Release-default.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    },
+    {
+        "Run":  "runner-Release-varied.json",
+        "Transitions":  32,
+        "Match":  true,
+        "FinalHash":  "a3561cf23f1ddf7abedc0052a789db2f27d017b8ea87c2fe4e209f92135000fa"
+    }
+]

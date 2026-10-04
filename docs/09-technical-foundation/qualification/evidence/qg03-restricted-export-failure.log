@@ -1,0 +1,56 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe --headless --path C:\Management Game\qualification\Host --export-release Windows x64 C:\Management Game\qualification/artifacts/windows/Qualification.exe
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (4 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mdotnet_publish_project[22m | Started Publishing .NET project... (1 steps)[39m[0m
+[   0% ] [90m[1mdotnet_publish_project[22m | Running dotnet publish[39m[0m
+[92m[ DONE ][39m [1mdotnet_publish_project[22m
+[0m
+[   0% ] [90m[1msavepack[22m | Started Packing (102 steps)[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://DenseUi.cs[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://DeterminismHost.cs[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://Main.cs[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-bcb0d2eb5949c52b6a65bfe9de3e985b-Main.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://packages.lock.json[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://SyntheticTable.cs[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://Main.tscn.remap[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://.godot/global_script_class_cache.cfg[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://.godot/uid_cache.bin[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://project.binary[39m[0m
+[92m[ DONE ][39m [1msavepack[22m
+[0m
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+ERROR: Export .NET Project: Failed to build project. Check MSBuild panel for details.
+   at: add_message (./editor/export/editor_export_platform.h:270)
+   C# backtrace (most recent call first):
+       [0] void Godot.EditorNativeCalls.godot_icall_3_490(nint, nint, int, string, string) (/root/godot/modules/mono/glue/GodotSharp/GodotSharpEditor/Generated/EditorNativeCalls.cs:145)
+       [1] void Godot.EditorExportPlatform.AddMessage(Godot.EditorExportPlatform+ExportMessageType, string, string) (/root/godot/modules/mono/glue/GodotSharp/GodotSharpEditor/Generated/GodotObjects/EditorExportPlatform.cs:295)
+       [2] void GodotTools.Export.ExportPlugin.AddExceptionMessage(Godot.EditorExportPlatform, System.Exception) (/root/godot/modules/mono/editor/GodotTools/GodotTools/Export/ExportPlugin.cs:113)
+       [3] void GodotTools.Export.ExportPlugin._ExportBegin(System.String[], bool, string, uint) (/root/godot/modules/mono/editor/GodotTools/GodotTools/Export/ExportPlugin.cs:162)
+       [4] bool Godot.EditorExportPlugin.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharpEditor/Generated/GodotObjects/EditorExportPlugin.cs:722)
+       [5] bool GodotTools.Export.ExportPlugin.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/editor/GodotTools/GodotTools/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/GodotTools.Export.ExportPlugin_ScriptMethods.generated.cs:140)
+       [6] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+System.InvalidOperationException: Failed to build project. Check MSBuild panel for details.
+   at GodotTools.Export.ExportPlugin._ExportBeginImpl(String[] features, Boolean isDebug, String path, Int64 flags) in /root/godot/modules/mono/editor/GodotTools/GodotTools/Export/ExportPlugin.cs:line 289
+   at GodotTools.Export.ExportPlugin._ExportBegin(String[] features, Boolean isDebug, String path, UInt32 flags) in /root/godot/modules/mono/editor/GodotTools/GodotTools/Export/ExportPlugin.cs:line 162
+WARNING: Project export for preset "Windows x64" completed with warnings.
+   at: _fs_changed (editor/editor_node.cpp:1422)
+
+EXIT: 0

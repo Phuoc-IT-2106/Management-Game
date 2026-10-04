@@ -1,0 +1,16 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe build C:\Management Game\qualification\Host/Host.csproj -c Debug -m:1
+  Determining projects to restore...
+  Restored C:\Management Game\qualification\Host\Host.csproj (in 284 ms).
+  2 of 3 projects are up-to-date for restore.
+  Domain -> C:\Management Game\qualification\Domain\bin\Debug\net10.0\Domain.dll
+  Application -> C:\Management Game\qualification\Application\bin\Debug\net10.0\Application.dll
+  Host -> C:\Management Game\qualification\Host\.godot\mono\temp\bin\Debug\Host.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.90
+
+
+EXIT: 0

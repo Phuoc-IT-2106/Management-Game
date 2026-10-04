@@ -1,0 +1,15 @@
+{
+  "encoding": "NFC UTF-8 parts; signed int32 big-endian byte-length prefix; SHA256 first uint64 big-endian",
+  "parts": [
+    "rng-v1",
+    "123456789",
+    "fixture",
+    "cmd-000",
+    "adjust",
+    "0",
+    "0"
+  ],
+  "sha256": "da0aff2c38a20cb5d820e1ccb8ae896ad3b8d2ce89457808a0918127f132f168",
+  "draw": 15711650815429184693,
+  "independent_reference": "Python hashlib/struct; not Python prototype parity"
+}
