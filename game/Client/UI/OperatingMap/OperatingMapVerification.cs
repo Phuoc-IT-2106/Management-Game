@@ -42,6 +42,7 @@ public partial class OperatingMap
         Check(navigation.SituationId == "matter:sponsor" && navigation.ScopeId == MapFixtures.Business, "synthetic Space selects sponsor and affected scope");
         Check(targets["map:matter:sponsor"].Binding.Selected && targets["list:matter:sponsor"].Binding.Selected, "map/list selection synchronized by stable ID");
         ToggleMode(); await Settle(); Check(targets["list:matter:sponsor"].HasFocus(), "mode change restores same situation focus");
+        Check(mapScroll.GetGlobalRect().Encloses(targets["list:matter:sponsor"].GetGlobalRect()), $"selected list situation is visible: region={mapScroll.GetGlobalRect()} target={targets["list:matter:sponsor"].GetGlobalRect()} scroll={mapScroll.ScrollVertical}");
         openEntry.GrabFocus(); await KeyPress(Key.Enter); await Settle();
         Check(isWorkspace && navigation.Return?.SituationId == "matter:sponsor" && navigation.Return.ListMode, "sponsor keyboard entry retains origin and mode");
         await KeyPress(Key.Escape); await Settle();

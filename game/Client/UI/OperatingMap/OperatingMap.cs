@@ -241,6 +241,14 @@ public partial class OperatingMap : Control
         if (isWorkspace) return;
         navigation.ListMode = !navigation.ListMode; RefreshSelection();
         originFocus = (navigation.ListMode ? "list:" : "map:") + (navigation.SituationId ?? navigation.ScopeId); FocusTarget(originFocus);
+        // The newly visible representation needs a container layout pass before scrolling to focus.
+        RestoreModeFocus(originFocus);
+    }
+    private async void RestoreModeFocus(string key)
+    {
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        if (IsInsideTree() && !isWorkspace && key == originFocus) FocusTarget(key);
     }
     private void Enter()
     {
@@ -275,9 +283,14 @@ public partial class OperatingMap : Control
     }
     private void FocusTarget(string key)
     {
-        if (targets.TryGetValue(key, out var target) && target.IsVisibleInTree()) target.GrabFocus();
-        else if (key.StartsWith("inspector:", StringComparison.Ordinal) && navigation.Situation is not null && !isWorkspace) openEntry.GrabFocus();
-        else if (targets.TryGetValue((navigation.ListMode ? "list:" : "map:") + (navigation.SituationId ?? navigation.ScopeId), out target) && target.IsVisibleInTree()) target.GrabFocus();
+        Control? focus = null;
+        if (targets.TryGetValue(key, out var target) && target.IsVisibleInTree()) focus = target;
+        else if (key.StartsWith("inspector:", StringComparison.Ordinal) && navigation.Situation is not null && !isWorkspace) focus = openEntry;
+        else if (targets.TryGetValue((navigation.ListMode ? "list:" : "map:") + (navigation.SituationId ?? navigation.ScopeId), out target) && target.IsVisibleInTree()) focus = target;
+        if (focus is null) return;
+        focus.GrabFocus();
+        if (mapScroll.IsAncestorOf(focus)) mapScroll.EnsureControlVisible(focus);
+        if (inspectorScroll.IsAncestorOf(focus)) inspectorScroll.EnsureControlVisible(focus);
     }
     private void ApplyScenario()
     {
