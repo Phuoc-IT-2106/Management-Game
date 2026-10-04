@@ -1,0 +1,16 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  ManagementGame.Domain -> C:\Management Game\src\ManagementGame.Domain\bin\Debug\net10.0\ManagementGame.Domain.dll
+  ManagementGame.Application -> C:\Management Game\src\ManagementGame.Application\bin\Debug\net10.0\ManagementGame.Application.dll
+  ManagementGame.Infrastructure -> C:\Management Game\src\ManagementGame.Infrastructure\bin\Debug\net10.0\ManagementGame.Infrastructure.dll
+  Client -> C:\Management Game\game\Client\.godot\mono\temp\bin\Debug\Client.dll
+  Domain -> C:\Management Game\tests\Domain\bin\Debug\net10.0\Domain.dll
+  Integration -> C:\Management Game\tests\Integration\bin\Debug\net10.0\Integration.dll
+  UI -> C:\Management Game\tests\UI\bin\Debug\net10.0\UI.dll
+  Headless -> C:\Management Game\tools\Headless\bin\Debug\net10.0\Headless.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.38

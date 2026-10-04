@@ -1,0 +1,15 @@
+PASS candidate identity-neutral-Default-1-1280x720-scroll0.json
+PASS candidate interaction-warning-Default-1-1920x1080-scroll0.json
+PASS candidate identity-bright-Compact-1-1920x1080-scroll0.json
+PASS candidate identity-dark-Comfortable-1.5-1280x720-scroll0.json
+PASS candidate identity-low-contrast-Default-1-2560x1440-scroll0.json
+PASS candidate identity-identical-Default-1-1280x720-scroll1.json
+PASS candidate identity-missing-emblem-Default-1-1920x1080-scroll0.json
+PASS candidate interaction-neutral-Default-1-1280x720-scroll1.json
+PASS candidate documents-neutral-Default-1-1920x1080-scroll0.json
+PASS candidate documents-neutral-Default-1-1920x1080-scroll0.5.json
+PASS candidate documents-neutral-Default-1-1920x1080-scroll1.json
+PASS candidate branding-neutral-Default-1-1920x1080-scroll0.json
+PASS candidate branding-neutral-Default-1-1920x1080-scroll0.5.json
+PASS candidate branding-neutral-Default-1-1920x1080-scroll1.json
+UI_KIT_CAPTURE_MATRIX_PASS 14 source=d8b7ae98973a100072cfe19c494f250bac7b4f18dd1cd405842915fb4a31c939

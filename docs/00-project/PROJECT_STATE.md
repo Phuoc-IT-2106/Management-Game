@@ -1,6 +1,6 @@
 # PROJECT STATE
 
-Version: 0.7
+Version: 0.8
 Phase: Phase 5 — Vertical Slice
 Status: Phase 4 Technical Foundation Closed — Vertical Slice Authorized
 
@@ -55,10 +55,16 @@ Historical results remain QG-01 **INCONCLUSIVE**, QG-02 **FAIL** against its ori
 Canonical accepted decisions are recorded in `docs/01-governance/DECISION_LOG.md`.
 
 Current accepted range:
-- DEC-001 through DEC-022.
+- DEC-001 through DEC-023.
 
 DEC-021 closes Phase 3 and authorizes Phase 4.
 DEC-022 accepts the production technical foundation, closes Phase 4 and authorizes Phase 5 BUILD.
+DEC-023 is accepted on 2026-10-05: Company-first UX Foundation governs subsequent
+Phase 5 presentation. UX Stage 2 authorizes a provisional design system, minimal
+UI Kit and internal UI Lab. The [Stage 2 package](../10-vertical-slice/ui-kit/README.md)
+is ready for Director review, with provisional tokens/theme, 17 components and
+golden candidates; it does not constitute final visual acceptance. Phase 5 remains open; final art direction, future
+modules, production discipline and identity/save migration remain separately gated.
 
 ## Prototype Findings Carried Forward
 

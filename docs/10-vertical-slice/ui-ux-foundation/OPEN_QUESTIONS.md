@@ -5,7 +5,7 @@ package; listed gates constrain later implementation or acceptance.
 
 | ID | Question / recommendation | Owner | Required before |
 | --- | --- | --- | --- |
-| UX-Q01 | Accept or revise DEC-023 and the proposed two-axis/hybrid presentation contracts? Recommend acceptance subject to bounded prototypes | Director | Treating this package as approved architecture |
+| UX-Q01 | CLOSED 2026-10-05: Director accepted DEC-023 and Company-first presentation architecture; bounded Stage 2 UI Kit authorized | Director | Acceptance recorded; later screen and art approvals remain separate |
 | UX-Q02 | Which initial operating-map form is clearest? Recommend small ownership map with contextual function links and list/matrix equivalent; avoid general graph engine | UX lead + Director | Map prototype blueprint approval |
 | UX-Q03 | What company identity entry/edit experience is needed first? Recommend minimal initialization contract before full editor; define allowed lengths, Unicode policy, emblem types/size and missing-field behavior | Product + Technical Leads | Campaign identity implementation; player-facing demo |
 | UX-Q04 | How should new identity fields affect existing experimental saves/content identity? Recommend explicit schema boundary or tested bounded conversion, never silently mutate old fixture hashes | Persistence lead + Director | Identity serialization change; DV-08 before distribution |

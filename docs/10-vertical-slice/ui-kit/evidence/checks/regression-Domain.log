@@ -1,0 +1,5 @@
+PASS ties-to-even signed rounding
+PASS independent SHA-256 rng-v1 golden vector
+PASS bounded rejection sampling
+PASS Domain System-only assembly dependencies
+DOMAIN PASS 4

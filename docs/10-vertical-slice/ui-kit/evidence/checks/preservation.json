@@ -1,0 +1,12 @@
+{
+  "BaselineFiles": 354,
+  "ExistingFilesChanged": [
+    "docs/00-project/PROJECT_STATE.md",
+    "docs/01-governance/DECISION_LOG.md",
+    "docs/10-vertical-slice/README.md",
+    "docs/10-vertical-slice/ui-ux-foundation/OPEN_QUESTIONS.md",
+    "docs/10-vertical-slice/ui-ux-foundation/README.md"
+  ],
+  "UnrelatedExistingFilesPreserved": true,
+  "Notes": "SHA-256 comparison against start-of-task working files; existing gameplay changes are preserved, not committed by the UI Kit."
+}

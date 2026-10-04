@@ -18,11 +18,13 @@ Documents: [scope](VERTICAL_SLICE_SCOPE.md), [plan](IMPLEMENTATION_PLAN.md),
 [architecture](ARCHITECTURE_MAPPING.md), [content](DATA_SCOPE.md),
 [tests](TEST_PLAN.md), [evidence](VERIFICATION.md), [questions](OPEN_QUESTIONS.md).
 
-## Company UX foundation — Director review
+## Company UX foundation — accepted; Stage 2 UI Kit
 
-The [company UX foundation](ui-ux-foundation/README.md) is a documentation-only
-Phase 5 proposal: company identity and context, separate corporate functions and
+The [company UX foundation](ui-ux-foundation/README.md) is accepted presentation
+architecture: company identity and context, separate corporate functions and
 operating portfolio, contextual decisions, component/design-system governance
-and incremental presentation migration. DEC-023 is PROPOSED; DEC-001–022 remain
+and incremental presentation migration. DEC-023 is ACCEPTED; DEC-001–022 remain
 canonical. The existing functional client remains an internal engineering path.
-This package neither implements the redesign nor changes gameplay or QG history.
+[Stage 2](ui-kit/README.md) implements the bounded provisional theme, minimal UI
+Kit and internal UI Lab. This does not close Phase 5 or approve future modules,
+final art direction, identity/save migration or the Company Operating Map build.
