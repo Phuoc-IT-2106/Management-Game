@@ -1,0 +1,670 @@
+{
+  "filesystem": "NTFS",
+  "tests": 166,
+  "results": [
+    {
+      "test": "valid snapshot round trip",
+      "result": "PASS"
+    },
+    {
+      "test": "two valid backup generations",
+      "result": "PASS"
+    },
+    {
+      "test": "reject truncated",
+      "result": "PASS"
+    },
+    {
+      "test": "truncated: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "truncated: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "truncated: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "truncated: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject malformed",
+      "result": "PASS"
+    },
+    {
+      "test": "malformed: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "malformed: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "malformed: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "malformed: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject new-schema",
+      "result": "PASS"
+    },
+    {
+      "test": "new-schema: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "new-schema: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "new-schema: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "new-schema: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject old-schema",
+      "result": "PASS"
+    },
+    {
+      "test": "old-schema: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "old-schema: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "old-schema: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "old-schema: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject checksum",
+      "result": "PASS"
+    },
+    {
+      "test": "checksum: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "checksum: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "checksum: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "checksum: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject content",
+      "result": "PASS"
+    },
+    {
+      "test": "content: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "content: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "content: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "content: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject duplicate",
+      "result": "PASS"
+    },
+    {
+      "test": "duplicate: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "duplicate: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "duplicate: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "duplicate: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject missing",
+      "result": "PASS"
+    },
+    {
+      "test": "missing: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "missing: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "missing: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "missing: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "reject invalid-day",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid-day: explicit recovery candidates",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid-day: explicit backup load",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid-day: corrupt primary cannot overwrite backup",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid-day: originals untouched",
+      "result": "PASS"
+    },
+    {
+      "test": "actual locked primary write rejected",
+      "result": "PASS"
+    },
+    {
+      "test": "locked primary preserves both generations",
+      "result": "PASS"
+    },
+    {
+      "test": "concurrent slot lock rejected",
+      "result": "PASS"
+    },
+    {
+      "test": "simulated disk full after 37 bytes",
+      "result": "PASS"
+    },
+    {
+      "test": "simulated disk full preserves committed generations",
+      "result": "PASS"
+    },
+    {
+      "test": "partial temp never selected as primary",
+      "result": "PASS"
+    },
+    {
+      "test": "subsequent save safely replaces abandoned temp",
+      "result": "PASS"
+    },
+    {
+      "test": "actual ACL-denied temporary write rejected",
+      "result": "PASS"
+    },
+    {
+      "test": "denied write preserves committed generations",
+      "result": "PASS"
+    },
+    {
+      "test": "corrupt backup never rotates over older valid backup",
+      "result": "PASS"
+    },
+    {
+      "test": "validated primary becomes new good backup",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-temp/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill partial-temp/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-temp-write/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-flush/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-validation/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-backup-publish/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-backup/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill before-publish/2: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/0: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/0: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/0: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/0: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/1: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/1: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/1: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/1: subsequent save succeeds",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/2: checkpoint reached",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/2: exact committed primary survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/2: valid committed backup survived",
+      "result": "PASS"
+    },
+    {
+      "test": "kill after-publish/2: subsequent save succeeds",
+      "result": "PASS"
+    }
+  ]
+}

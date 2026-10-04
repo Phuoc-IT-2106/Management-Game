@@ -1,0 +1,171 @@
+﻿COMMAND: C:\Management Game\qualification\.tools\dotnet\dotnet.exe C:\Management Game\qualification/SaveTests/bin/Release/net10.0/SaveTests.dll C:\Management Game\qualification\artifacts\save-tests-a82e167cde494ad59913ab51bbb2d10a
+PASS valid snapshot round trip
+PASS two valid backup generations
+PASS reject truncated
+PASS truncated: explicit recovery candidates
+PASS truncated: explicit backup load
+PASS truncated: corrupt primary cannot overwrite backup
+PASS truncated: originals untouched
+PASS reject malformed
+PASS malformed: explicit recovery candidates
+PASS malformed: explicit backup load
+PASS malformed: corrupt primary cannot overwrite backup
+PASS malformed: originals untouched
+PASS reject new-schema
+PASS new-schema: explicit recovery candidates
+PASS new-schema: explicit backup load
+PASS new-schema: corrupt primary cannot overwrite backup
+PASS new-schema: originals untouched
+PASS reject old-schema
+PASS old-schema: explicit recovery candidates
+PASS old-schema: explicit backup load
+PASS old-schema: corrupt primary cannot overwrite backup
+PASS old-schema: originals untouched
+PASS reject checksum
+PASS checksum: explicit recovery candidates
+PASS checksum: explicit backup load
+PASS checksum: corrupt primary cannot overwrite backup
+PASS checksum: originals untouched
+PASS reject content
+PASS content: explicit recovery candidates
+PASS content: explicit backup load
+PASS content: corrupt primary cannot overwrite backup
+PASS content: originals untouched
+PASS reject duplicate
+PASS duplicate: explicit recovery candidates
+PASS duplicate: explicit backup load
+PASS duplicate: corrupt primary cannot overwrite backup
+PASS duplicate: originals untouched
+PASS reject missing
+PASS missing: explicit recovery candidates
+PASS missing: explicit backup load
+PASS missing: corrupt primary cannot overwrite backup
+PASS missing: originals untouched
+PASS reject invalid-day
+PASS invalid-day: explicit recovery candidates
+PASS invalid-day: explicit backup load
+PASS invalid-day: corrupt primary cannot overwrite backup
+PASS invalid-day: originals untouched
+PASS actual locked primary write rejected
+PASS locked primary preserves both generations
+PASS concurrent slot lock rejected
+PASS simulated disk full after 37 bytes
+PASS simulated disk full preserves committed generations
+PASS partial temp never selected as primary
+PASS subsequent save safely replaces abandoned temp
+PASS actual ACL-denied temporary write rejected
+PASS denied write preserves committed generations
+PASS corrupt backup never rotates over older valid backup
+PASS validated primary becomes new good backup
+PASS kill before-temp/0: checkpoint reached
+PASS kill before-temp/0: exact committed primary survived
+PASS kill before-temp/0: valid committed backup survived
+PASS kill before-temp/0: subsequent save succeeds
+PASS kill before-temp/1: checkpoint reached
+PASS kill before-temp/1: exact committed primary survived
+PASS kill before-temp/1: valid committed backup survived
+PASS kill before-temp/1: subsequent save succeeds
+PASS kill before-temp/2: checkpoint reached
+PASS kill before-temp/2: exact committed primary survived
+PASS kill before-temp/2: valid committed backup survived
+PASS kill before-temp/2: subsequent save succeeds
+PASS kill partial-temp/0: checkpoint reached
+PASS kill partial-temp/0: exact committed primary survived
+PASS kill partial-temp/0: valid committed backup survived
+PASS kill partial-temp/0: subsequent save succeeds
+PASS kill partial-temp/1: checkpoint reached
+PASS kill partial-temp/1: exact committed primary survived
+PASS kill partial-temp/1: valid committed backup survived
+PASS kill partial-temp/1: subsequent save succeeds
+PASS kill partial-temp/2: checkpoint reached
+PASS kill partial-temp/2: exact committed primary survived
+PASS kill partial-temp/2: valid committed backup survived
+PASS kill partial-temp/2: subsequent save succeeds
+PASS kill after-temp-write/0: checkpoint reached
+PASS kill after-temp-write/0: exact committed primary survived
+PASS kill after-temp-write/0: valid committed backup survived
+PASS kill after-temp-write/0: subsequent save succeeds
+PASS kill after-temp-write/1: checkpoint reached
+PASS kill after-temp-write/1: exact committed primary survived
+PASS kill after-temp-write/1: valid committed backup survived
+PASS kill after-temp-write/1: subsequent save succeeds
+PASS kill after-temp-write/2: checkpoint reached
+PASS kill after-temp-write/2: exact committed primary survived
+PASS kill after-temp-write/2: valid committed backup survived
+PASS kill after-temp-write/2: subsequent save succeeds
+PASS kill after-flush/0: checkpoint reached
+PASS kill after-flush/0: exact committed primary survived
+PASS kill after-flush/0: valid committed backup survived
+PASS kill after-flush/0: subsequent save succeeds
+PASS kill after-flush/1: checkpoint reached
+PASS kill after-flush/1: exact committed primary survived
+PASS kill after-flush/1: valid committed backup survived
+PASS kill after-flush/1: subsequent save succeeds
+PASS kill after-flush/2: checkpoint reached
+PASS kill after-flush/2: exact committed primary survived
+PASS kill after-flush/2: valid committed backup survived
+PASS kill after-flush/2: subsequent save succeeds
+PASS kill after-validation/0: checkpoint reached
+PASS kill after-validation/0: exact committed primary survived
+PASS kill after-validation/0: valid committed backup survived
+PASS kill after-validation/0: subsequent save succeeds
+PASS kill after-validation/1: checkpoint reached
+PASS kill after-validation/1: exact committed primary survived
+PASS kill after-validation/1: valid committed backup survived
+PASS kill after-validation/1: subsequent save succeeds
+PASS kill after-validation/2: checkpoint reached
+PASS kill after-validation/2: exact committed primary survived
+PASS kill after-validation/2: valid committed backup survived
+PASS kill after-validation/2: subsequent save succeeds
+PASS kill before-backup-publish/0: checkpoint reached
+PASS kill before-backup-publish/0: exact committed primary survived
+PASS kill before-backup-publish/0: valid committed backup survived
+PASS kill before-backup-publish/0: subsequent save succeeds
+PASS kill before-backup-publish/1: checkpoint reached
+PASS kill before-backup-publish/1: exact committed primary survived
+PASS kill before-backup-publish/1: valid committed backup survived
+PASS kill before-backup-publish/1: subsequent save succeeds
+PASS kill before-backup-publish/2: checkpoint reached
+PASS kill before-backup-publish/2: exact committed primary survived
+PASS kill before-backup-publish/2: valid committed backup survived
+PASS kill before-backup-publish/2: subsequent save succeeds
+PASS kill after-backup/0: checkpoint reached
+PASS kill after-backup/0: exact committed primary survived
+PASS kill after-backup/0: valid committed backup survived
+PASS kill after-backup/0: subsequent save succeeds
+PASS kill after-backup/1: checkpoint reached
+PASS kill after-backup/1: exact committed primary survived
+PASS kill after-backup/1: valid committed backup survived
+PASS kill after-backup/1: subsequent save succeeds
+PASS kill after-backup/2: checkpoint reached
+PASS kill after-backup/2: exact committed primary survived
+PASS kill after-backup/2: valid committed backup survived
+PASS kill after-backup/2: subsequent save succeeds
+PASS kill before-publish/0: checkpoint reached
+PASS kill before-publish/0: exact committed primary survived
+PASS kill before-publish/0: valid committed backup survived
+PASS kill before-publish/0: subsequent save succeeds
+PASS kill before-publish/1: checkpoint reached
+PASS kill before-publish/1: exact committed primary survived
+PASS kill before-publish/1: valid committed backup survived
+PASS kill before-publish/1: subsequent save succeeds
+PASS kill before-publish/2: checkpoint reached
+PASS kill before-publish/2: exact committed primary survived
+PASS kill before-publish/2: valid committed backup survived
+PASS kill before-publish/2: subsequent save succeeds
+PASS kill after-publish/0: checkpoint reached
+PASS kill after-publish/0: exact committed primary survived
+PASS kill after-publish/0: valid committed backup survived
+PASS kill after-publish/0: subsequent save succeeds
+PASS kill after-publish/1: checkpoint reached
+PASS kill after-publish/1: exact committed primary survived
+PASS kill after-publish/1: valid committed backup survived
+PASS kill after-publish/1: subsequent save succeeds
+PASS kill after-publish/2: checkpoint reached
+PASS kill after-publish/2: exact committed primary survived
+PASS kill after-publish/2: valid committed backup survived
+PASS kill after-publish/2: subsequent save succeeds
+QG04_TESTS_PASS 166
+
+
+EXIT: 0

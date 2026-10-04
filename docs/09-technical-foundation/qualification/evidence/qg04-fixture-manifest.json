@@ -1,0 +1,967 @@
+﻿[
+    {
+        "Path":  "results.json",
+        "Bytes":  17009,
+        "SHA256":  "E0A6F01781D88D6A730861973B67056384D0AFFB4EFF8AE7EBB30FFCFEEADB0B"
+    },
+    {
+        "Path":  "000-roundtrip\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "000-roundtrip\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "000-roundtrip\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "000-roundtrip\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "001-truncated\\snapshot.json",
+        "Bytes":  95,
+        "SHA256":  "A41D910558604344A98CA9FF01E0428FF04B076CDAA33C89F18C172197C41C1E"
+    },
+    {
+        "Path":  "001-truncated\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "001-truncated\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "001-truncated\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "002-malformed\\snapshot.json",
+        "Bytes":  5,
+        "SHA256":  "935AAF3A54C0648C74DF48A8025F20086019843F5B9FBFFE5540B9CBA0EDCC97"
+    },
+    {
+        "Path":  "002-malformed\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "002-malformed\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "002-malformed\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "003-new-schema\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "0875ECC58771E05E7B4329317A9A0E79D2C831EE5D630EFC01A2725ADC4ABF9B"
+    },
+    {
+        "Path":  "003-new-schema\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "003-new-schema\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "003-new-schema\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "004-old-schema\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "EDB3F7297BFD1694598E3A31961776EA2C12B144024958250002C329B8539718"
+    },
+    {
+        "Path":  "004-old-schema\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "004-old-schema\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "004-old-schema\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "005-checksum\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "AD666E4254CA3E42F1D94811A8759C3866322FDF66676FF1AAE235912DF64F43"
+    },
+    {
+        "Path":  "005-checksum\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "005-checksum\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "005-checksum\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "006-content\\snapshot.json",
+        "Bytes":  171,
+        "SHA256":  "7EDCDD0C5995EE8B76A3B4DB0A7734F86AD3452116CD70DC0CD3F1DCADB48BBF"
+    },
+    {
+        "Path":  "006-content\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "006-content\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "006-content\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "007-duplicate\\snapshot.json",
+        "Bytes":  203,
+        "SHA256":  "98C3B1266C988E02FFA10B200FF3C88CF916EBBEE44D3C06A603E3BD31D6A9E5"
+    },
+    {
+        "Path":  "007-duplicate\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "007-duplicate\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "007-duplicate\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "008-missing\\snapshot.json",
+        "Bytes":  2,
+        "SHA256":  "44136FA355B3678A1146AD16F7E8649E94FB4FC21FE77E8310C060F61CAAFF8A"
+    },
+    {
+        "Path":  "008-missing\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "008-missing\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "008-missing\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "009-invalid-day\\snapshot.json",
+        "Bytes":  191,
+        "SHA256":  "DE39B2E4D8501B4AE0B6D3CC586E8ED8582CA36E112E30B3D537A6325BCBFA48"
+    },
+    {
+        "Path":  "009-invalid-day\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "009-invalid-day\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "009-invalid-day\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "010-locked\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "010-locked\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "010-locked\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "010-locked\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "011-full-disk\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "D3DCDE4E93A8A150B9C8B2EF4B7B447F1081DA597CBE6D060FD03FABD1D63800"
+    },
+    {
+        "Path":  "011-full-disk\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "011-full-disk\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "011-full-disk\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "012-denied\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "012-denied\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "012-denied\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "012-denied\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "012-denied\\snapshot.json.tmp",
+        "Bytes":  9,
+        "SHA256":  "20E7F550122EE415DE2B6D761A474EA5A363CBB575604F18B1FFFB269E4CF48A"
+    },
+    {
+        "Path":  "013-corrupt-backup\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "D3DCDE4E93A8A150B9C8B2EF4B7B447F1081DA597CBE6D060FD03FABD1D63800"
+    },
+    {
+        "Path":  "013-corrupt-backup\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "013-corrupt-backup\\snapshot.json.bak2",
+        "Bytes":  189,
+        "SHA256":  "AE0321948CB8CC673553E70CFF63ABFB05C95D0ACA8188E9B426AC12A25DFAE9"
+    },
+    {
+        "Path":  "013-corrupt-backup\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "014-kill-before-temp-0\\checkpoint.txt",
+        "Bytes":  11,
+        "SHA256":  "88D47AEFD4777F56752B9F27A260FCC01B83E26FDA46CF3804E192E34B4FCE64"
+    },
+    {
+        "Path":  "014-kill-before-temp-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "014-kill-before-temp-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "014-kill-before-temp-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "014-kill-before-temp-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "015-kill-before-temp-1\\checkpoint.txt",
+        "Bytes":  11,
+        "SHA256":  "88D47AEFD4777F56752B9F27A260FCC01B83E26FDA46CF3804E192E34B4FCE64"
+    },
+    {
+        "Path":  "015-kill-before-temp-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "015-kill-before-temp-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "015-kill-before-temp-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "015-kill-before-temp-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "016-kill-before-temp-2\\checkpoint.txt",
+        "Bytes":  11,
+        "SHA256":  "88D47AEFD4777F56752B9F27A260FCC01B83E26FDA46CF3804E192E34B4FCE64"
+    },
+    {
+        "Path":  "016-kill-before-temp-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "016-kill-before-temp-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "016-kill-before-temp-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "016-kill-before-temp-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "017-kill-partial-temp-0\\checkpoint.txt",
+        "Bytes":  12,
+        "SHA256":  "447388875AA5E1CB8A4C23882975924C2DFAA321595AD4B709B623306465EF8E"
+    },
+    {
+        "Path":  "017-kill-partial-temp-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "017-kill-partial-temp-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "017-kill-partial-temp-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "017-kill-partial-temp-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "018-kill-partial-temp-1\\checkpoint.txt",
+        "Bytes":  12,
+        "SHA256":  "447388875AA5E1CB8A4C23882975924C2DFAA321595AD4B709B623306465EF8E"
+    },
+    {
+        "Path":  "018-kill-partial-temp-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "018-kill-partial-temp-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "018-kill-partial-temp-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "018-kill-partial-temp-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "019-kill-partial-temp-2\\checkpoint.txt",
+        "Bytes":  12,
+        "SHA256":  "447388875AA5E1CB8A4C23882975924C2DFAA321595AD4B709B623306465EF8E"
+    },
+    {
+        "Path":  "019-kill-partial-temp-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "019-kill-partial-temp-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "019-kill-partial-temp-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "019-kill-partial-temp-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "020-kill-after-temp-write-0\\checkpoint.txt",
+        "Bytes":  16,
+        "SHA256":  "AB4D66B772D7E9A5DC5AF6FDEDF2C3531438AF417909C1CAA5D569C95C9D442C"
+    },
+    {
+        "Path":  "020-kill-after-temp-write-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "020-kill-after-temp-write-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "020-kill-after-temp-write-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "020-kill-after-temp-write-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "021-kill-after-temp-write-1\\checkpoint.txt",
+        "Bytes":  16,
+        "SHA256":  "AB4D66B772D7E9A5DC5AF6FDEDF2C3531438AF417909C1CAA5D569C95C9D442C"
+    },
+    {
+        "Path":  "021-kill-after-temp-write-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "021-kill-after-temp-write-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "021-kill-after-temp-write-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "021-kill-after-temp-write-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "022-kill-after-temp-write-2\\checkpoint.txt",
+        "Bytes":  16,
+        "SHA256":  "AB4D66B772D7E9A5DC5AF6FDEDF2C3531438AF417909C1CAA5D569C95C9D442C"
+    },
+    {
+        "Path":  "022-kill-after-temp-write-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "022-kill-after-temp-write-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "022-kill-after-temp-write-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "022-kill-after-temp-write-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "023-kill-after-flush-0\\checkpoint.txt",
+        "Bytes":  11,
+        "SHA256":  "BF822796DB171A0EF45E6AF9A195E74885B76E4795DE34AD9E0EE36E0D471812"
+    },
+    {
+        "Path":  "023-kill-after-flush-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "023-kill-after-flush-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "023-kill-after-flush-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "023-kill-after-flush-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "024-kill-after-flush-1\\checkpoint.txt",
+        "Bytes":  11,
+        "SHA256":  "BF822796DB171A0EF45E6AF9A195E74885B76E4795DE34AD9E0EE36E0D471812"
+    },
+    {
+        "Path":  "024-kill-after-flush-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "024-kill-after-flush-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "024-kill-after-flush-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "024-kill-after-flush-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "025-kill-after-flush-2\\checkpoint.txt",
+        "Bytes":  11,
+        "SHA256":  "BF822796DB171A0EF45E6AF9A195E74885B76E4795DE34AD9E0EE36E0D471812"
+    },
+    {
+        "Path":  "025-kill-after-flush-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "025-kill-after-flush-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "025-kill-after-flush-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "025-kill-after-flush-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "026-kill-after-validation-0\\checkpoint.txt",
+        "Bytes":  16,
+        "SHA256":  "52CBFDEB026A7B3D7CF1ABD6A5CA96D6E420361600BA0A566F4398A702C24B79"
+    },
+    {
+        "Path":  "026-kill-after-validation-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "026-kill-after-validation-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "026-kill-after-validation-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "026-kill-after-validation-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "027-kill-after-validation-1\\checkpoint.txt",
+        "Bytes":  16,
+        "SHA256":  "52CBFDEB026A7B3D7CF1ABD6A5CA96D6E420361600BA0A566F4398A702C24B79"
+    },
+    {
+        "Path":  "027-kill-after-validation-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "027-kill-after-validation-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "027-kill-after-validation-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "027-kill-after-validation-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "028-kill-after-validation-2\\checkpoint.txt",
+        "Bytes":  16,
+        "SHA256":  "52CBFDEB026A7B3D7CF1ABD6A5CA96D6E420361600BA0A566F4398A702C24B79"
+    },
+    {
+        "Path":  "028-kill-after-validation-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "028-kill-after-validation-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "028-kill-after-validation-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "028-kill-after-validation-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "029-kill-before-backup-publish-0\\checkpoint.txt",
+        "Bytes":  21,
+        "SHA256":  "D776B0AFBDF3C19B9D43777120746C2B69DBFD1B6365FEB2E42F842917BF8259"
+    },
+    {
+        "Path":  "029-kill-before-backup-publish-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "029-kill-before-backup-publish-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "029-kill-before-backup-publish-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "029-kill-before-backup-publish-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "030-kill-before-backup-publish-1\\checkpoint.txt",
+        "Bytes":  21,
+        "SHA256":  "D776B0AFBDF3C19B9D43777120746C2B69DBFD1B6365FEB2E42F842917BF8259"
+    },
+    {
+        "Path":  "030-kill-before-backup-publish-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "030-kill-before-backup-publish-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "030-kill-before-backup-publish-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "030-kill-before-backup-publish-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "031-kill-before-backup-publish-2\\checkpoint.txt",
+        "Bytes":  21,
+        "SHA256":  "D776B0AFBDF3C19B9D43777120746C2B69DBFD1B6365FEB2E42F842917BF8259"
+    },
+    {
+        "Path":  "031-kill-before-backup-publish-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "031-kill-before-backup-publish-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "031-kill-before-backup-publish-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "031-kill-before-backup-publish-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "032-kill-after-backup-0\\checkpoint.txt",
+        "Bytes":  12,
+        "SHA256":  "AACDF88587218FC4BF6E01B5174363E505FD6690785D669CA673CB12BB36A07C"
+    },
+    {
+        "Path":  "032-kill-after-backup-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "032-kill-after-backup-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "032-kill-after-backup-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "032-kill-after-backup-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "033-kill-after-backup-1\\checkpoint.txt",
+        "Bytes":  12,
+        "SHA256":  "AACDF88587218FC4BF6E01B5174363E505FD6690785D669CA673CB12BB36A07C"
+    },
+    {
+        "Path":  "033-kill-after-backup-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "033-kill-after-backup-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "033-kill-after-backup-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "033-kill-after-backup-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "034-kill-after-backup-2\\checkpoint.txt",
+        "Bytes":  12,
+        "SHA256":  "AACDF88587218FC4BF6E01B5174363E505FD6690785D669CA673CB12BB36A07C"
+    },
+    {
+        "Path":  "034-kill-after-backup-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "034-kill-after-backup-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "034-kill-after-backup-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "034-kill-after-backup-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "035-kill-before-publish-0\\checkpoint.txt",
+        "Bytes":  14,
+        "SHA256":  "9FE37D0A80D46239662B58B35F3B28FEE1332B9EDA58CAD5E33C66D6BEF0FC76"
+    },
+    {
+        "Path":  "035-kill-before-publish-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "035-kill-before-publish-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "035-kill-before-publish-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "035-kill-before-publish-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "036-kill-before-publish-1\\checkpoint.txt",
+        "Bytes":  14,
+        "SHA256":  "9FE37D0A80D46239662B58B35F3B28FEE1332B9EDA58CAD5E33C66D6BEF0FC76"
+    },
+    {
+        "Path":  "036-kill-before-publish-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "036-kill-before-publish-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "036-kill-before-publish-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "036-kill-before-publish-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "037-kill-before-publish-2\\checkpoint.txt",
+        "Bytes":  14,
+        "SHA256":  "9FE37D0A80D46239662B58B35F3B28FEE1332B9EDA58CAD5E33C66D6BEF0FC76"
+    },
+    {
+        "Path":  "037-kill-before-publish-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "037-kill-before-publish-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "037-kill-before-publish-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "AD3A8AB1B86541494A61E8C7BA6FBBD4C038054FF3EB35B91670A456EABAE743"
+    },
+    {
+        "Path":  "037-kill-before-publish-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "038-kill-after-publish-0\\checkpoint.txt",
+        "Bytes":  13,
+        "SHA256":  "77EC316D1E6675A99DD121EEF4523CAD7DB96CF896C8028F2104551097F2CCCF"
+    },
+    {
+        "Path":  "038-kill-after-publish-0\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "038-kill-after-publish-0\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "D3DCDE4E93A8A150B9C8B2EF4B7B447F1081DA597CBE6D060FD03FABD1D63800"
+    },
+    {
+        "Path":  "038-kill-after-publish-0\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "038-kill-after-publish-0\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "039-kill-after-publish-1\\checkpoint.txt",
+        "Bytes":  13,
+        "SHA256":  "77EC316D1E6675A99DD121EEF4523CAD7DB96CF896C8028F2104551097F2CCCF"
+    },
+    {
+        "Path":  "039-kill-after-publish-1\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "039-kill-after-publish-1\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "D3DCDE4E93A8A150B9C8B2EF4B7B447F1081DA597CBE6D060FD03FABD1D63800"
+    },
+    {
+        "Path":  "039-kill-after-publish-1\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "039-kill-after-publish-1\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "040-kill-after-publish-2\\checkpoint.txt",
+        "Bytes":  13,
+        "SHA256":  "77EC316D1E6675A99DD121EEF4523CAD7DB96CF896C8028F2104551097F2CCCF"
+    },
+    {
+        "Path":  "040-kill-after-publish-2\\snapshot.json",
+        "Bytes":  190,
+        "SHA256":  "44F288865F1A37B7607E598136DFEBB633CBA375BEFCC616FB9D716ED50DC601"
+    },
+    {
+        "Path":  "040-kill-after-publish-2\\snapshot.json.bak1",
+        "Bytes":  190,
+        "SHA256":  "D3DCDE4E93A8A150B9C8B2EF4B7B447F1081DA597CBE6D060FD03FABD1D63800"
+    },
+    {
+        "Path":  "040-kill-after-publish-2\\snapshot.json.bak2",
+        "Bytes":  190,
+        "SHA256":  "F65DEFDB0CF8D8F32C2E026479857DE61B5D06765128ECEA3846AAB57D401D64"
+    },
+    {
+        "Path":  "040-kill-after-publish-2\\snapshot.json.lock",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    }
+]
