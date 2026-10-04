@@ -801,3 +801,57 @@ Affected Systems:
 - UI technical foundation
 - prototype disposition
 
+---
+
+### DEC-022 — Production Technical Foundation Accepted
+Date: 2026-10-04
+Status: Accepted
+Approval authority: Project Director/user's explicit final Phase 4 closure instruction.
+
+Context:
+Phase 4 produced architecture specifications and bounded qualification evidence, reviewed at `258be419a0731a71cc7141ab1907c79b444424b5`. QG-03 and QG-04 passed within their documented local fixture scope. QG-01 lacks clean-machine and external-debugger evidence; QG-02 missed its original uniform 16.7 ms frame budget. Neither exposed a fundamental architecture or engine blocker. Native Godot Tree and bounded row reuse provide a tractable implementation path without a large custom table framework.
+
+Decision:
+Accept the Phase 4 production technical foundation with **PASS WITH DEFERRED VALIDATION OBLIGATIONS**. Close **Phase 4 — Technical Foundation**, then authorize **Phase 5 — Vertical Slice BUILD**.
+
+Adopt:
+- Godot .NET + C# as the production technical foundation; accept ADR-TF-001 under the conditions in [Phase 4 closure](../09-technical-foundation/PHASE4_CLOSURE.md).
+- ADR-TF-002: modular monolith, engine-independent C# Domain/Application, and Godot presentation/runtime host.
+- Company/World gameplay authority and explicit outcome boundaries. The technical execution envelope is not a third gameplay authority.
+- Versioned bounded save compatibility, deterministic/headless testing and data-driven content foundation.
+- Godot 4.7.2 stable mono, matching 4.7.2 mono export templates, .NET SDK 10.0.401, runtime 10.0.12 and `net10.0` as the initial **Phase 5 development pin**, for reproducibility rather than a permanent release-support promise. Future engine/runtime upgrades require targeted requalification.
+- Workflow-specific Phase 5 engineering budgets: approximately 60 Hz / 16.7 ms for continuous scrolling/direct navigation where practical; provisional p95 frame work around 33.3 ms for discrete rebind/page/sort/filter/layout transitions; <=100 ms p95 ordinary-action acknowledgement without deliberate debounce; query p95 <=250 ms at 10k and <=1 s at 100k. Measure intentional search debounce separately from processing latency. These are future engineering budgets, not retrospective qualification passes.
+- Phase 3 Python prototype as behavioral reference/test oracle only, without wholesale porting or promotion of its calibration to production canon.
+
+Deferred validation:
+- QG-01 clean Windows execution becomes a **DEFERRED DISTRIBUTION GATE**, required before external tester distribution, public demo, release candidate or a self-contained supported-clean-Windows claim.
+- External debugger workflow becomes **DEFERRED DEVELOPER-TOOLING VALIDATION**, not a Phase 4 exit blocker unless development becomes impractical.
+- Physical keyboard/mouse and Windows DPI/mixed-monitor validation must pass before the Vertical Slice UI quality gate.
+- Target/minimum hardware definition and workflow performance validation occur during Vertical Slice; second-machine determinism, long-campaign scale, production save migration policy and UI regression monitoring remain explicit obligations.
+- The [closure register DV-01 through DV-10](../09-technical-foundation/PHASE4_CLOSURE.md#risks-carried-forward-and-deferred-validation-gates) assigns owners, evidence and future gates. Obligations remain visible until evidence and Director disposition close them.
+
+Alternatives:
+- Keep Phase 4 open until every deployment, tooling and performance uncertainty is eliminated.
+- Switch engine despite no demonstrated architectural blocker or disproportionate UI infrastructure requirement.
+- Treat local qualification as proof of clean-machine support or rewrite historical failures as passes.
+
+Reasoning:
+The selected architecture is coherent, no unresolved architectural blocker is demonstrated, implementation risk is bounded and understood, and remaining evidence can be required at more appropriate gates. The project can safely begin bounded production work without claiming that unresolved validation is complete. Unavailable ideal hardware alone does not justify indefinite foundation optimization.
+
+Consequences:
+- Phase 4 closes; Phase 5 opens only after this accepted closure, satisfying DEC-021's exit dependency.
+- QG-01 remains historically INCONCLUSIVE; QG-02 remains historically FAIL against 16.7 ms; QG-03/QG-04 retain bounded PASS results. No qualification evidence is deleted or rewritten.
+- This decision explicitly supersedes earlier review-time recommendations to keep Phase 4 open, Phase 5 unauthorized and the runtime pin qualification-only. The development pin does not settle supported release OS/runtime or distribution prerequisites.
+- Godot remains revisable if later evidence demonstrates disproportionate UI infrastructure cost or another major technical failure; Unity remains the fallback requiring a documented Director decision.
+- Development authorization does not waive distribution/UI/performance/save gates or broaden gameplay scope. No clean-machine support, universal 60 FPS or solved production migration policy is claimed.
+- This closure task commits documentation/governance only; no Vertical Slice implementation starts in this task.
+
+Affected Systems:
+- project state and roadmap
+- engine / framework and development toolchain
+- architecture, state ownership and outcome boundaries
+- UI performance and validation
+- deterministic testing, persistence and content
+- distribution and release gates
+- prototype disposition
+

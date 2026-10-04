@@ -1,24 +1,14 @@
 # PROJECT STATE
 
-Version: 0.6
-Phase: Phase 4 — Technical Foundation
-Status: Prototype Gate Passed — Technical Foundation Authorized
+Version: 0.7
+Phase: Phase 5 — Vertical Slice
+Status: Phase 4 Technical Foundation Closed — Vertical Slice Authorized
 
 ## Current Objective
 
-Define and approve the production technical foundation required to turn the validated management simulation into a maintainable PC game.
+Build the smallest production Vertical Slice proving the real management loop through production architecture.
 
-Phase 4 must determine:
-- engine / framework choice;
-- production architecture and module boundaries;
-- simulation / presentation separation;
-- authoritative state and persistence strategy;
-- data-driven content format;
-- testing and deterministic-debugging strategy;
-- repository / tooling structure;
-- UI technical approach for a management-heavy game.
-
-Phase 4 does **not** authorize broad feature expansion or production Vertical Slice implementation before its own gate is closed.
+DEC-022 closes Phase 4 with **PASS WITH DEFERRED VALIDATION OBLIGATIONS** and then authorizes Phase 5 BUILD. The [closure package](../09-technical-foundation/PHASE4_CLOSURE.md) controls its conditions. Production implementation is authorized but was not started by the closure task.
 
 ## Strategic Center
 
@@ -52,14 +42,23 @@ The evidence is stored under `prototypes/reports/`.
 
 Phase 3 validates the bounded management-simulation thesis. It does **not** validate final balance, final content scope, production architecture, or a production esports discipline.
 
+### Phase 4 — Technical Foundation
+
+CLOSED — **PASS WITH DEFERRED VALIDATION OBLIGATIONS** (DEC-022).
+
+Godot .NET + C#, ADR-TF-002 modular monolith, engine-independent Domain/Application, Company/World authority, deterministic/headless testing, bounded save compatibility and data-driven content are accepted. Godot remains revisable through later evidence and a Director decision; Unity is the fallback if major technical failure or disproportionate UI infrastructure cost is demonstrated.
+
+Historical results remain QG-01 **INCONCLUSIVE**, QG-02 **FAIL** against its original 16.7 ms budget, QG-03 **PASS** for the bounded local determinism fixture, and QG-04 **PASS** for tested local NTFS durability scenarios. Closure accepts explicit deferrals; it does not rewrite those results.
+
 ## Accepted Decisions
 
 Canonical accepted decisions are recorded in `docs/01-governance/DECISION_LOG.md`.
 
 Current accepted range:
-- DEC-001 through DEC-021.
+- DEC-001 through DEC-022.
 
 DEC-021 closes Phase 3 and authorizes Phase 4.
+DEC-022 accepts the production technical foundation, closes Phase 4 and authorizes Phase 5 BUILD.
 
 ## Prototype Findings Carried Forward
 
@@ -92,7 +91,7 @@ Do not silently carry the following forward as final design:
 
 These remain disposable validation artifacts unless separately approved.
 
-## Known Prototype Limitations To Respect In Phase 4
+## Known Prototype Limitations Carried Into Phase 5
 
 - end-date viability is not the same as long-term solvency;
 - strong-start / snowball balance is not proven beyond the bounded horizon;
@@ -103,24 +102,19 @@ These remain disposable validation artifacts unless separately approved.
 - rival world simulation is intentionally lower fidelity;
 - prototype traces are verification instrumentation, not a final production event-sourcing design.
 
-These limitations are inputs to Technical Foundation and later design work, not blockers to starting Phase 4.
+These limitations remain inputs to Vertical Slice design and later validation. The Python prototype is a behavioral reference/test oracle only; do not port it wholesale.
 
-## Phase 4 Scope
+## Phase 5 Scope
 
 ### Required
-- compare engine / framework candidates against this game's requirements;
-- select production technology through an explicit ADR;
-- define high-level architecture;
-- preserve explicit authoritative state ownership;
-- preserve deterministic / headless simulation testing where practical;
-- define data-driven content boundaries;
-- define save/load and versioning approach at foundation level;
-- define testing, debugging and simulation tooling;
-- define UI technology / composition strategy appropriate for dense management interfaces;
-- identify which prototype concepts should be retained, redesigned, or discarded before production.
+- build one complete playable management cycle within the roadmap's one-company, one-discipline, one-primary-team scope;
+- prove staff/roster decisions, competition, finance, sponsors, progression, save/load and usable management UI through the accepted production architecture;
+- preserve Company/World gameplay authority and outcome boundaries; technical execution bookkeeping is not a third gameplay authority;
+- keep Domain/Application engine-independent and verify deterministic/headless behavior;
+- use data-driven content and bounded save compatibility without inventing migration guarantees;
+- carry the closure register into Phase 5 reviews and discharge obligations at their assigned gates.
 
 ### Not Authorized Yet
-- production Vertical Slice feature build;
 - final UI art direction;
 - large content production;
 - multiple esports disciplines;
@@ -128,10 +122,10 @@ These limitations are inputs to Technical Foundation and later design work, not 
 - additional industries;
 - deep facilities / relationships / merchandising / M&A;
 - final balance;
-- full production save migration implementation;
+- broad production save migration support beyond a separately approved compatibility policy;
 - broad optimization work.
 
-## Phase 4 Decision Rules
+## Ongoing Technical Decision Rules
 
 For each major technical choice, record:
 - problem;
@@ -159,24 +153,28 @@ Technical choices must be evaluated against:
 - future content growth;
 - possible modding without implementing modding now.
 
-## Phase 4 Exit Gate
+## Development Pin and Performance Policy
 
-Do not begin the production Vertical Slice until Project Director accepts:
-- engine / framework ADR;
-- production architecture boundaries;
-- simulation ownership model;
-- persistence / save-load foundation;
-- data format strategy;
-- testing / deterministic-debugging strategy;
-- UI technical foundation;
-- repository / build structure;
-- migration disposition for the Phase 3 prototype.
+Initial Phase 5 development pin: Godot 4.7.2 stable mono, matching 4.7.2 mono export templates, .NET SDK 10.0.401, runtime 10.0.12, target `net10.0`. This is for reproducible development, not a permanent release-support promise. Engine/runtime upgrades require targeted requalification.
+
+Phase 5 budgets: target approximately 60 Hz / 16.7 ms for continuous scrolling/direct navigation where practical; provisional p95 frame work around 33.3 ms for discrete rebind/page/sort/filter/layout transitions; <=100 ms p95 ordinary-action acknowledgement without deliberate debounce; query p95 <=250 ms at 10k and <=1 s at 100k. Measure debounce separately. These are engineering targets, not proof that historical QG-02 passed or that every current workflow meets them.
+
+## Deferred Validation Obligations
+
+The [closure register DV-01–DV-10](../09-technical-foundation/PHASE4_CLOSURE.md#risks-carried-forward-and-deferred-validation-gates) is the current owner/gate/evidence register. All entries remain OPEN / DEFERRED:
+
+- DV-01: clean supported Windows distribution before external testers, public demo, release candidate or self-contained clean-Windows claims.
+- DV-02: supported external debugger workflow during Phase 5 developer-tooling validation; resolve earlier if development becomes impractical.
+- DV-03/DV-04: physical keyboard/mouse usability and actual Windows DPI/mixed-monitor validation before the UI quality gate.
+- DV-05: Director-approved target/minimum hardware and workflow performance acceptance during Vertical Slice.
+- DV-06: second-machine replay evidence before determinism acceptance or cross-machine claims.
+- DV-07: approved campaign scale and measured performance/history growth before campaign-scale acceptance or broader expansion.
+- DV-08: production save compatibility policy before first distribution; test every promised migration edge before support claims.
+- DV-09: UI performance/correctness regression monitoring at affected changes and milestone reviews.
+- DV-10: targeted upgrade requalification and release OS/runtime support review before release candidate.
+
+These obligations do not reopen Phase 4 by default. They cannot be silently waived or treated as solved. No clean-machine support, universal 60 FPS or production save migration guarantee is established.
 
 ## Current Priority
 
-Proceed with **Phase 4 — Technical Foundation PLAN / SPEC**.
-
-First task:
-evaluate production engine / framework and architecture alternatives against the validated game requirements.
-
-Do not begin Vertical Slice implementation yet.
+Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.
