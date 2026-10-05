@@ -1,0 +1,40 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+PASS synthetic pointer click inspects portfolio
+PASS synthetic Down moves map focus
+PASS synthetic Enter inspects focused scope
+PASS synthetic Tab traverses
+PASS synthetic Shift+Tab returns focus
+PASS synthetic Space selects sponsor and affected scope
+PASS map/list selection synchronized by stable ID
+PASS mode change restores same situation focus
+PASS selected list situation is visible: region=(18, 241), (1498, 795) target=(27, 730), (1489, 35) scroll=0
+PASS sponsor keyboard entry retains origin and mode
+PASS Escape restores sponsor list origin and focus
+PASS secondary non-commercial entry
+PASS secondary return preserves team and situation
+PASS affair selects owning map context
+PASS affair entry return restores affair focus
+PASS 50 selection/mode/entry/return cycles retain constant nodes
+PASS one callback per activation after repeated navigation
+PASS canonical visible focus remains separate from selection
+PASS keyboard End reaches inspector evidence
+PASS inspector-origin selection moves focus to decision entry
+PASS inspector-origin return restores contextual action focus
+PASS no horizontal overflow: normal
+PASS no horizontal overflow: sponsor
+PASS no horizontal overflow: competitive
+PASS no horizontal overflow: quiet
+PASS no horizontal overflow: empty
+PASS no horizontal overflow: long-name
+PASS no horizontal overflow: branding
+PASS no horizontal overflow: missing-identity
+PASS no horizontal overflow: list
+PASS no horizontal overflow: decision
+PASS no horizontal overflow: return
+PASS no horizontal overflow: affairs
+PASS deleted scope clears entry and explains nearest parent fallback
+PASS no stale decision control after replacement
+OPERATING_MAP_NATIVE_PASS 35
+OPERATING_MAP_CAPTURE empty-1920x1080
