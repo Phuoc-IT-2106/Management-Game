@@ -5,7 +5,7 @@ namespace ManagementGame.OperatingMap;
 
 public static class MapFixtures
 {
-    public const string Version = "company-map-fixtures-v1";
+    public const string Version = "company-map-fixtures-v1.1";
     public const string Company = "DEV_ORG_001", Portfolio = "scope:competitive", Esports = "scope:esports",
         Discipline = "scope:development", Team = "scope:primary-team", Business = "function:business",
         Talent = "function:talent", Affairs = "function:affairs";
@@ -13,7 +13,7 @@ public static class MapFixtures
     public static MapSnapshot Create(string scenario = "normal")
     {
         if (!Cases.Contains(scenario)) throw new ArgumentException("Unknown map fixture.");
-        var organization = LabFixtures.Organization(scenario == "branding" ? "low-contrast" : "missing-emblem", scenario == "long-name");
+        var organization = LabFixtures.Organization(scenario is "branding" or "long-name" ? "low-contrast" : "missing-emblem", scenario == "long-name");
         if (scenario == "missing-identity") organization = organization with { DisplayName = "", ShortName = "" };
         ImmutableArray<MapScope> scopes = [
             new(Company, null, string.IsNullOrWhiteSpace(organization.DisplayName) ? "Player company" : organization.DisplayName, ScopeKind.Company, "Your company owns the competitive portfolio. Shared functions support its operating units."),

@@ -9,6 +9,9 @@ foreach (var scenario in MapFixtures.Cases)
     Check(fixture.Organization.IsDevelopmentFixture && fixture.Scopes.Length == 8, "bounded noncanonical fixture " + scenario);
 }
 var source = MapFixtures.Create(); var nav = new MapNavigation(source);
+Check(source.CompactDevelopmentPath && source.Path(MapFixtures.Team).Length == 5, "compaction retains all five semantic ancestors");
+Check(!(source with { Scopes = source.Scopes.SetItem(4, source.Scopes[4] with { ParentId = MapFixtures.Esports }) }).CompactDevelopmentPath, "branching disables compaction");
+Check(!(source with { Situations = source.Situations.SetItem(0, source.Situations[0] with { ScopeId = MapFixtures.Discipline }) }).CompactDevelopmentPath, "attached intermediate matter disables compaction");
 Check(source.Path(MapFixtures.Team).Select(x => x.Id).SequenceEqual(new[] { MapFixtures.Company, MapFixtures.Portfolio, MapFixtures.Esports, MapFixtures.Discipline, MapFixtures.Team }), "ownership hierarchy");
 Check(source.Situations.Select(x => x.Category).Distinct().Count() == 4, "four independent situation types");
 foreach (var matter in source.Situations)

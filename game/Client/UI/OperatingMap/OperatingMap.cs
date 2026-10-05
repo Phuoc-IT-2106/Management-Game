@@ -2,6 +2,7 @@ using Godot;
 using ManagementGame.UiKit;
 using ManagementGame.OperatingMap;
 using System.Diagnostics;
+using StatusIndicator = ManagementGame.UiKit.StatusIndicator;
 
 /// <summary>Bounded development projection. Never constructs a campaign or submits a command.</summary>
 public partial class OperatingMap : Control
@@ -13,9 +14,12 @@ public partial class OperatingMap : Control
     private ScrollContainer mapScroll = null!, inspectorScroll = null!;
     private Label path = null!, notice = null!;
     private Button mode = null!, openEntry = null!;
+    private Label identity = null!;
+    private Button affairsToggle = null!;
     private readonly Dictionary<string, EntityLabel> targets = [];
     private readonly Dictionary<string, List<double>> timings = [];
     private int intentCount;
+    private int focusEpoch;
     private string originFocus = "", scenario = "normal";
     private bool isWorkspace;
     private MapSnapshot Data => navigation.Snapshot;
@@ -56,6 +60,7 @@ public partial class OperatingMap : Control
 
     private void Build()
     {
+        focusEpoch++;
         if (layout is not null) { RemoveChild(layout); layout.QueueFree(); }
         targets.Clear(); Theme = ui.Theme;
         RenderingServer.SetDefaultClearColor(UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SurfaceBase)));
@@ -63,12 +68,23 @@ public partial class OperatingMap : Control
         foreach (var edge in new[] { "left", "right", "top", "bottom" }) margin.AddThemeConstantOverride("margin_" + edge, ui.Tokens.Space(SpaceRole.SpaceWorkspace));
         var shell = ui.Stack(); margin.AddChild(shell);
         header = ui.Stack(); shell.AddChild(header);
-        header.AddChild(NavigationContext.Create(ui, Data.Organization, [], null));
+        var brand = BrandResolver.Resolve(Data.Organization, ui.Tokens);
+        var identityRow = new HBoxContainer(); header.AddChild(ui.Panel(identityRow, ColorRole.SurfaceInset));
+        var mark = SemanticText.Create(ui, "[CO]", TypographyRole.Label);
+        mark.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        mark.AutowrapMode = TextServer.AutowrapMode.Off;
+        mark.AddThemeColorOverride("font_color", UiTheme.ToGodot(brand.TextOnOrganizationAccent));
+        var swatch = ui.Panel(mark, ColorRole.SurfaceInset); swatch.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        var brandStyle = UiTheme.Box(ui.Tokens, ColorRole.SurfaceInset);
+        brandStyle.BgColor = UiTheme.ToGodot(brand.AccentOrganization); brandStyle.BorderColor = UiTheme.ToGodot(brand.AccentOrganizationSecondary);
+        swatch.AddThemeStyleboxOverride("panel", brandStyle); identityRow.AddChild(swatch);
+        identity = SemanticText.Create(ui, CompanyShortName, TypographyRole.CompanyIdentity); identityRow.AddChild(identity);
+        identityRow.AddChild(ui.Button("Inspect company", () => { if (navigation.Return is not null) Back(); Select(Data.Organization.Id); }));
+        if (Data.Organization.IsDevelopmentFixture)
+            header.AddChild(SemanticText.Create(ui, PresentationText.FixtureNotice, TypographyRole.Annotation, ColorRole.StateWarning));
         var bar = ui.Flow(); shell.AddChild(bar);
-        bar.AddChild(ui.Button("Company context", () => { if (navigation.Return is not null) Back(); Select(Data.Organization.Id); }));
         bar.AddChild(ui.Button("Back / parent · Esc", Back));
         mode = ui.Button("Use ownership list", ToggleMode); bar.AddChild(mode);
-        bar.AddChild(ui.Button("Affairs / time", () => affairs.Visible = !affairs.Visible));
         var time = SemanticText.Create(ui, $"Fixture day {Data.Day} · " + PresentationText.Time(Data.NextCheckpoint, "Next checkpoint"), TypographyRole.Label, ColorRole.TextSecondary);
         time.CustomMinimumSize = new(UiTokens.MinimumColumnWidth, 0); bar.AddChild(time);
         path = SemanticText.Create(ui, "", TypographyRole.Label); shell.AddChild(path);
@@ -81,11 +97,16 @@ public partial class OperatingMap : Control
         inspectorScroll = ReadingScroll(); inspectorScroll.CustomMinimumSize = new(ui.Tokens.Size(SizeRole.InspectorWidth), 0);
         inspectorScroll.SizeFlagsHorizontal = SizeFlags.Fill; body.AddChild(inspectorScroll);
         inspector = ui.Stack(); inspectorScroll.AddChild(inspector);
+        var next = Data.Situations.OrderBy(x => x.DueDay ?? int.MaxValue).FirstOrDefault(x => x.DueDay is not null);
+        affairsToggle = ui.Button(next is null ? "Affairs · no dated matters" : $"Affairs · next: {next.Name} · day {next.DueDay}", () => affairs.Visible = !affairs.Visible);
+        shell.AddChild(affairsToggle);
         affairs = ui.Stack(); shell.AddChild(affairs); BuildAffairs(); affairs.Visible = false;
         shell.AddChild(SemanticText.Create(ui, UiTokens.Notice + " · Map/list: same context · Tab/Arrows: focus · Enter: inspect · Esc: return", TypographyRole.Annotation, ColorRole.TextMuted));
         if (GetViewportRect().Size.X < 2 * UiTokens.MinimumColumnWidth + ui.Tokens.Size(SizeRole.InspectorWidth)) navigation.ListMode = true;
         isWorkspace = false; RefreshSelection();
     }
+    private string CompanyShortName => !string.IsNullOrWhiteSpace(Data.Organization.ShortName) ? Data.Organization.ShortName :
+        !string.IsNullOrWhiteSpace(Data.Organization.DisplayName) ? Data.Organization.DisplayName : "Player company";
     private ScrollContainer ReadingScroll()
     {
         var scroll = new ScrollContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill,
@@ -100,7 +121,7 @@ public partial class OperatingMap : Control
         };
         return scroll;
     }
-    private EntityView ScopeEntity(MapScope scope) => new(scope.Id, scope.Name,
+    private EntityView ScopeEntity(MapScope scope) => new(scope.Id, scope.Kind == ScopeKind.Company ? CompanyShortName : scope.Name,
         scope.Kind == ScopeKind.Company ? EntityKind.Company : scope.Kind == ScopeKind.Function ? EntityKind.Department : scope.Kind == ScopeKind.Team ? EntityKind.Team : EntityKind.Division,
         scope.Kind.ToString(), Data.Revision);
     private bool Emphasized(MapSituation matter) => Data.Situations.OrderBy(x => x.Priority).ThenBy(x => x.DueDay ?? int.MaxValue).ThenBy(x => x.Id, StringComparer.Ordinal)
@@ -127,16 +148,16 @@ public partial class OperatingMap : Control
     }
     private void BuildMap()
     {
-        map.AddChild(SectionHeader.Create(ui, "Company operating map", "Owns the portfolio · shared functions support its scopes"));
         map.AddChild(Target(ScopeEntity(Data.Scope(Data.Organization.Id)), "map"));
         var lanes = new HBoxContainer(); map.AddChild(lanes);
         var portfolio = ui.Stack(); var functions = ui.Stack(); lanes.AddChild(portfolio); lanes.AddChild(functions);
         portfolio.AddChild(SectionHeader.Create(ui, "Operating portfolio", "Owned business scopes"));
         foreach (var scope in Data.Scopes.Where(x => x.Kind is not (ScopeKind.Company or ScopeKind.Function)))
         {
+            if (Data.CompactDevelopmentPath && scope.Id == MapFixtures.Discipline) continue;
             var box = ui.Stack();
             if (scope.Id != MapFixtures.Portfolio) box.AddChild(SemanticText.Create(ui, "↓ contains", TypographyRole.Annotation, ColorRole.TextSecondary));
-            box.AddChild(Target(ScopeEntity(scope), "map"));
+            box.AddChild(ScopeRow(scope, "map"));
             AddAttached(box, scope.Id, "map"); portfolio.AddChild(box);
         }
         functions.AddChild(SectionHeader.Create(ui, "Corporate functions", "Shared support capabilities"));
@@ -154,36 +175,50 @@ public partial class OperatingMap : Control
         foreach (var matter in Data.Situations.Where(x => x.ScopeId == scopeId).OrderBy(x => x.Priority))
         {
             var marker = Target(SituationEntity(matter), region); box.AddChild(marker);
-            if (Emphasized(matter)) box.AddChild(StatusBadge.Create(ui, SituationEntity(matter).Status, matter.Priority + " · " + PresentationText.Time(matter.DueDay, "Review")));
+            if (Emphasized(matter)) marker.AddThemeColorOverride("font_color", UiTheme.ToGodot(ui.Tokens.Color(StatusIndicator.Tone(SituationEntity(matter).Status))));
         }
     }
     private void BuildList()
     {
-        list.AddChild(SectionHeader.Create(ui, "Ownership list", "Same scopes and situations · indentation means ownership"));
+        list.AddChild(SectionHeader.Create(ui, "Ownership tree · situations beside owner"));
         foreach (var scope in Data.Scopes.Where(x => x.Kind != ScopeKind.Function)) AddListScope(scope);
-        list.AddChild(SectionHeader.Create(ui, "Company functions", "Support capabilities; separate from the owned portfolio"));
+        list.AddChild(SectionHeader.Create(ui, "Company functions · shared support"));
         foreach (var scope in Data.Scopes.Where(x => x.Kind == ScopeKind.Function)) AddListScope(scope);
     }
     private void AddListScope(MapScope scope)
     {
+        if (Data.CompactDevelopmentPath && scope.Id == MapFixtures.Discipline) return;
         var margin = new MarginContainer(); margin.AddThemeConstantOverride("margin_left", (Data.Path(scope.Id).Length - 1) * ui.Tokens.Space(SpaceRole.SpaceGroup));
-        var row = ui.Stack(); margin.AddChild(row); row.AddChild(Target(ScopeEntity(scope), "list")); AddAttached(row, scope.Id, "list"); list.AddChild(margin);
+        var scopeControl = ScopeRow(scope, "list");
+        if (Data.Situations.Any(x => x.ScopeId == scope.Id))
+        {
+            var row = new HBoxContainer(); margin.AddChild(row); row.AddChild(scopeControl);
+            scopeControl.SizeFlagsVertical = SizeFlags.ShrinkBegin;
+            var matters = ui.Stack(); row.AddChild(matters); AddAttached(matters, scope.Id, "list");
+        }
+        else margin.AddChild(scopeControl);
+        list.AddChild(margin);
+    }
+    private Control ScopeRow(MapScope scope, string region)
+    {
+        if (!Data.CompactDevelopmentPath || scope.Id != MapFixtures.Esports) return Target(ScopeEntity(scope), region);
+        var pair = new HBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        pair.AddChild(Target(ScopeEntity(scope), region));
+        var arrow = SemanticText.Create(ui, "→", TypographyRole.Label); arrow.AutowrapMode = TextServer.AutowrapMode.Off; arrow.SizeFlagsHorizontal = SizeFlags.ShrinkCenter; pair.AddChild(arrow);
+        pair.AddChild(Target(ScopeEntity(Data.Scope(MapFixtures.Discipline)), region)); return pair;
     }
     private void BuildAffairs()
     {
-        affairs.AddChild(SectionHeader.Create(ui, "Affairs & time", PresentationText.Time(Data.NextCheckpoint, "Next competitive checkpoint") + " · select a dated matter to locate its scope"));
-        var strip = new HBoxContainer(); affairs.AddChild(strip);
+        var strip = new GridContainer { Columns = 2, SizeFlagsHorizontal = SizeFlags.ExpandFill }; affairs.AddChild(strip);
         foreach (var matter in Data.Situations.OrderBy(x => x.DueDay ?? int.MaxValue))
         {
-            var item = TimelineEvent.Create(ui, Matter(matter) with { Why = Data.Scope(matter.ScopeId).Name, Consequence = "" }, intent =>
-            { intentCount++; originFocus = "affairs:" + matter.Id; Select(intent.TargetId, intent.Revision); });
-            strip.AddChild(item);
-            var button = Descendants(item).OfType<EntityLabel>().Single(); targets["affairs:" + matter.Id] = button;
+            strip.AddChild(Target(SituationEntity(matter) with { Role = PresentationText.Time(matter.DueDay, "Due") }, "affairs"));
         }
         if (Data.Situations.IsEmpty) affairs.AddChild(SemanticText.Create(ui, "No active situations. Next checkpoint remains scheduled."));
     }
     private void Select(string id, long? revision = null)
     {
+        focusEpoch++;
         var start = Stopwatch.GetTimestamp(); navigation.Select(id, revision ?? Data.Revision); RefreshSelection(); Measure("selection-update", start);
         if (originFocus.StartsWith("inspector:", StringComparison.Ordinal) && navigation.Situation is not null) openEntry.GrabFocus();
     }
@@ -194,7 +229,7 @@ public partial class OperatingMap : Control
         mode.Text = navigation.ListMode ? "Use operating map" : "Use ownership list"; mode.Disabled = isWorkspace;
         foreach (var target in targets.Values)
             target.SetSelected(target.Binding.Current?.Id == navigation.ScopeId || target.Binding.Current?.Id == navigation.SituationId);
-        path.Text = "Company context / " + string.Join(" / ", Data.Path(navigation.ScopeId).Skip(1).Select(x => x.Name)) +
+        path.Text = "Company" + (navigation.ScopeId == Data.Organization.Id ? " overview" : " / " + string.Join(" / ", Data.Path(navigation.ScopeId).Skip(1).Select(x => x.Name))) +
             (navigation.Situation is { } matter ? " / " + matter.Name : "");
         notice.Text = navigation.Notice; notice.Visible = navigation.Notice.Length > 0;
         Measure("map-list-synchronization", start); BindInspector();
@@ -208,17 +243,20 @@ public partial class OperatingMap : Control
     {
         var start = Stopwatch.GetTimestamp(); ClearInspector(); inspectorScroll.ScrollVertical = 0;
         var scope = Data.Scope(navigation.ScopeId);
-        inspector.AddChild(SectionHeader.Create(ui, navigation.Situation is null ? scope.Name : "Situation context", scope.Kind + " · " + (scope.Kind == ScopeKind.Company ? "Company root" : scope.Name)));
         if (navigation.Situation is { } matter)
         {
-            inspector.AddChild(AlertItem.Create(ui, Matter(matter), null));
-            inspector.AddChild(ConfidenceIndicator.Create(ui, matter.Information, matter.Evidence));
-            inspector.AddChild(SemanticText.Create(ui, "Affected scope: " + scope.Name + " · Category: " + matter.Category, TypographyRole.Label));
+            inspector.AddChild(SectionHeader.Create(ui, matter.Name));
+            inspector.AddChild(StatusIndicator.Create(ui, SituationEntity(matter).Status, matter.Status + " · " + PresentationText.Time(matter.DueDay, "Due")));
+            inspector.AddChild(SemanticText.Create(ui, "Scope: " + scope.Name, TypographyRole.Label));
+            inspector.AddChild(SemanticText.Create(ui, matter.Reason));
+            inspector.AddChild(SemanticText.Create(ui, "Consequence: " + matter.Consequence, TypographyRole.Label));
+            inspector.AddChild(ConfidenceIndicator.Create(ui, matter.Information, "See supporting evidence below."));
             openEntry = ui.Button("Open decision entry", Enter); inspector.AddChild(openEntry);
-            inspector.AddChild(SemanticText.Create(ui, matter.WorkspaceKind + " · read-only prototype", TypographyRole.Annotation, ColorRole.TextSecondary));
+            inspector.AddChild(SemanticText.Create(ui, matter.Evidence, TypographyRole.Label, ColorRole.TextSecondary));
         }
         else
         {
+            inspector.AddChild(SectionHeader.Create(ui, scope.Name, scope.Kind.ToString()));
             inspector.AddChild(SemanticText.Create(ui, scope.Description));
             var related = scope.Kind is ScopeKind.Company or ScopeKind.Function
                 ? Data.Situations.Where(x => scope.Kind == ScopeKind.Company || scope.Id == MapFixtures.Affairs || x.ScopeId == scope.Id || scope.Id == MapFixtures.Talent && x.Category == "Talent")
@@ -227,18 +265,18 @@ public partial class OperatingMap : Control
             inspector.AddChild(SectionHeader.Create(ui, ordered.Length == 0 ? "No active situations" : "Situations in this context"));
             foreach (var situation in ordered) inspector.AddChild(Target(SituationEntity(situation), "inspector"));
             if (ordered.All(x => x.Priority >= Attention.Normal)) inspector.AddChild(ValidationMessage.Create(ui, "No urgent situations. Inspect structure or the next checkpoint.", false));
-            foreach (var link in Data.Links.Where(x => x.From == scope.Id || x.To == scope.Id))
+            foreach (var link in Data.Links.Where(x => scope.Kind != ScopeKind.Company && (x.From == scope.Id || x.To == scope.Id)))
             {
                 inspector.AddChild(SemanticText.Create(ui, Data.Scope(link.From).Name + " " + link.Meaning.ToLowerInvariant() + " " + Data.Scope(link.To).Name, TypographyRole.Label));
                 var other = link.From == scope.Id ? link.To : link.From; inspector.AddChild(Target(ScopeEntity(Data.Scope(other)), "inspector"));
             }
-            inspector.AddChild(TimeMarker.Create(ui, Data.NextCheckpoint, "Next competitive checkpoint"));
         }
         Measure("inspector-rebind", start);
     }
     private void ToggleMode()
     {
         if (isWorkspace) return;
+        focusEpoch++;
         navigation.ListMode = !navigation.ListMode; RefreshSelection();
         originFocus = (navigation.ListMode ? "list:" : "map:") + (navigation.SituationId ?? navigation.ScopeId); FocusTarget(originFocus);
         // The newly visible representation needs a container layout pass before scrolling to focus.
@@ -246,14 +284,16 @@ public partial class OperatingMap : Control
     }
     private async void RestoreModeFocus(string key)
     {
+        var epoch = focusEpoch;
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-        if (IsInsideTree() && !isWorkspace && key == originFocus) FocusTarget(key);
+        if (IsInsideTree() && epoch == focusEpoch && !isWorkspace && key == originFocus) FocusTarget(key);
     }
     private void Enter()
     {
         var start = Stopwatch.GetTimestamp();
         if (navigation.Situation is not { } matter || !navigation.Enter(matter.TargetId, Data.Revision, originFocus, mapScroll.ScrollVertical)) return;
+        focusEpoch++;
         isWorkspace = true; map.Visible = list.Visible = false; mode.Disabled = true; ClearInspector();
         // The entry occupies the map reading region, keeping company and selected scope visible.
         var workspace = ui.Stack(); workspace.Name = "DecisionEntry"; map.GetParent().AddChild(workspace);
@@ -270,6 +310,7 @@ public partial class OperatingMap : Control
     }
     private void Back()
     {
+        focusEpoch++;
         var start = Stopwatch.GetTimestamp(); var origin = navigation.Back();
         if (isWorkspace)
         {
@@ -279,7 +320,18 @@ public partial class OperatingMap : Control
         isWorkspace = false; RefreshSelection();
         originFocus = origin?.FocusKey ?? (navigation.ListMode ? "list:" : "map:") + navigation.ScopeId;
         FocusTarget(originFocus); if (origin is not null) mapScroll.ScrollVertical = origin.Scroll;
+        if (origin is not null) RestoreReturnScroll(origin);
         Measure("return-navigation", start);
+    }
+    private async void RestoreReturnScroll(MapReturn origin)
+    {
+        var epoch = focusEpoch;
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        if (!IsInsideTree() || epoch != focusEpoch || isWorkspace || navigation.ScopeId != origin.ScopeId || originFocus != origin.FocusKey) return;
+        FocusTarget(origin.FocusKey);
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        if (epoch == focusEpoch && !isWorkspace && originFocus == origin.FocusKey) mapScroll.ScrollVertical = origin.Scroll;
     }
     private void FocusTarget(string key)
     {
@@ -298,6 +350,7 @@ public partial class OperatingMap : Control
         if (scenario is "sponsor" or "decision" or "return" or "list" or "affairs") { originFocus = "map:matter:sponsor"; Select("matter:sponsor"); }
         if (scenario == "competitive") { originFocus = "map:matter:preparation"; Select("matter:preparation"); }
         if (scenario == "list") ToggleMode();
+        if (Arg("--map-mode") == "list" && !navigation.ListMode) ToggleMode();
         if (scenario is "decision" or "return") Enter();
         if (scenario == "return") Back();
         if (scenario == "affairs") affairs.Visible = true;

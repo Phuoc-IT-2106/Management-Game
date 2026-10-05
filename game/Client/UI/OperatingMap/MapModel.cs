@@ -15,6 +15,12 @@ public sealed record MapSnapshot(string SessionKey, long Revision, OrganizationI
     ImmutableArray<MapSituation> Situations)
 {
     public MapScope Scope(string id) => Scopes.Single(x => x.Id == id);
+    // Only this approved, bounded pair can share a row. Branches retain separate rows.
+    public bool CompactDevelopmentPath => Scopes.Any(x => x.Id == MapFixtures.Esports) &&
+        Scopes.Any(x => x.Id == MapFixtures.Discipline && x.ParentId == MapFixtures.Esports) &&
+        Scopes.Count(x => x.ParentId == MapFixtures.Esports) == 1 &&
+        Scopes.Count(x => x.ParentId == MapFixtures.Discipline) == 1 &&
+        !Situations.Any(x => x.ScopeId is MapFixtures.Esports or MapFixtures.Discipline);
     public ImmutableArray<MapScope> Path(string id)
     {
         var result = new List<MapScope>();

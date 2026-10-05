@@ -1,0 +1,94 @@
+{
+  "Status": "GOLDEN CANDIDATE \u2014 NOT APPROVED",
+  "Case": "competitive",
+  "Commit": "c226f46381e02139ea822058c9f844b8539537ec",
+  "SourceDigest": "ea59db3235dd7535fbbd163cf407809fd7054945fb9341f35a36c70cacaa2a73",
+  "Dirty": true,
+  "FixtureVersion": "company-map-fixtures-v1.1",
+  "FixtureDigest": "cdf9325cca72e5a3c3ab032cc72548867cc695813ecb7803a345608506fa6908",
+  "Viewport": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "NativeWindow": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "CompanyId": "DEV_ORG_001",
+  "SessionKey": "fixture-session:001",
+  "Revision": 7,
+  "Day": 8,
+  "Seed": "none; presentation-only",
+  "Locale": "en-US",
+  "ScopeId": "scope:primary-team",
+  "SituationId": "matter:preparation",
+  "ListMode": false,
+  "Return": null,
+  "OriginFocus": "map:matter:preparation",
+  "Workspace": false,
+  "ThemeVersion": "engineering-neutral-v1",
+  "Density": "Compact",
+  "TextScale": 1,
+  "ReducedMotion": true,
+  "Engine": "4.7.2-stable (official)",
+  "Runtime": "10.0.12",
+  "OS": "Windows",
+  "Renderer": "gl_compatibility",
+  "Font": "Segoe UI",
+  "CaptureTrigger": "explicit output; settled process frames; frame_post_draw",
+  "SettleFrames": 12,
+  "PhysicalInputVerified": false,
+  "DpiGatePassed": false,
+  "Checks": [],
+  "ControlCount": 106,
+  "RetainedNodesBefore": 0,
+  "RetainedNodesAfter": 0,
+  "EngineeringProxies": {
+    "HeaderHeight": 73,
+    "RepresentationHeight": 414,
+    "ReadingHeight": 468,
+    "InspectorHeight": 323,
+    "InspectorViewportHeight": 468,
+    "RepresentationControls": 37,
+    "ActionVisible": true,
+    "MapScroll": 0,
+    "InspectorScroll": 0,
+    "Tasks": []
+  },
+  "Timings": {
+    "map-list-synchronization": {
+      "Samples": 3,
+      "P95Ms": 2.088,
+      "RawMs": [
+        0.9932,
+        0.2936,
+        2.088
+      ]
+    },
+    "inspector-rebind": {
+      "Samples": 3,
+      "P95Ms": 9.0749,
+      "RawMs": [
+        5.7725,
+        3.0752,
+        9.0749
+      ]
+    },
+    "initial-bind": {
+      "Samples": 1,
+      "P95Ms": 112.5256,
+      "RawMs": [
+        112.5256
+      ]
+    },
+    "selection-update": {
+      "Samples": 1,
+      "P95Ms": 12.1692,
+      "RawMs": [
+        12.1692
+      ]
+    }
+  },
+  "Image": "map-competitive-1280x720.png",
+  "ImageSha256": "8bf3c8ef2720cba7036f866fe4dcd5576bc4ee3b4a8ed8336dd25818174e2a4e"
+}

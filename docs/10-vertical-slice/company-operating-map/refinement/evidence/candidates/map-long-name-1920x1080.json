@@ -1,0 +1,85 @@
+{
+  "Status": "GOLDEN CANDIDATE \u2014 NOT APPROVED",
+  "Case": "long-name",
+  "Commit": "c226f46381e02139ea822058c9f844b8539537ec",
+  "SourceDigest": "ea59db3235dd7535fbbd163cf407809fd7054945fb9341f35a36c70cacaa2a73",
+  "Dirty": true,
+  "FixtureVersion": "company-map-fixtures-v1.1",
+  "FixtureDigest": "d773147d5bccb58bd8884e9775068a189fc9f6e4c1454719f1219cd3d2d9cb45",
+  "Viewport": {
+    "Width": 1920,
+    "Height": 1080
+  },
+  "NativeWindow": {
+    "Width": 1920,
+    "Height": 1050
+  },
+  "CompanyId": "DEV_ORG_001",
+  "SessionKey": "fixture-session:001",
+  "Revision": 7,
+  "Day": 8,
+  "Seed": "none; presentation-only",
+  "Locale": "en-US",
+  "ScopeId": "DEV_ORG_001",
+  "SituationId": null,
+  "ListMode": false,
+  "Return": null,
+  "OriginFocus": "map:DEV_ORG_001",
+  "Workspace": false,
+  "ThemeVersion": "engineering-neutral-v1",
+  "Density": "Compact",
+  "TextScale": 1,
+  "ReducedMotion": true,
+  "Engine": "4.7.2-stable (official)",
+  "Runtime": "10.0.12",
+  "OS": "Windows",
+  "Renderer": "gl_compatibility",
+  "Font": "Segoe UI",
+  "CaptureTrigger": "explicit output; settled process frames; frame_post_draw",
+  "SettleFrames": 12,
+  "PhysicalInputVerified": false,
+  "DpiGatePassed": false,
+  "Checks": [],
+  "ControlCount": 107,
+  "RetainedNodesBefore": 0,
+  "RetainedNodesAfter": 0,
+  "EngineeringProxies": {
+    "HeaderHeight": 73,
+    "RepresentationHeight": 414,
+    "ReadingHeight": 828,
+    "InspectorHeight": 417,
+    "InspectorViewportHeight": 828,
+    "RepresentationControls": 37,
+    "ActionVisible": false,
+    "MapScroll": 0,
+    "InspectorScroll": 0,
+    "Tasks": []
+  },
+  "Timings": {
+    "map-list-synchronization": {
+      "Samples": 2,
+      "P95Ms": 1.1898,
+      "RawMs": [
+        1.1898,
+        0.2768
+      ]
+    },
+    "inspector-rebind": {
+      "Samples": 2,
+      "P95Ms": 5.7716,
+      "RawMs": [
+        5.7716,
+        3.4731
+      ]
+    },
+    "initial-bind": {
+      "Samples": 1,
+      "P95Ms": 96.6249,
+      "RawMs": [
+        96.6249
+      ]
+    }
+  },
+  "Image": "map-long-name-1920x1080.png",
+  "ImageSha256": "9ed2a8bd6fe27c659e3b6dcb48984df19a03f784868d00b28c67785d5c324c52"
+}

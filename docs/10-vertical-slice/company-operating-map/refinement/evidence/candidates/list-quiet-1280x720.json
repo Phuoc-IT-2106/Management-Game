@@ -1,0 +1,87 @@
+{
+  "Status": "GOLDEN CANDIDATE \u2014 NOT APPROVED",
+  "Case": "quiet",
+  "Commit": "c226f46381e02139ea822058c9f844b8539537ec",
+  "SourceDigest": "ea59db3235dd7535fbbd163cf407809fd7054945fb9341f35a36c70cacaa2a73",
+  "Dirty": true,
+  "FixtureVersion": "company-map-fixtures-v1.1",
+  "FixtureDigest": "3c92951adb978389d7fafd1f5a0cd3c0b3b2752dc69ffc4914eefd20984690b5",
+  "Viewport": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "NativeWindow": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "CompanyId": "DEV_ORG_001",
+  "SessionKey": "fixture-session:001",
+  "Revision": 7,
+  "Day": 8,
+  "Seed": "none; presentation-only",
+  "Locale": "en-US",
+  "ScopeId": "DEV_ORG_001",
+  "SituationId": null,
+  "ListMode": true,
+  "Return": null,
+  "OriginFocus": "list:DEV_ORG_001",
+  "Workspace": false,
+  "ThemeVersion": "engineering-neutral-v1",
+  "Density": "Compact",
+  "TextScale": 1,
+  "ReducedMotion": true,
+  "Engine": "4.7.2-stable (official)",
+  "Runtime": "10.0.12",
+  "OS": "Windows",
+  "Renderer": "gl_compatibility",
+  "Font": "Segoe UI",
+  "CaptureTrigger": "explicit output; settled process frames; frame_post_draw",
+  "SettleFrames": 12,
+  "PhysicalInputVerified": false,
+  "DpiGatePassed": false,
+  "Checks": [],
+  "ControlCount": 108,
+  "RetainedNodesBefore": 0,
+  "RetainedNodesAfter": 0,
+  "EngineeringProxies": {
+    "HeaderHeight": 73,
+    "RepresentationHeight": 431,
+    "ReadingHeight": 468,
+    "InspectorHeight": 435,
+    "InspectorViewportHeight": 468,
+    "RepresentationControls": 29,
+    "ActionVisible": false,
+    "MapScroll": 0,
+    "InspectorScroll": 0,
+    "Tasks": []
+  },
+  "Timings": {
+    "map-list-synchronization": {
+      "Samples": 3,
+      "P95Ms": 1.0736,
+      "RawMs": [
+        1.0736,
+        0.6002,
+        0.4108
+      ]
+    },
+    "inspector-rebind": {
+      "Samples": 3,
+      "P95Ms": 7.9212,
+      "RawMs": [
+        5.3232,
+        4.5899,
+        7.9212
+      ]
+    },
+    "initial-bind": {
+      "Samples": 1,
+      "P95Ms": 95.4549,
+      "RawMs": [
+        95.4549
+      ]
+    }
+  },
+  "Image": "list-quiet-1280x720.png",
+  "ImageSha256": "a57a09155b0d3bce639fd0eaff37b713bbd33a839056cf5da1108c82d43ea4a1"
+}

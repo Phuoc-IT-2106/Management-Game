@@ -1,0 +1,30 @@
+[
+    {
+        "Path":  "build/Capture-OperatingMap.ps1",
+        "Hash":  "D1DA2D9171E3B0A3E88225CFAA1A50213E8F05966EB9617DECF5E367FD5805E0"
+    },
+    {
+        "Path":  "build/Run-OperatingMap.ps1",
+        "Hash":  "6A27F84ACF89C67765BF824B6138A80709B9280A3984F3D27CF128D23ECB32C3"
+    },
+    {
+        "Path":  "game/Client/UI/OperatingMap/MapFixtures.cs",
+        "Hash":  "3FB8400CCCD4B822B7DE632E4D05F8007629CE49492A56A4D5AD45C9CAA27C7E"
+    },
+    {
+        "Path":  "game/Client/UI/OperatingMap/MapModel.cs",
+        "Hash":  "CD3177893C0A20058EA313433B38579CFB64345D0C69A1317F3FE239761CA510"
+    },
+    {
+        "Path":  "game/Client/UI/OperatingMap/OperatingMap.cs",
+        "Hash":  "7616631189E05F4B4A145A09B64C67D6FDC7FAF6792AA5023C31F86CE1BDA1FB"
+    },
+    {
+        "Path":  "game/Client/UI/OperatingMap/OperatingMapVerification.cs",
+        "Hash":  "03A66B036EA0AE9E17E668162DF87D28DAB9638BB26E3F9CDE09B960EC4A7498"
+    },
+    {
+        "Path":  "tests/OperatingMap/Program.cs",
+        "Hash":  "120E5D0F3A79DA9AAEFB1757515BAC3841F4592F5B29DC0E63C3857AD7671B87"
+    }
+]

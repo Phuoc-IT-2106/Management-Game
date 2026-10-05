@@ -86,6 +86,7 @@ public partial class OperatingMap
         Build(); await Settle();
         Check(navigation.ScopeId == MapFixtures.Discipline && !isWorkspace && navigation.SituationId is null && notice.Visible, "deleted scope clears entry and explains nearest parent fallback");
         Check(Descendants(inspector).OfType<Button>().All(x => x.Text != "Open decision entry"), "no stale decision control after replacement");
+        await VerifyRefinement();
         scenario = Arg("--map-case") ?? "normal";
         GD.Print("OPERATING_MAP_NATIVE_PASS " + checks.Count);
     }
@@ -105,7 +106,7 @@ public partial class OperatingMap
     {
         var output = Arg("--map-output")!; Directory.CreateDirectory(output);
         using var pixels = GetViewport().GetTexture().GetImage();
-        var key = $"{scenario}-{pixels.GetWidth()}x{pixels.GetHeight()}";
+        var key = $"{(Arg("--map-mode") is { } modeName ? modeName + "-" : "")}{scenario}-{pixels.GetWidth()}x{pixels.GetHeight()}";
         var imagePath = Path.Combine(output, key + ".png");
         if (pixels.SavePng(imagePath) != Error.Ok) throw new IOException("Capture write failed.");
         var manifest = new
@@ -122,6 +123,11 @@ public partial class OperatingMap
             CaptureTrigger = "explicit output; settled process frames; frame_post_draw", SettleFrames = UiTokens.CaptureSettleFrames,
             PhysicalInputVerified = false, DpiGatePassed = false, Checks = checks,
             ControlCount = Descendants(this).OfType<Control>().Count(), RetainedNodesBefore = retainedNodesBefore, RetainedNodesAfter = retainedNodesAfter,
+            EngineeringProxies = new { HeaderHeight = header.Size.Y, RepresentationHeight = (navigation.ListMode ? list : map).Size.Y,
+                ReadingHeight = mapScroll.Size.Y, InspectorHeight = inspector.Size.Y, InspectorViewportHeight = inspectorScroll.Size.Y,
+                RepresentationControls = Descendants(navigation.ListMode ? list : map).OfType<Control>().Count(),
+                ActionVisible = navigation.Situation is not null && !isWorkspace && inspectorScroll.GetGlobalRect().Encloses(openEntry.GetGlobalRect()),
+                MapScroll = mapScroll.ScrollVertical, InspectorScroll = inspectorScroll.ScrollVertical, Tasks = taskProxies },
             Timings = timings.ToDictionary(x => x.Key, x => new { Samples = x.Value.Count, P95Ms = x.Value.Order().ElementAt((int)Math.Ceiling(x.Value.Count * .95) - 1), RawMs = x.Value }),
             Image = Path.GetFileName(imagePath), ImageSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(imagePath))).ToLowerInvariant()
         };

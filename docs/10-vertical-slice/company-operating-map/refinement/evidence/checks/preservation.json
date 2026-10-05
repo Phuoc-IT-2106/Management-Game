@@ -1,0 +1,15 @@
+{
+    "BaselineFiles":  617,
+    "ChangedFiles":  7,
+    "PreservedFiles":  610,
+    "UnexpectedChanges":  0,
+    "ChangedPaths":  [
+                         "build/Capture-OperatingMap.ps1",
+                         "build/Run-OperatingMap.ps1",
+                         "game/Client/UI/OperatingMap/MapFixtures.cs",
+                         "game/Client/UI/OperatingMap/MapModel.cs",
+                         "game/Client/UI/OperatingMap/OperatingMap.cs",
+                         "game/Client/UI/OperatingMap/OperatingMapVerification.cs",
+                         "tests/OperatingMap/Program.cs"
+                     ]
+}

@@ -1,0 +1,33 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  ManagementGame.Domain -> C:\Management Game\src\ManagementGame.Domain\bin\Debug\net10.0\ManagementGame.Domain.dll
+  ManagementGame.Application -> C:\Management Game\src\ManagementGame.Application\bin\Debug\net10.0\ManagementGame.Application.dll
+  ManagementGame.Infrastructure -> C:\Management Game\src\ManagementGame.Infrastructure\bin\Debug\net10.0\ManagementGame.Infrastructure.dll
+  Client -> C:\Management Game\game\Client\.godot\mono\temp\bin\Debug\Client.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.96
+PASS candidate map-normal-1280x720
+PASS candidate map-sponsor-1280x720
+PASS candidate map-competitive-1280x720
+PASS candidate map-quiet-1280x720
+PASS candidate map-long-name-1280x720
+PASS candidate list-normal-1280x720
+PASS candidate list-sponsor-1280x720
+PASS candidate list-competitive-1280x720
+PASS candidate list-quiet-1280x720
+PASS candidate list-long-name-1280x720
+PASS candidate map-normal-1920x1080
+PASS candidate map-sponsor-1920x1080
+PASS candidate map-competitive-1920x1080
+PASS candidate map-quiet-1920x1080
+PASS candidate map-long-name-1920x1080
+PASS candidate list-normal-1920x1080
+PASS candidate list-sponsor-1920x1080
+PASS candidate list-competitive-1920x1080
+PASS candidate list-quiet-1920x1080
+PASS candidate list-long-name-1920x1080
+OPERATING_MAP_CAPTURE_PASS 20 source=ea59db3235dd7535fbbd163cf407809fd7054945fb9341f35a36c70cacaa2a73
