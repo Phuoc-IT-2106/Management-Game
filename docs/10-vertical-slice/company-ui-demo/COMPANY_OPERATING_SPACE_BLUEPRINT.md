@@ -6,6 +6,11 @@ acceptance. Review owner: Project Director, with UX/UI and technical review.
 Authority: DEC-023, [Stage 5 governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md)
 and the active [Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md).
 
+Related investigation (2026-10-06): [repository/source review](COS05_SOURCE_REVIEW.md),
+[current semantic traceability](COS05_TRACEABILITY.md), and [two composition proposals](COS05_VISUAL_EXPLORATION.md).
+These record the later `b38da8f` sponsor-instrument baseline and Director review
+alternatives. COS-05 v1 remains a draft; no composition or production scene is approved.
+
 ## Purpose, boundary and source register
 
 Player goal: operate the company by understanding what needs attention, where it
