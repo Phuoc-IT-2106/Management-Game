@@ -1,0 +1,35 @@
+{
+  "Format": "management-game-development-content",
+  "Schema": 1,
+  "Label": "NONCANONICAL DEVELOPMENT FIXTURE — fictional 5v5 Role Arena; 28 days",
+  "RulesVersion": "slice-rules-v1",
+  "CompanyName": "Northstar Esports",
+  "Balance": {"Horizon":28,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"OperatingCost":1500,"BaseLoad":35,"PreparationScale":30,"MatchScale":12000,"Variance":8,"MetaDay":13,"RivalCadence":4,"ReputationGain":8,"AudienceGain":180},
+  "Coach": {"Id":"person:coach","Name":"Mira Chen","Preparation":72,"Analysis":70,"Adaptability":68,"Capacity":80},
+  "Players": [
+    {"Person":{"Id":"person:a","DefinitionId":"player:dev:anchor","Name":"Linh Tran","Role":"A","Execution":71,"Adaptability":64,"Consistency":78,"Readiness":90},"Salary":1000,"ReleaseCost":3000},
+    {"Person":{"Id":"person:b","DefinitionId":"player:dev:tempo","Name":"Kai Nguyen","Role":"B","Execution":68,"Adaptability":78,"Consistency":65,"Readiness":86},"Salary":900,"ReleaseCost":2500},
+    {"Person":{"Id":"person:c","DefinitionId":"player:dev:core","Name":"Ari Park","Role":"C","Execution":73,"Adaptability":61,"Consistency":72,"Readiness":92},"Salary":1100,"ReleaseCost":3000},
+    {"Person":{"Id":"person:d","DefinitionId":"player:dev:link","Name":"Sam Le","Role":"D","Execution":66,"Adaptability":74,"Consistency":76,"Readiness":88},"Salary":850,"ReleaseCost":2500},
+    {"Person":{"Id":"person:e","DefinitionId":"player:dev:closer","Name":"Noor Pham","Role":"E","Execution":69,"Adaptability":68,"Consistency":80,"Readiness":91},"Salary":950,"ReleaseCost":2500},
+    {"Person":{"Id":"person:sub","DefinitionId":"player:dev:reserve","Name":"Jules Vo","Role":"B","Execution":62,"Adaptability":84,"Consistency":70,"Readiness":98},"Salary":650,"ReleaseCost":1200}
+  ],
+  "Rivals": [
+    {"Id":"rival:ember","Name":"Ember Collective","Strength":75,"Analysis":76,"Adaptability":72,"Posture":2,"Budget":40,"Need":1},
+    {"Id":"rival:tide","Name":"Tide Union","Strength":68,"Analysis":55,"Adaptability":77,"Posture":0,"Budget":25,"Need":0}
+  ],
+  "Fixtures": [
+    {"Id":"fixture:01","Day":6,"RivalId":"rival:ember","Importance":1,"Prize":14000},
+    {"Id":"fixture:02","Day":12,"RivalId":"rival:tide","Importance":1,"Prize":14000},
+    {"Id":"fixture:03","Day":18,"RivalId":"rival:ember","Importance":2,"Prize":18000},
+    {"Id":"fixture:04","Day":24,"RivalId":"rival:tide","Importance":2,"Prize":18000}
+  ],
+  "Offers": [
+    {"Id":"offer:atlas","Name":"Atlas Hardware","Deadline":8,"EndDay":28,"Payment":35000,"WinBonus":5000,"Load":25,"MinimumReputation":40,"ClaimedBy":null},
+    {"Id":"offer:local","Name":"Local Circuit","Deadline":16,"EndDay":28,"Payment":22000,"WinBonus":1000,"Load":8,"MinimumReputation":20,"ClaimedBy":null}
+  ],
+  "Candidates": [
+    {"Person":{"Id":"person:star","DefinitionId":"player:dev:star","Name":"Rin Dao","Role":"B","Execution":86,"Adaptability":72,"Consistency":68,"Readiness":95},"Fee":65000,"Salary":2400,"ReleaseCost":8000,"Deadline":10}
+  ],
+  "InitialSponsor": {"Id":"offer:seed","Name":"Origin Coffee","Deadline":1,"EndDay":28,"Payment":35000,"WinBonus":2500,"Load":12,"MinimumReputation":0,"ClaimedBy":null}
+}

@@ -1,0 +1,10 @@
+using System.Collections.Immutable;
+using ManagementGame.Application;
+var rows = Enumerable.Range(0,1000).Select(i => new PersonRow($"person:{i:D4}","Same name", i%2==0?"A":"B",70,90,i,0,true)).ToImmutableArray();
+var page = RosterTable.Query(rows,new RosterQuery(Sort:"Salary",Descending:true),"person:0003");
+if(page.Rows.Length != 25 || page.Rows[0].Id != "person:0999" || page.SelectedId != "person:0003") throw new Exception("Bounded/stable selection failed");
+var filtered = RosterTable.Query(rows,new RosterQuery(Search:"009",Role:"A"),null);
+if(filtered.Total != 5) throw new Exception("Combined search/filter failed");
+var ties = RosterTable.Query(rows.Reverse().ToImmutableArray(),new RosterQuery(),null);
+if(ties.Rows[0].Id != "person:0000") throw new Exception("Stable tie break failed");
+Console.WriteLine("UI PRESENTATION PASS 3");
