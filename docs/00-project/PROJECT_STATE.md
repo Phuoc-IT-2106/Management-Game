@@ -215,6 +215,30 @@ Stage 4 human review remains pending; provisional design tokens and candidate
 captures retain their status. DEC-001–023, gameplay scope, final-art restrictions
 and deferred validation obligations remain unchanged. Phase 5 stays open.
 
+### Stage 5 visual composition clarification — 2026-10-06
+
+The [Director clarification](../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+is **ACTIVE** under DEC-023 and Stage 5 governance. LIST-FIRST remains structured
+navigation/reference authority with keyboard parity and shared IDs/context; it
+does not require list-dominant company composition. The visual target is a Company
+Operating / Command Space. Both generic SaaS dashboards and engineering/admin/debug
+interfaces fail the intended direction. Panels/instruments and semantic operating
+visualization are allowed when tied to current state, questions and real navigation.
+
+The [Company Operating Space blueprint](../10-vertical-slice/company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md)
+is **DRAFT FOR DIRECTOR VISUAL REVIEW**, defining eight semantic regions and 720p /
+1080p behavior without final pixels. Latest local/remote main inspected for this
+correction: `1241bc1d4972481fd5c91c621147da4d6d922a18`. Stage 3/3.1 findings and
+LIST-FIRST / MAP-OPTIONAL recommendation remain historical valid evidence; they
+did not test the final visual direction. Stage 4 engineering acceptance, pending
+human review and exact-return exemplar remain unchanged.
+
+This correction is documentation-only and stops before Stage 5 implementation.
+The original brief and DEC text are preserved; tokens remain provisional. Broader
+company matter routing and identity integration remain explicit gaps, not invented
+playable modules. Next composition milestone: Director visual exploration/review
+against the draft and expanded screen-review record; no visual/usability pass claimed.
+
 ## Current Priority
 
 Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.

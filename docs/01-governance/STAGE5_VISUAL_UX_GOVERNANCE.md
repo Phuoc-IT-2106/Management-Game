@@ -12,6 +12,15 @@ ID `b5175650-5b00-49f2-b3b0-c11fee4fa981`.
 Source SHA-256:
 `d361584431b805280d2daea02b9a3ba29f7005ab715912b33613d3ee8f98c6ee`.
 
+Later interpretation authority (2026-10-06):
+[Stage 5 visual composition direction](STAGE5_VISUAL_COMPOSITION_DIRECTION.md),
+**ACTIVE — DIRECTOR CLARIFICATION**. The preserved brief remains byte-identical.
+List-first governs structured navigation, not visual dominance. Company home is
+a company operating/command space; reject both generic SaaS dashboards and
+engineering/admin/debug composition. Useful panels and semantic operating
+visualization are permitted under that contract. No DEC text or historical
+Stage 3/4 finding is superseded; no Stage 5 implementation is authorized here.
+
 ## Authority and scope
 
 Gameplay decision → user context → information priority → interaction → layout
@@ -50,6 +59,12 @@ blueprints or provisional tokens to approved production designs.
    workspaces. Apply the full brief's restrictions on cards, rounding, shadows,
    badges, icons, accents, art, motion and SaaS/esports composition. No local
    component restyling or arbitrary values.
+5. For company-level work, apply the composition clarification and start from the
+   [draft operating-space blueprint](../10-vertical-slice/company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md).
+   Identify the primary visual anchor, structured-navigation role, operating-space
+   role and question answered by each instrument. The draft needs Director visual
+   review; existing prototype geometry and PanelContainer primitives do not dictate
+   the final screen. The provisional theme is not final art canon.
 
 ## Evidence and acceptance
 
@@ -70,7 +85,15 @@ separate from human visual approval and retain the existing
 [verification and golden ownership rules](../10-vertical-slice/ui-ux-foundation/UI_VERIFICATION_STRATEGY.md).
 Physical input/DPI and other deferred Phase 5 obligations remain open as recorded.
 
-## Integration verification
+The later clarification adds all ten company-management identity questions and
+explicit admin-UI, dashboard, decoration and current-scope tests to the review
+record. A YES to generic SaaS, editor/debug interchangeability or spectacle-only
+decoration requires correction. This supplements rather than renumbers the
+preserved A–J audit and 14-part gate. At 720p retain a meaningful operating center,
+selected scope, material situation/route and affairs access; do not retreat to a
+giant list. At 1080p add useful relationships/state/evidence, not filler.
+
+## Historical integration verification — original governance package
 
 Executed 2026-10-06: the repository brief matches the supplied attachment
 byte-for-byte; all 50 numbered rules and 14 source gate criteria are present.

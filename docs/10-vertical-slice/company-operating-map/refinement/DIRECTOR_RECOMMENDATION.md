@@ -37,3 +37,14 @@ satisfaction score, find time or human approval has been supplied for this gate.
 
 Stop here. Stage 4, live identity/observation integration, Sponsor implementation,
 final art and all DV/QG dispositions remain outside this completed assignment.
+
+## Current-status note — 2026-10-06 Director clarification
+
+The comparison and original LIST-FIRST / MAP-OPTIONAL recommendation above remain
+valid historical evidence. Structured list navigation remains required. The later
+[Stage 5 composition clarification](../../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+changes its visual application: list-first does not imply list-dominant company
+composition. A semantic Company Operating Space may be the visual/orientation
+anchor while preserving shared IDs, selection, keyboard parity and exact return.
+Stage 3.1 did not test the final visual direction; no usability result, measured
+geometry, original recommendation text or Stage 3/4 evidence is retroactively changed.

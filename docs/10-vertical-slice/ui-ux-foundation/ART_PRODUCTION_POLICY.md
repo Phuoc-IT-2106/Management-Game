@@ -2,6 +2,25 @@
 
 Status: PROPOSAL, under the Director's one-developer/system-first constraint.
 
+## Active Stage 5 interpretation — 2026-10-06
+
+The [Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+distinguishes decorative art from semantic operating visualization. Reject generic
+arenas, futuristic HQ wallpaper, cyberpunk cities, random offices and noninteractive
+illustrations used to fill space. A stateful, selectable/inspectable company
+representation is allowed when it maps actual scopes/functions/relationships,
+anchors orientation, leads to supported workspaces, uses real stable IDs and
+actor-safe data, and provides equivalent text/list navigation and information.
+
+A future illustrated headquarters/company campus may enrich that semantic model
+only through later art review. Stage 5 must work as a schematic/vector/structured
+space without bespoke HQ art. This clarification authorizes no asset generation.
+References may guide composition, density and atmosphere, never import names,
+logos, values, sponsors, leagues/sports, divisions, mechanics, modules or art assets.
+Final font/palette/panel treatment remains open; engineering-neutral-v1 is provisional.
+
+## Production baseline
+
 Quality should come primarily from information architecture, typography,
 composition, hierarchy, consistent reusable components and clear consequences.
 Prefer vector icons, symbols, configurable company marks, diagrams, documents,

@@ -63,6 +63,20 @@ while its player purpose or command semantics are unresolved.
 
 ## Anti-pattern disposition
 
+Stage 5 applies the active [Director composition contract](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md).
+Company composition must pass its ten management-game identity questions, recorded
+in the [screen review template](STAGE5_SCREEN_REVIEW_TEMPLATE.md). Reject both a
+generic SaaS/dashboard and an engineering/admin/debug interface: absence of cards
+or gradients is insufficient. A dominant ownership tree, editor-like inspector or
+database-browsing mental model can fail even with correct navigation. Structured
+navigation supports the operating space without defining its entire visual identity.
+
+Panels, lists, charts, status/time regions and resource values are permitted as
+question-led simulation instruments. A central semantic visualization may be the
+visual anchor when it shares authoritative state and equivalent keyboard/list
+paths. A YES to generic-SaaS interchangeability, editor/debug resemblance or
+spectacle-only decoration requires correction, not styling justification.
+
 Reject dashboard-for-every-domain, universal card grids, page = system = database
 table, arbitrary buttons, redundant “View” actions, context-free duplicated
 metrics/KPI walls, hidden trade-offs and color implying an inherently correct

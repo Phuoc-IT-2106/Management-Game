@@ -2,6 +2,17 @@
 
 Status: PROPOSAL. The canonical simulation cycle remains DEC-013.
 
+Current Stage 5 interpretation: the [Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+preserves this interaction architecture and the verified Stage 3/4 contracts.
+LIST-FIRST means deterministic structured navigation/reference and keyboard parity,
+shared IDs/selection/revision and exact valid return. It does not require a visually
+dominant list. A central operating visualization may orient the company provided
+every fact/route has a structured equivalent and spatial interaction is optional.
+Company home and decision workspaces may use different compositions; entering a
+decision may replace the full-size operating space while preserving company,
+function/scope, originating matter, time/revision and return context. No new command,
+time-stop rule, scheduler or navigation authority is introduced.
+
 ## Hybrid model and roles
 
 | Surface | Purpose | Interaction constraint |
@@ -11,7 +22,8 @@ Status: PROPOSAL. The canonical simulation cycle remains DEC-013.
 | Document / entity | Inspect a person, offer, contract or report with provenance | Object is directly navigable; actions depend on legality and authority |
 | Timeline / affairs | Understand timing, consequences and matters needing attention | Reflect authoritative chronology and checkpoint semantics |
 
-Start with a bounded structural map plus accessible list/matrix equivalent.
+Historical Stage 1 prototype plan (subsequently explored in Stage 3/3.1; not the
+final Stage 5 visual direction): start with a bounded structural map plus accessible list/matrix equivalent.
 Compare a hierarchical portfolio map (clear ownership), function/scope matrix
 (clear shared services) and relationship graph (clear dependencies but expensive
 at scale) in a later low-fidelity prototype. The preferred hybrid combines a

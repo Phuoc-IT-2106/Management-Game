@@ -12,6 +12,13 @@ actions, trade-offs, unknowns, return behavior and failure states before visual
 implementation. Attach a [Stage 5 review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md);
 the illustrative example below retains its original proposal status.
 
+Apply the later [composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+to company-level specifications; see the [draft operating-space blueprint](../company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md).
+List-first navigation does not prescribe list-dominant visuals. Classify every
+region's source, supported current content, interaction, components, priority,
+720p/1080p behavior, forbidden content and unresolved visual choices. Do not promote
+prototype fixtures into live gameplay. Company and decision compositions may differ.
+
 ```text
 SCREEN / WORKSPACE NAME:
 Blueprint ID / version:
@@ -45,6 +52,15 @@ Attention priority / matter class / reason:
 
 Canonical components (version and any reviewed gap):
 Layout regions and density / reflow rules (not a final pixel design):
+PRIMARY VISUAL ANCHOR: What is the dominant simulation representation?
+STRUCTURED NAVIGATION ROLE: How does hierarchy support rather than define the screen?
+OPERATING-SPACE ROLE: How does the center communicate company operation/state?
+INSTRUMENT TEST: What player question does each surrounding panel answer?
+ADMIN-UI TEST: Could this be mistaken for editor/debug/database tooling?
+DASHBOARD TEST: Could this be generic SaaS/business software?
+DECORATION TEST: Would gameplay/navigation/context meaning change if removed?
+CURRENT-SCOPE TEST: Is each entity/module/mechanic currently supported and sourced?
+Region source/content/interaction/components/priority/forbidden/unresolved matrix:
 Navigation behavior / cross-links / return to decision:
 Keyboard behavior / focus restoration / shortcut suppression:
 Draft lifetime / cancellation:
@@ -64,6 +80,7 @@ Automated checks:
 Golden capture cases / viewport / brand / states:
 UX review framework (all 11 dimensions with evidence):
 Stage 5 review record (region value audit, A–J review, all 14 gate criteria):
+Company-level ten-question identity gate (later Director clarification):
 720p / 1080p and long-content evidence; repeated-use and unbranded identity tests:
 Open questions / dependencies / migration and rollback:
 ```

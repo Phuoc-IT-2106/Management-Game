@@ -29,6 +29,49 @@ Use one row per visible region, including persistent context and action areas.
 - Chart questions, bounded progress quantities, or explicit absence:
 - Existing component composition; any failed composition and smallest proposed addition:
 
+## Visual composition contract — later Director clarification
+
+Authority: [2026-10-06 composition direction](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md).
+Complete these fields for every proposal; company-level reviews also answer all
+ten identity questions below. For a decision workspace, explain its distinct
+composition and preserved company/origin/return context. These checks supplement
+the original audit and gate without altering the preserved brief.
+
+- PRIMARY VISUAL ANCHOR: What is the dominant simulation representation?
+- STRUCTURED NAVIGATION ROLE: How does the list/hierarchy support navigation without defining the whole screen?
+- OPERATING-SPACE ROLE: How does the central representation communicate company operation/state?
+- INSTRUMENT TEST: For each surrounding panel, what player question does it answer?
+- ADMIN-UI TEST: Could this screen be mistaken for editor/debug/database tooling?
+- DASHBOARD TEST: Could this screen be generic SaaS/business software?
+- DECORATION TEST: Would gameplay/navigation/context meaning change if this visual element were removed?
+- CURRENT-SCOPE TEST: Is every displayed module/entity/mechanic currently supported? Link exact source and implemented destination; distinguish integration gaps.
+
+| # | Company-level management-game identity question | YES / NO / PENDING | Evidence / correction |
+| --- | --- | --- | --- |
+| 1 | Without branding, does this still read as a management/simulation game? | | |
+| 2 | Is the company itself visibly the subject being operated? | | |
+| 3 | Can the player understand ownership and shared corporate functions? | | |
+| 4 | Are time, situations, commitments and consequences visible? | | |
+| 5 | Does the center communicate a changing simulation rather than a static database? | | |
+| 6 | Is the structured list available without defining the whole visual identity? | | |
+| 7 | Could this exact composition be dropped into generic SaaS? | | |
+| 8 | Could this exact composition be mistaken for editor/debug tooling? | | |
+| 9 | Are surrounding information surfaces actual simulation instruments? | | |
+| 10 | Is any visual element present only to make the screen look impressive? | | |
+
+A YES to 7, 8 or 10 requires correction. A NO to a positive requirement requires
+revision; missing evidence remains PENDING. Neither styling nor removal of cards
+and gradients waives these checks. Reject both generic web/SaaS composition and
+engineering/admin/debug composition. Record shared semantic-state parity, equivalent
+keyboard/list routes, real targets and no-art viability for the operating visualization.
+
+Company 1280×720 evidence: identity/context, time/checkpoint, selected scope,
+meaningful operating center, material situation and decision route, affairs/time
+discoverability, no primary-shell horizontal scrolling. Secondary instruments may
+collapse; a giant list is not the density solution. Company 1920×1080 evidence:
+useful relationships, operating state, consequences and evidence; no invented
+metrics or merely stretched layout. Record unresolved visual choices explicitly.
+
 ## Anti-AI visual review
 
 Answer YES / NO for every row. Every YES needs a correction with recheck evidence
@@ -83,6 +126,8 @@ or documented justification. An unanswered row remains PENDING.
 
 Disposition: PENDING / REVISE / REJECT / ACCEPT, with rationale and named reviewer.
 Any failed criterion prevents acceptance; pending evidence prevents a pass claim.
+The later composition checks also block acceptance when failed or pending;
+all original fourteen criteria still apply.
 Reject a proposal that violates the governing rules even if visually attractive.
 Record engineering results separately from human acceptance; do not promote
 candidate captures to approved goldens through this template alone.

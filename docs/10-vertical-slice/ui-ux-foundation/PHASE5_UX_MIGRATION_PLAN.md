@@ -3,6 +3,32 @@
 Status: PROPOSAL. This task completes only stage 1. Later stages are separate
 bounded assignments; no UI demo or production redesign starts here.
 
+## Current Stage 5 application — 2026-10-06
+
+The original stage table and next-task recommendation below record the Stage 1
+plan. DEC-023 was subsequently accepted; Stages 2/3/3.1 and the first sponsor
+workspace now have recorded engineering evidence. Stage 4 human review remains
+pending. Read [current project state](../../00-project/PROJECT_STATE.md) for status.
+
+Before Stage 5 BUILD, apply the active [Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+and review the [Company Operating Space blueprint](../company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md),
+currently DRAFT FOR DIRECTOR VISUAL REVIEW. LIST-FIRST remains navigation/reference
+authority, not a requirement for a list-dominant company home. Target a meaningful
+company operating/command space with structured parity; reject both SaaS dashboards
+and admin/debug interfaces. Company and decision workspace compositions may differ.
+
+The next composition milestone is visual exploration and Director review of
+semantic regions, operating-space form, instruments, 720p/1080p reflow and any
+smallest shared visual-system refinement. Provisional tokens are not final art;
+this documentation correction changes no values. Current live company routing is
+sponsor-bounded: review broader actor-safe situation/destination integration and
+identity prerequisites before representing a complete playable company demo.
+Keep internal Main, map/list and sponsor exact-return behavior; preserve all
+historical findings, acceptance limits and DV/QG obligations. No implementation
+or final artwork begins in this task.
+
+## Original staged plan
+
 | Stage | Scope / owner | Entry | Exit evidence / rollback |
 | --- | --- | --- | --- |
 | 0. Preserve functional slice | Technical Lead | Existing local gameplay/engineering path | Preserve files, command semantics, tests, save boundaries and historical evidence; classify current UI as internal |

@@ -2,6 +2,17 @@
 
 Status: PROPOSAL, constrained by DEC-001/002/003/008/022 and the Director brief.
 
+Current interpretation (2026-10-06): DEC-023 accepts this architecture. The active
+[Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+requires company-level visual identity to read as a **Company Operating / Command
+Space**. Structured hierarchy is required navigation/reference, not the dominant
+visual prescription. Ownership, shared functions, situations, time, commitments
+and consequences form one connected company. Both administrative tree/editor
+composition and generic SaaS dashboard composition fail. Panels, charts, lists and
+other instruments are allowed when they answer current simulation questions.
+The [Stage 5 blueprint](../company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md)
+is a draft semantic composition, not final art or implementation approval.
+
 The intended question is “What company am I building, and which commitment should
 I make next?” Competitive teams are owned business units. Competition generates
 strategic and commercial consequences within the company's broader objectives.

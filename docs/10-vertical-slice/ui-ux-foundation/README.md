@@ -10,6 +10,14 @@ all 50 rules and the 14-part gate apply. Use the
 [screen review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md) alongside each blueprint.
 This instruction does not retroactively accept existing screens or final art.
 
+The later [Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+is active under DEC-023: list-first is navigation authority, not list-dominant
+visual design. Company Operating / Command Space is the intended company-level
+identity; reject both SaaS dashboards and admin/debug tooling. Start company-level
+visual exploration from the [draft composition blueprint](../company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md),
+then use the expanded review record. Semantic instruments/visualization are allowed;
+Stage 3/4 evidence and provisional Stage 2 styling retain their original limits.
+
 The player builds and operates their own company. Corporate functions describe
 what they are doing; the operating portfolio describes where it applies. A
 company operating map, contextual workspaces, entities/documents and affairs

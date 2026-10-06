@@ -10,6 +10,26 @@ now requires approved blueprint, component catalog, tokens and interaction rules
 before visual implementation, plus the [Stage 5 review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md).
 It does not grant blanket approval to illustrative screens or provisional designs.
 
+Apply the later [Director composition clarification](../../01-governance/STAGE5_VISUAL_COMPOSITION_DIRECTION.md)
+before Stage 5 layout work. The [company operating-space blueprint](../company-ui-demo/COMPANY_OPERATING_SPACE_BLUEPRINT.md)
+is DRAFT FOR DIRECTOR VISUAL REVIEW. Do not inherit a dominant tree/inspector/affairs
+composition from Stage 3.1 or mistake list-first navigation for a visual mandate.
+Keep equivalent structured paths and all verified ID/context/return semantics.
+
+Review both failure modes: generic SaaS/dashboard and engineering/admin/debug UI.
+Removing cards/gradients alone does not pass. Record primary visual anchor,
+structured navigation and operating-space roles, each instrument's player question,
+admin/dashboard/decoration tests and current-scope provenance. The additional ten
+identity questions supplement the unchanged A–J and 14-part gate.
+
+Stage 2 components are primitives, not a Company layout. PanelContainer does not
+mandate a bordered card for every region. Use the smallest reviewed central
+refinement if composition fails; never locally restyle. Provisional token values,
+fonts and panels are not final art canon. Visual references cannot supply gameplay
+content, fake future navigation or copied assets. Semantic operating visualization
+is allowed with actor-safe state, stable IDs and a text/list equivalent; decorative
+HQ art is not a dependency. This correction task stops at documentation.
+
 ## Authority
 
 Read in order: accepted project decisions → approved UX architecture → approved
