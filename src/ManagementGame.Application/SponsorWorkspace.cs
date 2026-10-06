@@ -14,7 +14,7 @@ public sealed record SponsorSnapshot(string CampaignId, string CompanyId, string
     long Revision, int Day, int? NextCheckpoint, long Cash, long CommittedForecast,
     int Load, int Capacity, int Reputation, ImmutableArray<SponsorTerms> Offers,
     ImmutableArray<SponsorAgreement> Agreements, int LastDay, ImmutableArray<int> LoadByDay,
-    ImmutableArray<int> CompetitionDays);
+    ImmutableArray<int> CompetitionDays, int SponsorSlots);
 
 public interface ISponsorSession
 {
@@ -35,7 +35,8 @@ public static class SponsorProjection
     // Only player-owned finances and visible offer terms; no rival private inputs.
     public static SponsorSnapshot Build(Campaign state, Content content)
     {
-        var c = state.Company; var w = state.World; var day = w.Calendar.Day; var last = content.Balance.Horizon;
+        // A fixed four-week lookahead; the campaign itself has no end date.
+        var c = state.Company; var w = state.World; var day = w.Calendar.Day; var last = day + 27;
         // Daily load from the authoritative Load rule, holding today's roster and agreements fixed.
         ImmutableArray<int> LoadByDay(Company company) => Enumerable.Range(day, Math.Max(0, last - day + 1))
             .Select(d => Simulation.Load(company, content.Balance, d)).ToImmutableArray();
@@ -56,7 +57,7 @@ public static class SponsorProjection
                 preview.Company.FinancialItems.Where(i => i.CauseId == "agreement:" + o.Id)
                     .Select(i => new SponsorPayment(i.Id, i.DueDay, i.Amount, i.Remaining)).ToImmutableArray());
             // Consequence preview comes from the same authoritative transition, never UI arithmetic.
-            return new SponsorTerms(o.Id, o.Name, o.Deadline, o.EndDay, o.Payment, o.WinBonus,
+            return new SponsorTerms(o.Id, o.Name, o.Deadline, signed?.EndDay ?? day + o.DurationDays - 1, o.Payment, o.WinBonus,
                 o.Load, o.MinimumReputation, preview is not null, reason, payments,
                 preview is null ? null : Simulation.Load(preview.Company, content.Balance, day),
                 preview is null ? null : Finance.Forecast(preview.Company, day),
@@ -65,6 +66,6 @@ public static class SponsorProjection
         return new(state.Execution.CampaignId, c.Id, c.Name, state.Execution.Revision, day,
             Simulation.NextFixture(state)?.Day, c.Cash, Finance.Forecast(c, day),
             Simulation.Load(c, content.Balance, day), c.Coach.Capacity, c.Reputation, offers, agreements,
-            last, LoadByDay(c), w.Fixtures.Where(f => f.Day >= day).Select(f => f.Day).Order().ToImmutableArray());
+            last, LoadByDay(c), w.Fixtures.Where(f => f.Day >= day && f.Day <= last).Select(f => f.Day).Order().ToImmutableArray(), content.Balance.SponsorSlots);
     }
 }

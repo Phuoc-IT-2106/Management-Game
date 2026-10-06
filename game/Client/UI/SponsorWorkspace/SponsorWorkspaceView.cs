@@ -72,7 +72,7 @@ public partial class SponsorWorkspaceView : Control
             if (o is not null)
             {
                 document = DocumentView.Create(ui, SponsorPresentation.Document(s, o)); terms.AddChild(document);
-                terms.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known, "Limit: two active sponsors, including the initial agreement. No termination action is supported."));
+                terms.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known, $"Limit: {s.SponsorSlots} active sponsors, including existing agreements. No termination action is supported."));
                 if (o.Availability != "Signed") terms.AddChild(ComparisonView.Create(ui, new("Accept", "Leave available",
                     [new("Income and obligation", SponsorPresentation.Money(o.Payment) + " each scheduled receipt; +" + o.Load + " ongoing load.",
                     "No new income or load; opportunity may expire or be claimed."),

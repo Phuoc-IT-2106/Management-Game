@@ -257,6 +257,16 @@ lacks time control and world presence (roster, rivals, fixtures); that is the ne
 enabled step, followed by graphical primitives and retiring the internal console
 as a player path. DEC-001–023 and DV obligations are unchanged; Phase 5 stays open.
 
+### Rules v2 — continuous campaign — 2026-10-06
+
+By explicit user instruction the bounded 28-day fixture is replaced by
+[rules v2](../10-vertical-slice/RULES_V2_CONTINUOUS_CAMPAIGN.md): consecutive seasons
+with regenerated schedules, a qualification-gated sponsor market plus player
+negotiation, staggered contracts with renewal, a coach market, and people, rivals
+and brands generated per seed from content pools. Content and save schema move to
+2; v1 saves are rejected by design (no migration promised, DV-08). All values stay
+noncanonical. A Director DEC entry should confirm this scope expansion.
+
 ## Current Priority
 
 Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.

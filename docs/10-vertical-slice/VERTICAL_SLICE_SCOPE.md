@@ -1,5 +1,10 @@
 # Playable scope
 
+> **Superseded in part by [rules v2](RULES_V2_CONTINUOUS_CAMPAIGN.md)** (2026-10-06, user
+> instruction): continuous seasons replace the 28-day campaign; sponsors arrive from a
+> market or are negotiated; people, rivals and brands are generated from content pools.
+> The text below records the original v1 slice scope.
+
 One company, one fictional 5v5 discipline, one primary team, six starting players,
 one Head Coach, two compressed rivals and four fixtures within a 28-day development
 campaign. Counts, denomination and numerical calibration are NONCANONICAL DEVELOPMENT

@@ -11,6 +11,8 @@ probabilities use integer millionths. Arithmetic rounds ties to even at explicit
 division boundaries. Keyed SHA-256 rng-v1 uses length-prefixed NFC UTF-8 fields and
 big-endian lengths/output, with rejection sampling. Golden vectors precede use.
 
-Initial content: six players, one coach, two rivals, four scheduled competitions,
-one candidate, active sponsor and two alternative offers, employment/sponsor
-terms and bounded balance configuration. No scripts or generic mod loader.
+Content schema 2 (rules v2, see [continuous campaign](RULES_V2_CONTINUOUS_CAMPAIGN.md)):
+balance and season shape, attribute generation ranges, name pools, rival
+organization names and a sponsor brand pool. People, rivals, schedules and offers
+are generated per seed; no names are fixed in code. No scripts or generic mod loader.
+The v1 description (six fixed players, two rivals, four fixtures, fixed offers) is historical.

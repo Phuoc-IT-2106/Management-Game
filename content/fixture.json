@@ -1,35 +1,38 @@
 {
   "Format": "management-game-development-content",
-  "Schema": 1,
-  "Label": "NONCANONICAL DEVELOPMENT FIXTURE — fictional 5v5 Role Arena; 28 days",
-  "RulesVersion": "slice-rules-v1",
-  "CompanyName": "DEV_ORG_001",
-  "Balance": {"Horizon":28,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"OperatingCost":1500,"BaseLoad":35,"PreparationScale":30,"MatchScale":12000,"Variance":8,"MetaDay":13,"RivalCadence":4,"ReputationGain":8,"AudienceGain":180},
-  "Coach": {"Id":"person:coach","Name":"Mira Chen","Preparation":72,"Analysis":70,"Adaptability":68,"Capacity":80},
-  "Players": [
-    {"Person":{"Id":"person:a","DefinitionId":"player:dev:anchor","Name":"Linh Tran","Role":"A","Execution":71,"Adaptability":64,"Consistency":78,"Readiness":90},"Salary":1000,"ReleaseCost":3000},
-    {"Person":{"Id":"person:b","DefinitionId":"player:dev:tempo","Name":"Kai Nguyen","Role":"B","Execution":68,"Adaptability":78,"Consistency":65,"Readiness":86},"Salary":900,"ReleaseCost":2500},
-    {"Person":{"Id":"person:c","DefinitionId":"player:dev:core","Name":"Ari Park","Role":"C","Execution":73,"Adaptability":61,"Consistency":72,"Readiness":92},"Salary":1100,"ReleaseCost":3000},
-    {"Person":{"Id":"person:d","DefinitionId":"player:dev:link","Name":"Sam Le","Role":"D","Execution":66,"Adaptability":74,"Consistency":76,"Readiness":88},"Salary":850,"ReleaseCost":2500},
-    {"Person":{"Id":"person:e","DefinitionId":"player:dev:closer","Name":"Noor Pham","Role":"E","Execution":69,"Adaptability":68,"Consistency":80,"Readiness":91},"Salary":950,"ReleaseCost":2500},
-    {"Person":{"Id":"person:sub","DefinitionId":"player:dev:reserve","Name":"Jules Vo","Role":"B","Execution":62,"Adaptability":84,"Consistency":70,"Readiness":98},"Salary":650,"ReleaseCost":1200}
-  ],
-  "Rivals": [
-    {"Id":"rival:ember","Name":"Ember Collective","Strength":75,"Analysis":76,"Adaptability":72,"Posture":2,"Budget":40,"Need":1},
-    {"Id":"rival:tide","Name":"Tide Union","Strength":68,"Analysis":55,"Adaptability":77,"Posture":0,"Budget":25,"Need":0}
-  ],
-  "Fixtures": [
-    {"Id":"fixture:01","Day":6,"RivalId":"rival:ember","Importance":1,"Prize":14000},
-    {"Id":"fixture:02","Day":12,"RivalId":"rival:tide","Importance":1,"Prize":14000},
-    {"Id":"fixture:03","Day":18,"RivalId":"rival:ember","Importance":2,"Prize":18000},
-    {"Id":"fixture:04","Day":24,"RivalId":"rival:tide","Importance":2,"Prize":18000}
-  ],
-  "Offers": [
-    {"Id":"offer:atlas","Name":"Atlas Hardware","Deadline":8,"EndDay":28,"Payment":35000,"WinBonus":5000,"Load":25,"MinimumReputation":40,"ClaimedBy":null},
-    {"Id":"offer:local","Name":"Local Circuit","Deadline":16,"EndDay":28,"Payment":22000,"WinBonus":1000,"Load":8,"MinimumReputation":20,"ClaimedBy":null}
-  ],
-  "Candidates": [
-    {"Person":{"Id":"person:star","DefinitionId":"player:dev:star","Name":"Rin Dao","Role":"B","Execution":86,"Adaptability":72,"Consistency":68,"Readiness":95},"Fee":65000,"Salary":2400,"ReleaseCost":8000,"Deadline":10}
-  ],
-  "InitialSponsor": {"Id":"offer:seed","Name":"Origin Coffee","Deadline":1,"EndDay":28,"Payment":35000,"WinBonus":2500,"Load":12,"MinimumReputation":0,"ClaimedBy":null}
+  "Schema": 2,
+  "Label": "NONCANONICAL DEVELOPMENT FIXTURE — fictional 5v5 Role Arena; continuous seasons",
+  "RulesVersion": "slice-rules-v2",
+  "DefaultCompanyName": "DEV_ORG_001",
+  "Balance": {"SeasonLength":56,"FirstMatchDay":6,"MatchInterval":5,"RivalCount":4,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"BaseLoad":35,"PreparationScale":30,"MatchScale":12000,"Variance":8,"MetaDayOfSeason":21,"RivalCadence":4,"ReputationGain":8,"AudienceGain":180,"PrizeBase":14000,"SponsorSlots":2,"MaxOpenOffers":3,"MarketInterval":7,"OfferWindow":7,"NegotiationDelay":2,"RejectCooldown":21,"RosterSize":6,"MaxRoster":8,"CandidateCount":4,"CoachCandidateCount":3,"TalentRefreshInterval":28,"RenewalWindow":21,"StartingContractSeasons":2},
+  "Generation": {
+    "Talent": {"Min":62,"Max":76},
+    "Prospect": {"Min":58,"Max":88},
+    "CoachSkill": {"Min":58,"Max":80},
+    "CoachCapacity": {"Min":72,"Max":90},
+    "Rival": {"Min":64,"Max":78}
+  },
+  "Names": {
+    "Given": ["Linh","Kai","Ari","Sam","Noor","Jules","Minh","An","Bao","Hana","Joon","Seo-yeon","Mateo","Lucia","Ivan","Elif","Omar","Priya","Ravi","Aiko","Ren","Tomas","Ingrid","Femi","Zara","Leo","Maya","Niko","Sofia","Diego","Yuki","Thao","Duc","Mai","Kofi","Amara","Lena","Oskar","Wei","Ines"],
+    "Family": ["Tran","Nguyen","Park","Le","Pham","Vo","Hoang","Dao","Kim","Lee","Choi","Sato","Tanaka","Chen","Wang","Singh","Patel","Garcia","Silva","Rossi","Novak","Kowalski","Okafor","Mensah","Haddad","Yilmaz","Larsen","Berg","Moreau","Dubois","Costa","Ibrahim","Kaya","Petrov","Morales","Alvarez","Fischer","Weber","Romero","Nakamura"]
+  },
+  "OrganizationNames": ["Ember Collective","Tide Union","Northwind Gaming","Crimson Lantern","Ironbark Esports","Saltmarsh Five","Paper Tigers GG","Hollow Peak","Glasswing","Quarry Club","Foxglove Esports","Stormhaven","Blue Heron Squad","Copper Kites","Night Ferry","Lotus Signal","Red Kiln","Granite Owls","Silver Current","Marigold Union"],
+  "Brands": [
+    {"Id":"brand:northfield-coffee","Name":"Northfield Coffee","Sector":"Food & beverage","MinimumReputation":0,"MinimumAudience":0,"BasePayment":30000,"WinBonus":2500,"Load":12,"DurationDays":[28,56]},
+    {"Id":"brand:copperline-print","Name":"Copperline Print","Sector":"Local services","MinimumReputation":10,"MinimumAudience":500,"BasePayment":18000,"WinBonus":1000,"Load":6,"DurationDays":[28,56]},
+    {"Id":"brand:mosswood-snacks","Name":"Mosswood Snacks","Sector":"Food & beverage","MinimumReputation":15,"MinimumAudience":800,"BasePayment":20000,"WinBonus":1500,"Load":9,"DurationDays":[28,56]},
+    {"Id":"brand:greyhook-hosting","Name":"Greyhook Hosting","Sector":"Technology","MinimumReputation":20,"MinimumAudience":1000,"BasePayment":22000,"WinBonus":1500,"Load":8,"DurationDays":[28,56,84]},
+    {"Id":"brand:tidewater-energy","Name":"Tidewater Energy Drinks","Sector":"Food & beverage","MinimumReputation":35,"MinimumAudience":2000,"BasePayment":32000,"WinBonus":4000,"Load":18,"DurationDays":[28,56]},
+    {"Id":"brand:atlas-hardware","Name":"Atlas Hardware","Sector":"Hardware","MinimumReputation":40,"MinimumAudience":2500,"BasePayment":35000,"WinBonus":5000,"Load":25,"DurationDays":[28,56,84]},
+    {"Id":"brand:lumenfield-mobile","Name":"Lumenfield Mobile","Sector":"Telecom","MinimumReputation":42,"MinimumAudience":3000,"BasePayment":36000,"WinBonus":3000,"Load":16,"DurationDays":[56,84]},
+    {"Id":"brand:kestrel-peripherals","Name":"Kestrel Peripherals","Sector":"Hardware","MinimumReputation":45,"MinimumAudience":3000,"BasePayment":38000,"WinBonus":4500,"Load":20,"DurationDays":[56,84]},
+    {"Id":"brand:orbit-air","Name":"Orbit Air","Sector":"Travel","MinimumReputation":55,"MinimumAudience":6000,"BasePayment":52000,"WinBonus":6000,"Load":22,"DurationDays":[56,84]},
+    {"Id":"brand:halcyon-apparel","Name":"Halcyon Apparel","Sector":"Apparel","MinimumReputation":55,"MinimumAudience":6500,"BasePayment":48000,"WinBonus":7000,"Load":20,"DurationDays":[56,84]},
+    {"Id":"brand:harborvale-bank","Name":"Harbor & Vale Bank","Sector":"Finance","MinimumReputation":58,"MinimumAudience":7000,"BasePayment":56000,"WinBonus":5000,"Load":18,"DurationDays":[84,112]},
+    {"Id":"brand:ferro-motors","Name":"Ferro Motors","Sector":"Automotive","MinimumReputation":60,"MinimumAudience":8000,"BasePayment":60000,"WinBonus":8000,"Load":26,"DurationDays":[56,84,112]},
+    {"Id":"brand:vantage-cloud","Name":"Vantage Cloud","Sector":"Technology","MinimumReputation":70,"MinimumAudience":15000,"BasePayment":80000,"WinBonus":10000,"Load":24,"DurationDays":[84,112]},
+    {"Id":"brand:borealis-games","Name":"Borealis Games","Sector":"Publisher","MinimumReputation":72,"MinimumAudience":18000,"BasePayment":88000,"WinBonus":9000,"Load":22,"DurationDays":[84,112]},
+    {"Id":"brand:meridian-telecom","Name":"Meridian Telecom","Sector":"Telecom","MinimumReputation":75,"MinimumAudience":20000,"BasePayment":95000,"WinBonus":12000,"Load":28,"DurationDays":[112,168]},
+    {"Id":"brand:apex-sportswear","Name":"Apex Sportswear","Sector":"Apparel","MinimumReputation":80,"MinimumAudience":25000,"BasePayment":110000,"WinBonus":15000,"Load":30,"DurationDays":[112,168]}
+  ]
 }

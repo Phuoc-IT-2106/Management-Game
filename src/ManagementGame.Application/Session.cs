@@ -24,14 +24,16 @@ public sealed partial class Session(Content content, Campaign initial, ISnapshot
                 if (request.Decision is AdvanceDecision && state.Company.Plan is null && Simulation.NextFixture(state) is not null && state.Company.Authority.Mode == ControlMode.Autonomous)
                 {
                     var observation = Observations.Build(staged, content);
-                    var plan = observation.Recommendation ?? throw new RuleViolation("Coach escalates: no legal lineup is available.");
                     if (observation.Confidence == "Low confidence") throw new RuleViolation("Coach escalates uncertain opponent information. Review and commit a plan manually.");
-                    // Same typed decision mapping and domain executor as a manual commitment.
-                    staged = ApplyDecision(staged, new PreparationDecision(plan.FixtureId, plan.Execution, plan.Opponent, plan.Meta, plan.Posture, plan.Lineup), "coach:" + request.Id);
+                    // Same typed decision mapping and domain executor as a manual commitment. Without a legal lineup the match is forfeited.
+                    if (observation.Recommendation is { } plan)
+                        staged = ApplyDecision(staged, new PreparationDecision(plan.FixtureId, plan.Execution, plan.Opponent, plan.Meta, plan.Posture, plan.Lineup), "coach:" + request.Id);
                 }
                 staged = ApplyDecision(staged, request.Decision, request.Id);
                 var revision = checked(state.Execution.Revision + 1);
-                var message = request.Decision is AdvanceDecision ? $"Advanced to day {staged.World.Calendar.Day}; {staged.World.Results.Length} competition results recorded." : "Decision committed.";
+                var message = request.Decision is AdvanceDecision
+                    ? $"Advanced to day {staged.World.Calendar.Day}: {Simulation.StopReason(state, staged) ?? "a week passed with nothing new."}"
+                    : "Decision committed.";
                 state = staged with { Execution = staged.Execution with { Revision = revision,
                     Receipts = staged.Execution.Receipts.Add(new CommandReceipt(request.Id, digest, revision, message)) } };
                 return new Response(true, revision, message);
@@ -47,8 +49,10 @@ public sealed partial class Session(Content content, Campaign initial, ISnapshot
             PreparationDecision p => new CommitPlan(new Plan(p.FixtureId, p.Execution, p.Opponent, p.Meta, (Posture)p.Posture, p.Lineup,
                 Enum.Parse<Posture>(Observations.Build(s, content).OpponentTendency), cause)),
             CoachDecision a => new SetAuthority(new Authority((ControlMode)a.Mode, (Posture)a.Ceiling)),
-            SigningDecision p => new SignPlayer(p.PersonId), ReleaseDecision p => new ReleasePlayer(p.PersonId),
-            SponsorDecision o => new AcceptSponsor(o.OfferId), AdvanceDecision => new Advance(),
+            SigningDecision p => new SignPlayer(p.PersonId, p.Seasons), ReleaseDecision p => new ReleasePlayer(p.PersonId),
+            SponsorDecision o => new AcceptSponsor(o.OfferId), ProposalDecision p => new ProposeSponsorship(p.BrandId, p.Payment, p.DurationDays),
+            RenewalDecision r => new RenewContract(r.PersonId, r.Seasons), HireCoachDecision h => new HireCoach(h.CoachId),
+            AdvanceDecision => new Advance(),
             _ => throw new RuleViolation("Unsupported decision.")
         };
         return Simulation.Apply(s, intent, content, cause);

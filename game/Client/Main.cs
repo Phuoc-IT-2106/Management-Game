@@ -17,14 +17,17 @@ public partial class Main : Control
     private TreeItem root = null!;
     private readonly List<TreeItem> rows = [];
     private readonly LineEdit search = new() { PlaceholderText = "Search roster by name or ID", CustomMinimumSize = new Vector2(240, 0) };
-    private readonly OptionButton roleFilter = new(), sort = new(), posture = new(), authority = new(), ceiling = new(), candidates = new(), offers = new();
+    private readonly OptionButton roleFilter = new(), sort = new(), posture = new(), authority = new(), ceiling = new(), candidates = new(), offers = new(),
+        contractSeasons = new(), coachCandidates = new(), brands = new(), proposalDuration = new();
+    private readonly SpinBox proposalPayment = new() { MinValue = 5, MaxValue = 3000, Step = 5, Value = 300, Suffix = "CU/week", CustomMinimumSize = new Vector2(170, 0) };
+    private readonly LineEdit companyInput = new() { PlaceholderText = "Company name", CustomMinimumSize = new Vector2(200, 0) };
     private readonly SpinBox execution = new() { MinValue = 0, MaxValue = 100, Value = 50 }, opponentWork = new() { MinValue = 0, MaxValue = 100, Value = 30 }, meta = new() { MinValue = 0, MaxValue = 100, Value = 20 };
     private readonly Dictionary<string, OptionButton> lineup = [];
     private readonly ConfirmationDialog confirmation = new();
     private Action? confirmed;
     private string? selectedId;
     private int page;
-    private Button commit = null!, advance = null!, sign = null!, sponsor = null!, release = null!, coach = null!;
+    private Button commit = null!, advance = null!, sign = null!, sponsor = null!, release = null!, coach = null!, renew = null!, renewCoach = null!, hire = null!, propose = null!;
     private readonly List<double> binds = [], acknowledgements = [], frames = [];
     private bool benchmark, refreshing;
     private int benchmarkFrames, controlsBefore, captureFrames;
@@ -57,11 +60,11 @@ public partial class Main : Control
         foreach (var edge in new[] { "left", "right", "top", "bottom" }) margin.AddThemeConstantOverride("margin_" + edge, 20);
         AddChild(margin); var shell = new VBoxContainer(); shell.AddThemeConstantOverride("separation", 12); margin.AddChild(shell);
         var title = new HBoxContainer(); shell.AddChild(title); heading.AddThemeFontSizeOverride("font_size", 28); heading.SizeFlagsHorizontal = SizeFlags.ExpandFill; title.AddChild(heading);
-        title.AddChild(new Label { Text = "Campaign seed" }); title.AddChild(seedInput);
+        title.AddChild(companyInput); title.AddChild(new Label { Text = "Campaign seed" }); title.AddChild(seedInput);
         title.AddChild(Button("New campaign", () => Ask("Start a fresh campaign? Unsaved progress will be replaced.", () =>
         {
             if (!ulong.TryParse(seedInput.Text, out var seed)) { message.Text = "Enter an unsigned integer seed."; return; }
-            session = Composition.Create(contentPath, saveDirectory, seed); requestId = 0; selectedId = null; activeSlot = "campaign"; Refresh();
+            session = Composition.Create(contentPath, saveDirectory, seed, companyInput.Text); requestId = 0; selectedId = null; activeSlot = "campaign"; Refresh();
         })));
         var toolbar = new HBoxContainer(); shell.AddChild(toolbar); status.SizeFlagsHorizontal = SizeFlags.ExpandFill; toolbar.AddChild(status);
         toolbar.AddChild(Button("Save", () => Report(session.Save(activeSlot))));
@@ -87,23 +90,42 @@ public partial class Main : Control
         roleFilter.AddItem("All roles"); foreach (var role in new[] { "A", "B", "C", "D", "E" }) roleFilter.AddItem(role);
         foreach (var key in new[] { "Name", "Salary", "Readiness" }) sort.AddItem(key);
         filters.AddChild(roleFilter); filters.AddChild(sort); filters.AddChild(Button("Previous", () => { page--; BindRoster(); })); filters.AddChild(Button("Next", () => { page++; BindRoster(); })); team.AddChild(rosterCount);
-        roster.Columns = 5; roster.ColumnTitlesVisible = true; roster.HideRoot = true; roster.SizeFlagsVertical = SizeFlags.ExpandFill; roster.CustomMinimumSize = new Vector2(0, 230); roster.SelectMode = Tree.SelectModeEnum.Row;
-        var columns = new[] { "Player", "Role", "Execution · fact", "Readiness · fact", "Daily salary" };
+        roster.Columns = 6; roster.ColumnTitlesVisible = true; roster.HideRoot = true; roster.SizeFlagsVertical = SizeFlags.ExpandFill; roster.CustomMinimumSize = new Vector2(0, 230); roster.SelectMode = Tree.SelectModeEnum.Row;
+        var columns = new[] { "Player", "Role", "Execution · fact", "Readiness · fact", "Daily salary", "Contract ends" };
         for (var i = 0; i < columns.Length; i++) { roster.SetColumnTitle(i, columns[i]); roster.SetColumnExpand(i, true); }
         team.AddChild(roster); root = roster.CreateItem();
         roster.ItemSelected += () => { if (!refreshing) { selectedId = roster.GetSelected()?.GetMetadata(0).AsString(); UpdateRelease(); } };
         search.TextChanged += _ => { page = 0; BindRoster(); }; roleFilter.ItemSelected += _ => { page = 0; BindRoster(); }; sort.ItemSelected += _ => BindRoster();
         var personnel = new HBoxContainer(); team.AddChild(personnel); personnel.AddChild(candidates);
+        foreach (var length in new[] { 1, 2, 3 }) contractSeasons.AddItem(length + (length == 1 ? " season" : " seasons")); personnel.AddChild(contractSeasons);
         sign = Button("Review signing", () =>
         {
             var id = candidates.GetSelectedMetadata().AsString(); var candidate = view.Candidates.FirstOrDefault(x => x.Id == id); if (candidate is null) return;
-            Ask($"Sign {candidate.Name}?\nFee {Money(candidate.Fee)} now; salary {Money(candidate.Salary)}/day from tomorrow to day 28.\nInitial integration reduces readiness. Future payroll reduces financial flexibility.", () => Send(new SigningDecision(id)));
+            var seasons = contractSeasons.Selected + 1;
+            Ask($"Sign {candidate.Name} for {seasons} season(s)?\nFee {Money(candidate.Fee)} now; salary {Money(candidate.Salary)}/day until day {view.Day + seasons * view.SeasonLength - 1}.\nInitial integration reduces readiness. Future payroll reduces financial flexibility.", () => Send(new SigningDecision(id, seasons)));
         }); personnel.AddChild(sign);
+        renew = Button("Review renewal", () =>
+        {
+            var person = view.People.FirstOrDefault(x => x.Id == selectedId); if (person is null) return;
+            var seasons = contractSeasons.Selected + 1;
+            Ask($"Renew {person.Name} for {seasons} more season(s)?\nNew wage {Money(person.RenewalSalary)}/day (now {Money(person.Salary)}); contract would end day {person.ContractEnd + seasons * view.SeasonLength}.", () => Send(new RenewalDecision(person.Id, seasons)));
+        }); personnel.AddChild(renew);
         release = Button("Review release", () =>
         {
             var person = view.People.FirstOrDefault(x => x.Id == selectedId); if (person is null) return;
             Ask($"Release {person.Name}?\nPay {Money(person.ExitCost)} now; future wages stop tomorrow. Due wages and arrears remain.\nRoster depth and competitive options are lost.", () => Send(new ReleaseDecision(person.Id)));
         }); personnel.AddChild(release);
+        var staff = new HBoxContainer(); team.AddChild(staff); staff.AddChild(coachCandidates);
+        hire = Button("Review coach hire", () =>
+        {
+            var id = coachCandidates.GetSelectedMetadata().AsString(); var candidate = view.CoachCandidates.FirstOrDefault(x => x.Id == id); if (candidate is null) return;
+            Ask($"Hire {candidate.Name} as head coach for two seasons?\nFee {Money(candidate.Fee)} plus the current coach's exit cost now; salary {Money(candidate.Salary)}/day.", () => Send(new HireCoachDecision(id)));
+        }); staff.AddChild(hire);
+        renewCoach = Button("Review coach renewal", () =>
+        {
+            var current = view.CoachContract; var seasons = contractSeasons.Selected + 1;
+            Ask($"Renew head coach {current.Name} for {seasons} more season(s)?\nNew wage {Money(current.RenewalSalary)}/day (now {Money(current.Salary)}).", () => Send(new RenewalDecision(current.Id, seasons)));
+        }); staff.AddChild(renewCoach);
         var preparation = Tab("Competition & coach"); AddText(preparation, opponent);
         var allocations = new HBoxContainer(); preparation.AddChild(allocations);
         AddField(allocations, "Team execution %", execution); AddField(allocations, "Opponent prep %", opponentWork); AddField(allocations, "Meta adaptation %", meta);
@@ -123,8 +145,17 @@ public partial class Main : Control
         sponsor = Button("Review sponsor commitment", () =>
         {
             var id = offers.GetSelectedMetadata().AsString(); var offer = view.Offers.FirstOrDefault(x => x.Id == id); if (offer is null) return;
-            Ask($"Sign {offer.Name}?\n{Money(offer.Payment)} in three days, then every seven days until day 28.\nWin bonus {Money(offer.WinBonus)}; delivery load +{offer.Load}. Only one additional active sponsor is allowed.\nOverload reduces preparation conversion.", () => Send(new SponsorDecision(id)));
-        }); sponsors.AddChild(sponsor); AddText(Tab("Review & results"), review);
+            Ask($"Sign {offer.Name}?\n{Money(offer.Payment)} in three days, then weekly until day {view.Day + offer.DurationDays - 1}.\nWin bonus {Money(offer.WinBonus)}; delivery load +{offer.Load}. Sponsor slots: {view.ActiveSponsors}/{view.SponsorSlots}.\nOverload reduces preparation conversion.", () => Send(new SponsorDecision(id)));
+        }); sponsors.AddChild(sponsor);
+        var approach = new HBoxContainer(); sponsors.AddChild(new Label { Text = "APPROACH A BRAND · propose your own terms; the brand answers in a few days" }); sponsors.AddChild(approach);
+        approach.AddChild(brands); approach.AddChild(proposalPayment); approach.AddChild(proposalDuration);
+        brands.ItemSelected += _ => BindProposal();
+        propose = Button("Review proposal", () =>
+        {
+            var id = brands.GetSelectedMetadata().AsString(); var brand = view.Brands.FirstOrDefault(x => x.Id == id); if (brand is null || proposalDuration.ItemCount == 0) return;
+            var payment = (long)Math.Round(proposalPayment.Value * 100); var days = (int)proposalDuration.GetSelectedMetadata().AsInt32();
+            Ask($"Propose {Money(payment)} per week for {days} days to {brand.Name}?\nMarket guide {Money(brand.GuideLow)}–{Money(brand.GuideHigh)} (estimate). Asking more risks a counter-offer or a refusal with a cooling-off period.", () => Send(new ProposalDecision(id, payment, days)));
+        }); approach.AddChild(propose); AddText(Tab("Review & results"), review);
         confirmation.Title = "Review commitment"; confirmation.Confirmed += () => { var action = confirmed; confirmed = null; action?.Invoke(); }; confirmation.Canceled += () => confirmed = null; AddChild(confirmation);
     }
     private VBoxContainer Tab(string name)
@@ -144,12 +175,12 @@ public partial class Main : Control
     private void Report(Response response) { message.Text = response.Message; message.AddThemeColorOverride("font_color", new Color(response.Accepted ? "86cfb7" : "ffb1a6")); Refresh(); }
     private void Refresh()
     {
-        view = session.Observe(); refreshing = true; heading.Text = view.Company; status.Text = $"Day {view.Day}  ·  {view.Status}  ·  Cash {Money(view.Cash)}";
-        dashboard.Text = $"YOUR NEXT DECISION\n\n{(view.Finished ? "Development campaign complete. Review results or start a different seeded campaign." : $"Prepare for {view.Opponent} on day {view.NextMatchDay}. Inspect terms before spending, then advance to the next meaningful checkpoint.")}\n\n" +
+        view = session.Observe(); refreshing = true; heading.Text = view.Company; status.Text = $"Season {view.Season} · day {view.DayOfSeason}/{view.SeasonLength}  ·  {view.Status}  ·  Cash {Money(view.Cash)}";
+        dashboard.Text = $"YOUR NEXT DECISION\n\n{(view.NextFixtureId.Length == 0 ? "Off-season: no match until next season. Use the time for contracts, sponsors and recruitment." : $"Prepare for {view.Opponent} on day {view.NextMatchDay}. Inspect terms before spending, then advance to the next meaningful checkpoint.")}\n\n" +
             $"7-day committed cash forecast: {Money(view.Forecast)}\nReputation: {view.Reputation}/100  ·  Audience: {view.Audience:N0}\nOrganizational load: {view.Load}/{view.Capacity} — {(view.Load > view.Capacity ? "overload reduces preparation throughput" : "within capacity")}\nCoach: {view.Coach} · {view.Delegation}\n\n" +
             $"{(view.CommittedPlan is null ? "No plan committed. Open Competition & coach or authorize autonomous preparation." : "Preparation plan committed. You may change future work before advancing.")}\n\nFinances settle before matches. Prizes and sponsor bonuses become receivable tomorrow.\n\nPending consequences: {(view.PendingConsequences.Length == 0 ? "None" : view.PendingConsequences)}";
         opponent.Text = $"NEXT COMPETITION · DAY {view.NextMatchDay}\n{view.Opponent}\nStrength: {view.OpponentEstimate}; likely posture: {view.OpponentTendency} ({view.Confidence}).\nPublic meta: {view.Meta}. Hidden opponent preparation and match-day variance: unknown.\n\nPreparation must total 100%. Changing the plan affects future work; completed work is retained.";
-        recommendation.Text = $"{view.RecommendationReason}\n\nAutonomous mode commits a legal recommendation when a new plan is needed. Low confidence escalates. Manual overrides carry no hidden bonus or penalty.\n\n" +
+        recommendation.Text = $"HEAD COACH {view.CoachContract.Name} · {Money(view.CoachContract.Salary)}/day · contract ends day {view.CoachContract.ContractEnd}{(view.CoachContract.CanRenew ? $" · renewal asks {Money(view.CoachContract.RenewalSalary)}/day" : "")}\n\n{view.RecommendationReason}\n\nAutonomous mode commits a legal recommendation when a new plan is needed. Low confidence escalates. Manual overrides carry no hidden bonus or penalty.\n\n" +
             (view.CommittedPlan is { } plan ? $"COMMITTED: {plan.Execution}/{plan.Opponent}/{plan.Meta}% · {plan.Posture}" : "No committed plan.");
         authority.Selected = (int)view.Delegation; ceiling.Selected = (int)view.Ceiling;
         foreach (var (role, choice) in lineup)
@@ -158,19 +189,37 @@ public partial class Main : Control
             foreach (var p in view.People.Where(p => p.Role == role)) { choice.AddItem(p.Name); choice.SetItemMetadata(choice.ItemCount - 1, p.Id); }
             SelectId(choice, old ?? view.Recommendation?.Lineup.FirstOrDefault(id => view.People.Any(p => p.Id == id && p.Role == role)));
         }
-        candidates.Clear(); foreach (var c in view.Candidates) { candidates.AddItem($"{c.Name} · role {c.Role} · ability {c.AbilityEstimate}"); candidates.SetItemMetadata(candidates.ItemCount - 1, c.Id); } sign.Disabled = candidates.ItemCount == 0 || view.Finished;
-        offers.Clear(); foreach (var o in view.Offers) { offers.AddItem($"{o.Name} · {o.Availability}"); offers.SetItemMetadata(offers.ItemCount - 1, o.Id); } sponsor.Disabled = view.Finished;
-        commercial.Text = "ACTIVE AGREEMENTS\n" + string.Join("\n", view.Sponsors) + "\n\nOPPORTUNITIES\n" + string.Join("\n\n", view.Offers.Select(o =>
-            $"{o.Name} · {o.Availability}\n{Money(o.Payment)} per scheduled payment; win bonus {Money(o.WinBonus)}; load {o.Load}; minimum reputation {o.MinimumReputation}; deadline day {o.Deadline}.")) + "\n\nCommercial value creates opportunities. Cash comes only from signed terms and due settlements.";
+        candidates.Clear(); foreach (var c in view.Candidates) { candidates.AddItem($"{c.Name} · role {c.Role} · ability {c.AbilityEstimate}"); candidates.SetItemMetadata(candidates.ItemCount - 1, c.Id); } sign.Disabled = candidates.ItemCount == 0;
+        offers.Clear(); foreach (var o in view.Offers) { offers.AddItem($"{o.Name} · {o.Availability}"); offers.SetItemMetadata(offers.ItemCount - 1, o.Id); } sponsor.Disabled = offers.ItemCount == 0;
+        coachCandidates.Clear(); foreach (var c in view.CoachCandidates) { coachCandidates.AddItem($"{c.Name} · skill {c.SkillEstimate} · {Money(c.Salary)}/day · until day {c.Deadline}"); coachCandidates.SetItemMetadata(coachCandidates.ItemCount - 1, c.Id); }
+        hire.Disabled = coachCandidates.ItemCount == 0; renewCoach.Disabled = !view.CoachContract.CanRenew;
+        var chosenBrand = brands.ItemCount > 0 ? brands.GetSelectedMetadata().AsString() : null; brands.Clear();
+        foreach (var b in view.Brands) { brands.AddItem($"{b.Name} · {b.Sector} · {b.Availability}"); brands.SetItemMetadata(brands.ItemCount - 1, b.Id); }
+        SelectId(brands, chosenBrand ?? view.Brands.FirstOrDefault(b => b.Availability == "Open to proposals")?.Id); BindProposal(chosenBrand is null);
+        commercial.Text = $"ACTIVE AGREEMENTS ({view.ActiveSponsors}/{view.SponsorSlots} slots)\n" + string.Join("\n", view.Sponsors) + "\n\nOFFERS\n" + string.Join("\n\n", view.Offers.Select(o =>
+            $"{o.Name} · {o.Origin} · {o.Availability}\n{Money(o.Payment)} weekly for {o.DurationDays} days; win bonus {Money(o.WinBonus)}; load {o.Load}; minimum reputation {o.MinimumReputation}; answer by day {o.Deadline}.")) +
+            "\n\nPROPOSALS UNDER REVIEW\n" + (view.Negotiations.IsEmpty ? "None" : string.Join("\n", view.Negotiations.Select(n => $"{n.Brand}: {Money(n.Payment)} weekly for {n.DurationDays} days · answer on day {n.ResponseDay}"))) + "\n\nCommercial value creates opportunities. Cash comes only from signed terms and due settlements.";
         finance.Text = $"Cash: {Money(view.Cash)}\n7-day committed forecast: {Money(view.Forecast)}\nCondition: {view.Status}\n\nUPCOMING ITEMS (grouped by due day)\n" +
             string.Join("\n", view.Bills.GroupBy(x => x.DueDay).Take(14).Select(g => $"Day {g.Key}: receipts {Money(g.Where(x => x.Incoming).Sum(x => x.Remaining))} / obligations {Money(g.Where(x => !x.Incoming).Sum(x => x.Remaining))}")) +
             "\n\nArrears: " + Money(view.Bills.Where(x => !x.Incoming && x.MissedDay is not null).Sum(x => x.Remaining)) + "\nReceipts settle before obligations. Unpaid balances and first missed dates persist. Releasing a duplicate-role player sacrifices depth and future wages; existing arrears remain. No unapproved terminal threshold is applied.";
         review.Text = "COMPETITION RECORD\n" + string.Join("\n", view.Results.Select(x => $"Day {x.Day} · {x.Result} vs {x.Opponent} · {x.Posture}")) + "\n\nDECISIONS & CONSEQUENCES\n" + string.Join("\n\n", view.Review) + "\n\nPending: " + view.PendingConsequences;
-        advance.Disabled = view.Finished; commit.Disabled = view.Finished || view.NextFixtureId.Length == 0; coach.Disabled = view.Finished; refreshing = false; BindRoster(); UpdateRelease();
+        advance.Disabled = false; commit.Disabled = view.NextFixtureId.Length == 0; coach.Disabled = false; refreshing = false; BindRoster(); UpdateRelease();
     }
     private static void SelectId(OptionButton choice, string? id) { for (var i = 0; i < choice.ItemCount; i++) if (choice.GetItemMetadata(i).AsString() == id) { choice.Select(i); return; } }
     private void SetDraft(PlanView plan) { execution.Value = plan.Execution; opponentWork.Value = plan.Opponent; meta.Value = plan.Meta; posture.Selected = (int)plan.Posture; foreach (var choice in lineup.Values) foreach (var id in plan.Lineup) SelectId(choice, id); }
-    private void UpdateRelease() => release.Disabled = view.Finished || !view.People.Any(x => x.Id == selectedId && x.CanRelease);
+    private void UpdateRelease()
+    {
+        release.Disabled = !view.People.Any(x => x.Id == selectedId && x.CanRelease);
+        renew.Disabled = !view.People.Any(x => x.Id == selectedId && x.CanRenew);
+    }
+    private void BindProposal(bool resetPayment = true)
+    {
+        proposalDuration.Clear(); propose.Disabled = true;
+        if (brands.ItemCount == 0 || view.Brands.FirstOrDefault(x => x.Id == brands.GetSelectedMetadata().AsString()) is not { } brand) return;
+        foreach (var days in brand.DurationDays) { proposalDuration.AddItem(days + " days"); proposalDuration.SetItemMetadata(proposalDuration.ItemCount - 1, days); }
+        if (resetPayment) proposalPayment.Value = (brand.GuideLow + brand.GuideHigh) / 200.0;
+        propose.Disabled = !brand.Availability.StartsWith("Open", StringComparison.Ordinal);
+    }
     private void BindRoster()
     {
         if (view is null || root is null) return; var start = Stopwatch.GetTimestamp(); refreshing = true;
@@ -180,7 +229,7 @@ public partial class Main : Control
         while (rows.Count > result.Rows.Length) { rows[^1].Free(); rows.RemoveAt(rows.Count - 1); }
         for (var i = 0; i < rows.Count; i++)
         {
-            var p = result.Rows[i]; var item = rows[i]; item.SetMetadata(0, p.Id); var values = new[] { p.Name, p.Role, p.Execution.ToString(), p.Readiness.ToString(), Money(p.Salary) };
+            var p = result.Rows[i]; var item = rows[i]; item.SetMetadata(0, p.Id); var values = new[] { p.Name, p.Role, p.Execution.ToString(), p.Readiness.ToString(), Money(p.Salary), p.ContractEnd == 0 ? "—" : "day " + p.ContractEnd };
             for (var j = 0; j < values.Length; j++) if (item.GetText(j) != values[j]) item.SetText(j, values[j]); item.Deselect(0); if (p.Id == selectedId) item.Select(0);
         }
         rosterCount.Text = $"{result.Total} people · page {page + 1} · {rows.Count} bound rows · actions use stable person IDs"; refreshing = false; binds.Add(Stopwatch.GetElapsedTime(start).TotalMilliseconds);
@@ -203,12 +252,15 @@ public partial class Main : Control
     {
         try
         {
-            SelectId(offers, "offer:atlas"); sponsor.EmitSignal(BaseButton.SignalName.Pressed); confirmation.EmitSignal(ConfirmationDialog.SignalName.Confirmed); confirmation.Hide();
-            SelectId(candidates, "person:star"); sign.EmitSignal(BaseButton.SignalName.Pressed); confirmation.EmitSignal(ConfirmationDialog.SignalName.Confirmed); confirmation.Hide();
+            // Same decision sequence as tools/Headless; identities are read from the observation, never hard-coded.
+            SelectId(offers, view.Offers.First(o => o.Availability == "Available").Id); sponsor.EmitSignal(BaseButton.SignalName.Pressed); confirmation.EmitSignal(ConfirmationDialog.SignalName.Confirmed); confirmation.Hide();
+            contractSeasons.Selected = 0; SelectId(candidates, view.Candidates[0].Id); sign.EmitSignal(BaseButton.SignalName.Pressed); confirmation.EmitSignal(ConfirmationDialog.SignalName.Confirmed); confirmation.Hide();
             authority.Selected = (int)Delegation.Recommend; ceiling.Selected = (int)Risk.Balanced; coach.EmitSignal(BaseButton.SignalName.Pressed);
-            execution.Value = 70; opponentWork.Value = 20; meta.Value = 10; posture.Selected = (int)Risk.Balanced; SelectId(lineup["B"], "person:star"); commit.EmitSignal(BaseButton.SignalName.Pressed); advance.EmitSignal(BaseButton.SignalName.Pressed);
+            SetDraft(view.Recommendation!); execution.Value = 70; opponentWork.Value = 20; meta.Value = 10; posture.Selected = (int)Risk.Balanced; commit.EmitSignal(BaseButton.SignalName.Pressed);
+            for (var i = 0; i < 20 && view.Results.Length < 1; i++) advance.EmitSignal(BaseButton.SignalName.Pressed);
             if (view.Results.Length != 1) throw new Exception("First UI cycle failed: " + message.Text);
-            authority.Selected = (int)Delegation.Autonomous; ceiling.Selected = (int)Risk.Aggressive; coach.EmitSignal(BaseButton.SignalName.Pressed); advance.EmitSignal(BaseButton.SignalName.Pressed);
+            authority.Selected = (int)Delegation.Autonomous; ceiling.Selected = (int)Risk.Aggressive; coach.EmitSignal(BaseButton.SignalName.Pressed);
+            for (var i = 0; i < 20 && view.Results.Length < 2; i++) advance.EmitSignal(BaseButton.SignalName.Pressed);
             if (view.Results.Length != 2) throw new Exception("Second UI cycle failed: " + message.Text);
             var hash = Composition.Hash(session);
             if (!session.Save("smoke").Accepted || !session.Load("smoke").Accepted || Composition.Hash(session) != hash) throw new Exception("UI save/load failed.");

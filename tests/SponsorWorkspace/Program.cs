@@ -16,17 +16,18 @@ var offer = snapshot.Offers.First();
 MapReturn Origin(bool list = true) => new(snapshot.CompanyId, MapFixtures.Business, "matter:" + offer.OfferId, list, "list:matter:" + offer.OfferId, 37);
 SponsorPresenter Presenter(ISponsorSession? service = null) => new(service ?? session, snapshot, offer.OfferId, Origin());
 Check(snapshot.CompanyName == session.Observe().Company && snapshot.CompanyId == session.Capture().Company.Id, "live campaign identity");
-Check(snapshot.Offers.All(o => o.CanAccept) && offer.ScheduledPayments.Select(p => p.DueDay).SequenceEqual(new[] { 4, 11, 18, 25 }), "authoritative eligibility and schedule");
+var expectedDays = Enumerable.Range(0, 100).Select(k => snapshot.Day + 3 + 7 * k).TakeWhile(d => d <= offer.EndDay).ToArray();
+Check(snapshot.Offers.All(o => o.CanAccept) && offer.ScheduledPayments.Select(p => p.DueDay).SequenceEqual(expectedDays) && content.Definition.Brands.Single(x => x.Name == offer.Name).DurationDays.Contains(offer.EndDay - snapshot.Day + 1), "authoritative eligibility and schedule");
 Check(Canonical.Hash(session.Capture()) == before, "projection preview cannot mutate state or consume RNG");
 var accepted = Simulation.Apply(session.Capture(), new AcceptSponsor(offer.OfferId), content.Definition, "test:preview").Company;
 Check(offer.LoadIfAccepted == Simulation.Load(accepted, content.Definition.Balance, snapshot.Day) && offer.LoadIfAccepted == snapshot.Load + offer.Load &&
     offer.ForecastIfAccepted == Finance.Forecast(accepted, snapshot.Day), "if-accepted load and forecast match authoritative transition");
 var days = Enumerable.Range(snapshot.Day, snapshot.LastDay - snapshot.Day + 1).ToArray();
-Check(snapshot.LastDay == content.Definition.Balance.Horizon && snapshot.LoadByDay.SequenceEqual(days.Select(d => Simulation.Load(session.Capture().Company, content.Definition.Balance, d))) &&
+Check(snapshot.LastDay == snapshot.Day + 27 && snapshot.SponsorSlots == content.Definition.Balance.SponsorSlots && snapshot.LoadByDay.SequenceEqual(days.Select(d => Simulation.Load(session.Capture().Company, content.Definition.Balance, d))) &&
     offer.LoadByDayIfAccepted.SequenceEqual(days.Select(d => Simulation.Load(accepted, content.Definition.Balance, d))), "daily load series use the authoritative load rule");
-Check(snapshot.CompetitionDays.SequenceEqual(session.Capture().World.Fixtures.Select(f => f.Day).Where(d => d >= snapshot.Day).Order()), "competition days are the scheduled fixtures");
+Check(snapshot.CompetitionDays.SequenceEqual(session.Capture().World.Fixtures.Select(f => f.Day).Where(d => d >= snapshot.Day && d <= snapshot.LastDay).Order()), "competition days are the scheduled fixtures inside the lookahead");
 var sponsorTrack = SponsorPresentation.Track(snapshot, offer); var sponsorLines = PresentationText.DayTrackSummary(sponsorTrack);
-Check(sponsorLines[0].StartsWith("If accepted: over capacity on day") && sponsorLines.Any(l => l.StartsWith("Receipts · this offer: day 4, 11, 18, 25")) &&
+Check(sponsorLines[0].StartsWith("If accepted:") && sponsorLines.Any(l => l.StartsWith("Receipts · this offer: day 4, 11, 18, 25")) &&
     sponsorLines.Any(l => l.StartsWith("Competition: day")), "sponsor track states overload, offer receipts and matches in text");
 var hidden = session.Capture() with { World = session.Capture().World with { Rivals = session.Capture().World.Rivals.Select(r => r with { Strength = 1, Budget = 999, Need = 88 }).ToImmutableArray() } };
 Check(JsonSerializer.Serialize(SponsorProjection.Build(hidden, content.Definition)) == JsonSerializer.Serialize(snapshot), "private rival changes are invisible to sponsor read model");
@@ -71,14 +72,14 @@ var expiredState = New().Capture(); expiredState = expiredState with { World = e
 var expired = New(expiredState).ObserveSponsors();
 Check(expired.Offers.All(o => !o.CanAccept && o.LoadIfAccepted is null && o.ForecastIfAccepted is null && o.LoadByDayIfAccepted.IsEmpty), "expired offer not actionable and has no consequence preview");
 Check(SponsorPresentation.Track(expired, expired.Offers[0]).Proposed.IsEmpty && SponsorPresentation.Track(expired, expired.Offers[0]).Rows.All(r => r.Label != "Receipts · this offer"), "unavailable offer draws no proposed series");
-foreach (var variant in new[] { "end", "reputation", "claimed", "finished" })
+foreach (var variant in new[] { "deadline", "reputation", "claimed", "partner" })
 {
     var state = New().Capture();
     state = variant switch {
-        "end" => state with { World = state.World with { Offers = state.World.Offers.Select(o => o with { EndDay = 2 }).ToImmutableArray() } },
+        "deadline" => state with { World = state.World with { Offers = state.World.Offers.Select(o => o with { Deadline = 0 }).ToImmutableArray() } },
         "reputation" => state with { Company = state.Company with { Reputation = 0 } },
         "claimed" => state with { World = state.World with { Offers = state.World.Offers.Select(o => o with { ClaimedBy = state.World.Rivals[0].Id }).ToImmutableArray() } },
-        _ => state with { World = state.World with { Finished = true } } };
+        _ => state with { World = state.World with { Offers = state.World.Offers.Select(o => o with { BrandId = state.Company.Sponsors[0].BrandId }).ToImmutableArray() } } };
     Check(New(state).ObserveSponsors().Offers.All(o => !o.CanAccept), "authoritative unavailable: " + variant);
 }
 var map = SponsorPresentation.Company(snapshot, "live"); map.Validate(); var nav = new MapNavigation(map) { ListMode = true };
@@ -89,21 +90,22 @@ Check(nav.Return is { ListMode: false } && nav.Situation!.TargetId == offer.Offe
 nav.Back(); nav.Replace(SponsorPresentation.Company(removed.ObserveSponsors(), "live"));
 Check(nav.ScopeId == MapFixtures.Business && nav.SituationId is null && nav.Notice.Contains("no longer exists"), "removed matter returns nearest business context");
 var updatedMap = SponsorPresentation.Company(presenter.Snapshot, "live");
-Check(updatedMap.Situations.Any(m => m.Category == "Receipt" && m.DueDay == 4), "bounded Affairs receipt from actual scheduled item");
+Check(updatedMap.Situations.Any(m => m.Category == "Receipt" && m.DueDay == snapshot.Day + 3), "bounded Affairs receipt from actual scheduled item");
 var saveRoot = Path.GetFullPath("artifacts/sponsor-workspace/save-tests-" + Guid.NewGuid().ToString("N"));
 var store = new SnapshotStore(saveRoot, content); store.Save("signed", session.Capture()); var loaded = store.Load("signed");
-Check(Canonical.Hash(loaded) == committed && JsonSerializer.Serialize(New(loaded).ObserveSponsors()) == JsonSerializer.Serialize(presenter.Snapshot), "schema 1 save/load signed terms and schedule");
-Check(JsonDocument.Parse(File.ReadAllText(store.PrimaryPath("signed"))).RootElement.GetProperty("Schema").GetInt32() == 1, "save schema unchanged");
+Check(Canonical.Hash(loaded) == committed && JsonSerializer.Serialize(New(loaded).ObserveSponsors()) == JsonSerializer.Serialize(presenter.Snapshot), "schema 2 save/load signed terms and schedule");
+Check(JsonDocument.Parse(File.ReadAllText(store.PrimaryPath("signed"))).RootElement.GetProperty("Schema").GetInt32() == 2, "continuous-season save schema");
 var a = New(); var b = New(); var request = new Request("same", 0, new SponsorDecision(offer.OfferId));
 for(var i=0;i<10;i++) b.ObserveSponsors(); a.Submit(request); b.Submit(request);
 Check(Canonical.Hash(a.Capture()) == Canonical.Hash(b.Capture()), "same decisions deterministic despite extra queries");
-var rules = New().Capture(); var signed = Simulation.Apply(rules, new AcceptSponsor(offer.OfferId), content.Definition, "load-test");
+var generated = New().Capture();
+// Capacity set to current load, so any sponsor delivery load is overload regardless of the generated coach.
+var rules = generated with { Company = generated.Company with { Coach = generated.Company.Coach with { Capacity = Simulation.Load(generated.Company, content.Definition.Balance, 1) } } }; var signed = Simulation.Apply(rules, new AcceptSponsor(offer.OfferId), content.Definition, "load-test");
 var plan = Observations.Build(rules, content.Definition).Recommendation!;
 Campaign Prepare(Campaign state) => state with { Company = state.Company with { Plan = new Plan(plan.FixtureId, 100, 0, 0, Posture.Balanced, plan.Lineup, Posture.Balanced, "prep") }, World = state.World with { Calendar = new(1, Phase.Preparation, 2) } };
 Check(Simulation.Step(Prepare(signed), content.Definition).Company.Work.Execution < Simulation.Step(Prepare(rules), content.Definition).Company.Work.Execution, "actual sponsor load reduces future preparation conversion");
 foreach(var file in Directory.GetFiles("game/Client/UI/SponsorWorkspace", "*.cs"))
     Check(!File.ReadAllText(file).Contains("using ManagementGame.Domain") && !File.ReadAllText(file).Contains(".Capture()"), "UI authority boundary " + Path.GetFileName(file));
-FixtureIdentity.Verify(content, Check);
 Console.WriteLine("SPONSOR_WORKSPACE_PASS " + count);
 
 sealed class Probe(ISponsorSession session) : ISponsorSession

@@ -58,27 +58,37 @@ public static class ContentLoader
     public static void Validate(Content c)
     {
         void Require(bool valid, string field) { if (!valid) throw new InvalidDataException("content/fixture.json: " + field); }
-        Require(c.Format == "management-game-development-content" && c.Schema == 1 && c.RulesVersion == "slice-rules-v1", "unsupported schema/rules");
+        Require(c.Format == "management-game-development-content" && c.Schema == 2 && c.RulesVersion == "slice-rules-v2", "unsupported schema/rules");
         Require(c.Label.Contains("NONCANONICAL", StringComparison.Ordinal), "fixture label required");
+        Require(c.DefaultCompanyName.Trim().Length is > 0 and <= 60, "default company name");
         var b = c.Balance;
-        Require(b.Horizon is >= 25 and <= 60 && b.StartingCash is >= 0 and <= 1_000_000_000 && b.OperatingCost >= 0, "balance cash/horizon");
+        Require(b.SeasonLength is >= 28 and <= 400 && b.FirstMatchDay >= 3 && b.MatchInterval is >= 2 and <= 30 && b.RivalCount is >= 2 and <= 12, "season shape");
+        Require(b.FirstMatchDay + b.MatchInterval * (2 * b.RivalCount - 1) <= b.SeasonLength - 2, "season schedule must fit inside the season");
+        Require(b.StartingCash is >= 0 and <= 1_000_000_000 && b.PrizeBase is >= 0 and <= 1_000_000, "balance cash");
         Require(b.PreparationScale is > 0 and <= 1000 && b.MatchScale is > 0 and <= 20000 && b.Variance is > 0 and <= 20 && b.RivalCadence > 0, "balance arithmetic bounds");
         Require(b.Reputation is >= 0 and <= 100 && b.Audience is >= 0 and <= 1_000_000 && b.Information is >= 0 and <= 100 && b.BaseLoad is >= 0 and <= 1000, "balance resource bounds");
-        Require(c.Players.Length == 6 && c.Rivals.Length == 2 && c.Fixtures.Length >= 2 && c.Fixtures.Length <= 8, "bounded roster/rival/competition counts");
-        var ids = c.Players.Select(p => p.Person.Id).Concat(c.Candidates.Select(x => x.Person.Id)).Concat(c.Rivals.Select(r => r.Id))
-            .Concat(c.Fixtures.Select(f => f.Id)).Concat(c.Offers.Select(o => o.Id)).Append(c.Coach.Id).Append(c.InitialSponsor.Id).ToArray();
-        Require(ids.Distinct(StringComparer.Ordinal).Count() == ids.Length && ids.All(Id), "IDs must be unique lowercase stable IDs");
-        foreach (var p in c.Players.Select(x => x.Person).Concat(c.Candidates.Select(x => x.Person)))
-            Require(Id(p.DefinitionId) && p.Name.Length is > 0 and <= 120 && "ABCDE".Contains(p.Role, StringComparison.Ordinal) && p.Role.Length == 1
-                && p.Execution is >= 0 and <= 100 && p.Adaptability is >= 0 and <= 100 && p.Consistency is >= 0 and <= 100 && p.Readiness is > 0 and <= 100, "person " + p.Id);
-        Require(c.Players.Select(p => p.Person.Role).Distinct().Count() == 5, "five-role coverage");
-        Require(c.Coach.Capacity is > 0 and <= 1000 && c.Coach.Preparation is > 0 and <= 100 && c.Coach.Analysis is >= 0 and <= 100 && c.Coach.Adaptability is >= 0 and <= 100, "coach bounds");
-        Require(c.Players.All(p => p.Salary is >= 0 and <= 100000 && p.ReleaseCost is >= 0 and <= 100000), "employment terms");
-        Require(c.Candidates.All(p => p.Fee is >= 0 and <= 100000 && p.Salary is >= 0 and <= 100000 && p.ReleaseCost is >= 0 and <= 100000 && p.Deadline <= b.Horizon), "candidate terms");
-        Require(c.Fixtures.Select(f => f.Day).Distinct().Count() == c.Fixtures.Length, "one match per day");
-        foreach (var f in c.Fixtures) Require(f.Day >= 3 && f.Day < b.Horizon && c.Rivals.Any(r => r.Id == f.RivalId) && f.Importance is > 0 and <= 3 && f.Prize is >= 0 and <= 100000, "fixture " + f.Id);
-        foreach (var r in c.Rivals) Require(r.Strength is > 0 and <= 100 && r.Analysis is >= 0 and <= 100 && r.Adaptability is >= 0 and <= 100 && Enum.IsDefined(r.Posture) && r.Budget >= 0, "rival " + r.Id);
-        foreach (var o in c.Offers.Append(c.InitialSponsor)) Require(o.Payment is >= 0 and <= 100000 && o.WinBonus is >= 0 and <= 100000 && o.Load is >= 0 and <= 100 && o.Deadline >= 1 && o.EndDay <= b.Horizon && o.EndDay >= o.Deadline && o.MinimumReputation is >= 0 and <= 100 && o.ClaimedBy is null, "sponsor " + o.Id);
+        Require(b.MetaDayOfSeason is >= 1 && b.MetaDayOfSeason <= b.SeasonLength && b.ReputationGain >= 0 && b.AudienceGain >= 0, "meta and commercial bounds");
+        Require(b.SponsorSlots is >= 1 and <= 8 && b.MaxOpenOffers is >= 1 and <= 8 && b.MarketInterval is >= 1 and <= 28 && b.OfferWindow is >= 1 and <= 28
+            && b.NegotiationDelay is >= 1 and <= 14 && b.RejectCooldown is >= 1 and <= 112, "sponsor market bounds");
+        Require(b.RosterSize is >= 5 and <= 12 && b.MaxRoster >= b.RosterSize && b.MaxRoster <= 16 && b.CandidateCount is >= 1 and <= 12
+            && b.CoachCandidateCount is >= 1 and <= 8 && b.TalentRefreshInterval is >= 7 and <= 112, "talent market bounds");
+        Require(b.RenewalWindow is >= 7 && b.RenewalWindow < b.SeasonLength && b.StartingContractSeasons is >= 1 and <= 3, "contract bounds");
+        bool Range(AttributeRange r, int min, int max) => r.Min >= min && r.Max <= max && r.Min <= r.Max;
+        var g = c.Generation;
+        Require(Range(g.Talent, 1, 100) && Range(g.Prospect, 1, 100) && Range(g.CoachSkill, 1, 100) && Range(g.CoachCapacity, 20, 1000) && Range(g.Rival, 6, 95), "generation ranges");
+        bool Name(string value) => value.Trim().Length is > 0 and <= 40;
+        Require(c.Names.Given.Length >= 10 && c.Names.Family.Length >= 10 && c.Names.Given.All(Name) && c.Names.Family.All(Name), "name pools need at least ten valid entries each");
+        Require(c.Names.Given.Distinct(StringComparer.Ordinal).Count() == c.Names.Given.Length && c.Names.Family.Distinct(StringComparer.Ordinal).Count() == c.Names.Family.Length, "name pools must not repeat");
+        Require(c.OrganizationNames.Length >= b.RivalCount && c.OrganizationNames.All(x => x.Trim().Length is > 0 and <= 60)
+            && c.OrganizationNames.Distinct(StringComparer.Ordinal).Count() == c.OrganizationNames.Length, "organization names cover every rival without repeats");
+        Require(c.Brands.Length >= 6 && c.Brands.Select(x => x.Id).Distinct(StringComparer.Ordinal).Count() == c.Brands.Length
+            && c.Brands.Select(x => x.Name).Distinct(StringComparer.Ordinal).Count() == c.Brands.Length, "brand pool needs six unique brands");
+        foreach (var brand in c.Brands)
+            Require(Id(brand.Id) && brand.Name.Trim().Length is > 0 and <= 60 && brand.Sector.Trim().Length is > 0 and <= 40
+                && brand.MinimumReputation is >= 0 and <= 100 && brand.MinimumAudience is >= 0 and <= 10_000_000
+                && brand.BasePayment is > 0 and <= 1_000_000 && brand.WinBonus is >= 0 and <= 1_000_000 && brand.Load is >= 0 and <= 100
+                && brand.DurationDays.Length > 0 && brand.DurationDays.All(d => d is >= 7 and <= 400) && brand.DurationDays.Distinct().Count() == brand.DurationDays.Length, "brand " + brand.Id);
+        Require(c.Brands.Any(x => x.MinimumReputation <= b.Reputation && x.MinimumAudience <= b.Audience), "at least one brand must sponsor a new company");
     }
     public static bool Id(string value) => !string.IsNullOrWhiteSpace(value) && value.Length <= 128 && value.All(ch => ch is >= 'a' and <= 'z' or >= '0' and <= '9' or ':' or '-' or '_');
 }
