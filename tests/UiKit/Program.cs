@@ -39,6 +39,10 @@ binding.Clear(); Check(!binding.CanActivate && binding.Current is null, "unbound
 Check(PresentationText.Resource(new("Value", 999m, "TEST", InformationState.Unknown, "no evidence")).Contains("Unknown") && !PresentationText.Resource(new("Value", 999m, "TEST", InformationState.Unknown, "no evidence")).Contains("999"), "unknown never displays a backing number");
 Check(PresentationText.Resource(new("Value", -1000m, "TEST", InformationState.Estimated, "forecast")).Contains("-1,000.00") && PresentationText.Information(InformationState.Estimated) != PresentationText.Information(InformationState.Unknown), "negative estimated value distinct from unknown");
 Check(PresentationText.Time(null, "Due").Contains("unknown") && PresentationText.Icon("undefined") == "[?]", "unknown time/icon safe fallbacks");
+var icons = Enum.GetValues<EntityKind>().Select(k => PresentationText.Icon(k.ToString())).ToArray();
+Check(icons.Distinct().Count() == icons.Length && !icons.Contains(PresentationText.InformationMarker(InformationState.Unknown)), "entity icons distinct and never the Unknown marker");
+var amount = new ResourceView("Value", 1000m, "TEST", InformationState.Estimated, "forecast");
+Check(PresentationText.ResourceAmount(amount) == "Value: 1,000.00 TEST" && PresentationText.ResourceEvidence(amount).StartsWith("[~] Estimated"), "resource amount separated from information evidence");
 foreach (var d in Enum.GetValues<UiDensity>())
 {
     var t = new UiTokens(d, 1.5); Check(t.FontSize(TypographyRole.Body) > tokens.FontSize(TypographyRole.Body) && t.ControlHeight >= t.Size(SizeRole.ControlCompact), "text and density scale: " + d);

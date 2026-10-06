@@ -70,6 +70,8 @@ public static class SponsorPresentation
          new("Delivery obligation", "+" + o.Load + " organizational load from acceptance through end day"),
          new("Win bonus", Money(o.WinBonus) + " per win while active; due the following day"),
          new("Accept by", "Day " + o.Deadline + " · minimum reputation " + o.MinimumReputation)]);
+    public static ResourceView ForecastIfAccepted(long forecast) => new("Forecast if accepted", forecast / 100m,
+        "CU", InformationState.Estimated, "Same 7-day window, adding this offer's receipts due in it. Excludes unearned wins.");
     public static ResourceView Forecast(SponsorSnapshot s) => new("Committed cash forecast", s.CommittedForecast / 100m,
         "CU", InformationState.Estimated, "Next 7 days; signed items only. Excludes unearned wins and unsigned offers.");
 

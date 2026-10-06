@@ -70,18 +70,30 @@ public partial class SponsorWorkspaceView : Control
         }
         document?.SetMeta("revision", s.Revision);
         Measure("profile-document", section); section = System.Diagnostics.Stopwatch.GetTimestamp();
-        var nextEvidenceKey = JsonSerializer.Serialize(new { s.CampaignId, s.CompanyId, s.CompanyName, s.Cash, s.Load, s.Capacity, s.CommittedForecast, s.Reputation, s.Agreements });
+        var nextEvidenceKey = JsonSerializer.Serialize(new { s.CampaignId, s.CompanyId, s.CompanyName, s.Cash, s.Load, s.Capacity, s.CommittedForecast, s.Reputation, s.Agreements,
+            o?.OfferId, o?.CanAccept, o?.LoadIfAccepted, o?.ForecastIfAccepted });
         if (evidenceKey != nextEvidenceKey)
         {
             Clear(evidence); evidenceKey = nextEvidenceKey;
             evidence.AddChild(SectionHeader.Create(ui, "Company trade-off", "Is the scheduled income worth the ongoing delivery obligation?"));
             evidence.AddChild(ResourceValue.Create(ui, new("Cash now", s.Cash / 100m, "CU", InformationState.Known, "Signing itself pays nothing now.")));
-            evidence.AddChild(SemanticText.Create(ui, $"Current load {s.Load} / capacity {s.Capacity}"));
+            evidence.AddChild(SemanticText.Create(ui, $"Load now: {s.Load} / capacity {s.Capacity}", TypographyRole.Data));
+            if (o is not null && o.CanAccept && o.LoadIfAccepted is { } after)
+            {
+                var over = after - s.Capacity;
+                evidence.AddChild(SemanticText.Create(ui, $"Load if accepted: {after} / capacity {s.Capacity}", TypographyRole.Data,
+                    over > 0 ? ColorRole.StateWarning : ColorRole.TextPrimary));
+                evidence.AddChild(SemanticText.Create(ui, over > 0
+                    ? $"[!] Over capacity by {over} from acceptance through day {o.EndDay}."
+                    : $"[=] Within capacity; {-over} remaining after acceptance.", TypographyRole.Label, over > 0 ? ColorRole.StateWarning : ColorRole.TextSecondary));
+            }
             evidence.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known,
                 "Sponsor load shares capacity with preparation. When total load exceeds capacity, future preparation converts more slowly; completed work is retained."));
             evidence.AddChild(ConfidenceIndicator.Create(ui, InformationState.Unknown,
                 "Future wins and total bonuses. No exact future performance or revenue estimate is available."));
             evidence.AddChild(ResourceValue.Create(ui, SponsorPresentation.Forecast(s)));
+            if (o is not null && o.CanAccept && o.ForecastIfAccepted is { } forecastIfAccepted)
+                evidence.AddChild(ResourceValue.Create(ui, SponsorPresentation.ForecastIfAccepted(forecastIfAccepted)));
             evidence.AddChild(SectionHeader.Create(ui, "Supporting evidence"));
             evidence.AddChild(SemanticText.Create(ui, "Company: " + s.CompanyName, TypographyRole.Label));
             evidence.AddChild(SemanticText.Create(ui, "Current reputation: " + s.Reputation + ". Signing itself grants no reputation or audience.", TypographyRole.Label));
@@ -101,7 +113,8 @@ public partial class SponsorWorkspaceView : Control
         if (Presenter.Phase == SponsorPhase.Confirm && o is not null)
         {
             Commitment = new(); actions.AddChild(Commitment);
-            Commitment.Bind(ui, new(o.OfferId, s.Revision, "Accept " + o.Name + " · current data revision " + s.Revision,
+            // Revision stays in binding metadata; players see terms, not data versions.
+            Commitment.Bind(ui, new(o.OfferId, s.Revision, "Accept " + o.Name + " on the terms shown",
                 $"+{o.Load} load now through day {o.EndDay}; {SponsorPresentation.Money(o.Payment)} each scheduled receipt. Future wins unknown.",
                 ActionPhase.Ready, "Material commitment; no termination action."), _ => Act("commit"));
         }

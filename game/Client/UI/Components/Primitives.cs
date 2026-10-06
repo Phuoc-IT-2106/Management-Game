@@ -50,7 +50,8 @@ public partial class EntityLabel : Button
     {
         Binding.Selected = selected; ThemeTypeVariation = selected ? "SelectedEntity" : "";
         if (Binding.Current is not { } entity) return;
-        Text = $"{(selected ? "[Selected] " : "")}{PresentationText.Icon(entity.Kind.ToString())} {entity.Name} · {entity.Role}";
+        // Selection is carried by the SelectedEntity edge bar (shape + surface), not repeated label text.
+        Text = $"{PresentationText.Icon(entity.Kind.ToString())} {entity.Name} · {entity.Role}";
         if (entity.Availability != Availability.Ready) Text += " · " + PresentationText.AvailabilityText(entity.Availability, entity.Reason);
     }
     private void OnActivate() => Binding.Activate("inspect");
@@ -58,8 +59,17 @@ public partial class EntityLabel : Button
 }
 public static class ResourceValue
 {
-    public static Label Create(UiContext ui, ResourceView value) => SemanticText.Create(ui, PresentationText.Resource(value), TypographyRole.Data,
-        value.Information == InformationState.Estimated ? ColorRole.InformationEstimated : value.Information == InformationState.Unknown ? ColorRole.InformationUnknown : ColorRole.TextPrimary);
+    /// <summary>Numeric face only for the amount; information state and context read as prose.</summary>
+    public static VBoxContainer Create(UiContext ui, ResourceView value)
+    {
+        var stack = new VBoxContainer { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
+        stack.AddThemeConstantOverride("separation", ui.Tokens.Space(SpaceRole.SpaceInline));
+        stack.AddChild(SemanticText.Create(ui, PresentationText.ResourceAmount(value), TypographyRole.Data,
+            value.Information == InformationState.Estimated ? ColorRole.InformationEstimated : value.Information == InformationState.Unknown ? ColorRole.InformationUnknown : ColorRole.TextPrimary));
+        stack.AddChild(SemanticText.Create(ui, PresentationText.ResourceEvidence(value), TypographyRole.Label,
+            value.Information == InformationState.Estimated ? ColorRole.InformationEstimated : value.Information == InformationState.Unknown ? ColorRole.InformationUnknown : ColorRole.TextSecondary));
+        return stack;
+    }
 }
 public static class TimeMarker
 {
@@ -68,7 +78,7 @@ public static class TimeMarker
 public static class ConfidenceIndicator
 {
     public static Label Create(UiContext ui, InformationState state, string evidence) => SemanticText.Create(ui,
-        $"{(state == InformationState.Estimated ? "[~]" : state == InformationState.Unknown ? "[?]" : "[=]")} {PresentationText.Information(state)} · {evidence}", TypographyRole.Label,
+        $"{PresentationText.InformationMarker(state)} {PresentationText.Information(state)} · {evidence}", TypographyRole.Label,
         state == InformationState.Estimated ? ColorRole.InformationEstimated : state == InformationState.Unknown ? ColorRole.InformationUnknown : ColorRole.InformationKnown);
 }
 public static class StatusBadge

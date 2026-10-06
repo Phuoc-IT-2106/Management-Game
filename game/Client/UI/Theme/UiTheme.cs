@@ -33,7 +33,9 @@ public static class UiTheme
             theme.SetStylebox("focus", kind, Focus(tokens));
         }
         theme.SetTypeVariation("SelectedEntity", "Button");
-        theme.SetStylebox("normal", "SelectedEntity", Box(tokens, ColorRole.SelectedSurface));
+        // Leading edge bar keeps selection perceivable without relying on surface color alone.
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed" })
+            theme.SetStylebox(state, "SelectedEntity", Selected(tokens, state.StartsWith("hover") ? ColorRole.HoverSurface : ColorRole.SelectedSurface));
         foreach (var surface in new[] { ColorRole.SurfaceBase, ColorRole.SurfaceRaised, ColorRole.SurfaceInset, ColorRole.SurfaceOverlay })
         {
             theme.SetTypeVariation(surface.ToString(), "PanelContainer");
@@ -65,6 +67,13 @@ public static class UiTheme
         ContentMarginLeft = tokens.Space(SpaceRole.SpaceGroup), ContentMarginRight = tokens.Space(SpaceRole.SpaceGroup),
         ContentMarginTop = tokens.Space(SpaceRole.SpaceRelated), ContentMarginBottom = tokens.Space(SpaceRole.SpaceRelated)
     };
+    private static StyleBoxFlat Selected(UiTokens tokens, ColorRole surface)
+    {
+        var box = Box(tokens, surface);
+        box.BorderColor = ToGodot(tokens.Color(ColorRole.TextPrimary));
+        box.BorderWidthLeft = UiTokens.SelectionWidth;
+        return box;
+    }
     private static StyleBoxFlat Focus(UiTokens tokens) => new()
     {
         DrawCenter = false, BorderColor = ToGodot(tokens.Color(ColorRole.FocusRing)),

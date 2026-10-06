@@ -48,7 +48,7 @@ public sealed class UiTokens
     public const string Notice = "PROVISIONAL DEVELOPMENT THEME";
     public const double TextContrast = 4.5;
     public const double GraphicContrast = 3.0;
-    public const int BorderWidth = 1, FocusWidth = 2, CornerRadius = 4;
+    public const int BorderWidth = 1, FocusWidth = 2, SelectionWidth = 4, CornerRadius = 4;
     public const int IconWidth = 44, MinimumColumnWidth = 330, ActionWidth = 160;
     public const int MaxSpecimenRows = 12, MaxDocumentSections = 12, MaxNavigationDepth = 6;
     public const int CaptureSettleFrames = 12, LayoutTolerance = 2;

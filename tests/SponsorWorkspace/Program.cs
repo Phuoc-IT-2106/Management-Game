@@ -18,6 +18,9 @@ SponsorPresenter Presenter(ISponsorSession? service = null) => new(service ?? se
 Check(snapshot.CompanyName == session.Observe().Company && snapshot.CompanyId == session.Capture().Company.Id, "live campaign identity");
 Check(snapshot.Offers.All(o => o.CanAccept) && offer.ScheduledPayments.Select(p => p.DueDay).SequenceEqual(new[] { 4, 11, 18, 25 }), "authoritative eligibility and schedule");
 Check(Canonical.Hash(session.Capture()) == before, "projection preview cannot mutate state or consume RNG");
+var accepted = Simulation.Apply(session.Capture(), new AcceptSponsor(offer.OfferId), content.Definition, "test:preview").Company;
+Check(offer.LoadIfAccepted == Simulation.Load(accepted, content.Definition.Balance, snapshot.Day) && offer.LoadIfAccepted == snapshot.Load + offer.Load &&
+    offer.ForecastIfAccepted == Finance.Forecast(accepted, snapshot.Day), "if-accepted load and forecast match authoritative transition");
 var hidden = session.Capture() with { World = session.Capture().World with { Rivals = session.Capture().World.Rivals.Select(r => r with { Strength = 1, Budget = 999, Need = 88 }).ToImmutableArray() } };
 Check(JsonSerializer.Serialize(SponsorProjection.Build(hidden, content.Definition)) == JsonSerializer.Serialize(snapshot), "private rival changes are invisible to sponsor read model");
 Check(!JsonSerializer.Serialize(snapshot).Contains("Probability") && !JsonSerializer.Serialize(snapshot).Contains("Variance"), "no hidden resolver fields");
@@ -58,7 +61,7 @@ var removed = New(removedState); var removedPresenter = Presenter(removed);
 removedPresenter.Handle(new("review", offer.OfferId, 0)); removedPresenter.Handle(new("commit", offer.OfferId, 0));
 Check(removedPresenter.Phase == SponsorPhase.Rejected && removedPresenter.Offer is null && !removedPresenter.CanReview, "removed offer rejected and disabled");
 var expiredState = New().Capture(); expiredState = expiredState with { World = expiredState.World with { Offers = expiredState.World.Offers.Select(o => o with { Deadline = 0 }).ToImmutableArray() } };
-Check(New(expiredState).ObserveSponsors().Offers.All(o => !o.CanAccept), "expired offer not actionable");
+Check(New(expiredState).ObserveSponsors().Offers.All(o => !o.CanAccept && o.LoadIfAccepted is null && o.ForecastIfAccepted is null), "expired offer not actionable and has no consequence preview");
 foreach (var variant in new[] { "end", "reputation", "claimed", "finished" })
 {
     var state = New().Capture();

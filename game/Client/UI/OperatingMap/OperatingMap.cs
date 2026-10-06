@@ -137,7 +137,8 @@ public partial class OperatingMap : Control
         return scroll;
     }
     private EntityView ScopeEntity(MapScope scope) => new(scope.Id, scope.Kind == ScopeKind.Company ? CompanyShortName : scope.Name,
-        scope.Kind == ScopeKind.Company ? EntityKind.Company : scope.Kind == ScopeKind.Function ? EntityKind.Department : scope.Kind == ScopeKind.Team ? EntityKind.Team : EntityKind.Division,
+        scope.Kind switch { ScopeKind.Company => EntityKind.Company, ScopeKind.Portfolio => EntityKind.Portfolio, ScopeKind.Discipline => EntityKind.Discipline,
+            ScopeKind.Function => EntityKind.Department, ScopeKind.Team => EntityKind.Team, _ => EntityKind.Division },
         scope.Kind.ToString(), Data.Revision);
     private bool Emphasized(MapSituation matter) => Data.Situations.OrderBy(x => x.Priority).ThenBy(x => x.DueDay ?? int.MaxValue).ThenBy(x => x.Id, StringComparer.Ordinal)
         .Where(x => x.Priority is Attention.Critical or Attention.High).Take(2).Any(x => x.Id == matter.Id);

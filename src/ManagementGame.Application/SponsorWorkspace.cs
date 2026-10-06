@@ -6,7 +6,8 @@ namespace ManagementGame.Application;
 public sealed record SponsorPayment(string Id, int DueDay, long Amount, long Remaining);
 public sealed record SponsorTerms(string OfferId, string Name, int Deadline, int EndDay,
     long Payment, long WinBonus, int Load, int MinimumReputation, bool CanAccept,
-    string Availability, ImmutableArray<SponsorPayment> ScheduledPayments);
+    string Availability, ImmutableArray<SponsorPayment> ScheduledPayments,
+    int? LoadIfAccepted = null, long? ForecastIfAccepted = null);
 public sealed record SponsorAgreement(string Id, string Name, int EndDay, int Load,
     long WinBonus, ImmutableArray<SponsorPayment> Payments);
 public sealed record SponsorSnapshot(string CampaignId, string CompanyId, string CompanyName,
@@ -50,8 +51,11 @@ public static class SponsorProjection
             var payments = signed?.Payments ?? (preview is null ? ImmutableArray<SponsorPayment>.Empty :
                 preview.Company.FinancialItems.Where(i => i.CauseId == "agreement:" + o.Id)
                     .Select(i => new SponsorPayment(i.Id, i.DueDay, i.Amount, i.Remaining)).ToImmutableArray());
+            // Consequence preview comes from the same authoritative transition, never UI arithmetic.
             return new SponsorTerms(o.Id, o.Name, o.Deadline, o.EndDay, o.Payment, o.WinBonus,
-                o.Load, o.MinimumReputation, preview is not null, reason, payments);
+                o.Load, o.MinimumReputation, preview is not null, reason, payments,
+                preview is null ? null : Simulation.Load(preview.Company, content.Balance, day),
+                preview is null ? null : Finance.Forecast(preview.Company, day));
         }).ToImmutableArray();
         return new(state.Execution.CampaignId, c.Id, c.Name, state.Execution.Revision, day,
             Simulation.NextFixture(state)?.Day, c.Cash, Finance.Forecast(c, day),

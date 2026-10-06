@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace ManagementGame.UiKit;
 
-public enum EntityKind { Company, Division, Team, Department, Person, Contract, Sponsor, Competition, Market, Opportunity, Risk, Obligation, Event, Decision }
+public enum EntityKind { Company, Division, Team, Department, Person, Contract, Sponsor, Competition, Market, Opportunity, Risk, Obligation, Event, Decision, Portfolio, Discipline }
 public enum DomainStatus { Neutral, Positive, Warning, Critical }
 public enum InformationState { Known, Estimated, Unknown }
 public enum Availability { Ready, Empty, Loading, Unavailable, Error }
@@ -32,6 +32,15 @@ public static class PresentationText
     {
         InformationState.Known => "Known", InformationState.Estimated => "Estimated", _ => "Unknown"
     };
+    /// <summary>Non-color information marker; "[?]" is reserved for Unknown and unresolved kinds.</summary>
+    public static string InformationMarker(InformationState value) => value switch
+    {
+        InformationState.Known => "[=]", InformationState.Estimated => "[~]", _ => "[?]"
+    };
+    public static string ResourceAmount(ResourceView value) => value.Information == InformationState.Unknown || value.Value is null
+        ? $"{value.Label}: Unknown"
+        : $"{value.Label}: {value.Value.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit}";
+    public static string ResourceEvidence(ResourceView value) => $"{InformationMarker(value.Information)} {Information(value.Information)} · {value.Context}";
     public static string Resource(ResourceView value) => value.Information == InformationState.Unknown || value.Value is null
         ? $"{value.Label}: Unknown · {value.Context}"
         : $"{value.Label}: {value.Value.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit} · {Information(value.Information)} · {value.Context}";
@@ -42,7 +51,7 @@ public static class PresentationText
         EntityKind.Company => "[CO]", EntityKind.Division => "[DV]", EntityKind.Team => "[TM]", EntityKind.Department => "[DP]",
         EntityKind.Person => "[P]", EntityKind.Contract => "[CT]", EntityKind.Sponsor => "[SP]", EntityKind.Competition => "[CP]",
         EntityKind.Market => "[MK]", EntityKind.Opportunity => "[OP]", EntityKind.Risk => "[!]", EntityKind.Obligation => "[DU]",
-        EntityKind.Event => "[EV]", EntityKind.Decision => "[?]", _ => "[?]"
+        EntityKind.Event => "[EV]", EntityKind.Decision => "[DC]", EntityKind.Portfolio => "[PF]", EntityKind.Discipline => "[DS]", _ => "[?]"
     } : "[?]";
 }
 
