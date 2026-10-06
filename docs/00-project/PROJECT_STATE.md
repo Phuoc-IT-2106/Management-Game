@@ -185,11 +185,22 @@ These obligations do not reopen Phase 4 by default. They cannot be silently waiv
 
 The Director's 2026-10-05 brief accepts **LIST-FIRST / MAP-OPTIONAL** under DEC-023.
 The [live sponsor workspace](../10-vertical-slice/sponsor-workspace/README.md) uses
-current Application state and fixed-offer acceptance. Engineering verification
-is complete; recommendation: **ITERATE FIRST CONTEXTUAL WORKSPACE** for human/input
-review and measured presentation cost. The internal client remains available.
-Phase 5 remains open; no new DEC, gameplay scope, identity/save migration or next
-UX stage is introduced by this delivery.
+current Application state and fixed-offer acceptance. Following the 2026-10-06
+[Stage 4.1 acceptance pass](../10-vertical-slice/sponsor-workspace/acceptance/README.md),
+**Stage 4 engineering acceptance is complete**; recommendation:
+**ACCEPT FIRST CONTEXTUAL WORKSPACE**. Local managed Release rebind/confirmation
+p95 are 3.6017/10.9039 ms; initial construction/company navigation limits are
+explicitly carried forward. Required regression and bounded visual checks pass.
+Human Director review remains **pending**, with a blank five-task review record;
+golden candidates are not human-approved. The internal client remains available.
+
+Published gameplay baseline is `0e9bbee0`, Stage 4 implementation is `7ad0501`,
+and Stage 4.1 tested runtime/fixture source is `043ad9b`. Original verification
+retains its original working-tree provenance. The sole content change is technical
+company name `DEV_ORG_001`; canonical/content hashes change and old exact-content
+development saves correctly reject. Schema 1 and simulation rules are unchanged.
+Phase 5 remains open; no new DEC, gameplay scope, full identity system, save
+migration or next UX stage is introduced. Historical QG-02 and wider DV gates remain.
 
 ## Current Priority
 

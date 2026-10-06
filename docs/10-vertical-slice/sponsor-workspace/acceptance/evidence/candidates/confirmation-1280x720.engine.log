@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.7080 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+PASS no horizontal workspace overflow
+PASS back remains visible
+PASS commit/review action remains visible
+PASS all core contract terms visible above fold
+SPONSOR_NATIVE_PASS 4

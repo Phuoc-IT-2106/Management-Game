@@ -1,0 +1,221 @@
+{
+  "Case": "stale",
+  "Kind": "GOLDEN CANDIDATE",
+  "Commit": "043ad9bee1c149eb9cce407a419a1e5eda6f8799",
+  "SourceDigest": "efe569fe4bc47dfc2423c088090c5b61a294d78fe151c5b12c79d5476e2aa5c1",
+  "Dirty": true,
+  "Viewport": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "Window": {
+    "Size": {}
+  },
+  "Engine": "4.7.2-stable (official)",
+  "Theme": "PROVISIONAL DEVELOPMENT THEME",
+  "Density": "Compact",
+  "TextScale": 1,
+  "Locale": "en",
+  "Fixture": "DEVELOPMENT FIXTURE \u2014 NONCANONICAL",
+  "Seed": 20261004,
+  "Snapshot": {
+    "CampaignId": "campaign:development",
+    "CompanyId": "company:player",
+    "CompanyName": "DEV_ORG_001",
+    "Revision": 1,
+    "Day": 1,
+    "NextCheckpoint": 6,
+    "Cash": 260000,
+    "CommittedForecast": 239400,
+    "Load": 65,
+    "Capacity": 80,
+    "Reputation": 45,
+    "Offers": [
+      {
+        "OfferId": "offer:atlas",
+        "Name": "Atlas Hardware",
+        "Deadline": 8,
+        "EndDay": 28,
+        "Payment": 35000,
+        "WinBonus": 5000,
+        "Load": 25,
+        "MinimumReputation": 40,
+        "CanAccept": true,
+        "Availability": "Available",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:atlas:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      },
+      {
+        "OfferId": "offer:local",
+        "Name": "Local Circuit",
+        "Deadline": 16,
+        "EndDay": 28,
+        "Payment": 22000,
+        "WinBonus": 1000,
+        "Load": 8,
+        "MinimumReputation": 20,
+        "CanAccept": true,
+        "Availability": "Available",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:local:day:4",
+            "DueDay": 4,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:11",
+            "DueDay": 11,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:18",
+            "DueDay": 18,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:25",
+            "DueDay": 25,
+            "Amount": 22000,
+            "Remaining": 22000
+          }
+        ]
+      }
+    ],
+    "Agreements": [
+      {
+        "Id": "agreement:offer:seed",
+        "Name": "Origin Coffee",
+        "EndDay": 28,
+        "Load": 12,
+        "WinBonus": 2500,
+        "Payments": [
+          {
+            "Id": "agreement:offer:seed:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      }
+    ]
+  },
+  "State": "Rejected",
+  "Origin": {
+    "CompanyId": "company:player",
+    "ScopeId": "function:business",
+    "SituationId": "matter:offer:atlas",
+    "ListMode": true,
+    "FocusKey": "list:matter:offer:atlas",
+    "Scroll": 0
+  },
+  "Checks": [
+    "no horizontal workspace overflow",
+    "back remains visible",
+    "commit/review action remains visible",
+    "all core contract terms visible above fold"
+  ],
+  "RetainedControls": {
+    "Before": 0,
+    "After": 0
+  },
+  "Timings": {
+    "enter-work": [
+      116.2164
+    ],
+    "initial-bind-plus-layout": [
+      231.6781
+    ],
+    "command-and-refresh-work": [
+      7.1599
+    ]
+  },
+  "WorkspaceWork": {
+    "profile-shell": [
+      8.1275,
+      0.0373,
+      0.0399
+    ],
+    "profile-document": [
+      34.2407,
+      0.1207,
+      0.1019
+    ],
+    "profile-evidence": [
+      17.1875,
+      0.0337,
+      0.0362
+    ],
+    "profile-actions": [
+      1.6614,
+      8.5289,
+      2.6724
+    ],
+    "bind": [
+      61.2286,
+      8.7226,
+      2.8526
+    ],
+    "review": [
+      0.6777
+    ],
+    "commit": [
+      3.2315
+    ]
+  },
+  "ApplicationWork": {
+    "command-acknowledgement": [
+      2.8384
+    ],
+    "post-command-refresh": [
+      0.2741
+    ]
+  },
+  "ImageHash": "B7F0DD33C8BDB5F4FD3514CF7D949539A38F4BE5B2EBC37DA471D8599ECDE916",
+  "GameplayHash": "cb49a49e2979365317773af586afe76fb0bfd35c24d64b7282f32f3672ef50e3",
+  "Limits": "Synthetic native input; no physical input/DPI or human usability acceptance. Debug local timings, not QG-02 pass."
+}

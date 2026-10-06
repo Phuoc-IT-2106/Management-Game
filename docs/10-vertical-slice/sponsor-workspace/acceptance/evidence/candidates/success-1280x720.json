@@ -1,0 +1,229 @@
+{
+  "Case": "success",
+  "Kind": "GOLDEN CANDIDATE",
+  "Commit": "043ad9bee1c149eb9cce407a419a1e5eda6f8799",
+  "SourceDigest": "efe569fe4bc47dfc2423c088090c5b61a294d78fe151c5b12c79d5476e2aa5c1",
+  "Dirty": true,
+  "Viewport": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "Window": {
+    "Size": {}
+  },
+  "Engine": "4.7.2-stable (official)",
+  "Theme": "PROVISIONAL DEVELOPMENT THEME",
+  "Density": "Compact",
+  "TextScale": 1,
+  "Locale": "en",
+  "Fixture": "DEVELOPMENT FIXTURE \u2014 NONCANONICAL",
+  "Seed": 20261004,
+  "Snapshot": {
+    "CampaignId": "campaign:development",
+    "CompanyId": "company:player",
+    "CompanyName": "DEV_ORG_001",
+    "Revision": 1,
+    "Day": 1,
+    "NextCheckpoint": 6,
+    "Cash": 260000,
+    "CommittedForecast": 274400,
+    "Load": 90,
+    "Capacity": 80,
+    "Reputation": 45,
+    "Offers": [
+      {
+        "OfferId": "offer:atlas",
+        "Name": "Atlas Hardware",
+        "Deadline": 8,
+        "EndDay": 28,
+        "Payment": 35000,
+        "WinBonus": 5000,
+        "Load": 25,
+        "MinimumReputation": 40,
+        "CanAccept": false,
+        "Availability": "Signed",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:atlas:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      },
+      {
+        "OfferId": "offer:local",
+        "Name": "Local Circuit",
+        "Deadline": 16,
+        "EndDay": 28,
+        "Payment": 22000,
+        "WinBonus": 1000,
+        "Load": 8,
+        "MinimumReputation": 20,
+        "CanAccept": false,
+        "Availability": "The fixture permits one additional active sponsor.",
+        "ScheduledPayments": []
+      }
+    ],
+    "Agreements": [
+      {
+        "Id": "agreement:offer:seed",
+        "Name": "Origin Coffee",
+        "EndDay": 28,
+        "Load": 12,
+        "WinBonus": 2500,
+        "Payments": [
+          {
+            "Id": "agreement:offer:seed:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      },
+      {
+        "Id": "agreement:offer:atlas",
+        "Name": "Atlas Hardware",
+        "EndDay": 28,
+        "Load": 25,
+        "WinBonus": 5000,
+        "Payments": [
+          {
+            "Id": "agreement:offer:atlas:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      }
+    ]
+  },
+  "State": "Accepted",
+  "Origin": {
+    "CompanyId": "company:player",
+    "ScopeId": "function:business",
+    "SituationId": "matter:offer:atlas",
+    "ListMode": true,
+    "FocusKey": "list:matter:offer:atlas",
+    "Scroll": 0
+  },
+  "Checks": [
+    "no horizontal workspace overflow",
+    "back remains visible",
+    "commit/review action remains visible",
+    "all core contract terms visible above fold"
+  ],
+  "RetainedControls": {
+    "Before": 0,
+    "After": 0
+  },
+  "Timings": {
+    "enter-work": [
+      113.1706
+    ],
+    "initial-bind-plus-layout": [
+      283.3417
+    ],
+    "command-and-refresh-work": [
+      51.615
+    ]
+  },
+  "WorkspaceWork": {
+    "profile-shell": [
+      9.734,
+      0.0396,
+      0.0435
+    ],
+    "profile-document": [
+      40.963,
+      0.104,
+      7.5471
+    ],
+    "profile-evidence": [
+      18.5883,
+      0.0279,
+      14.1641
+    ],
+    "profile-actions": [
+      1.9127,
+      8.6576,
+      1.7856
+    ],
+    "bind": [
+      71.2106,
+      8.8314,
+      23.5465
+    ],
+    "review": [
+      0.6765
+    ],
+    "commit": [
+      26.6508
+    ]
+  },
+  "ApplicationWork": {
+    "command-acknowledgement": [
+      25.773
+    ],
+    "post-command-refresh": [
+      0.8023
+    ]
+  },
+  "ImageHash": "45270A2297AC11EBE6D74027C47BD6C535DCA5E96CC3B4BDE596B85196FC6D1E",
+  "GameplayHash": "9fcbe3a74484f33eea1c0d6c37ceb1b9e4d6c6f27ab3a6cde7d4796d28077df7",
+  "Limits": "Synthetic native input; no physical input/DPI or human usability acceptance. Debug local timings, not QG-02 pass."
+}

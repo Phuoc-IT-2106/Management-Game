@@ -1,5 +1,13 @@
 # Executed verification — 2026-10-05 (Asia/Saigon)
 
+Historical record: the tests below originally ran on `a381d8f...` plus the recorded
+working files, not on a later published commit. Publication subsequently established
+gameplay baseline `0e9bbee0ea27ff5a6409eefa62b7d532384ce312` and Stage 4 implementation
+`7ad0501fd0719c48b8c759a491771525567fa863`; both were verified in Git history during
+Stage 4.1. Current source `043ad9bee1c149eb9cce407a419a1e5eda6f8799` has a new
+development fixture content hash and separate [acceptance verification](acceptance/VERIFICATION.md).
+Original results, dates, digests and screenshots below have not been rewritten.
+
 Local HEAD and read-only remote main matched
 `a381d8f26b55132d697e9df9b93e97dcdfc474dc`. Production gameplay is the pre-existing
 working implementation. Windows; SDK 10.0.401/runtime 10.0.12; Godot

@@ -1,0 +1,200 @@
+{
+  "Case": "long",
+  "Kind": "GOLDEN CANDIDATE",
+  "Commit": "043ad9bee1c149eb9cce407a419a1e5eda6f8799",
+  "SourceDigest": "efe569fe4bc47dfc2423c088090c5b61a294d78fe151c5b12c79d5476e2aa5c1",
+  "Dirty": true,
+  "Viewport": {
+    "Width": 1280,
+    "Height": 720
+  },
+  "Window": {
+    "Size": {}
+  },
+  "Engine": "4.7.2-stable (official)",
+  "Theme": "PROVISIONAL DEVELOPMENT THEME",
+  "Density": "Compact",
+  "TextScale": 1,
+  "Locale": "en",
+  "Fixture": "DEVELOPMENT FIXTURE \u2014 NONCANONICAL",
+  "Seed": 20261004,
+  "Snapshot": {
+    "CampaignId": "campaign:development",
+    "CompanyId": "company:player",
+    "CompanyName": "DEVELOPMENT COMPANY \u00B7 T\u1ED5 ch\u1EE9c ph\u00E1t tri\u1EC3n th\u01B0\u01A1ng m\u1EA1i v\u00E0 th\u1EC3 thao qu\u1ED1c t\u1EBF \u00B7 Long identity review",
+    "Revision": 0,
+    "Day": 1,
+    "NextCheckpoint": 6,
+    "Cash": 260000,
+    "CommittedForecast": 239400,
+    "Load": 65,
+    "Capacity": 80,
+    "Reputation": 45,
+    "Offers": [
+      {
+        "OfferId": "offer:atlas",
+        "Name": "DEVELOPMENT SPONSOR \u00B7 International Commercial and Competitive Technology Partnership",
+        "Deadline": 8,
+        "EndDay": 28,
+        "Payment": 35000,
+        "WinBonus": 5000,
+        "Load": 25,
+        "MinimumReputation": 40,
+        "CanAccept": true,
+        "Availability": "Available",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:atlas:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      },
+      {
+        "OfferId": "offer:local",
+        "Name": "DEVELOPMENT SPONSOR \u00B7 International Commercial and Competitive Technology Partnership",
+        "Deadline": 16,
+        "EndDay": 28,
+        "Payment": 22000,
+        "WinBonus": 1000,
+        "Load": 8,
+        "MinimumReputation": 20,
+        "CanAccept": true,
+        "Availability": "Available",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:local:day:4",
+            "DueDay": 4,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:11",
+            "DueDay": 11,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:18",
+            "DueDay": 18,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:25",
+            "DueDay": 25,
+            "Amount": 22000,
+            "Remaining": 22000
+          }
+        ]
+      }
+    ],
+    "Agreements": [
+      {
+        "Id": "agreement:offer:seed",
+        "Name": "Origin Coffee",
+        "EndDay": 28,
+        "Load": 12,
+        "WinBonus": 2500,
+        "Payments": [
+          {
+            "Id": "agreement:offer:seed:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      }
+    ]
+  },
+  "State": "Review",
+  "Origin": {
+    "CompanyId": "company:player",
+    "ScopeId": "function:business",
+    "SituationId": "matter:offer:atlas",
+    "ListMode": true,
+    "FocusKey": "list:matter:offer:atlas",
+    "Scroll": 0
+  },
+  "Checks": [
+    "no horizontal workspace overflow",
+    "back remains visible",
+    "commit/review action remains visible",
+    "all core contract terms visible above fold"
+  ],
+  "RetainedControls": {
+    "Before": 0,
+    "After": 0
+  },
+  "Timings": {
+    "enter-work": [
+      144.7239
+    ],
+    "initial-bind-plus-layout": [
+      299.8633
+    ]
+  },
+  "WorkspaceWork": {
+    "profile-shell": [
+      14.1833,
+      0.0896
+    ],
+    "profile-document": [
+      56.0213,
+      13.1205
+    ],
+    "profile-evidence": [
+      29.2575,
+      8.2677
+    ],
+    "profile-actions": [
+      1.796,
+      1.0004
+    ],
+    "bind": [
+      101.2696,
+      22.489
+    ]
+  },
+  "ApplicationWork": {},
+  "ImageHash": "92F1E1B472BDBA349B5D3498024BAC6541AEDD53C10D4D519196A9FD4B2738C1",
+  "GameplayHash": "0858ad9fa39ab3c68ce9e56dc638f90ffcc98591ff6621136fb463f9e0cc9a9a",
+  "Limits": "Synthetic native input; no physical input/DPI or human usability acceptance. Debug local timings, not QG-02 pass."
+}

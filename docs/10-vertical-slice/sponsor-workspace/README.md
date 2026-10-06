@@ -1,9 +1,10 @@
 # Phase 5 UX Stage 4 — live sponsor commitment
 
-Outcome: implemented and locally verified first live contextual decision workspace;
-Director acceptance pending. **Phase 5 remains open.** No next UX stage started.
+Current acceptance report: [Stage 4.1](acceptance/README.md). The original Stage 4
+implementation and measurements below are historical evidence from 2026-10-05.
+Director/human acceptance remains separate. **Phase 5 remains open.**
 
-Director recommendation: **ITERATE FIRST CONTEXTUAL WORKSPACE**. The real management
+Original Stage 4 recommendation: **ITERATE FIRST CONTEXTUAL WORKSPACE**. The real management
 loop works; local Debug rebind/confirmation cost exceeds the provisional 33.3 ms
 target and human/physical-input review remains open. Sponsor gameplay needs no
 invented depth. Human superiority over the old interface has not been proven.
@@ -20,7 +21,7 @@ LIST-FIRST / MAP-OPTIONAL is applied to live company navigation using the same
 semantic model and one sponsor workspace. DEC-023 remains authoritative; no new
 DEC, generic graph or gameplay mechanic. Internal sponsor tab and map fixtures remain.
 
-## Review summary
+## Original Stage 4 review summary (2026-10-05)
 
 - Mechanic: fixed-offer acceptance; scheduled receipts, conditional win bonuses,
   immediate delivery load and limited active slot. No negotiation, renewal,
@@ -60,9 +61,21 @@ Reproduce: `build/Verify-SponsorWorkspace.ps1`; captures:
 `build/Capture-SponsorWorkspace.ps1`. Use the pinned environment and native Windows
 access for rendering and the existing file-replacement checks.
 
-Commit SHA(s): no new commit created. Verified starting HEAD:
-`a381d8f26b55132d697e9df9b93e97dcdfc474dc`. Substantial production gameplay work was
-already uncommitted. Stage 4 remains reviewable in the working tree without silently
-publishing that unrelated work. Final source hashes and preservation evidence identify
-the tested files. A coherent clean-checkout baseline requires separate disposition
-of the pre-existing implementation.
+Original verification ran against starting HEAD
+`a381d8f26b55132d697e9df9b93e97dcdfc474dc` plus then-uncommitted gameplay and Stage 4
+files. No commit had been created **at that verification time**; its source digest
+continues to identify that historical working tree.
+
+Publication was subsequently completed and verified in Git history:
+
+- Gameplay baseline: `0e9bbee0ea27ff5a6409eefa62b7d532384ce312`
+  — `feat: publish verified vertical slice gameplay foundation`.
+- Stage 4 implementation: `7ad0501fd0719c48b8c759a491771525567fa863`
+  — `feat: add live sponsor commitment workspace`; also the inspected Stage 4.1
+  starting local/remote `main` HEAD.
+- Stage 4.1 runtime/fixture implementation and current verification source:
+  `043ad9bee1c149eb9cce407a419a1e5eda6f8799`.
+
+The later publication does not retroactively date the original tests. Current
+acceptance measurements, fixture hash and regression evidence are in the linked
+acceptance package; the original hashes and captures remain unchanged.

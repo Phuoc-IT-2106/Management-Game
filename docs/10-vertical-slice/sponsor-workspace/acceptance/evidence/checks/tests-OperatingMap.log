@@ -1,0 +1,49 @@
+PASS bounded noncanonical fixture normal
+PASS bounded noncanonical fixture sponsor
+PASS bounded noncanonical fixture competitive
+PASS bounded noncanonical fixture quiet
+PASS bounded noncanonical fixture empty
+PASS bounded noncanonical fixture long-name
+PASS bounded noncanonical fixture branding
+PASS bounded noncanonical fixture missing-identity
+PASS bounded noncanonical fixture list
+PASS bounded noncanonical fixture decision
+PASS bounded noncanonical fixture return
+PASS bounded noncanonical fixture affairs
+PASS compaction retains all five semantic ancestors
+PASS branching disables compaction
+PASS attached intermediate matter disables compaction
+PASS ownership hierarchy
+PASS four independent situation types
+PASS situation attaches to affected scope matter:sponsor
+PASS typed entry Commercial commitment review
+PASS entry cannot overwrite origin
+PASS exact return tuple
+PASS situation attaches to affected scope matter:preparation
+PASS typed entry Preparation review
+PASS entry cannot overwrite origin
+PASS exact return tuple
+PASS situation attaches to affected scope matter:talent
+PASS typed entry Talent contract review
+PASS entry cannot overwrite origin
+PASS exact return tuple
+PASS situation attaches to affected scope matter:obligation
+PASS typed entry Obligation inspection
+PASS entry cannot overwrite origin
+PASS exact return tuple
+PASS invalid and stale intents rejected
+PASS removed scope returns nearest valid ancestor and clears entry
+PASS removed matter preserves valid scope
+PASS stale replacement atomic
+PASS new/load session resets identical technical IDs
+PASS rename preserves stable navigation
+PASS back closes situation first
+PASS back reaches company parent
+PASS quiet and empty do not synthesize urgent alerts
+PASS unknown remains explicit without hidden numeric data
+PASS projection and navigation have no gameplay or engine dependency
+PASS malformed projection rejected
+PASS malformed projection rejected
+PASS malformed projection rejected
+PASS refresh closes entry and follows relocated matter scope
+OPERATING_MAP_PURE_PASS 48

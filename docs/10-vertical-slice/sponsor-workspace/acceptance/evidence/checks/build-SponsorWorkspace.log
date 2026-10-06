@@ -1,0 +1,12 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  ManagementGame.Domain -> C:\Management Game\src\ManagementGame.Domain\bin\Debug\net10.0\ManagementGame.Domain.dll
+  ManagementGame.Application -> C:\Management Game\src\ManagementGame.Application\bin\Debug\net10.0\ManagementGame.Application.dll
+  ManagementGame.Infrastructure -> C:\Management Game\src\ManagementGame.Infrastructure\bin\Debug\net10.0\ManagementGame.Infrastructure.dll
+  SponsorWorkspace -> C:\Management Game\tests\SponsorWorkspace\bin\Debug\net10.0\SponsorWorkspace.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.22

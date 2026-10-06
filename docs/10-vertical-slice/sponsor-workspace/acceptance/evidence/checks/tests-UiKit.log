@@ -1,0 +1,127 @@
+PASS complete semantic color catalog
+PASS text contrast TextPrimary/SurfaceBase
+PASS text contrast TextSecondary/SurfaceBase
+PASS text contrast TextMuted/SurfaceBase
+PASS text contrast StatePositive/SurfaceBase
+PASS text contrast StateWarning/SurfaceBase
+PASS text contrast StateCritical/SurfaceBase
+PASS text contrast SystemError/SurfaceBase
+PASS text contrast InformationKnown/SurfaceBase
+PASS text contrast InformationEstimated/SurfaceBase
+PASS text contrast InformationUnknown/SurfaceBase
+PASS focus contrast SurfaceBase
+PASS essential border contrast SurfaceBase
+PASS text contrast TextPrimary/SurfaceRaised
+PASS text contrast TextSecondary/SurfaceRaised
+PASS text contrast TextMuted/SurfaceRaised
+PASS text contrast StatePositive/SurfaceRaised
+PASS text contrast StateWarning/SurfaceRaised
+PASS text contrast StateCritical/SurfaceRaised
+PASS text contrast SystemError/SurfaceRaised
+PASS text contrast InformationKnown/SurfaceRaised
+PASS text contrast InformationEstimated/SurfaceRaised
+PASS text contrast InformationUnknown/SurfaceRaised
+PASS focus contrast SurfaceRaised
+PASS essential border contrast SurfaceRaised
+PASS text contrast TextPrimary/SurfaceInset
+PASS text contrast TextSecondary/SurfaceInset
+PASS text contrast TextMuted/SurfaceInset
+PASS text contrast StatePositive/SurfaceInset
+PASS text contrast StateWarning/SurfaceInset
+PASS text contrast StateCritical/SurfaceInset
+PASS text contrast SystemError/SurfaceInset
+PASS text contrast InformationKnown/SurfaceInset
+PASS text contrast InformationEstimated/SurfaceInset
+PASS text contrast InformationUnknown/SurfaceInset
+PASS focus contrast SurfaceInset
+PASS essential border contrast SurfaceInset
+PASS text contrast TextPrimary/SurfaceOverlay
+PASS text contrast TextSecondary/SurfaceOverlay
+PASS text contrast TextMuted/SurfaceOverlay
+PASS text contrast StatePositive/SurfaceOverlay
+PASS text contrast StateWarning/SurfaceOverlay
+PASS text contrast StateCritical/SurfaceOverlay
+PASS text contrast SystemError/SurfaceOverlay
+PASS text contrast InformationKnown/SurfaceOverlay
+PASS text contrast InformationEstimated/SurfaceOverlay
+PASS text contrast InformationUnknown/SurfaceOverlay
+PASS focus contrast SurfaceOverlay
+PASS essential border contrast SurfaceOverlay
+PASS text contrast TextPrimary/HoverSurface
+PASS text contrast TextSecondary/HoverSurface
+PASS text contrast TextMuted/HoverSurface
+PASS text contrast StatePositive/HoverSurface
+PASS text contrast StateWarning/HoverSurface
+PASS text contrast StateCritical/HoverSurface
+PASS text contrast SystemError/HoverSurface
+PASS text contrast InformationKnown/HoverSurface
+PASS text contrast InformationEstimated/HoverSurface
+PASS text contrast InformationUnknown/HoverSurface
+PASS focus contrast HoverSurface
+PASS essential border contrast HoverSurface
+PASS text contrast TextPrimary/SelectedSurface
+PASS text contrast TextSecondary/SelectedSurface
+PASS text contrast TextMuted/SelectedSurface
+PASS text contrast StatePositive/SelectedSurface
+PASS text contrast StateWarning/SelectedSurface
+PASS text contrast StateCritical/SelectedSurface
+PASS text contrast SystemError/SelectedSurface
+PASS text contrast InformationKnown/SelectedSurface
+PASS text contrast InformationEstimated/SelectedSurface
+PASS text contrast InformationUnknown/SelectedSurface
+PASS focus contrast SelectedSurface
+PASS essential border contrast SelectedSurface
+PASS neutral brand text contrast
+PASS neutral accent contrast
+PASS neutral immutable and name-independent branding
+PASS neutral text emblem fallback
+PASS bright brand text contrast
+PASS bright accent contrast
+PASS bright immutable and name-independent branding
+PASS bright text emblem fallback
+PASS dark brand text contrast
+PASS dark accent contrast
+PASS dark immutable and name-independent branding
+PASS dark text emblem fallback
+PASS warning brand text contrast
+PASS warning accent contrast
+PASS warning immutable and name-independent branding
+PASS warning text emblem fallback
+PASS low-contrast brand text contrast
+PASS low-contrast accent contrast
+PASS low-contrast immutable and name-independent branding
+PASS low-contrast text emblem fallback
+PASS identical brand text contrast
+PASS identical accent contrast
+PASS identical immutable and name-independent branding
+PASS identical text emblem fallback
+PASS missing-emblem brand text contrast
+PASS missing-emblem accent contrast
+PASS missing-emblem immutable and name-independent branding
+PASS missing-emblem text emblem fallback
+PASS dark raw color resolves safe accent
+PASS low-contrast secondary fallback
+PASS identical brand colors allowed without invented identity
+PASS independent black-white contrast vector
+PASS mid-gray contrast reference vector
+PASS rebind callback reset with identical display names
+PASS stale bind preserves current target and callback
+PASS non-ready activation suppressed: Empty
+PASS non-ready activation suppressed: Loading
+PASS non-ready activation suppressed: Unavailable
+PASS non-ready activation suppressed: Error
+PASS missing stable ID is not actionable
+PASS unbound lifetime releases target
+PASS unknown never displays a backing number
+PASS negative estimated value distinct from unknown
+PASS unknown time/icon safe fallbacks
+PASS text and density scale: Compact
+PASS reduced motion: Compact
+PASS text and density scale: Default
+PASS reduced motion: Default
+PASS text and density scale: Comfortable
+PASS reduced motion: Comfortable
+PASS semantic optional motion durations exist
+PASS capture fixture numeric formatting reproducible across host cultures
+PASS presentation fixture/test assembly has no gameplay or engine dependency
+UI_KIT_PURE_PASS 126

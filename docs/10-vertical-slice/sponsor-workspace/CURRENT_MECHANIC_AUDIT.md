@@ -1,5 +1,10 @@
 # Current sponsor mechanic audit
 
+Historical inspection below dates to 2026-10-05. The formerly uncommitted gameplay
+was later published as `0e9bbee0`, followed by Stage 4 in `7ad0501`. Stage 4.1
+reinspected the current source and preserves all rules; see
+[current acceptance](acceptance/README.md). Only the development company name changed.
+
 Inspected 2026-10-05 (Asia/Saigon). Local HEAD and read-only remote main are
 `a381d8f26b55132d697e9df9b93e97dcdfc474dc`. Production gameplay is present as
 pre-existing uncommitted working files, as recorded by prior UX stages. This

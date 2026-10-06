@@ -3,10 +3,9 @@
 - Director/human review must decide whether the document/evidence/commitment flow
   improves management understanding over the old tab/text interface. Engineering
   evidence establishes correct live behavior and visibility, not human superiority.
-- The repository's production gameplay/content/persistence implementation was
-  already uncommitted. This delivery builds on and preserves it; a clean checkout
-  of the starting main alone cannot reproduce that local implementation. Stage 4
-  must not silently publish unrelated pre-existing work in its commit.
+- Resolved publication concern: the originally uncommitted gameplay was published
+  as `0e9bbee0`, and Stage 4 as `7ad0501`. Original verification retains its original
+  working-tree provenance. [Stage 4.1](acceptance/README.md) records current source.
 - Full company identity persistence/editor, art direction, final balance/content,
   sponsor negotiation and other workspace migrations remain separate tasks.
 - Current offer/contract bounds are tiny. The eligibility preview reuses a pure
@@ -19,7 +18,8 @@
   retain outcome cause IDs in the existing finance observation.
 - Native synthetic input and fixed viewports do not discharge DV-03/04 physical
   input, Windows DPI/mixed monitors, human usability or accessibility certification.
-  Target hardware/Release acceptance, cross-machine determinism and other DV gates
-  remain open. QG-02's historical result is unchanged.
+  Target hardware, exported-engine qualification, cross-machine determinism and
+  other DV gates remain open. Local managed Debug/Release measurements are now
+  recorded separately in Stage 4.1. QG-02's historical result is unchanged.
 - The internal management UI stays reachable and owns existing time/save/load
   controls. No full company-first demo or next Phase 5 UX stage is included.

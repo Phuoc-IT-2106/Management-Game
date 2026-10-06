@@ -1,0 +1,54 @@
+PASS live campaign identity
+PASS authoritative eligibility and schedule
+PASS projection preview cannot mutate state or consume RNG
+PASS private rival changes are invisible to sponsor read model
+PASS no hidden resolver fields
+PASS document renders Application dates
+PASS forecast explicitly estimated
+PASS unknown never zero or hidden numeric backing
+PASS review local draft
+PASS review submits nothing
+PASS pending rebind cannot submit again
+PASS real commitment command
+PASS exact offer ID and viewed revision
+PASS success refreshes observation
+PASS cash unchanged, delivery load immediate
+PASS double click Enter and spam suppressed
+PASS existing receipt retry remains sole idempotency authority
+PASS slot consumed; signed and competing offer disabled
+PASS stale message and actor-safe refresh
+PASS stale rejects without mutation or retry
+PASS fresh explicit review required
+PASS Escape confirmation returns review
+PASS cancel and exact return preserve state
+PASS sorting cannot retarget stable ID
+PASS removed offer rejected and disabled
+PASS expired offer not actionable
+PASS authoritative unavailable: end
+PASS authoritative unavailable: reputation
+PASS authoritative unavailable: claimed
+PASS authoritative unavailable: finished
+PASS list return tuple
+PASS optional map shares workspace target
+PASS removed matter returns nearest business context
+PASS bounded Affairs receipt from actual scheduled item
+PASS schema 1 save/load signed terms and schedule
+PASS save schema unchanged
+PASS same decisions deterministic despite extra queries
+PASS actual sponsor load reduces future preparation conversion
+PASS UI authority boundary SponsorCompanyHost.cs
+PASS UI authority boundary SponsorPerformance.cs
+PASS UI authority boundary SponsorPresenter.cs
+PASS UI authority boundary SponsorVerification.cs
+PASS UI authority boundary SponsorWorkspaceView.cs
+PASS fixture differs from published bytes only in company identity
+PASS canonical identity changes without initial gameplay change
+PASS identity-only behavior equivalence: SponsorDecision
+PASS identity-only behavior equivalence: CoachDecision
+PASS identity-only behavior equivalence: AdvanceDecision
+PASS identity-only behavior equivalence: AdvanceDecision
+PASS identity-only equivalence at all 63 first-match phase boundaries
+PASS old exact-content save rejected without mutation
+PASS new fixture schema-1 save round trip
+FIXTURE_IDENTITY_PASS old=605c6673574379e0d18d97e969e8db58eb84c3f004057d22d618cc9ced9e3f89 new=f874fb34b3991c0167aeb6c4285ec1f71974af12d200b4ced98f43d1bb1322ea phaseBoundaries=63
+SPONSOR_WORKSPACE_PASS 52

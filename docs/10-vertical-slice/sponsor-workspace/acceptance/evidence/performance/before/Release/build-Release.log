@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  Restored C:\Management Game\src\ManagementGame.Domain\ManagementGame.Domain.csproj (in 290 ms).
+  Restored C:\Management Game\src\ManagementGame.Infrastructure\ManagementGame.Infrastructure.csproj (in 290 ms).
+  Restored C:\Management Game\src\ManagementGame.Application\ManagementGame.Application.csproj (in 290 ms).
+  Restored C:\Management Game\game\Client\Client.csproj (in 417 ms).
+  ManagementGame.Domain -> C:\Management Game\src\ManagementGame.Domain\bin\Release\net10.0\ManagementGame.Domain.dll
+  ManagementGame.Application -> C:\Management Game\src\ManagementGame.Application\bin\Release\net10.0\ManagementGame.Application.dll
+  ManagementGame.Infrastructure -> C:\Management Game\src\ManagementGame.Infrastructure\bin\Release\net10.0\ManagementGame.Infrastructure.dll
+  Client -> C:\Management Game\game\Client\.godot\mono\temp\bin\Release\Client.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:12.10

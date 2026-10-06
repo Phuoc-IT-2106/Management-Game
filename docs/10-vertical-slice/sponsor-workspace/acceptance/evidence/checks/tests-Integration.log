@@ -1,0 +1,163 @@
+PASS stale rejection atomicity
+PASS invalid ID atomicity
+PASS coach authority commit
+PASS exact retry idempotency
+PASS conflicting reuse rejected
+PASS first full management cycle
+PASS first result checkpoint
+PASS second consecutive management cycle
+PASS second result checkpoint
+PASS same seed and commands equal authoritative hash
+PASS consumer idempotency
+PASS observations exclude developer truth
+PASS observation does not mutate or consume RNG
+PASS explicit DTO disk round trip
+PASS loaded continuation equals uninterrupted
+PASS explicit backup preserves previous revision
+PASS corrupt load preserves valid session
+PASS corrupt primary cannot replace backup evidence
+PASS explicit recovery loads valid backup
+PASS phase save continuation 0
+PASS phase save continuation 1
+PASS phase save continuation 2
+PASS phase save continuation 3
+PASS phase save continuation 4
+PASS phase save continuation 5
+PASS phase save continuation 6
+PASS phase save continuation 7
+PASS phase save continuation 8
+PASS phase save continuation 9
+PASS phase save continuation 10
+PASS phase save continuation 11
+PASS phase save continuation 12
+PASS phase save continuation 13
+PASS phase save continuation 14
+PASS phase save continuation 15
+PASS phase save continuation 16
+PASS phase save continuation 17
+PASS phase save continuation 18
+PASS phase save continuation 19
+PASS phase save continuation 20
+PASS phase save continuation 21
+PASS phase save continuation 22
+PASS phase save continuation 23
+PASS phase save continuation 24
+PASS phase save continuation 25
+PASS phase save continuation 26
+PASS phase save continuation 27
+PASS phase save continuation 28
+PASS phase save continuation 29
+PASS phase save continuation 30
+PASS phase save continuation 31
+PASS phase save continuation 32
+PASS phase save continuation 33
+PASS phase save continuation 34
+PASS phase save continuation 35
+PASS phase save continuation 36
+PASS phase save continuation 37
+PASS phase save continuation 38
+PASS phase save continuation 39
+PASS phase save continuation 40
+PASS phase save continuation 41
+PASS phase save continuation 42
+PASS phase save continuation 43
+PASS phase save continuation 44
+PASS phase save continuation 45
+PASS phase save continuation 46
+PASS phase save continuation 47
+PASS phase save continuation 48
+PASS phase save continuation 49
+PASS phase save continuation 50
+PASS phase save continuation 51
+PASS phase save continuation 52
+PASS phase save continuation 53
+PASS phase save continuation 54
+PASS phase save continuation 55
+PASS phase save continuation 56
+PASS phase save continuation 57
+PASS phase save continuation 58
+PASS phase save continuation 59
+PASS phase save continuation 60
+PASS phase save continuation 61
+PASS phase save continuation 62
+PASS result plus immediate consumers saved atomically
+PASS signed sponsorship creates receivables, no immediate cash
+PASS sponsor timing explicit
+PASS recruitment transfers sole person ownership
+PASS release transfers ownership and sacrifices roster depth
+PASS information narrows estimates without changing true assets
+PASS manual/delegated competitive and finance parity
+PASS culture-independent replay en-US
+PASS culture-independent replay tr-TR
+PASS culture-independent replay vi-VN
+PASS shuffled definition order has canonical initial state
+PASS uncertain coach escalates without partial mutation
+PASS continue bounded campaign
+PASS continue bounded campaign
+PASS all four cycles and final business consequences resolved
+PASS invalid save leaves session intact: schema
+PASS invalid save leaves session intact: content
+PASS invalid save leaves session intact: cursor
+PASS invalid save leaves session intact: cash
+PASS invalid save leaves session intact: owner
+PASS invalid save leaves session intact: receipts
+PASS trailing-corruption rejection
+PASS exclusive slot lock rejects concurrent writer
+PASS failed write preserves primary bytes
+PASS save slot traversal rejected
+PASS duplicate key rejection
+PASS duplicate content IDs
+PASS low liquidity reaches a material distress checkpoint
+PASS unpaid items retain original missed date
+PASS recovery commits scarce sponsor opportunity and load
+PASS distress resumes without repeated completed phases
+PASS recovery retains late-payment history after settlement
+PASS seed 1 transition a
+PASS seed 1 transition b
+PASS seed 1 transition c
+PASS seed 2 transition a
+PASS seed 2 transition b
+PASS seed 2 transition c
+PASS seed 3 transition a
+PASS seed 3 transition b
+PASS seed 3 transition c
+PASS seed 4 transition a
+PASS seed 4 transition b
+PASS seed 4 transition c
+PASS seed 5 transition a
+PASS seed 5 transition b
+PASS seed 5 transition c
+PASS seed 6 transition a
+PASS seed 6 transition b
+PASS seed 6 transition c
+PASS seed 7 transition a
+PASS seed 7 transition b
+PASS seed 7 transition c
+PASS seed 8 transition a
+PASS seed 8 transition b
+PASS seed 8 transition c
+PASS seed 9 transition a
+PASS seed 9 transition b
+PASS seed 9 transition c
+PASS seed 10 transition a
+PASS seed 10 transition b
+PASS seed 10 transition c
+PASS seed 11 transition a
+PASS seed 11 transition b
+PASS seed 11 transition c
+PASS seed 12 transition a
+PASS seed 12 transition b
+PASS seed 12 transition c
+PASS seed 13 transition a
+PASS seed 13 transition b
+PASS seed 13 transition c
+PASS seed 14 transition a
+PASS seed 14 transition b
+PASS seed 14 transition c
+PASS seed 15 transition a
+PASS seed 15 transition b
+PASS seed 15 transition c
+PASS seed 16 transition a
+PASS seed 16 transition b
+PASS seed 16 transition c
+INTEGRATION PASS 162 phaseBoundaries=63 hash=f8614b89b1ce12b298f158337c6d40090ef64419b23b540667c57ae7d6920ec7
