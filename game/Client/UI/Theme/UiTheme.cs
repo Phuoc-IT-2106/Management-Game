@@ -9,14 +9,22 @@ public static class UiTheme
     public static Theme Build(UiTokens tokens)
     {
         var font = new SystemFont { FontNames = UiTokens.UiFontNames, AllowSystemFallback = true };
-        var numeric = new SystemFont { FontNames = UiTokens.NumericFontNames, AllowSystemFallback = true };
+        var display = new SystemFont { FontNames = UiTokens.DisplayFontNames, FontWeight = UiTokens.DisplayWeight, AllowSystemFallback = true };
+        // Tabular figures keep columns of values aligned without a code/monospace face.
+        var numeric = new FontVariation { BaseFont = new SystemFont { FontNames = UiTokens.NumericFontNames, AllowSystemFallback = true },
+            OpentypeFeatures = new Godot.Collections.Dictionary { { TextServerManager.GetPrimaryInterface().NameToTag("tnum"), 1 } } };
         var theme = new Theme { DefaultFont = font, DefaultFontSize = tokens.FontSize(TypographyRole.Body) };
         foreach (var role in Enum.GetValues<ColorRole>()) theme.SetColor(role.ToString(), "Semantic", ToGodot(tokens.Color(role)));
         foreach (var role in Enum.GetValues<TypographyRole>())
         {
             if (role != TypographyRole.Label) theme.SetTypeVariation(role.ToString(), "Label");
             theme.SetFontSize("font_size", role.ToString(), tokens.FontSize(role));
-            theme.SetFont("font", role.ToString(), role == TypographyRole.Data ? numeric : font);
+            theme.SetFont("font", role.ToString(), role switch
+            {
+                TypographyRole.Data => numeric,
+                TypographyRole.CompanyIdentity or TypographyRole.WorkspaceTitle or TypographyRole.SectionTitle => display,
+                _ => font
+            });
         }
         theme.SetColor("font_color", "Label", ToGodot(tokens.Color(ColorRole.TextPrimary)));
         foreach (var kind in new[] { "Button", "OptionButton", "CheckButton", "CheckBox" })
@@ -32,14 +40,34 @@ public static class UiTheme
             theme.SetStylebox("disabled", kind, Box(tokens, ColorRole.SurfaceInset));
             theme.SetStylebox("focus", kind, Focus(tokens));
         }
+        // Entities are rows, not buttons: flat until hovered, with surfaces instead of per-item borders.
+        theme.SetTypeVariation("Entity", "Button");
+        theme.SetStylebox("normal", "Entity", Flat(tokens, null));
+        theme.SetStylebox("disabled", "Entity", Flat(tokens, null));
+        theme.SetStylebox("hover", "Entity", Flat(tokens, ColorRole.HoverSurface));
+        theme.SetStylebox("pressed", "Entity", Flat(tokens, ColorRole.SelectedSurface));
+        theme.SetStylebox("hover_pressed", "Entity", Flat(tokens, ColorRole.SelectedSurface));
         theme.SetTypeVariation("SelectedEntity", "Button");
         // Leading edge bar keeps selection perceivable without relying on surface color alone.
-        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed" })
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed", "disabled" })
             theme.SetStylebox(state, "SelectedEntity", Selected(tokens, state.StartsWith("hover") ? ColorRole.HoverSurface : ColorRole.SelectedSurface));
+        // One inverted-neutral treatment marks the workspace decision; it is not a semantic state color.
+        theme.SetTypeVariation("PrimaryAction", "Button");
+        theme.SetStylebox("normal", "PrimaryAction", Box(tokens, ColorRole.ActionPrimary, false));
+        theme.SetStylebox("hover", "PrimaryAction", Box(tokens, ColorRole.ActionPrimaryHover, false));
+        theme.SetStylebox("pressed", "PrimaryAction", Box(tokens, ColorRole.ActionPrimaryHover, false));
+        theme.SetStylebox("hover_pressed", "PrimaryAction", Box(tokens, ColorRole.ActionPrimaryHover, false));
+        theme.SetStylebox("disabled", "PrimaryAction", Box(tokens, ColorRole.SurfaceInset));
+        foreach (var item in new[] { "font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color" })
+            theme.SetColor(item, "PrimaryAction", ToGodot(tokens.Color(ColorRole.TextOnAction)));
+        theme.SetFont("font", "PrimaryAction", display);
         foreach (var surface in new[] { ColorRole.SurfaceBase, ColorRole.SurfaceRaised, ColorRole.SurfaceInset, ColorRole.SurfaceOverlay })
         {
             theme.SetTypeVariation(surface.ToString(), "PanelContainer");
-            theme.SetStylebox("panel", surface.ToString(), Box(tokens, surface, surface != ColorRole.SurfaceBase));
+            // Surface tiers carry structure; raised/inset edges are subtle dividers, overlays keep an essential border.
+            var box = Box(tokens, surface, surface != ColorRole.SurfaceBase);
+            if (surface is ColorRole.SurfaceRaised or ColorRole.SurfaceInset) box.BorderColor = ToGodot(tokens.Color(ColorRole.Divider));
+            theme.SetStylebox("panel", surface.ToString(), box);
         }
         foreach (var kind in new[] { "VBoxContainer", "HBoxContainer" })
             theme.SetConstant("separation", kind, tokens.Space(SpaceRole.SpaceRelated));
@@ -67,16 +95,26 @@ public static class UiTheme
         ContentMarginLeft = tokens.Space(SpaceRole.SpaceGroup), ContentMarginRight = tokens.Space(SpaceRole.SpaceGroup),
         ContentMarginTop = tokens.Space(SpaceRole.SpaceRelated), ContentMarginBottom = tokens.Space(SpaceRole.SpaceRelated)
     };
-    private static StyleBoxFlat Selected(UiTokens tokens, ColorRole surface)
+    private static StyleBoxFlat Flat(UiTokens tokens, ColorRole? surface)
     {
-        var box = Box(tokens, surface);
-        box.BorderColor = ToGodot(tokens.Color(ColorRole.TextPrimary));
-        box.BorderWidthLeft = UiTokens.SelectionWidth;
+        var box = Box(tokens, surface ?? ColorRole.SurfaceBase, false);
+        box.DrawCenter = surface is not null;
         return box;
     }
+    private static StyleBoxFlat Selected(UiTokens tokens, ColorRole surface)
+    {
+        var box = Box(tokens, surface, false);
+        box.BorderColor = ToGodot(tokens.Color(ColorRole.TextPrimary));
+        box.BorderWidthLeft = UiTokens.SelectionWidth;
+        box.ContentMarginLeft += UiTokens.SelectionWidth;
+        return box;
+    }
+    // Drawn outside the control so the ring keeps contrast on light primary fills and dark rows alike.
     private static StyleBoxFlat Focus(UiTokens tokens) => new()
     {
         DrawCenter = false, BorderColor = ToGodot(tokens.Color(ColorRole.FocusRing)),
+        ExpandMarginLeft = UiTokens.FocusWidth + UiTokens.BorderWidth, ExpandMarginRight = UiTokens.FocusWidth + UiTokens.BorderWidth,
+        ExpandMarginTop = UiTokens.FocusWidth + UiTokens.BorderWidth, ExpandMarginBottom = UiTokens.FocusWidth + UiTokens.BorderWidth,
         BorderWidthLeft = UiTokens.FocusWidth, BorderWidthRight = UiTokens.FocusWidth,
         BorderWidthTop = UiTokens.FocusWidth, BorderWidthBottom = UiTokens.FocusWidth,
         CornerRadiusTopLeft = UiTokens.CornerRadius, CornerRadiusTopRight = UiTokens.CornerRadius,
@@ -96,6 +134,13 @@ public sealed class UiContext(UiTokens tokens)
         var panel = new PanelContainer { ThemeTypeVariation = surface.ToString(), SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
         panel.AddChild(child); return panel;
     }
+    /// <summary>The single decision action of a workspace.</summary>
+    public Button PrimaryButton(string text, Action action)
+    {
+        var button = Button(text, action); button.ThemeTypeVariation = "PrimaryAction"; return button;
+    }
+    /// <summary>The one development marker allowed in player space.</summary>
+    public Label Watermark() => SemanticText.Create(this, PresentationText.DevelopmentWatermark, TypographyRole.Annotation, ColorRole.TextMuted);
     public Button Button(string text, Action action)
     {
         var button = new Button { Text = text, FocusMode = Control.FocusModeEnum.All,

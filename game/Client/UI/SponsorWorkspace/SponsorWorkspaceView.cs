@@ -42,7 +42,7 @@ public partial class SponsorWorkspaceView : Control
             var margin = new MarginContainer(); layout = margin; AddChild(margin); margin.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
             foreach (var edge in new[] { "left", "right", "top", "bottom" }) margin.AddThemeConstantOverride("margin_" + edge, ui.Tokens.Space(SpaceRole.SpaceWorkspace));
             shell = ui.Stack(); margin.AddChild(shell);
-            heading = SemanticText.Create(ui, "[CO] " + s.CompanyName, TypographyRole.CompanyIdentity);
+            heading = SemanticText.Create(ui, s.CompanyName, TypographyRole.CompanyIdentity);
             heading.AutowrapMode = TextServer.AutowrapMode.Off; heading.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
             heading.TooltipText = s.CompanyName; shell.AddChild(heading);
             shell.AddChild(SemanticText.Create(ui, "Business & Finance  /  Sponsorship  /  Commitment review", TypographyRole.Label));
@@ -56,12 +56,12 @@ public partial class SponsorWorkspaceView : Control
             feedback = ValidationMessage.Create(ui, "", false); shell.AddChild(feedback);
             actions = new HBoxContainer(); shell.AddChild(actions);
             filler = new Control { SizeFlagsVertical = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore }; shell.AddChild(filler);
-            shell.AddChild(SemanticText.Create(ui, UiTokens.Notice, TypographyRole.Annotation, ColorRole.TextMuted));
+            shell.AddChild(ui.Watermark());
             foreach (var region in new Control[] { reading, evidence, feedback, actions }) region.MinimumSizeChanged += QueueFit;
             Resized += QueueFit;
         }
-        heading.Text = "[CO] " + s.CompanyName; heading.TooltipText = s.CompanyName;
-        time.Text = $"Day {s.Day} · " + PresentationText.Time(s.NextCheckpoint, "Next competition") + " · " + PresentationText.FixtureNotice;
+        heading.Text = s.CompanyName; heading.TooltipText = s.CompanyName;
+        time.Text = $"Day {s.Day} · " + PresentationText.Time(s.NextCheckpoint, "Next competition");
         Measure("profile-shell", section); section = System.Diagnostics.Stopwatch.GetTimestamp();
         // Specific, bounded display records. Revision alone never identifies data.
         // Action binding below always uses the current presenter, ID and revision.
@@ -84,6 +84,7 @@ public partial class SponsorWorkspaceView : Control
         Measure("profile-document", section); section = System.Diagnostics.Stopwatch.GetTimestamp();
         var nextEvidenceKey = JsonSerializer.Serialize(new { s.CampaignId, s.CompanyId, s.CompanyName, s.Cash, s.Load, s.Capacity, s.CommittedForecast, s.Reputation, s.Agreements,
             s.Day, s.LastDay, s.LoadByDay, s.CompetitionDays, o?.OfferId, o?.CanAccept, o?.LoadIfAccepted, o?.ForecastIfAccepted, o?.LoadByDayIfAccepted, o?.ScheduledPayments });
+        var evidenceChanged = evidenceKey is not null && evidenceKey != nextEvidenceKey;
         if (evidenceKey != nextEvidenceKey)
         {
             Clear(evidence); Clear(support); evidenceKey = nextEvidenceKey;
@@ -92,15 +93,15 @@ public partial class SponsorWorkspaceView : Control
             evidence.AddChild(SemanticText.Create(ui, $"Load now: {s.Load} / capacity {s.Capacity}", TypographyRole.Data,
                 s.Load > s.Capacity ? ColorRole.StateWarning : ColorRole.TextPrimary));
             if (s.Load > s.Capacity)
-                evidence.AddChild(SemanticText.Create(ui, $"[!] Over capacity by {s.Load - s.Capacity} now.", TypographyRole.Label, ColorRole.StateWarning));
+                evidence.AddChild(SemanticText.Create(ui, $"{PresentationText.WarningMarker} Over capacity by {s.Load - s.Capacity} now.", TypographyRole.Label, ColorRole.StateWarning));
             if (o is not null && o.CanAccept && o.LoadIfAccepted is { } after)
             {
                 var over = after - s.Capacity;
                 evidence.AddChild(SemanticText.Create(ui, $"Load if accepted: {after} / capacity {s.Capacity}", TypographyRole.Data,
                     over > 0 ? ColorRole.StateWarning : ColorRole.TextPrimary));
                 evidence.AddChild(SemanticText.Create(ui, over > 0
-                    ? $"[!] Over capacity by {over} from acceptance through day {o.EndDay}."
-                    : $"[=] Within capacity; {-over} remaining after acceptance.", TypographyRole.Label, over > 0 ? ColorRole.StateWarning : ColorRole.TextSecondary));
+                    ? $"{PresentationText.WarningMarker} Over capacity by {over} from acceptance through day {o.EndDay}."
+                    : $"{PresentationText.NeutralMarker} Within capacity; {-over} remaining after acceptance.", TypographyRole.Label, over > 0 ? ColorRole.StateWarning : ColorRole.TextSecondary));
             }
             evidence.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known,
                 "Sponsor load shares capacity with preparation. When total load exceeds capacity, future preparation converts more slowly; completed work is retained."));
@@ -122,7 +123,9 @@ public partial class SponsorWorkspaceView : Control
         }
         Measure("profile-evidence", section); section = System.Diagnostics.Stopwatch.GetTimestamp();
         var rejected = Presenter.Phase == SponsorPhase.Rejected;
-        feedback.Text = (rejected ? "[!] " : "[i] ") + Presenter.Feedback;
+        var nextFeedback = (rejected ? PresentationText.WarningMarker : PresentationText.NeutralMarker) + " " + Presenter.Feedback;
+        var feedbackChanged = feedback.Text.Length > 0 && feedback.Text != nextFeedback;
+        feedback.Text = nextFeedback;
         ui.Tone(feedback, rejected ? ColorRole.SystemError : ColorRole.TextSecondary);
         Clear(actions);
         BackButton = ui.Button(Presenter.Phase == SponsorPhase.Confirm ? "Keep reviewing · Esc" : "Return to company · Esc", () => Act("back"));
@@ -137,11 +140,14 @@ public partial class SponsorWorkspaceView : Control
         }
         else
         {
-            ReviewButton = ui.Button(Presenter.Phase == SponsorPhase.Accepted ? "Agreement signed" : "Review acceptance", () => Act("review"));
+            ReviewButton = ui.PrimaryButton(Presenter.Phase == SponsorPhase.Accepted ? "Agreement signed" : "Review acceptance", () => Act("review"));
             ReviewButton.Disabled = !Presenter.CanReview; actions.AddChild(ReviewButton);
         }
         Measure("profile-actions", section);
         Measure("bind", start);
+        // Acknowledge changed authoritative state (refresh after commit/rejection), never the first bind.
+        if (evidenceChanged) UiMotion.Highlight(ui, evidence);
+        if (feedbackChanged) UiMotion.Highlight(ui, feedback);
         QueueFit();
     }
     private void QueueFit()

@@ -42,7 +42,7 @@ Check(PresentationText.Time(null, "Due").Contains("unknown") && PresentationText
 var icons = Enum.GetValues<EntityKind>().Select(k => PresentationText.Icon(k.ToString())).ToArray();
 Check(icons.Distinct().Count() == icons.Length && !icons.Contains(PresentationText.InformationMarker(InformationState.Unknown)), "entity icons distinct and never the Unknown marker");
 var amount = new ResourceView("Value", 1000m, "TEST", InformationState.Estimated, "forecast");
-Check(PresentationText.ResourceAmount(amount) == "Value: 1,000.00 TEST" && PresentationText.ResourceEvidence(amount).StartsWith("[~] Estimated"), "resource amount separated from information evidence");
+Check(PresentationText.ResourceAmount(amount) == "Value: 1,000.00 TEST" && PresentationText.ResourceEvidence(amount).StartsWith("◐ Estimated"), "resource amount separated from information evidence");
 Check(PresentationText.DayRanges([6, 1, 2, 3, 9, 10]) == "1–3, 6, 9–10" && PresentationText.DayRanges([]) == "", "day ranges compress consecutive runs");
 var track = new DayTrackData("Q?", 1, 5, 10, "limit", "Now", [5, 5, 5, 5, 5], "If", [8, 12, 12, 8, 5],
     [new("Marks", [2, 4, 9], DayMarkShape.Filled)], "assumption");
@@ -54,12 +54,24 @@ foreach (var invalid in new[] { track with { Current = [1, 2] }, track with { Pr
     try { invalid.Validate(); Check(false, "invalid day track must be rejected"); } catch (ArgumentException) { }
 }
 Check(true, "day track rejects mismatched or unbounded series");
+Check(PresentationText.Monogram("DEV_ORG_001") == "DO" && PresentationText.Monogram("TEST") == "TE" && PresentationText.Monogram("Tổ chức phát triển") == "TC" && PresentationText.Monogram("___") == "—", "text emblem fallback is a monogram, not a type code");
+var markers = Enum.GetValues<InformationState>().Select(PresentationText.InformationMarker).Concat(Enum.GetValues<DomainStatus>().Select(PresentationText.StatusMarker)).ToArray();
+Check(markers.Distinct().Count() == markers.Length && markers.All(m => !m.Contains('[')), "information and status markers are distinct geometric glyphs, not bracket codes");
+Check(!PresentationText.DevelopmentWatermark.Contains("Tab") && PresentationText.DevelopmentWatermark.Contains(PresentationText.FixtureNotice), "single watermark keeps fixture marker without keyboard legend");
 foreach (var d in Enum.GetValues<UiDensity>())
 {
-    var t = new UiTokens(d, 1.5); Check(t.FontSize(TypographyRole.Body) > tokens.FontSize(TypographyRole.Body) && t.ControlHeight >= t.Size(SizeRole.ControlCompact), "text and density scale: " + d);
+    var t = new UiTokens(d, 1.5, reducedMotion: true); Check(t.FontSize(TypographyRole.Body) > tokens.FontSize(TypographyRole.Body) && t.ControlHeight >= t.Size(SizeRole.ControlCompact), "text and density scale: " + d);
     Check(Enum.GetValues<MotionRole>().All(x => t.Duration(x) == 0), "reduced motion: " + d);
 }
 Check(Enum.GetValues<MotionRole>().All(x => new UiTokens(reducedMotion: false).Duration(x) > 0), "semantic optional motion durations exist");
+UiTokens.PreferReducedMotion = false; var live = new UiTokens();
+Check(!live.ReducedMotion && live.Duration(MotionRole.ChangeHighlight) > 0, "explanatory motion is on by default");
+UiTokens.PreferReducedMotion = true; Check(live.ReducedMotion && live.Duration(MotionRole.ChangeHighlight) == 0 && !new UiTokens(reducedMotion: false).ReducedMotion, "reduced-motion preference applies live; explicit choice wins");
+UiTokens.PreferReducedMotion = false;
+Check(Rgb.Contrast(tokens.Color(ColorRole.TextOnAction), tokens.Color(ColorRole.ActionPrimary)) >= UiTokens.TextContrast &&
+    Rgb.Contrast(tokens.Color(ColorRole.TextOnAction), tokens.Color(ColorRole.ActionPrimaryHover)) >= UiTokens.TextContrast, "primary action text contrast");
+Check(new[] { ColorRole.SurfaceBase, ColorRole.SurfaceRaised, ColorRole.SurfaceInset }.All(x => Rgb.Contrast(tokens.Color(ColorRole.ActionPrimary), tokens.Color(x)) >= UiTokens.GraphicContrast), "primary action boundary contrast against surfaces");
+Check(new[] { ColorRole.StateWarning, ColorRole.StateCritical, ColorRole.SystemError, ColorRole.FocusRing }.All(x => tokens.Color(x) != tokens.Color(ColorRole.ActionPrimary)), "primary action never reuses a semantic state color");
 var priorCulture = CultureInfo.CurrentCulture;
 CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("vi-VN"); var vi = PresentationText.Resource(new("Value", 1000.5m, "TEST", InformationState.Known, "fixture"));
 CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US"); var en = PresentationText.Resource(new("Value", 1000.5m, "TEST", InformationState.Known, "fixture"));

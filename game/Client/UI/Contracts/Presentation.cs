@@ -44,14 +44,31 @@ public sealed record DayTrackData(string Question, int FirstDay, int LastDay, in
 public static class PresentationText
 {
     public const string FixtureNotice = "DEVELOPMENT FIXTURE — NONCANONICAL";
+    /// <summary>Single compact development marker; keyboard legends and contract notes never enter player space.</summary>
+    public const string DevelopmentWatermark = FixtureNotice + " · provisional theme";
+    // Geometric markers always accompany words; "○" is reserved for Unknown information.
+    public const string WarningMarker = "▲", CriticalMarker = "■", NeutralMarker = "•", PositiveMarker = "✓";
+    /// <summary>Text emblem fallback from the display name ("DEV_ORG_001" → "DO"), never a type code.</summary>
+    public static string Monogram(string name)
+    {
+        var words = name.Split([' ', '_', '-', '.', '·'], StringSplitOptions.RemoveEmptyEntries).Where(w => char.IsLetter(w[0])).ToArray();
+        if (words.Length == 0) return "—";
+        var letters = words.Length == 1 ? words[0].Where(char.IsLetter).Take(2) : words.Take(2).Select(w => w[0]);
+        return new string(letters.ToArray()).ToUpperInvariant();
+    }
+    public static string StatusMarker(DomainStatus status) => status switch
+    {
+        DomainStatus.Critical => CriticalMarker, DomainStatus.Warning => WarningMarker,
+        DomainStatus.Positive => PositiveMarker, _ => NeutralMarker
+    };
     public static string Information(InformationState value) => value switch
     {
         InformationState.Known => "Known", InformationState.Estimated => "Estimated", _ => "Unknown"
     };
-    /// <summary>Non-color information marker; "[?]" is reserved for Unknown and unresolved kinds.</summary>
+    /// <summary>Non-color information marker: filled known, half estimated, open unknown.</summary>
     public static string InformationMarker(InformationState value) => value switch
     {
-        InformationState.Known => "[=]", InformationState.Estimated => "[~]", _ => "[?]"
+        InformationState.Known => "●", InformationState.Estimated => "◐", _ => "○"
     };
     public static string ResourceAmount(ResourceView value) => value.Information == InformationState.Unknown || value.Value is null
         ? $"{value.Label}: Unknown"

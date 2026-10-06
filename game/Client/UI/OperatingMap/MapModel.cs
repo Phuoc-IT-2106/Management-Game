@@ -57,6 +57,8 @@ public sealed record MapReturn(string CompanyId, string ScopeId, string? Situati
 /// <summary>Local navigation only; snapshot is an immutable observation, never gameplay authority.</summary>
 public sealed class MapNavigation
 {
+    /// <summary>Player-facing verb for entering a situation's decision workspace.</summary>
+    public const string EntryLabel = "Review decision";
     public MapSnapshot Snapshot { get; private set; }
     public string ScopeId { get; private set; }
     public string? SituationId { get; private set; }

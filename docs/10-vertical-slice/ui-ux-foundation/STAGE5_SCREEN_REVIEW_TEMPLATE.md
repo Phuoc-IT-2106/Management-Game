@@ -72,6 +72,22 @@ collapse; a giant list is not the density solution. Company 1920×1080 evidence:
 useful relationships, operating state, consequences and evidence; no invented
 metrics or merely stretched layout. Record unresolved visual choices explicitly.
 
+## Positive game-identity checks (P1–P8)
+
+Source: [game-identity thesis](../../01-governance/STAGE5_GAME_IDENTITY_THESIS.md).
+These supplement the A–J audit and 14-part gate; a FAIL requires correction.
+
+| ID | Check | PASS / FAIL / PENDING | Evidence |
+| --- | --- | --- | --- |
+| P1 | Ten-second test: names removed, viewer identifies a management game and what needs attention | | |
+| P2 | Current time, next stop and the supported way forward (or why it is blocked) are on the primary company space | | |
+| P3 | Own team/people and at least the next opponent are visible as actors where supported | | |
+| P4 | At least one material state is drawn as an instrument with a complete text equivalent | | |
+| P5 | No developer, contract or keyboard-legend text in player space beyond the single watermark | | |
+| P6 | Exactly one primary action; irreversible actions distinct from navigation | | |
+| P7 | State changes are visibly acknowledged; reduced motion still communicates them | | |
+| P8 | 1080p space shows world/evidence/history; no dead band between content and its action | | |
+
 ## Anti-AI visual review
 
 Answer YES / NO for every row. Every YES needs a correction with recheck evidence

@@ -10,7 +10,8 @@ public enum ColorRole
     StatePositive, StateWarning, StateCritical, StateNeutral, SystemError, FocusRing,
     InformationKnown, InformationEstimated, InformationUnknown,
     AccentOrganization, AccentOrganizationSecondary, OrganizationSurface,
-    Border, HoverSurface, SelectedSurface, BrandTextLight, BrandTextDark
+    Border, HoverSurface, SelectedSurface, BrandTextLight, BrandTextDark,
+    ActionPrimary, ActionPrimaryHover, TextOnAction, Divider
 }
 public enum TypographyRole { CompanyIdentity, WorkspaceTitle, SectionTitle, Body, Data, Label, Annotation }
 public enum SpaceRole { SpaceInline, SpaceRelated, SpaceGroup, SpaceSection, SpaceWorkspace }
@@ -44,7 +45,7 @@ public readonly record struct Rgb(byte R, byte G, byte B)
 /// <summary>Single replaceable aesthetic source. Values are development choices, not final art direction.</summary>
 public sealed class UiTokens
 {
-    public const string Version = "engineering-neutral-v1";
+    public const string Version = "operations-room-v2";
     public const string Notice = "PROVISIONAL DEVELOPMENT THEME";
     public const double TextContrast = 4.5;
     public const double GraphicContrast = 3.0;
@@ -53,21 +54,28 @@ public sealed class UiTokens
     public const int MaxSpecimenRows = 12, MaxDocumentSections = 12, MaxNavigationDepth = 6, MaxTrackDays = 62;
     public const int CaptureSettleFrames = 12, LayoutTolerance = 2;
     public static readonly string[] UiFontNames = ["Segoe UI", "Noto Sans", "Arial"];
-    public static readonly string[] NumericFontNames = ["Consolas", "Noto Sans Mono", "Courier New"];
+    // Display and numeric faces share a condensed signage family with tabular figures; never a code face.
+    public static readonly string[] DisplayFontNames = ["Bahnschrift", "Segoe UI Semibold", "Segoe UI", "Noto Sans", "Arial"];
+    public static readonly string[] NumericFontNames = ["Bahnschrift", "Segoe UI", "Noto Sans", "Arial"];
+    public const int DisplayWeight = 600;
+    /// <summary>Process-wide player preference; tokens built without an explicit choice follow it.</summary>
+    public static bool PreferReducedMotion { get; set; }
     public static readonly ImmutableDictionary<ColorRole, Rgb> Colors = new Dictionary<ColorRole, string>
     {
-        [ColorRole.SurfaceBase] = "171A1F", [ColorRole.SurfaceRaised] = "242930",
-        [ColorRole.SurfaceInset] = "1C2026", [ColorRole.SurfaceOverlay] = "303640",
-        [ColorRole.TextPrimary] = "F2F4F7", [ColorRole.TextSecondary] = "CCD2DA",
-        [ColorRole.TextMuted] = "ACB5C1", [ColorRole.TextOnAccent] = "101419",
+        [ColorRole.SurfaceBase] = "12151A", [ColorRole.SurfaceRaised] = "1B2028",
+        [ColorRole.SurfaceInset] = "161A20", [ColorRole.SurfaceOverlay] = "252B34",
+        [ColorRole.TextPrimary] = "F2F4F7", [ColorRole.TextSecondary] = "C5CCD5",
+        [ColorRole.TextMuted] = "A7B0BC", [ColorRole.TextOnAccent] = "101419",
         [ColorRole.StatePositive] = "A8DBB7", [ColorRole.StateWarning] = "F3CE83",
-        [ColorRole.StateCritical] = "FFB0AA", [ColorRole.StateNeutral] = "CCD2DA",
+        [ColorRole.StateCritical] = "FFB0AA", [ColorRole.StateNeutral] = "C5CCD5",
         [ColorRole.SystemError] = "FFB0D1", [ColorRole.FocusRing] = "C2D9FF",
-        [ColorRole.InformationKnown] = "CCD2DA", [ColorRole.InformationEstimated] = "E2CC9A",
+        [ColorRole.InformationKnown] = "C5CCD5", [ColorRole.InformationEstimated] = "E2CC9A",
         [ColorRole.InformationUnknown] = "BFC4D0", [ColorRole.AccentOrganization] = "BAC4CF",
-        [ColorRole.AccentOrganizationSecondary] = "AAB6C4", [ColorRole.OrganizationSurface] = "1C2026",
-        [ColorRole.Border] = "919DAD", [ColorRole.HoverSurface] = "343C47",
-        [ColorRole.SelectedSurface] = "364352", [ColorRole.BrandTextLight] = "FFFFFF", [ColorRole.BrandTextDark] = "000000"
+        [ColorRole.AccentOrganizationSecondary] = "AAB6C4", [ColorRole.OrganizationSurface] = "161A20",
+        [ColorRole.Border] = "8592A3", [ColorRole.HoverSurface] = "2A313B",
+        [ColorRole.SelectedSurface] = "2F3A48", [ColorRole.BrandTextLight] = "FFFFFF", [ColorRole.BrandTextDark] = "000000",
+        [ColorRole.ActionPrimary] = "E3E8EF", [ColorRole.ActionPrimaryHover] = "FFFFFF",
+        [ColorRole.TextOnAction] = "0F1318", [ColorRole.Divider] = "2C333D"
     }.ToImmutableDictionary(k => k.Key, v => Rgb.Hex(v.Value));
 
     private static readonly ImmutableDictionary<TypographyRole, int> Fonts = new Dictionary<TypographyRole, int>
@@ -78,12 +86,14 @@ public sealed class UiTokens
     }.ToImmutableDictionary();
     public UiDensity Density { get; }
     public double TextScale { get; }
-    public bool ReducedMotion { get; }
-    public UiTokens(UiDensity density = UiDensity.Default, double textScale = 1, bool reducedMotion = true)
+    private readonly bool? reducedMotion;
+    /// <summary>Explicit choice, else the live process preference (a settings change applies without rebuilding).</summary>
+    public bool ReducedMotion => reducedMotion ?? PreferReducedMotion;
+    public UiTokens(UiDensity density = UiDensity.Default, double textScale = 1, bool? reducedMotion = null)
     {
         if (!Enum.IsDefined(density) || !double.IsFinite(textScale) || textScale < 1 || textScale > 1.5)
             throw new ArgumentOutOfRangeException(nameof(textScale), "Supported lab text scale is 1–1.5 and density must be defined.");
-        Density = density; TextScale = textScale; ReducedMotion = reducedMotion;
+        Density = density; TextScale = textScale; this.reducedMotion = reducedMotion;
     }
     public Rgb Color(ColorRole role) => Colors[role];
     public int FontSize(TypographyRole role) => (int)Math.Round(Fonts[role] * TextScale);
@@ -102,7 +112,7 @@ public sealed class UiTokens
     public int ControlHeight => (int)Math.Ceiling(Size(Density switch { UiDensity.Compact => SizeRole.ControlCompact, UiDensity.Comfortable => SizeRole.ControlComfortable, _ => SizeRole.ControlDefault }) * TextScale);
     public double Duration(MotionRole role) => ReducedMotion ? 0 : role switch
     {
-        MotionRole.Acknowledge => .08, MotionRole.ContextTransition => .12, MotionRole.ChangeHighlight => .18,
+        MotionRole.Acknowledge => .08, MotionRole.ContextTransition => .16, MotionRole.ChangeHighlight => .7,
         _ => throw new ArgumentOutOfRangeException(nameof(role))
     };
 }

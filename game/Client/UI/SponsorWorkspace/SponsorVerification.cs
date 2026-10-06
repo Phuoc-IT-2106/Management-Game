@@ -34,7 +34,7 @@ public partial class SponsorVerification : Control
         await Settle();
     }
     private EntityLabel Matter() => Descendants(host).OfType<EntityLabel>().First(x => x.IsVisibleInTree() && x.Binding.Current?.Id == "matter:" + OfferId);
-    private Button Entry() => Descendants(host).OfType<Button>().First(x => x.IsVisibleInTree() && x.Text == "Open decision entry");
+    private Button Entry() => Descendants(host).OfType<Button>().First(x => x.IsVisibleInTree() && x.Text == MapNavigation.EntryLabel);
     private async Task Open()
     {
         var start = Stopwatch.GetTimestamp(); Matter().EmitSignal(BaseButton.SignalName.Pressed); Entry().EmitSignal(BaseButton.SignalName.Pressed);
@@ -67,7 +67,7 @@ public partial class SponsorVerification : Control
         await Key(Godot.Key.Escape); await Settle();
         Check(!Descendants(host).OfType<SponsorWorkspaceView>().Any() && Composition.Hash(session) == hash, "cancel returns without gameplay mutation");
         Check(Matter().HasFocus(), "return restores matter focus");
-        var toggle = Descendants(host).OfType<Button>().First(x => x.IsVisibleInTree() && x.Text.Contains("map", StringComparison.OrdinalIgnoreCase) && x.Text.StartsWith("Use"));
+        var toggle = Descendants(host).OfType<Button>().First(x => x.IsVisibleInTree() && x.Text == "Map view");
         toggle.EmitSignal(BaseButton.SignalName.Pressed); await Settle(); await Open();
         Check(!View.Presenter.Origin.ListMode, "optional map opens same live presenter");
         View.Act("back"); await Settle();
@@ -106,7 +106,7 @@ public partial class SponsorVerification : Control
         var changed = current with { CompanyName = "IDENTITY_REBIND_PROBE", Cash = current.Cash + 100,
             Offers = current.Offers.Select(x => x with { Name = "TERM_REBIND_PROBE" }).ToImmutableArray() };
         View.Configure(new((ISponsorSession)session, changed, other.OfferId, View.Presenter.Origin), () => {}); View.Render();
-        Check(Descendants(View).OfType<Label>().Any(x => x.Text == "[CO] IDENTITY_REBIND_PROBE") &&
+        Check(Descendants(View).OfType<Label>().Any(x => x.Text == "IDENTITY_REBIND_PROBE") &&
             Descendants(View).OfType<Label>().Any(x => x.Text == "TERM_REBIND_PROBE") &&
             Descendants(View).OfType<Label>().Any(x => x.Text.Contains("2,601")), "same revision changed identity terms and cash refresh displayed data");
         await Setup(); await Open(); for(var i=0;i<5;i++) { View.Render(); await Settle(1); }
@@ -148,6 +148,8 @@ public partial class SponsorVerification : Control
             {
                 await Performance(performanceOutput); GetTree().Quit(); return;
             }
+            // Deterministic captures: no frame may be taken mid-transition.
+            if(Arg("--sponsor-output") is not null) UiTokens.PreferReducedMotion = true;
             if(OS.GetCmdlineUserArgs().Contains("--sponsor-verify")) await Verify();
             await Setup(); var initial=Stopwatch.GetTimestamp(); await Open(); Measure("initial-bind-plus-layout",initial);
             var scenario=Arg("--sponsor-case")??"review";

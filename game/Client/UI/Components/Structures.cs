@@ -24,12 +24,8 @@ public static class NavigationContext
         style.BgColor = UiTheme.ToGodot(brand.AccentOrganization);
         style.BorderColor = UiTheme.ToGodot(brand.AccentOrganizationSecondary);
         swatch.AddThemeStyleboxOverride("panel", style); identity.AddChild(swatch);
-        if (emblem is null)
-        {
-            var missing = SemanticText.Create(ui, "[CO] Emblem unavailable · text identity", TypographyRole.Annotation, ColorRole.TextSecondary);
-            missing.CustomMinimumSize = new Vector2(UiTokens.MinimumColumnWidth, 0); identity.AddChild(missing);
-        }
-        if (organization.IsDevelopmentFixture) stack.AddChild(SemanticText.Create(ui, PresentationText.FixtureNotice, TypographyRole.Annotation, ColorRole.StateWarning));
+        // Missing emblem falls back to the text swatch alone; fixture status is not a warning state.
+        if (organization.IsDevelopmentFixture) stack.AddChild(SemanticText.Create(ui, PresentationText.FixtureNotice, TypographyRole.Annotation, ColorRole.TextMuted));
         var route = ui.Flow(); stack.AddChild(route);
         foreach (var entity in path)
         {
@@ -59,7 +55,7 @@ public partial class EntityRow : VBoxContainer
         var availability = PresentationText.AvailabilityText(entity.Availability, entity.Reason);
         status.Text = entity.Status + (availability.Length == 0 ? "" : " · " + availability);
         ui.Tone(status, StatusIndicator.Tone(entity.Status));
-        information.Text = $"{PresentationText.Information(entity.Information)} · evidence supplied by presentation record";
+        information.Text = $"{PresentationText.InformationMarker(entity.Information)} {PresentationText.Information(entity.Information)}";
         ui.Tone(information, entity.Information == InformationState.Estimated ? ColorRole.InformationEstimated : entity.Information == InformationState.Unknown ? ColorRole.InformationUnknown : ColorRole.InformationKnown);
     }
 }
@@ -89,7 +85,7 @@ public static class ComparisonView
     public static VBoxContainer Create(UiContext ui, ComparisonData data)
     {
         if (data.Lines.Length > UiTokens.MaxSpecimenRows) throw new ArgumentException("Comparison must be bounded; paginate in the host.", nameof(data));
-        var stack = ui.Stack(); stack.AddChild(SectionHeader.Create(ui, "Comparison", "Equal emphasis; labels carry known, estimated or unknown meaning."));
+        var stack = ui.Stack(); stack.AddChild(SectionHeader.Create(ui, "Comparison"));
         if (data.Availability != Availability.Ready || data.Lines.IsEmpty)
         { stack.AddChild(SemanticText.Create(ui, PresentationText.AvailabilityText(data.Lines.IsEmpty && data.Availability == Availability.Ready ? Availability.Empty : data.Availability, "Comparison records"))); return stack; }
         foreach (var line in data.Lines)
@@ -124,6 +120,7 @@ public partial class CommitmentReview : VBoxContainer
     public CommitmentReview()
     {
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        ActionButton.Variation = "PrimaryAction"; ActionButton.Alignment = HorizontalAlignment.Center;
         foreach (var label in new[] { summary, tradeOff, result }) { label.AutowrapMode = TextServer.AutowrapMode.WordSmart; label.ThemeTypeVariation = TypographyRole.Body.ToString(); AddChild(label); }
         AddChild(ActionButton);
     }
@@ -137,7 +134,7 @@ public partial class CommitmentReview : VBoxContainer
         ui.Tone(summary, ColorRole.TextPrimary); ui.Tone(tradeOff, ColorRole.TextSecondary);
         ui.Tone(result, data.Phase == ActionPhase.Rejected ? ColorRole.SystemError : ColorRole.TextSecondary);
         var available = data.Phase == ActionPhase.Ready ? Availability.Ready : data.Phase == ActionPhase.Pending ? Availability.Loading : Availability.Unavailable;
-        ActionButton.Bind(ui, new EntityView(data.Id, "Review and commit", EntityKind.Decision, "Explicit acknowledgement", data.Revision, Availability: available, Reason: data.Result),
+        ActionButton.Bind(ui, new EntityView(data.Id, "Confirm commitment", EntityKind.Decision, "", data.Revision, Availability: available, Reason: data.Result),
             commit is null ? null : intent =>
             {
                 if (phase != ActionPhase.Ready) return;

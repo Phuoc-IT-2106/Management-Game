@@ -239,6 +239,24 @@ company matter routing and identity integration remain explicit gaps, not invent
 playable modules. Next composition milestone: Director visual exploration/review
 against the draft and expanded screen-review record; no visual/usability pass claimed.
 
+### Stage 5 game-identity foundation — 2026-10-06
+
+The user's instruction to remove the admin/debug appearance is recorded in the
+[game-identity thesis](../01-governance/STAGE5_GAME_IDENTITY_THESIS.md) (**ACTIVE**):
+a positive visual target, six pillars and positive checks P1–P8 added to the
+screen review record. Provisional material `operations-room-v2` replaces
+`engineering-neutral-v1`: flat entity rows, one primary-action treatment, surface
+tiers with subtle dividers, display/tabular numeric faces instead of a code face,
+geometric status markers, outer focus rings, explanatory motion on by default with
+a live reduced-motion preference, and one development watermark in place of
+keyboard legends and contract notes. Sponsor workspace and company map adopt it.
+
+No gameplay, Application contract, content or save schema changed. Final fonts,
+palette, icon family and art remain Director decisions. The company space still
+lacks time control and world presence (roster, rivals, fixtures); that is the next
+enabled step, followed by graphical primitives and retiring the internal console
+as a player path. DEC-001–023 and DV obligations are unchanged; Phase 5 stays open.
+
 ## Current Priority
 
 Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.

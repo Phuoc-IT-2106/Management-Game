@@ -85,7 +85,7 @@ public partial class OperatingMap
             Situations = [.. Data.Situations.Where(x => x.ScopeId != MapFixtures.Team)], Links = [.. Data.Links.Where(x => x.To != MapFixtures.Team)] });
         Build(); await Settle();
         Check(navigation.ScopeId == MapFixtures.Discipline && !isWorkspace && navigation.SituationId is null && notice.Visible, "deleted scope clears entry and explains nearest parent fallback");
-        Check(Descendants(inspector).OfType<Button>().All(x => x.Text != "Open decision entry"), "no stale decision control after replacement");
+        Check(Descendants(inspector).OfType<Button>().All(x => x.Text != MapNavigation.EntryLabel), "no stale decision control after replacement");
         await VerifyRefinement();
         scenario = Arg("--map-case") ?? "normal";
         GD.Print("OPERATING_MAP_NATIVE_PASS " + checks.Count);

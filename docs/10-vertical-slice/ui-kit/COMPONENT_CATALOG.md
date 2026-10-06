@@ -1,8 +1,12 @@
 # Implemented component contracts
 
-Scope: the 17 Stage 2 components below plus Stage 5 addition DayTrack. Code:
-`UI/Components/Primitives.cs`, `Structures.cs` and `DayTrack.cs`; data:
-`UI/Contracts/Presentation.cs`. Factories return native
+Scope: the 17 Stage 2 components below plus Stage 5 additions DayTrack and
+UiMotion. Code: `UI/Components/Primitives.cs`, `Structures.cs`, `DayTrack.cs` and
+`UiMotion.cs`; data: `UI/Contracts/Presentation.cs`. Material follows the
+[game-identity thesis](../../01-governance/STAGE5_GAME_IDENTITY_THESIS.md): entities
+are flat rows, one PrimaryAction per workspace, geometric markers with words
+(● Known, ◐ Estimated, ○ Unknown; ▲ warning, ■ critical/error, • neutral), and a
+single development watermark (`UiContext.Watermark`). Factories return native
 Controls; only reusable stateful binders are EntityLabel, EntityRow and
 CommitmentReview. Factories are intentionally small compositions, not independent
 feature controllers. See the [accepted component architecture](../ui-ux-foundation/COMPONENT_ARCHITECTURE.md)
@@ -44,10 +48,10 @@ for future candidates, not additional implemented functionality.
 | SemanticText | Native Label with text, typography role and color role | No event/key; replace text snapshot |
 | IconPresentation | Representation key for Company, Division, Team, Department, Person, Contract, Sponsor, Competition, Market, Opportunity, Risk, Obligation, Event, Decision, Portfolio, Discipline | No action/key; every kind has a distinct marker; `[?]` is reserved for unknown kinds and Unknown information |
 | StatusIndicator | DomainStatus and explanatory reason | No event/key; labelled Neutral/Positive/Warning/Critical snapshot |
-| EntityLabel | EntityView plus optional inspect handler | `inspect` intent with supplied ID/revision; Bind resets selection, pressed/toggle state, tooltip, availability and callback; missing ID is nonactionable |
+| EntityLabel | EntityView plus optional inspect handler; `Variation` (Entity row or PrimaryAction) | `inspect` intent with supplied ID/revision; caption is name · role without a kind code; Bind resets selection, pressed/toggle state, tooltip, availability and callback; missing ID is nonactionable |
 | ResourceValue | Label, nullable decimal, unit, InformationState and context | No action/key; invariant grouped signed amount or Unknown, then marker/state/context line; actor-safe scalar snapshot |
 | TimeMarker | Nullable day and meaning | No event/key; fixed day or date unknown; never advances a clock |
-| ConfidenceIndicator | InformationState and evidence text | No event/key; `[=]`, `[~]`, `[?]` plus Known/Estimated/Unknown; never computes hidden confidence |
+| ConfidenceIndicator | InformationState and evidence text | No event/key; `●`, `◐`, `○` plus Known/Estimated/Unknown; never computes hidden confidence |
 | StatusBadge | DomainStatus and reason | StatusIndicator in a panel; no event/key |
 | SectionHeader | Title and optional supporting description | No event/key; reading hierarchy |
 | ValidationMessage | Message and error/information choice | No event/key; supplies explanation, not automatic retry |
@@ -58,6 +62,7 @@ for future candidates, not additional implemented functionality.
 | ComparisonView | Titles and <=12 labelled comparison lines plus Availability | No action/selection/key; equal emphasis; presenter supplies comparable evidence labels; no automatic score/rank |
 | DocumentView | ID, revision, title, provenance, <=12 sections, Availability | No command; ID/revision metadata on panel; never treats title as key |
 | CommitmentReview | CommitmentData ID/revision, summary, trade-off, phase/result and commit handler | One `commit` intent with supplied ID/revision; immediately Pending locally, disables resubmission; presenter must bind authoritative result; stale same-ID revision rejected atomically |
+| UiMotion | UiContext plus a CanvasItem | `Highlight` (changed authoritative value) and `Reveal` (replaced context) tweens from motion tokens; no-op under reduced motion; never changes layout or state |
 | DayTrack | DayTrackData: question, first/last day (<=MaxTrackDays), one limit, current series, optional proposed series, marker rows (filled/outlined/diamond), assumption | No action/key; drawn track plus legend and `DayTrackSummary` text stating every drawn fact; rejects mismatched or unbounded series |
 
 ## State, keyboard, branding and lifetime support
@@ -70,10 +75,10 @@ static-label contract above; it does not imply that the component loads data.
 | SemanticText | Selected typography and text roles; no focus | E blank optional text; U/X/L host. Unbranded. Wrap and system glyph fallback; one Label |
 | IconPresentation | Label/TextSecondary, ActionWidth; no focus | E/unknown key `[?]`; U/X/L host. Unbranded. Written key accompanies symbol; one Label |
 | StatusIndicator | Label + StateNeutral/Positive/Warning/Critical; no focus | E reason omitted but status remains; U/X/L host. Unbranded. Written status plus marker; one Label |
-| EntityLabel | Shared Button, ControlHeight, SelectedSurface + SelectionWidth leading edge, FocusRing; Tab/Shift+Tab, Enter/Space; default/hover/press/disabled/selected | E/U/X/L Availability text and reason; all non-ready activations suppressed even on direct signal path. Unbranded identity text. Wrap/name/role/symbol; stable finite control, clears callback on exit |
+| EntityLabel | Entity flat row (left-aligned, HoverSurface on hover), SelectedSurface + SelectionWidth leading bar, outer FocusRing, ControlHeight; Tab/Shift+Tab, Enter/Space; default/hover/press/disabled/selected | E/U/X/L Availability text and reason; all non-ready activations suppressed even on direct signal path. Unbranded identity text. Wrap/name/role/symbol; stable finite control, clears callback on exit |
 | ResourceValue | Data amount, Label evidence; TextPrimary/TextSecondary or InformationEstimated/Unknown; no focus | E/null/unknown value shows Unknown; U/X/L host. Unbranded. Minus sign, unit, `[=]`/`[~]`/`[?]` marker and evidence wording, never color-only; stack of two Labels |
 | TimeMarker | Label/TextSecondary; no focus | E/null shows date unknown; U/X/L host. Unbranded. Written meaning/day; one Label |
-| ConfidenceIndicator | Label + InformationKnown/Estimated/Unknown; no focus | E evidence may be empty; state remains; U/X/L host. Unbranded. Symbol plus word; one Label |
+| ConfidenceIndicator | Label + InformationKnown/Estimated/Unknown; no focus | E evidence may be empty; state remains; U/X/L host. Unbranded. Geometric marker plus word; one Label |
 | StatusBadge | SurfaceInset/Border/Label + status, ActionWidth; no focus | Same states as StatusIndicator. Unbranded. Text preserved inside bounded panel; two Controls |
 | SectionHeader | SectionTitle, Annotation/TextSecondary, SpaceRelated; no focus | E optional description omitted; title required by host; U/X/L host. Unbranded. Hierarchy stays text; <=3 Controls |
 | ValidationMessage | Body/SystemError or TextSecondary; no focus | E “No validation issues”; U/L host explanations, X labelled error message. Unbranded. `[!]`/`[i]` plus message; one Label |

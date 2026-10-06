@@ -28,31 +28,40 @@ public static class StatusIndicator
         DomainStatus.Critical => ColorRole.StateCritical, _ => ColorRole.StateNeutral
     };
     public static Label Create(UiContext ui, DomainStatus status, string reason = "") => SemanticText.Create(ui,
-        $"{(status is DomainStatus.Warning or DomainStatus.Critical ? "[!]" : "[·]")} {status}{(reason.Length > 0 ? ": " + reason : "")}", TypographyRole.Label, Tone(status));
+        $"{PresentationText.StatusMarker(status)} {status}{(reason.Length > 0 ? ": " + reason : "")}", TypographyRole.Label, Tone(status));
 }
 
 /// <summary>Focusable entity identity. Rebind replaces one intent callback; labels never act as keys.</summary>
 public partial class EntityLabel : Button
 {
     public IntentBinding Binding { get; } = new();
-    public EntityLabel() { Pressed += OnActivate; FocusMode = FocusModeEnum.All; AutowrapMode = TextServer.AutowrapMode.WordSmart; SizeFlagsHorizontal = SizeFlags.ExpandFill; }
+    /// <summary>Unselected theme variation: a flat "Entity" row by default, "PrimaryAction" for a decision.</summary>
+    public string Variation { get; set; } = "Entity";
+    public EntityLabel()
+    {
+        Pressed += OnActivate; FocusMode = FocusModeEnum.All; AutowrapMode = TextServer.AutowrapMode.WordSmart;
+        SizeFlagsHorizontal = SizeFlags.ExpandFill; Alignment = HorizontalAlignment.Left;
+    }
+    private static string Caption(EntityView entity)
+    {
+        // Kind is carried by role wording and placement; no code prefix before every label (#20).
+        var text = entity.Role.Length == 0 ? entity.Name : $"{entity.Name} · {entity.Role}";
+        return entity.Availability == Availability.Ready ? text : text + " · " + PresentationText.AvailabilityText(entity.Availability, entity.Reason);
+    }
     public void Bind(UiContext ui, EntityView entity, Action<UiIntent>? inspect)
     {
         Binding.Bind(entity, inspect);
-        SetPressedNoSignal(false); ToggleMode = false; ThemeTypeVariation = "";
-        Text = $"{PresentationText.Icon(entity.Kind.ToString())} {entity.Name} · {entity.Role}";
-        if (entity.Availability != Availability.Ready) Text += " · " + PresentationText.AvailabilityText(entity.Availability, entity.Reason);
+        SetPressedNoSignal(false); ToggleMode = false; ThemeTypeVariation = Variation;
+        Text = Caption(entity);
         TooltipText = ""; SetMeta("entity_id", entity.Id); SetMeta("revision", entity.Revision);
         CustomMinimumSize = new Vector2(0, ui.Tokens.ControlHeight);
         Disabled = !Binding.CanActivate;
     }
     public void SetSelected(bool selected)
     {
-        Binding.Selected = selected; ThemeTypeVariation = selected ? "SelectedEntity" : "";
-        if (Binding.Current is not { } entity) return;
+        Binding.Selected = selected; ThemeTypeVariation = selected ? "SelectedEntity" : Variation;
         // Selection is carried by the SelectedEntity edge bar (shape + surface), not repeated label text.
-        Text = $"{PresentationText.Icon(entity.Kind.ToString())} {entity.Name} · {entity.Role}";
-        if (entity.Availability != Availability.Ready) Text += " · " + PresentationText.AvailabilityText(entity.Availability, entity.Reason);
+        if (Binding.Current is { } entity) Text = Caption(entity);
     }
     private void OnActivate() => Binding.Activate("inspect");
     public override void _ExitTree() => Binding.Clear();
@@ -101,6 +110,6 @@ public static class SectionHeader
 public static class ValidationMessage
 {
     public static Label Create(UiContext ui, string message, bool error = true) => SemanticText.Create(ui,
-        message.Length == 0 ? "No validation issues." : $"{(error ? "[!]" : "[i]")} {message}", TypographyRole.Body,
+        message.Length == 0 ? "No validation issues." : $"{(error ? PresentationText.CriticalMarker : PresentationText.NeutralMarker)} {message}", TypographyRole.Body,
         error && message.Length > 0 ? ColorRole.SystemError : ColorRole.TextSecondary);
 }
