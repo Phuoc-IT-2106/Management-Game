@@ -3,7 +3,7 @@ using ManagementGame.Domain;
 
 namespace ManagementGame.Application;
 
-public sealed class Session(Content content, Campaign initial, ISnapshotStore? store = null) : IGameSession
+public sealed partial class Session(Content content, Campaign initial, ISnapshotStore? store = null) : IGameSession
 {
     private Campaign state = initial;
     private readonly object gate = new();

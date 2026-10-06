@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework><OutputType>Exe</OutputType></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ManagementGame.Infrastructure/ManagementGame.Infrastructure.csproj" />
+    <Compile Include="../../game/Client/UI/Tokens/*.cs" Link="Tokens/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Client/UI/Contracts/*.cs" Link="Contracts/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Client/UI/Theme/BrandResolver.cs" Link="BrandResolver.cs" />
+    <Compile Include="../../game/Client/UI/Fixtures/*.cs" Link="Fixtures/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Client/UI/OperatingMap/MapModel.cs" Link="MapModel.cs" />
+    <Compile Include="../../game/Client/UI/OperatingMap/MapFixtures.cs" Link="MapFixtures.cs" />
+    <Compile Include="../../game/Client/UI/SponsorWorkspace/SponsorPresenter.cs" Link="SponsorPresenter.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+﻿{
+    "BaselineCount":  740,
+    "Changed":  [
+                    "docs/00-project/PROJECT_STATE.md",
+                    "game/Client/Main.cs",
+                    "game/Client/UI/OperatingMap/OperatingMap.cs",
+                    "src/ManagementGame.Application/Session.cs"
+                ],
+    "PreservedCount":  736
+}

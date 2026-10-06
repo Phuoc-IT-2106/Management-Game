@@ -74,6 +74,15 @@ public partial class Main : Control
         message.AutowrapMode = TextServer.AutowrapMode.WordSmart; message.CustomMinimumSize = new Vector2(0, 42); shell.AddChild(message);
         tabs.SizeFlagsVertical = SizeFlags.ExpandFill; shell.AddChild(tabs);
         AddText(Tab("Dashboard"), dashboard);
+        var companyEntry = Button("Company context · live sponsor workspace", () =>
+        {
+            margin.Visible = false;
+            var companyHost = new SponsorCompanyHost();
+            companyHost.Configure(session, () => { RemoveChild(companyHost); companyHost.QueueFree(); margin.Visible = true; Refresh(); });
+            AddChild(companyHost); companyHost.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        });
+        shell.MoveChild(tabs, shell.GetChildCount() - 1);
+        shell.AddChild(companyEntry);
         var team = Tab("Team & people"); var filters = new HBoxContainer(); team.AddChild(filters); filters.AddChild(search);
         roleFilter.AddItem("All roles"); foreach (var role in new[] { "A", "B", "C", "D", "E" }) roleFilter.AddItem(role);
         foreach (var key in new[] { "Name", "Salary", "Readiness" }) sort.AddItem(key);

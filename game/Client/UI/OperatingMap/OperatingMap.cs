@@ -7,6 +7,17 @@ using StatusIndicator = ManagementGame.UiKit.StatusIndicator;
 /// <summary>Bounded development projection. Never constructs a campaign or submits a command.</summary>
 public partial class OperatingMap : Control
 {
+    private MapSnapshot? liveSnapshot;
+    private Action<MapSituation, MapReturn>? liveEntry;
+    public void ConfigureLive(MapSnapshot snapshot, Action<MapSituation, MapReturn> enter)
+    { liveSnapshot = snapshot; liveEntry = enter; }
+    public void ReturnLive(MapSnapshot snapshot)
+    {
+        var origin = navigation.Back();
+        navigation.Replace(snapshot); Build();
+        originFocus = origin?.FocusKey ?? "list:" + navigation.ScopeId;
+        if (origin is not null) RestoreReturnScroll(origin);
+    }
     private readonly UiContext ui = new(new UiTokens(UiDensity.Compact));
     private MapNavigation navigation = null!;
     private Control layout = null!;
@@ -32,6 +43,10 @@ public partial class OperatingMap : Control
     {
         try
         {
+            if (liveSnapshot is not null)
+            {
+                navigation = new(liveSnapshot) { ListMode = true }; Build(); return;
+            }
             GetWindow().ContentScaleSize = Vector2I.Zero;
             if (Arg("--map-viewport") is { } viewport)
             {
@@ -129,7 +144,7 @@ public partial class OperatingMap : Control
     private EntityView SituationEntity(MapSituation matter) => new(matter.Id, matter.Name, EntityKind.Decision,
         $"{matter.Priority} · {matter.Status}", Data.Revision, matter.Information,
         Emphasized(matter) ? matter.Priority == Attention.Critical ? DomainStatus.Critical : DomainStatus.Warning : DomainStatus.Neutral);
-    private MatterView Matter(MapSituation matter) => new(SituationEntity(matter), MatterClass.Actionable, matter.Reason, matter.DueDay, matter.Consequence);
+    private MatterView Matter(MapSituation matter) => new(SituationEntity(matter), liveSnapshot is not null && matter.Category == "Receipt" ? MatterClass.Informational : MatterClass.Actionable, matter.Reason, matter.DueDay, matter.Consequence);
     private EntityLabel Target(EntityView entity, string region)
     {
         var label = new EntityLabel(); var key = region + ":" + entity.Id;
@@ -293,11 +308,13 @@ public partial class OperatingMap : Control
     {
         var start = Stopwatch.GetTimestamp();
         if (navigation.Situation is not { } matter || !navigation.Enter(matter.TargetId, Data.Revision, originFocus, mapScroll.ScrollVertical)) return;
+        if (liveEntry is not null && matter.Category == "Sponsor")
+        { liveEntry(matter, navigation.Return!); return; }
         focusEpoch++;
         isWorkspace = true; map.Visible = list.Visible = false; mode.Disabled = true; ClearInspector();
         // The entry occupies the map reading region, keeping company and selected scope visible.
         var workspace = ui.Stack(); workspace.Name = "DecisionEntry"; map.GetParent().AddChild(workspace);
-        workspace.AddChild(SectionHeader.Create(ui, matter.WorkspaceKind, "Decision workspace entry · read-only prototype"));
+        workspace.AddChild(SectionHeader.Create(ui, matter.WorkspaceKind, liveSnapshot is null ? "Decision workspace entry · read-only prototype" : "Current campaign evidence · read-only"));
         workspace.AddChild(DocumentView.Create(ui, new(matter.TargetId, Data.Revision, matter.Name, PresentationText.FixtureNotice,
             [new("Company scope", Data.Scope(matter.ScopeId).Name), new("Why now", matter.Reason), new("Trade-off", matter.Consequence),
              new("Evidence", PresentationText.Information(matter.Information) + " · " + matter.Evidence),
@@ -357,6 +374,7 @@ public partial class OperatingMap : Control
     }
     public override void _UnhandledKeyInput(InputEvent @event)
     {
+        if (!IsVisibleInTree()) return;
         if (@event is InputEventKey { Pressed: true, Keycode: Key.Escape }) { Back(); GetViewport().SetInputAsHandled(); }
     }
 }

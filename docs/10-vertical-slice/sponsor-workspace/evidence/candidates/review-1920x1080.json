@@ -1,0 +1,314 @@
+{
+  "Case": "review",
+  "Kind": "GOLDEN CANDIDATE",
+  "Commit": "a381d8f26b55132d697e9df9b93e97dcdfc474dc",
+  "SourceDigest": "a19c65950bbfeef6486b4b2fd035c2a882587638fb7df07ea8037e9cd7de0dfc",
+  "Dirty": true,
+  "Viewport": {
+    "Width": 1920,
+    "Height": 1080
+  },
+  "Window": {
+    "Size": {}
+  },
+  "Engine": "4.7.2-stable (official)",
+  "Theme": "PROVISIONAL DEVELOPMENT THEME",
+  "Density": "Compact",
+  "TextScale": 1,
+  "Locale": "en",
+  "Fixture": "DEVELOPMENT FIXTURE \u2014 NONCANONICAL",
+  "Seed": 20261004,
+  "Snapshot": {
+    "CampaignId": "campaign:development",
+    "CompanyId": "company:player",
+    "CompanyName": "Northstar Esports",
+    "Revision": 0,
+    "Day": 1,
+    "NextCheckpoint": 6,
+    "Cash": 260000,
+    "CommittedForecast": 239400,
+    "Load": 65,
+    "Capacity": 80,
+    "Reputation": 45,
+    "Offers": [
+      {
+        "OfferId": "offer:atlas",
+        "Name": "Atlas Hardware",
+        "Deadline": 8,
+        "EndDay": 28,
+        "Payment": 35000,
+        "WinBonus": 5000,
+        "Load": 25,
+        "MinimumReputation": 40,
+        "CanAccept": true,
+        "Availability": "Available",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:atlas:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:atlas:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      },
+      {
+        "OfferId": "offer:local",
+        "Name": "Local Circuit",
+        "Deadline": 16,
+        "EndDay": 28,
+        "Payment": 22000,
+        "WinBonus": 1000,
+        "Load": 8,
+        "MinimumReputation": 20,
+        "CanAccept": true,
+        "Availability": "Available",
+        "ScheduledPayments": [
+          {
+            "Id": "agreement:offer:local:day:4",
+            "DueDay": 4,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:11",
+            "DueDay": 11,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:18",
+            "DueDay": 18,
+            "Amount": 22000,
+            "Remaining": 22000
+          },
+          {
+            "Id": "agreement:offer:local:day:25",
+            "DueDay": 25,
+            "Amount": 22000,
+            "Remaining": 22000
+          }
+        ]
+      }
+    ],
+    "Agreements": [
+      {
+        "Id": "agreement:offer:seed",
+        "Name": "Origin Coffee",
+        "EndDay": 28,
+        "Load": 12,
+        "WinBonus": 2500,
+        "Payments": [
+          {
+            "Id": "agreement:offer:seed:day:4",
+            "DueDay": 4,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:11",
+            "DueDay": 11,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:18",
+            "DueDay": 18,
+            "Amount": 35000,
+            "Remaining": 35000
+          },
+          {
+            "Id": "agreement:offer:seed:day:25",
+            "DueDay": 25,
+            "Amount": 35000,
+            "Remaining": 35000
+          }
+        ]
+      }
+    ]
+  },
+  "State": "Review",
+  "Origin": {
+    "CompanyId": "company:player",
+    "ScopeId": "function:business",
+    "SituationId": "matter:offer:atlas",
+    "ListMode": true,
+    "FocusKey": "list:matter:offer:atlas",
+    "Scroll": 0
+  },
+  "Checks": [
+    "live list-first sponsor matter exists",
+    "pointer \u002B Enter enters from live hierarchy",
+    "native Tab and Shift\u002BTab traverse actions",
+    "visible canonical focus",
+    "Space opens material confirmation",
+    "Escape confirmation restores review",
+    "keyboard scroll reaches supporting evidence",
+    "cancel returns without gameplay mutation",
+    "return restores matter focus",
+    "optional map opens same live presenter",
+    "map return restores matter focus",
+    "native stale rejection and refresh",
+    "rejection requires fresh review",
+    "Space commits once and success disables action",
+    "native button spam cannot duplicate commitment",
+    "live schema-1 save/load after native commitment",
+    "return displays updated company matter",
+    "25 rebind/confirmation cycles retain Controls",
+    "25 enter/back cycles retain Controls and one workspace",
+    "no horizontal workspace overflow",
+    "back remains visible",
+    "commit/review action remains visible",
+    "all core contract terms visible above fold"
+  ],
+  "RetainedControls": {
+    "Before": 53,
+    "After": 53
+  },
+  "Timings": {
+    "enter-work": [
+      57.7734,
+      45.3684,
+      91.4982,
+      60.8626,
+      41.0925,
+      64.8749,
+      37.3093,
+      41.5646,
+      37.382,
+      41.0579,
+      33.1714,
+      55.8776,
+      28.2691,
+      60.3835,
+      44.591,
+      79.5893,
+      49.118,
+      63.6715,
+      68.0951,
+      57.3079,
+      73.2744,
+      62.7316,
+      61.623,
+      62.7713,
+      67.7846,
+      62.8497,
+      76.2306,
+      57.5811,
+      46.9971
+    ],
+    "evidence-rebind-work": [
+      39.1573,
+      23.8468,
+      31.4013,
+      23.7748,
+      32.3588,
+      25.618,
+      36.6929,
+      20.2918,
+      17.9279,
+      38.5001,
+      50.9842,
+      29.3604,
+      44.857,
+      29.9838,
+      35.7773,
+      36.0444,
+      28.0794,
+      26.567,
+      36.222,
+      28.9904,
+      19.3801,
+      29.9327,
+      31.1008,
+      21.7662,
+      21.6811
+    ],
+    "confirmation-work": [
+      42.7328,
+      37.9928,
+      31.6727,
+      29.8531,
+      25.1567,
+      26.8377,
+      27.2081,
+      21.6748,
+      28.0707,
+      40.2175,
+      21.0412,
+      41.6573,
+      65.3015,
+      28.0582,
+      40.0021,
+      34.917,
+      15.4659,
+      39.7995,
+      40.1529,
+      29.8101,
+      35.382,
+      30.9402,
+      42.1311,
+      20.0593,
+      24.4356
+    ],
+    "enter-back-plus-layout": [
+      311.8831,
+      266.0149,
+      299.9373,
+      283.2034,
+      250.7154,
+      249.6203,
+      249.9758,
+      282.9873,
+      316.772,
+      284.0191,
+      282.1768,
+      300.0916,
+      300.1919,
+      316.8113,
+      316.9715,
+      316.0229,
+      300.4801,
+      333.2721,
+      349.1799,
+      317.8209,
+      349.7121,
+      316.0729,
+      316.7123,
+      333.5317,
+      284.9955
+    ],
+    "view-bind": [
+      29.9363
+    ],
+    "initial-bind-plus-layout": [
+      149.8296
+    ]
+  },
+  "WorkspaceWork": {
+    "bind": [
+      25.4702
+    ]
+  },
+  "ApplicationWork": {},
+  "ImageHash": "7B245AEBCD075F2E96F2474F2F45FB8099400C09F4F5607652EE1DF05174F3C3",
+  "GameplayHash": "dbd8a36f8ade20a08e8f693172f27acb123da6d94723adf4cd47f208af1ee34f",
+  "Limits": "Synthetic native input; no physical input/DPI or human usability acceptance. Debug local timings, not QG-02 pass."
+}
