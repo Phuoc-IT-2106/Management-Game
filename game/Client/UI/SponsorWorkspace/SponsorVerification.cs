@@ -29,7 +29,7 @@ public partial class SponsorVerification : Control
     {
         foreach(var child in GetChildren()) { RemoveChild(child); child.QueueFree(); }
         session = Composition.Create(Path.GetFullPath(Path.Combine(ProjectSettings.GlobalizePath("res://"), "../../content/fixture.json")),
-            Path.GetFullPath(Path.Combine(ProjectSettings.GlobalizePath("res://"), "../../artifacts/sponsor-workspace/native-saves")), 20261004);
+            Arg("--sponsor-saves") ?? Path.GetFullPath(Path.Combine(ProjectSettings.GlobalizePath("res://"), "../../artifacts/sponsor-workspace/native-saves-" + Guid.NewGuid().ToString("N"))), 20261004);
         host = new SponsorCompanyHost(); host.Configure(session, () => {}); AddChild(host); host.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         await Settle();
     }
@@ -83,6 +83,32 @@ public partial class SponsorVerification : Control
         Check(Composition.Hash(session)==acceptedHash, "native button spam cannot duplicate commitment");
         Check(session.Save("native-sponsor").Accepted && session.Load("native-sponsor").Accepted && Composition.Hash(session)==acceptedHash, "live schema-1 save/load after native commitment");
         View.Act("back"); await Settle(); Check(Matter().Text.Contains("Signed"), "return displays updated company matter");
+        await Setup(); await Open();
+        var readingRegion = View.TermsScroll; var evidenceRegion = View.EvidenceScroll;
+        var originalDocument = Descendants(View).OfType<PanelContainer>().Single(x => x.HasMeta("document_id"));
+        View.EvidenceScroll.ScrollVertical = 20; var scroll = View.EvidenceScroll.ScrollVertical;
+        View.Act("review"); var retiredAction = View.Commitment!.ActionButton; View.Act("back");
+        Check(View.TermsScroll == readingRegion && View.EvidenceScroll == evidenceRegion && View.EvidenceScroll.ScrollVertical == scroll,
+            "phase changes retain reading regions and scroll position");
+        Check(!retiredAction.Binding.CanActivate, "retired commitment clears callback immediately");
+        session.Submit(new("native:revision", 0, new CoachDecision(Delegation.Manual, Risk.Balanced)));
+        View.Presenter.Refresh(); View.Render();
+        Check(Descendants(View).OfType<PanelContainer>().Single(x => x.HasMeta("document_id")) == originalDocument && originalDocument.GetMeta("revision").AsInt64() == 1,
+            "fresh revision retains unchanged document with current metadata");
+        View.Act("review");
+        Check(View.Commitment!.ActionButton.Binding.Current is { Revision: 1 } binding && binding.Id == OfferId, "retained shell binds exact current command identity");
+        View.Act("back");
+        var current = View.Presenter.Snapshot;
+        var other = current.Offers[1];
+        View.Configure(new((ISponsorSession)session, current, other.OfferId, View.Presenter.Origin), () => {}); View.Render();
+        Check(Descendants(View).OfType<PanelContainer>().Single(x => x.HasMeta("document_id")).GetMeta("document_id").AsString() == other.OfferId,
+            "same revision different offer rebinds document");
+        var changed = current with { CompanyName = "IDENTITY_REBIND_PROBE", Cash = current.Cash + 100,
+            Offers = current.Offers.Select(x => x with { Name = "TERM_REBIND_PROBE" }).ToImmutableArray() };
+        View.Configure(new((ISponsorSession)session, changed, other.OfferId, View.Presenter.Origin), () => {}); View.Render();
+        Check(Descendants(View).OfType<Label>().Any(x => x.Text == "[CO] IDENTITY_REBIND_PROBE") &&
+            Descendants(View).OfType<Label>().Any(x => x.Text == "TERM_REBIND_PROBE") &&
+            Descendants(View).OfType<Label>().Any(x => x.Text.Contains("2,601")), "same revision changed identity terms and cash refresh displayed data");
         await Setup(); await Open(); for(var i=0;i<5;i++) { View.Render(); await Settle(1); }
         retainedBefore=Descendants(View).OfType<Control>().Count();
         for(var i=0;i<25;i++)
@@ -115,6 +141,10 @@ public partial class SponsorVerification : Control
             GetWindow().ContentScaleSize=new(int.Parse(size[0]),int.Parse(size[1])); GetWindow().ContentScaleMode=Window.ContentScaleModeEnum.Viewport;
             GetWindow().ContentScaleAspect=Window.ContentScaleAspectEnum.Ignore;
             RenderingServer.SetDefaultClearColor(UiTheme.ToGodot(new UiTokens().Color(ColorRole.SurfaceBase)));
+            if (Arg("--sponsor-performance") is { } performanceOutput)
+            {
+                await Performance(performanceOutput); GetTree().Quit(); return;
+            }
             if(OS.GetCmdlineUserArgs().Contains("--sponsor-verify")) await Verify();
             await Setup(); var initial=Stopwatch.GetTimestamp(); await Open(); Measure("initial-bind-plus-layout",initial);
             var scenario=Arg("--sponsor-case")??"review";

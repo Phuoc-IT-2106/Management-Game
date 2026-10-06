@@ -91,6 +91,7 @@ Campaign Prepare(Campaign state) => state with { Company = state.Company with { 
 Check(Simulation.Step(Prepare(signed), content.Definition).Company.Work.Execution < Simulation.Step(Prepare(rules), content.Definition).Company.Work.Execution, "actual sponsor load reduces future preparation conversion");
 foreach(var file in Directory.GetFiles("game/Client/UI/SponsorWorkspace", "*.cs"))
     Check(!File.ReadAllText(file).Contains("using ManagementGame.Domain") && !File.ReadAllText(file).Contains(".Capture()"), "UI authority boundary " + Path.GetFileName(file));
+FixtureIdentity.Verify(content, Check);
 Console.WriteLine("SPONSOR_WORKSPACE_PASS " + count);
 
 sealed class Probe(ISponsorSession session) : ISponsorSession

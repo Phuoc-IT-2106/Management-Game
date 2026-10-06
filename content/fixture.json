@@ -3,7 +3,7 @@
   "Schema": 1,
   "Label": "NONCANONICAL DEVELOPMENT FIXTURE — fictional 5v5 Role Arena; 28 days",
   "RulesVersion": "slice-rules-v1",
-  "CompanyName": "Northstar Esports",
+  "CompanyName": "DEV_ORG_001",
   "Balance": {"Horizon":28,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"OperatingCost":1500,"BaseLoad":35,"PreparationScale":30,"MatchScale":12000,"Variance":8,"MetaDay":13,"RivalCadence":4,"ReputationGain":8,"AudienceGain":180},
   "Coach": {"Id":"person:coach","Name":"Mira Chen","Preparation":72,"Analysis":70,"Adaptability":68,"Capacity":80},
   "Players": [
