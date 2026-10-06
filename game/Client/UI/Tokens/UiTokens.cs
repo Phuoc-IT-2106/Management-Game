@@ -50,7 +50,7 @@ public sealed class UiTokens
     public const double GraphicContrast = 3.0;
     public const int BorderWidth = 1, FocusWidth = 2, SelectionWidth = 4, CornerRadius = 4;
     public const int IconWidth = 44, MinimumColumnWidth = 330, ActionWidth = 160;
-    public const int MaxSpecimenRows = 12, MaxDocumentSections = 12, MaxNavigationDepth = 6;
+    public const int MaxSpecimenRows = 12, MaxDocumentSections = 12, MaxNavigationDepth = 6, MaxTrackDays = 62;
     public const int CaptureSettleFrames = 12, LayoutTolerance = 2;
     public static readonly string[] UiFontNames = ["Segoe UI", "Noto Sans", "Arial"];
     public static readonly string[] NumericFontNames = ["Consolas", "Noto Sans Mono", "Courier New"];

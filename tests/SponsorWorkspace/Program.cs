@@ -21,6 +21,13 @@ Check(Canonical.Hash(session.Capture()) == before, "projection preview cannot mu
 var accepted = Simulation.Apply(session.Capture(), new AcceptSponsor(offer.OfferId), content.Definition, "test:preview").Company;
 Check(offer.LoadIfAccepted == Simulation.Load(accepted, content.Definition.Balance, snapshot.Day) && offer.LoadIfAccepted == snapshot.Load + offer.Load &&
     offer.ForecastIfAccepted == Finance.Forecast(accepted, snapshot.Day), "if-accepted load and forecast match authoritative transition");
+var days = Enumerable.Range(snapshot.Day, snapshot.LastDay - snapshot.Day + 1).ToArray();
+Check(snapshot.LastDay == content.Definition.Balance.Horizon && snapshot.LoadByDay.SequenceEqual(days.Select(d => Simulation.Load(session.Capture().Company, content.Definition.Balance, d))) &&
+    offer.LoadByDayIfAccepted.SequenceEqual(days.Select(d => Simulation.Load(accepted, content.Definition.Balance, d))), "daily load series use the authoritative load rule");
+Check(snapshot.CompetitionDays.SequenceEqual(session.Capture().World.Fixtures.Select(f => f.Day).Where(d => d >= snapshot.Day).Order()), "competition days are the scheduled fixtures");
+var sponsorTrack = SponsorPresentation.Track(snapshot, offer); var sponsorLines = PresentationText.DayTrackSummary(sponsorTrack);
+Check(sponsorLines[0].StartsWith("If accepted: over capacity on day") && sponsorLines.Any(l => l.StartsWith("Receipts · this offer: day 4, 11, 18, 25")) &&
+    sponsorLines.Any(l => l.StartsWith("Competition: day")), "sponsor track states overload, offer receipts and matches in text");
 var hidden = session.Capture() with { World = session.Capture().World with { Rivals = session.Capture().World.Rivals.Select(r => r with { Strength = 1, Budget = 999, Need = 88 }).ToImmutableArray() } };
 Check(JsonSerializer.Serialize(SponsorProjection.Build(hidden, content.Definition)) == JsonSerializer.Serialize(snapshot), "private rival changes are invisible to sponsor read model");
 Check(!JsonSerializer.Serialize(snapshot).Contains("Probability") && !JsonSerializer.Serialize(snapshot).Contains("Variance"), "no hidden resolver fields");
@@ -61,7 +68,9 @@ var removed = New(removedState); var removedPresenter = Presenter(removed);
 removedPresenter.Handle(new("review", offer.OfferId, 0)); removedPresenter.Handle(new("commit", offer.OfferId, 0));
 Check(removedPresenter.Phase == SponsorPhase.Rejected && removedPresenter.Offer is null && !removedPresenter.CanReview, "removed offer rejected and disabled");
 var expiredState = New().Capture(); expiredState = expiredState with { World = expiredState.World with { Offers = expiredState.World.Offers.Select(o => o with { Deadline = 0 }).ToImmutableArray() } };
-Check(New(expiredState).ObserveSponsors().Offers.All(o => !o.CanAccept && o.LoadIfAccepted is null && o.ForecastIfAccepted is null), "expired offer not actionable and has no consequence preview");
+var expired = New(expiredState).ObserveSponsors();
+Check(expired.Offers.All(o => !o.CanAccept && o.LoadIfAccepted is null && o.ForecastIfAccepted is null && o.LoadByDayIfAccepted.IsEmpty), "expired offer not actionable and has no consequence preview");
+Check(SponsorPresentation.Track(expired, expired.Offers[0]).Proposed.IsEmpty && SponsorPresentation.Track(expired, expired.Offers[0]).Rows.All(r => r.Label != "Receipts · this offer"), "unavailable offer draws no proposed series");
 foreach (var variant in new[] { "end", "reputation", "claimed", "finished" })
 {
     var state = New().Capture();

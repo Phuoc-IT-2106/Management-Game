@@ -132,6 +132,9 @@ public partial class SponsorVerification : Control
         Check(bounds.Encloses(action.GetGlobalRect()), "commit/review action remains visible");
         var doc=Descendants(View).OfType<PanelContainer>().FirstOrDefault(x=>x.HasMeta("document_id"));
         Check(doc is not null && View.TermsScroll.GetGlobalRect().Encloses(doc.GetGlobalRect()), "all core contract terms visible above fold");
+        Check(Descendants(View).OfType<VBoxContainer>().Any(x => x.HasMeta("day_track")) &&
+            Descendants(View).OfType<Label>().Any(x => x.Text.StartsWith("Load now: within", StringComparison.Ordinal) || x.Text.StartsWith("Load now: over", StringComparison.Ordinal)), "day track with text equivalent present");
+        Check(View.ReadingSlack <= UiTokens.LayoutTolerance, "decision actions follow reading content without dead space");
     }
     public override async void _Ready()
     {

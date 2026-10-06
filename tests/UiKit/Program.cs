@@ -43,6 +43,17 @@ var icons = Enum.GetValues<EntityKind>().Select(k => PresentationText.Icon(k.ToS
 Check(icons.Distinct().Count() == icons.Length && !icons.Contains(PresentationText.InformationMarker(InformationState.Unknown)), "entity icons distinct and never the Unknown marker");
 var amount = new ResourceView("Value", 1000m, "TEST", InformationState.Estimated, "forecast");
 Check(PresentationText.ResourceAmount(amount) == "Value: 1,000.00 TEST" && PresentationText.ResourceEvidence(amount).StartsWith("[~] Estimated"), "resource amount separated from information evidence");
+Check(PresentationText.DayRanges([6, 1, 2, 3, 9, 10]) == "1–3, 6, 9–10" && PresentationText.DayRanges([]) == "", "day ranges compress consecutive runs");
+var track = new DayTrackData("Q?", 1, 5, 10, "limit", "Now", [5, 5, 5, 5, 5], "If", [8, 12, 12, 8, 5],
+    [new("Marks", [2, 4, 9], DayMarkShape.Filled)], "assumption");
+var trackLines = PresentationText.DayTrackSummary(track);
+Check(trackLines.SequenceEqual(["If: over limit on day 2–3 (peak 12 / 10).", "Now: within limit every day through day 5 (peak 5 / 10).", "Marks: day 2, 4."]), "day track text states every drawn fact in range");
+Check(PresentationText.DayTrackSummary(track with { Proposed = [] }).Length == 2 && !PresentationText.DayTrackLegend(track with { Proposed = [] }).Contains("If"), "absent alternative omitted from summary and legend");
+foreach (var invalid in new[] { track with { Current = [1, 2] }, track with { Proposed = [1] }, track with { LastDay = 0 }, track with { LastDay = UiTokens.MaxTrackDays + 1 } })
+{
+    try { invalid.Validate(); Check(false, "invalid day track must be rejected"); } catch (ArgumentException) { }
+}
+Check(true, "day track rejects mismatched or unbounded series");
 foreach (var d in Enum.GetValues<UiDensity>())
 {
     var t = new UiTokens(d, 1.5); Check(t.FontSize(TypographyRole.Body) > tokens.FontSize(TypographyRole.Body) && t.ControlHeight >= t.Size(SizeRole.ControlCompact), "text and density scale: " + d);

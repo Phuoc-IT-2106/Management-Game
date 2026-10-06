@@ -9,6 +9,30 @@ loop works; local Debug rebind/confirmation cost exceeds the provisional 33.3 ms
 target and human/physical-input review remains open. Sponsor gameplay needs no
 invented depth. Human superiority over the old interface has not been proven.
 
+## Stage 5 instrument refinement — 2026-10-06 (candidate, not accepted)
+
+Under [Stage 5 governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md), the
+workspace now answers the decision's consequence directly instead of leaving
+arithmetic to the player:
+
+- Load and 7-day forecast **if accepted**, plus a 28-day **DayTrack** answering
+  "When does load exceed capacity, and when do receipts and matches fall?". All
+  series come from the authoritative `AcceptSponsor` preview and `Simulation.Load`;
+  the read model adds `LastDay`, `LoadByDay`, `CompetitionDays` and
+  `LoadByDayIfAccepted`. Daily load holds today's roster/agreements fixed and is
+  labelled Estimated. Every drawn fact is restated in text.
+- The reading region sizes to its content up to the available height, so actions
+  follow the evidence (no dead band at 1080p); supporting evidence moved under the
+  terms to balance the columns.
+- Earlier same-day fixes: distinct entity markers (`[?]` reserved for Unknown),
+  edge-bar selection, numeric face for amounts only, no data revision in the
+  player-facing summary.
+
+No gameplay rule, save schema or content changed. Reproduce on the pinned toolchain
+with `build/Verify-SponsorAcceptance.ps1 -Output artifacts/<fresh>/checks`; window
+captures need an interactive desktop session. Human Director review remains pending
+and these captures are candidates only.
+
 ## Use the live path
 
 Launch the existing client (`build/Run-Client.ps1`). Select **Company context · live

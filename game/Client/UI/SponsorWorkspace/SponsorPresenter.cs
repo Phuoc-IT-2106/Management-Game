@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using ManagementGame.Application;
 using ManagementGame.UiKit;
 using ManagementGame.OperatingMap;
@@ -70,6 +71,17 @@ public static class SponsorPresentation
          new("Delivery obligation", "+" + o.Load + " organizational load from acceptance through end day"),
          new("Win bonus", Money(o.WinBonus) + " per win while active; due the following day"),
          new("Accept by", "Day " + o.Deadline + " · minimum reputation " + o.MinimumReputation)]);
+    public static DayTrackData Track(SponsorSnapshot s, SponsorTerms? o)
+    {
+        var proposing = o is { CanAccept: true } && !o.LoadByDayIfAccepted.IsEmpty;
+        var rows = ImmutableArray.CreateBuilder<DayRow>();
+        rows.Add(new("Receipts · signed", s.Agreements.SelectMany(a => a.Payments.Where(p => p.Remaining > 0).Select(p => p.DueDay)).ToImmutableArray(), DayMarkShape.Filled));
+        if (proposing) rows.Add(new("Receipts · this offer", o!.ScheduledPayments.Select(p => p.DueDay).ToImmutableArray(), DayMarkShape.Outlined));
+        rows.Add(new("Competition", s.CompetitionDays, DayMarkShape.Diamond));
+        return new("When does load exceed capacity, and when do receipts and matches fall?", s.Day, s.LastDay, s.Capacity, "capacity",
+            "Load now", s.LoadByDay, "If accepted", proposing ? o!.LoadByDayIfAccepted : [], rows.ToImmutable(),
+            "Projected from today's roster and agreements; signing or releasing players changes daily load.");
+    }
     public static ResourceView ForecastIfAccepted(long forecast) => new("Forecast if accepted", forecast / 100m,
         "CU", InformationState.Estimated, "Same 7-day window, adding this offer's receipts due in it. Excludes unearned wins.");
     public static ResourceView Forecast(SponsorSnapshot s) => new("Committed cash forecast", s.CommittedForecast / 100m,

@@ -7,13 +7,14 @@ public sealed record SponsorPayment(string Id, int DueDay, long Amount, long Rem
 public sealed record SponsorTerms(string OfferId, string Name, int Deadline, int EndDay,
     long Payment, long WinBonus, int Load, int MinimumReputation, bool CanAccept,
     string Availability, ImmutableArray<SponsorPayment> ScheduledPayments,
-    int? LoadIfAccepted = null, long? ForecastIfAccepted = null);
+    int? LoadIfAccepted, long? ForecastIfAccepted, ImmutableArray<int> LoadByDayIfAccepted);
 public sealed record SponsorAgreement(string Id, string Name, int EndDay, int Load,
     long WinBonus, ImmutableArray<SponsorPayment> Payments);
 public sealed record SponsorSnapshot(string CampaignId, string CompanyId, string CompanyName,
     long Revision, int Day, int? NextCheckpoint, long Cash, long CommittedForecast,
     int Load, int Capacity, int Reputation, ImmutableArray<SponsorTerms> Offers,
-    ImmutableArray<SponsorAgreement> Agreements);
+    ImmutableArray<SponsorAgreement> Agreements, int LastDay, ImmutableArray<int> LoadByDay,
+    ImmutableArray<int> CompetitionDays);
 
 public interface ISponsorSession
 {
@@ -34,7 +35,10 @@ public static class SponsorProjection
     // Only player-owned finances and visible offer terms; no rival private inputs.
     public static SponsorSnapshot Build(Campaign state, Content content)
     {
-        var c = state.Company; var w = state.World; var day = w.Calendar.Day;
+        var c = state.Company; var w = state.World; var day = w.Calendar.Day; var last = content.Balance.Horizon;
+        // Daily load from the authoritative Load rule, holding today's roster and agreements fixed.
+        ImmutableArray<int> LoadByDay(Company company) => Enumerable.Range(day, Math.Max(0, last - day + 1))
+            .Select(d => Simulation.Load(company, content.Balance, d)).ToImmutableArray();
         var agreements = c.Sponsors.Select(x => new SponsorAgreement(x.Id, x.Name, x.EndDay, x.Load, x.WinBonus,
             c.FinancialItems.Where(i => i.CauseId == x.Id && i.Incoming)
                 .OrderBy(i => i.DueDay).ThenBy(i => i.Id, StringComparer.Ordinal)
@@ -55,10 +59,12 @@ public static class SponsorProjection
             return new SponsorTerms(o.Id, o.Name, o.Deadline, o.EndDay, o.Payment, o.WinBonus,
                 o.Load, o.MinimumReputation, preview is not null, reason, payments,
                 preview is null ? null : Simulation.Load(preview.Company, content.Balance, day),
-                preview is null ? null : Finance.Forecast(preview.Company, day));
+                preview is null ? null : Finance.Forecast(preview.Company, day),
+                preview is null ? ImmutableArray<int>.Empty : LoadByDay(preview.Company));
         }).ToImmutableArray();
         return new(state.Execution.CampaignId, c.Id, c.Name, state.Execution.Revision, day,
             Simulation.NextFixture(state)?.Day, c.Cash, Finance.Forecast(c, day),
-            Simulation.Load(c, content.Balance, day), c.Coach.Capacity, c.Reputation, offers, agreements);
+            Simulation.Load(c, content.Balance, day), c.Coach.Capacity, c.Reputation, offers, agreements,
+            last, LoadByDay(c), w.Fixtures.Where(f => f.Day >= day).Select(f => f.Day).Order().ToImmutableArray());
     }
 }

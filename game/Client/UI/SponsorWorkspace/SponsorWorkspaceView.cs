@@ -11,7 +11,10 @@ public partial class SponsorWorkspaceView : Control
     public SponsorPresenter Presenter { get; private set; } = null!;
     private Action? returned;
     private Control? layout;
-    private VBoxContainer terms = null!, evidence = null!;
+    private VBoxContainer shell = null!, reading = null!, terms = null!, support = null!, evidence = null!;
+    private HBoxContainer columns = null!;
+    private Control filler = null!;
+    private bool fitQueued;
     private HBoxContainer actions = null!;
     private Label heading = null!, time = null!, feedback = null!;
     private string? termsKey, evidenceKey;
@@ -22,6 +25,9 @@ public partial class SponsorWorkspaceView : Control
     public ScrollContainer TermsScroll { get; private set; } = null!;
     public ScrollContainer EvidenceScroll { get; private set; } = null!;
     public Dictionary<string, List<double>> Timings { get; } = [];
+    /// <summary>Unused height inside the reading region; positive means dead space between content and actions.</summary>
+    public float ReadingSlack => columns.Size.Y - ReadingContentHeight;
+    private float ReadingContentHeight => Math.Max(reading.GetCombinedMinimumSize().Y, evidence.GetCombinedMinimumSize().Y);
     public void Configure(SponsorPresenter presenter, Action back) { Presenter = presenter; returned = back; }
     public override void _Ready() => Render();
     public override void _ExitTree() => returned = null;
@@ -35,18 +41,24 @@ public partial class SponsorWorkspaceView : Control
         {
             var margin = new MarginContainer(); layout = margin; AddChild(margin); margin.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
             foreach (var edge in new[] { "left", "right", "top", "bottom" }) margin.AddThemeConstantOverride("margin_" + edge, ui.Tokens.Space(SpaceRole.SpaceWorkspace));
-            var shell = ui.Stack(); margin.AddChild(shell);
+            shell = ui.Stack(); margin.AddChild(shell);
             heading = SemanticText.Create(ui, "[CO] " + s.CompanyName, TypographyRole.CompanyIdentity);
             heading.AutowrapMode = TextServer.AutowrapMode.Off; heading.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
             heading.TooltipText = s.CompanyName; shell.AddChild(heading);
             shell.AddChild(SemanticText.Create(ui, "Business & Finance  /  Sponsorship  /  Commitment review", TypographyRole.Label));
             time = SemanticText.Create(ui, "", TypographyRole.Annotation, ColorRole.TextSecondary); shell.AddChild(time);
-            var columns = new HBoxContainer { SizeFlagsVertical = SizeFlags.ExpandFill }; shell.AddChild(columns);
+            // Reading region sizes to its content up to the available height, so the decision
+            // follows the evidence directly; spare height collects below the actions instead.
+            columns = new HBoxContainer { SizeFlagsVertical = SizeFlags.Fill }; shell.AddChild(columns);
             TermsScroll = ReadingScroll(); EvidenceScroll = ReadingScroll(); columns.AddChild(TermsScroll); columns.AddChild(EvidenceScroll);
-            terms = ui.Stack(); evidence = ui.Stack(); TermsScroll.AddChild(terms); EvidenceScroll.AddChild(evidence);
+            reading = ui.Stack(); terms = ui.Stack(); support = ui.Stack(); evidence = ui.Stack();
+            reading.AddChild(terms); reading.AddChild(support); TermsScroll.AddChild(reading); EvidenceScroll.AddChild(evidence);
             feedback = ValidationMessage.Create(ui, "", false); shell.AddChild(feedback);
             actions = new HBoxContainer(); shell.AddChild(actions);
+            filler = new Control { SizeFlagsVertical = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore }; shell.AddChild(filler);
             shell.AddChild(SemanticText.Create(ui, UiTokens.Notice, TypographyRole.Annotation, ColorRole.TextMuted));
+            foreach (var region in new Control[] { reading, evidence, feedback, actions }) region.MinimumSizeChanged += QueueFit;
+            Resized += QueueFit;
         }
         heading.Text = "[CO] " + s.CompanyName; heading.TooltipText = s.CompanyName;
         time.Text = $"Day {s.Day} · " + PresentationText.Time(s.NextCheckpoint, "Next competition") + " · " + PresentationText.FixtureNotice;
@@ -71,13 +83,16 @@ public partial class SponsorWorkspaceView : Control
         document?.SetMeta("revision", s.Revision);
         Measure("profile-document", section); section = System.Diagnostics.Stopwatch.GetTimestamp();
         var nextEvidenceKey = JsonSerializer.Serialize(new { s.CampaignId, s.CompanyId, s.CompanyName, s.Cash, s.Load, s.Capacity, s.CommittedForecast, s.Reputation, s.Agreements,
-            o?.OfferId, o?.CanAccept, o?.LoadIfAccepted, o?.ForecastIfAccepted });
+            s.Day, s.LastDay, s.LoadByDay, s.CompetitionDays, o?.OfferId, o?.CanAccept, o?.LoadIfAccepted, o?.ForecastIfAccepted, o?.LoadByDayIfAccepted, o?.ScheduledPayments });
         if (evidenceKey != nextEvidenceKey)
         {
-            Clear(evidence); evidenceKey = nextEvidenceKey;
+            Clear(evidence); Clear(support); evidenceKey = nextEvidenceKey;
             evidence.AddChild(SectionHeader.Create(ui, "Company trade-off", "Is the scheduled income worth the ongoing delivery obligation?"));
             evidence.AddChild(ResourceValue.Create(ui, new("Cash now", s.Cash / 100m, "CU", InformationState.Known, "Signing itself pays nothing now.")));
-            evidence.AddChild(SemanticText.Create(ui, $"Load now: {s.Load} / capacity {s.Capacity}", TypographyRole.Data));
+            evidence.AddChild(SemanticText.Create(ui, $"Load now: {s.Load} / capacity {s.Capacity}", TypographyRole.Data,
+                s.Load > s.Capacity ? ColorRole.StateWarning : ColorRole.TextPrimary));
+            if (s.Load > s.Capacity)
+                evidence.AddChild(SemanticText.Create(ui, $"[!] Over capacity by {s.Load - s.Capacity} now.", TypographyRole.Label, ColorRole.StateWarning));
             if (o is not null && o.CanAccept && o.LoadIfAccepted is { } after)
             {
                 var over = after - s.Capacity;
@@ -94,13 +109,14 @@ public partial class SponsorWorkspaceView : Control
             evidence.AddChild(ResourceValue.Create(ui, SponsorPresentation.Forecast(s)));
             if (o is not null && o.CanAccept && o.ForecastIfAccepted is { } forecastIfAccepted)
                 evidence.AddChild(ResourceValue.Create(ui, SponsorPresentation.ForecastIfAccepted(forecastIfAccepted)));
-            evidence.AddChild(SectionHeader.Create(ui, "Supporting evidence"));
-            evidence.AddChild(SemanticText.Create(ui, "Company: " + s.CompanyName, TypographyRole.Label));
-            evidence.AddChild(SemanticText.Create(ui, "Current reputation: " + s.Reputation + ". Signing itself grants no reputation or audience.", TypographyRole.Label));
+            evidence.AddChild(DayTrack.Create(ui, SponsorPresentation.Track(s, o)));
+            support.AddChild(SectionHeader.Create(ui, "Supporting evidence"));
+            support.AddChild(SemanticText.Create(ui, "Company: " + s.CompanyName, TypographyRole.Label));
+            support.AddChild(SemanticText.Create(ui, "Current reputation: " + s.Reputation + ". Signing itself grants no reputation or audience.", TypographyRole.Label));
             foreach (var a in s.Agreements)
             {
                 var next = a.Payments.FirstOrDefault(x => x.Remaining > 0);
-                evidence.AddChild(SemanticText.Create(ui, a.Name + $" · load {a.Load} through day {a.EndDay}" +
+                support.AddChild(SemanticText.Create(ui, a.Name + $" · load {a.Load} through day {a.EndDay}" +
                     (next is null ? " · no outstanding base receipts" : $" · next receipt day {next.DueDay}: " + SponsorPresentation.Money(next.Remaining)), TypographyRole.Label));
             }
         }
@@ -109,7 +125,8 @@ public partial class SponsorWorkspaceView : Control
         feedback.Text = (rejected ? "[!] " : "[i] ") + Presenter.Feedback;
         ui.Tone(feedback, rejected ? ColorRole.SystemError : ColorRole.TextSecondary);
         Clear(actions);
-        BackButton = ui.Button(Presenter.Phase == SponsorPhase.Confirm ? "Keep reviewing · Esc" : "Return to company · Esc", () => Act("back")); actions.AddChild(BackButton);
+        BackButton = ui.Button(Presenter.Phase == SponsorPhase.Confirm ? "Keep reviewing · Esc" : "Return to company · Esc", () => Act("back"));
+        BackButton.SizeFlagsVertical = SizeFlags.ShrinkEnd; actions.AddChild(BackButton);
         if (Presenter.Phase == SponsorPhase.Confirm && o is not null)
         {
             Commitment = new(); actions.AddChild(Commitment);
@@ -125,6 +142,24 @@ public partial class SponsorWorkspaceView : Control
         }
         Measure("profile-actions", section);
         Measure("bind", start);
+        QueueFit();
+    }
+    private void QueueFit()
+    {
+        if (fitQueued || shell is null) return;
+        fitQueued = true; Callable.From(Fit).CallDeferred();
+    }
+    private void Fit()
+    {
+        fitQueued = false;
+        if (!IsInstanceValid(shell)) return;
+        var visible = shell.GetChildren().OfType<Control>().Where(x => x.Visible).ToArray();
+        var others = visible.Where(x => x != columns && x != filler).Sum(x => x.GetCombinedMinimumSize().Y);
+        // Measure against the anchored view, never the shell: a taller action area can stretch
+        // the shell past the viewport, and measuring that stretched size would preserve overflow.
+        var available = Size.Y - 2 * ui.Tokens.Space(SpaceRole.SpaceWorkspace) - others - shell.GetThemeConstant("separation") * (visible.Length - 1);
+        var height = Math.Max(0, Math.Min(ReadingContentHeight, available));
+        if (Math.Abs(columns.CustomMinimumSize.Y - height) > UiTokens.LayoutTolerance) columns.CustomMinimumSize = new Vector2(0, height);
     }
     private static void Clear(Node region)
     {

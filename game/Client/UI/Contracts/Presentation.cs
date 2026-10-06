@@ -24,6 +24,22 @@ public sealed record DocumentSection(string Label, string Value);
 public sealed record DocumentData(string Id, long Revision, string Title, string Provenance, ImmutableArray<DocumentSection> Sections,
     Availability Availability = Availability.Ready);
 public sealed record CommitmentData(string Id, long Revision, string Summary, string TradeOff, ActionPhase Phase, string Result);
+public enum DayMarkShape { Filled, Outlined, Diamond }
+public sealed record DayRow(string Label, ImmutableArray<int> Days, DayMarkShape Shape);
+/// <summary>Bounded day-by-day quantity against one limit. Proposed may be empty when no alternative applies.</summary>
+public sealed record DayTrackData(string Question, int FirstDay, int LastDay, int Limit, string LimitLabel,
+    string CurrentLabel, ImmutableArray<int> Current, string ProposedLabel, ImmutableArray<int> Proposed,
+    ImmutableArray<DayRow> Rows, string Assumption)
+{
+    public int Length => LastDay - FirstDay + 1;
+    public void Validate()
+    {
+        if (Length < 1 || Length > UiTokens.MaxTrackDays) throw new ArgumentException("Day track must cover 1 to MaxTrackDays days.");
+        if (Current.IsDefault || Current.Length != Length) throw new ArgumentException("Current series must supply one value per day.");
+        if (Proposed.IsDefault || (!Proposed.IsEmpty && Proposed.Length != Length)) throw new ArgumentException("Proposed series must be empty or one value per day.");
+        if (Rows.IsDefault || Rows.Any(r => r.Days.IsDefault)) throw new ArgumentException("Day rows must be initialized.");
+    }
+}
 
 public static class PresentationText
 {
@@ -41,6 +57,44 @@ public static class PresentationText
         ? $"{value.Label}: Unknown"
         : $"{value.Label}: {value.Value.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit}";
     public static string ResourceEvidence(ResourceView value) => $"{InformationMarker(value.Information)} {Information(value.Information)} · {value.Context}";
+    /// <summary>Compact ascending day list with consecutive runs, e.g. "1–3, 6".</summary>
+    public static string DayRanges(IEnumerable<int> days)
+    {
+        var ordered = days.Distinct().Order().ToArray(); var parts = new List<string>();
+        for (var i = 0; i < ordered.Length; i++)
+        {
+            var start = ordered[i];
+            while (i + 1 < ordered.Length && ordered[i + 1] == ordered[i] + 1) i++;
+            parts.Add(start == ordered[i] ? start.ToString(CultureInfo.InvariantCulture) : $"{start}–{ordered[i]}");
+        }
+        return string.Join(", ", parts);
+    }
+    public static string DayTrackLegend(DayTrackData data) =>
+        $"Bars: {data.CurrentLabel} filled" + (data.Proposed.IsEmpty ? "" : $", {data.ProposedLabel} outlined on top") + $"; amber above {data.LimitLabel}. " +
+        string.Join("; ", data.Rows.Select(r => (r.Shape switch { DayMarkShape.Filled => "Filled square", DayMarkShape.Outlined => "Outlined square", _ => "Diamond" }) + ": " + r.Label)) + ".";
+    /// <summary>Text equivalent of every fact the day track draws; the drawing never carries information alone.</summary>
+    public static ImmutableArray<string> DayTrackSummary(DayTrackData data)
+    {
+        data.Validate();
+        var lines = ImmutableArray.CreateBuilder<string>();
+        void Series(string label, ImmutableArray<int> values)
+        {
+            if (values.IsEmpty) return;
+            var over = values.Select((v, i) => (v, day: data.FirstDay + i)).Where(x => x.v > data.Limit).Select(x => x.day).ToArray();
+            var peak = values.Max();
+            lines.Add(over.Length == 0
+                ? $"{label}: within {data.LimitLabel} every day through day {data.LastDay} (peak {peak} / {data.Limit})."
+                : $"{label}: over {data.LimitLabel} on day {DayRanges(over)} (peak {peak} / {data.Limit}).");
+        }
+        Series(data.ProposedLabel, data.Proposed); Series(data.CurrentLabel, data.Current);
+        foreach (var row in data.Rows)
+        {
+            var days = row.Days.Where(d => d >= data.FirstDay && d <= data.LastDay).Distinct().Order().ToArray();
+            lines.Add(days.Length == 0 ? $"{row.Label}: none through day {data.LastDay}."
+                : $"{row.Label}: day {string.Join(", ", days.Select(d => d.ToString(CultureInfo.InvariantCulture)))}.");
+        }
+        return lines.ToImmutable();
+    }
     public static string Resource(ResourceView value) => value.Information == InformationState.Unknown || value.Value is null
         ? $"{value.Label}: Unknown · {value.Context}"
         : $"{value.Label}: {value.Value.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit} · {Information(value.Information)} · {value.Context}";
