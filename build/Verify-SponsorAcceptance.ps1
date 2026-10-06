@@ -22,7 +22,7 @@ try {
     & $Godot --headless --path "$RepoRoot/game/Client" --audio-driver Dummy --log-file "$evidence/map.engine.log" res://UI/OperatingMap/OperatingMap.tscn -- --map-verify --map-viewport=1280x720 > "$evidence/map.log" 2> "$evidence/map.stderr.log"
     if($LASTEXITCODE -ne 0 -or (Get-Item "$evidence/map.stderr.log").Length -gt 0) { throw 'Native map failed' }
     $saves=Join-Path $evidence ('smoke-saves-'+[Guid]::NewGuid().ToString('N'))
-    & $Godot --headless --path "$RepoRoot/game/Client" --audio-driver Dummy --log-file "$evidence/main.engine.log" -- --smoke "--saves=$saves" "--hash=$evidence/main.hash" > "$evidence/main.log" 2> "$evidence/main.stderr.log"
+    & $Godot --headless --path "$RepoRoot/game/Client" --audio-driver Dummy --log-file "$evidence/main.engine.log" res://Main.tscn -- --smoke "--saves=$saves" "--hash=$evidence/main.hash" > "$evidence/main.log" 2> "$evidence/main.stderr.log"
     if($LASTEXITCODE -ne 0 -or (Get-Item "$evidence/main.stderr.log").Length -gt 0) { throw 'Main smoke failed' }
     $headless=Get-Content -Raw -Encoding utf8 "$evidence/headless.json" | ConvertFrom-Json
     if((Get-Content -Raw "$evidence/main.hash").Trim() -ne $headless.FinalHash) { throw 'Main/headless mismatch' }

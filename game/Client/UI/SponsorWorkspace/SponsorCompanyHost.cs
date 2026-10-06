@@ -12,8 +12,9 @@ public partial class SponsorCompanyHost : Control
     private SponsorWorkspaceView? workspace;
     private readonly string sessionKey = Guid.NewGuid().ToString("N");
     private Action? close;
-    public void Configure(IGameSession session, Action onClose)
-    { gameSession = session; sponsors = (ISponsorSession)session; close = onClose; }
+    private bool embedded;
+    public void Configure(IGameSession session, Action onClose, bool embedded = false)
+    { gameSession = session; sponsors = (ISponsorSession)session; close = onClose; this.embedded = embedded; }
     public override void _Ready()
     {
         if (gameSession is null)
@@ -23,8 +24,8 @@ public partial class SponsorCompanyHost : Control
         }
         var shell = new VBoxContainer(); AddChild(shell); shell.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         var ui = new UiContext(new UiTokens(UiDensity.Compact)); Theme = ui.Theme;
-        shell.AddChild(ui.Button("Return to internal management UI", () => close?.Invoke()));
-        company = new OperatingMap { SizeFlagsVertical = SizeFlags.ExpandFill };
+        if (!embedded) shell.AddChild(ui.Button("Return to internal management UI", () => close?.Invoke()));
+        company = new OperatingMap { SizeFlagsVertical = SizeFlags.ExpandFill, Embedded = embedded };
         company.ConfigureLive(SponsorPresentation.Company(sponsors.ObserveSponsors(), sessionKey), Open); shell.AddChild(company);
     }
     private void Open(MapSituation matter, MapReturn origin)

@@ -198,6 +198,23 @@ AdvanceUntilResults(unplanned, 1);
 Check(unplanned.Observe().Results.Length == 0 && unplanned.Observe().Day == schedule[0].Day, "manual company stops on match day for a plan");
 Check(!Submit(unplanned, new AdvanceDecision()).Accepted, "match day cannot be skipped while a lineup is possible");
 
+// Genre-shell projections: inbox, tasks, fixtures and head-to-head come from authoritative state only.
+var shell = New(); var start = shell.Observe();
+Check(start.Inbox.Count(r => r.Kind == "Offer") == start.Offers.Count(o => o.Origin == "Inbound") && start.Inbox.All(r => !r.Id.StartsWith("decision:", StringComparison.Ordinal)), "inbox carries world messages, never the player's own decisions");
+Check(start.Fixtures.Length == 2 * b.RivalCount && start.Rivals.Length == b.RivalCount && start.Rivals.All(r => r.Remaining == 2 && r.Wins + r.Losses == 0), "season fixtures and head-to-head rows");
+var startTasks = PortalTasks.Build(start);
+Check(startTasks.Any(t => t.Section == ShellSections.Competition && t.Urgency == TaskUrgency.Due) && startTasks.Count(t => t.Section == ShellSections.Commercial) == start.Offers.Count(o => o.Availability == "Available"), "portal tasks list match preparation and every open offer");
+Check(startTasks.Select(t => t.Urgency).SequenceEqual(startTasks.Select(t => t.Urgency).Order()) && PortalTasks.Blocker(start) is null, "tasks order by urgency; nothing blocks on day one");
+Submit(shell, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+Check(!PortalTasks.Build(shell.Observe()).Any(t => t.Section == ShellSections.Competition), "an autonomous coach removes the preparation task");
+var matchDay = New(); AdvanceUntilResults(matchDay, 1);
+Check(PortalTasks.Blocker(matchDay.Observe()) is { Urgency: TaskUrgency.Blocking }, "an unplanned match day blocks Continue and routes to Competition");
+var played = New(); Submit(played, new CoachDecision(Delegation.Autonomous, Risk.Balanced)); AdvanceUntilResults(played, 1);
+var afterMatch = played.Observe();
+Check(afterMatch.Inbox[0].Kind == "Match" || afterMatch.Inbox.Any(r => r.Kind == "Match"), "match results reach the inbox");
+Check(afterMatch.Rivals.Sum(r => r.Wins + r.Losses) == 1 && afterMatch.Fixtures.Count(f => f.Result.Length > 0) == 1, "head-to-head and fixtures record the result");
+Check(ShellSections.ForInbox("Offer") == ShellSections.Commercial && ShellSections.ForInbox("Renewal") == ShellSections.Squad && ShellSections.ForInbox("Match") == ShellSections.Competition, "inbox kinds route to their owning section");
+
 // Recomputed checksums are not a substitute for semantic validation.
 void RejectSave(string name, Func<SaveEnvelope, SaveEnvelope> change)
 {

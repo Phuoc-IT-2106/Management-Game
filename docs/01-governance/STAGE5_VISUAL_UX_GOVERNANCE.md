@@ -12,7 +12,11 @@ ID `b5175650-5b00-49f2-b3b0-c11fee4fa981`.
 Source SHA-256:
 `d361584431b805280d2daea02b9a3ba29f7005ab715912b33613d3ee8f98c6ee`.
 
-Later interpretation authority (2026-10-06):
+Latest interpretation authority (2026-10-06): the
+[genre-shell amendment](STAGE5_GENRE_SHELL_AMENDMENT.md) pre-approves the
+management-genre shell and replaces the Operating-Space-as-home requirement.
+
+Earlier interpretation authority (2026-10-06):
 [Stage 5 visual composition direction](STAGE5_VISUAL_COMPOSITION_DIRECTION.md),
 **ACTIVE — DIRECTOR CLARIFICATION**. The preserved brief remains byte-identical.
 List-first governs structured navigation, not visual dominance. Company home is
@@ -105,3 +109,16 @@ untouched. Runtime tests were not rerun for this documentation change.
 
 This supplies no new rendered-screen evidence and makes no Stage 5 screen
 acceptance claim.
+
+## Primary composition — reconciled with the genre-shell amendment
+
+A 2026-10-06 draft of this section treated any web/dashboard primary composition as
+a hard rejection. The later [genre-shell amendment](STAGE5_GENRE_SHELL_AMENDMENT.md)
+replaces that reading: the management-genre shell (top bar with Continue, left
+navigation rail, Portal home, dense tables, bounded overview tiles) is pre-approved.
+
+Retained from the draft and still a rejection condition: SaaS styling (white
+dashboards, blue CTAs, floating rounded card stacks), KPI or chart walls without a
+decision reason, static data panels plus a call to action standing in for
+simulation context, and sections for mechanics the slice does not have. Styling
+changes cannot rescue a screen that offers no decision, time or consequence.

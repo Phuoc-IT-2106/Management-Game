@@ -1,5 +1,10 @@
 # Stage 5 visual composition direction
 
+> **Partially superseded (2026-10-06)** by the [genre-shell amendment](STAGE5_GENRE_SHELL_AMENDMENT.md):
+> the Portal is the default home; the Company Operating Space becomes the optional
+> Company section; C3's hard rejection is replaced by the shell contract. C1, C5 and
+> C6 still apply.
+
 Status: **ACTIVE — DIRECTOR CLARIFICATION** under DEC-023 and
 [Stage 5 visual / UX governance](STAGE5_VISUAL_UX_GOVERNANCE.md).
 Date: 2026-10-06 (Asia/Saigon). Scope: governance and specification only.

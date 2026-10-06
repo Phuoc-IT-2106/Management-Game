@@ -81,6 +81,39 @@ public static class UiTheme
         theme.SetStylebox("grabber", "VScrollBar", Box(tokens, ColorRole.Border, false));
         theme.SetStylebox("grabber_highlight", "VScrollBar", Box(tokens, ColorRole.TextMuted, false));
         theme.SetStylebox("grabber_pressed", "VScrollBar", Box(tokens, ColorRole.TextSecondary, false));
+        // Dense tables (genre shell S5): structural rows, no per-cell borders, the shared selection bar.
+        theme.SetStylebox("panel", "Tree", Box(tokens, ColorRole.SurfaceInset, false));
+        theme.SetStylebox("focus", "Tree", Focus(tokens));
+        theme.SetStylebox("selected", "Tree", Selected(tokens, ColorRole.SelectedSurface));
+        theme.SetStylebox("selected_focus", "Tree", Selected(tokens, ColorRole.SelectedSurface));
+        theme.SetStylebox("cursor", "Tree", Flat(tokens, null));
+        theme.SetStylebox("cursor_unfocused", "Tree", Flat(tokens, null));
+        theme.SetStylebox("title_button_normal", "Tree", Box(tokens, ColorRole.SurfaceRaised, false));
+        theme.SetStylebox("title_button_hover", "Tree", Box(tokens, ColorRole.HoverSurface, false));
+        theme.SetStylebox("title_button_pressed", "Tree", Box(tokens, ColorRole.SelectedSurface, false));
+        foreach (var item in new[] { "font_color", "font_selected_color", "title_button_color" })
+            theme.SetColor(item, "Tree", ToGodot(tokens.Color(ColorRole.TextPrimary)));
+        theme.SetColor("guide_color", "Tree", ToGodot(tokens.Color(ColorRole.Divider)));
+        theme.SetConstant("draw_guides", "Tree", 1);
+        theme.SetConstant("v_separation", "Tree", tokens.Space(SpaceRole.SpaceRelated));
+        theme.SetFont("title_button_font", "Tree", display);
+        theme.SetFontSize("font_size", "Tree", tokens.FontSize(TypographyRole.Label));
+        theme.SetFontSize("title_button_font_size", "Tree", tokens.FontSize(TypographyRole.Annotation));
+        foreach (var kind in new[] { "LineEdit" })
+        {
+            theme.SetStylebox("normal", kind, Box(tokens, ColorRole.SurfaceInset));
+            theme.SetStylebox("focus", kind, Focus(tokens));
+            theme.SetStylebox("read_only", kind, Box(tokens, ColorRole.SurfaceBase));
+            theme.SetColor("font_color", kind, ToGodot(tokens.Color(ColorRole.TextPrimary)));
+            theme.SetColor("font_placeholder_color", kind, ToGodot(tokens.Color(ColorRole.TextMuted)));
+            theme.SetColor("caret_color", kind, ToGodot(tokens.Color(ColorRole.FocusRing)));
+            theme.SetFontSize("font_size", kind, tokens.FontSize(TypographyRole.Label));
+        }
+        theme.SetStylebox("panel", "PopupMenu", Box(tokens, ColorRole.SurfaceOverlay));
+        theme.SetStylebox("hover", "PopupMenu", Box(tokens, ColorRole.HoverSurface, false));
+        theme.SetColor("font_color", "PopupMenu", ToGodot(tokens.Color(ColorRole.TextPrimary)));
+        theme.SetColor("font_hover_color", "PopupMenu", ToGodot(tokens.Color(ColorRole.TextPrimary)));
+        theme.SetFontSize("font_size", "PopupMenu", tokens.FontSize(TypographyRole.Label));
         theme.SetStylebox("panel", "TooltipPanel", Box(tokens, ColorRole.SurfaceOverlay));
         theme.SetColor("font_color", "TooltipLabel", ToGodot(tokens.Color(ColorRole.TextPrimary)));
         return theme;

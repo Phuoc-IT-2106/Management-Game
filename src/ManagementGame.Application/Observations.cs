@@ -5,6 +5,29 @@ namespace ManagementGame.Application;
 
 public static class Observations
 {
+    private static readonly (string Prefix, string Kind)[] Kinds =
+    [
+        ("notice:offer:", "Offer"), ("notice:negotiation:", "Negotiation"), ("notice:contract:", "Contract"),
+        ("notice:renewal:", "Renewal"), ("notice:season:", "Season"), ("result:", "Match"), ("claim:", "Market"),
+        ("lapse:", "Market"), ("meta:", "Meta"), ("commercial:", "Commercial")
+    ];
+    /// <summary>World-originated messages, newest first; the player's own decisions are not inbox mail.</summary>
+    public static ImmutableArray<InboxRow> Inbox(Company c) => c.Reviews
+        .Select(r => (Review: r, Kind: Kinds.FirstOrDefault(k => r.Id.StartsWith(k.Prefix, StringComparison.Ordinal)).Kind))
+        .Where(x => x.Kind is not null).Reverse().Take(40)
+        .Select(x => new InboxRow(x.Review.Id, x.Review.Day, x.Kind!, x.Review.Text, x.Review.CauseId)).ToImmutableArray();
+    private static string Outcome(CompetitiveOutcome r) => r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat";
+    public static ImmutableArray<FixtureRow> FixtureRows(Campaign s) => s.World.Fixtures.Select(f =>
+    {
+        var result = s.World.Results.FirstOrDefault(r => r.FixtureId == f.Id);
+        return new FixtureRow(f.Id, f.Day, s.World.Rivals.Single(r => r.Id == f.RivalId).Name, f.Importance, result is null ? "" : Outcome(result));
+    }).ToImmutableArray();
+    public static ImmutableArray<RivalRow> RivalRows(Campaign s) => s.World.Rivals.OrderBy(r => r.Name, StringComparer.Ordinal).Select(r =>
+    {
+        var played = s.World.Results.Where(x => x.RivalId == r.Id && s.World.Fixtures.Any(f => f.Id == x.FixtureId)).ToArray();
+        return new RivalRow(r.Id, r.Name, played.Count(x => x.Won), played.Count(x => !x.Won),
+            s.World.Fixtures.Count(f => f.RivalId == r.Id && !s.World.Results.Any(x => x.FixtureId == f.Id)));
+    }).ToImmutableArray();
     public static Situation Build(Campaign s, Content content)
     {
         var c = s.Company; var w = s.World; var b = content.Balance; var day = w.Calendar.Day;
@@ -57,7 +80,7 @@ public static class Observations
             w.CoachCandidates.Where(x => x.Deadline >= day).Select(x => new CoachCandidateRow(x.Coach.Id, x.Coach.Name,
                 Band((x.Coach.Preparation + x.Coach.Analysis + x.Coach.Adaptability) / 3), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
             brands, w.Negotiations.Select(n => new NegotiationRow(n.Id, Market.Brand(content, n.BrandId).Name, n.Payment, n.DurationDays, n.ResponseDay)).ToImmutableArray(),
-            b.SponsorSlots, active);
+            b.SponsorSlots, active, Inbox(c), FixtureRows(s), RivalRows(s));
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
             ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover every role A–E."

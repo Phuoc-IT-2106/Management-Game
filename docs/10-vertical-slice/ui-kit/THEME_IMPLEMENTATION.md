@@ -13,6 +13,9 @@ colors are also addressable on the Theme's `Semantic` type. Small shared factori
 bind text roles and semantic tones; hosts do not create aesthetic overrides.
 
 Native Button normal/hover/pressed/hover_pressed/disabled/focus styles are shared.
+Tree (dense tables: inset panel, display-face titles, selection bar, divider guides),
+LineEdit/SpinBox (inset field, outer focus) and PopupMenu (overlay surface) are
+themed centrally for the genre shell; screens do not restyle them.
 Focus draws a separate 2px outline outside the control bounds so it stays visible
 on light primary fills. Selection is a 4px leading bar plus surface, not label text.
 Status and information labels remain visible below EntityRow, so selected +

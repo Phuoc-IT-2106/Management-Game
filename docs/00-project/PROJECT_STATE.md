@@ -257,6 +257,19 @@ lacks time control and world presence (roster, rivals, fixtures); that is the ne
 enabled step, followed by graphical primitives and retiring the internal console
 as a player path. DEC-001–023 and DV obligations are unchanged; Phase 5 stays open.
 
+### Genre shell — 2026-10-06
+
+The user approved the [genre-shell amendment](../01-governance/STAGE5_GENRE_SHELL_AMENDMENT.md),
+which pre-approves the management-genre skeleton (top bar with Continue, collapsible
+navigation rail, Portal home, dense tables, bounded tiles) and replaces the
+Operating-Space-as-home and dashboard hard-rejection readings while keeping every
+uncertainty, accessibility, data-honesty and anti-SaaS-styling rule. The
+[genre shell](../10-vertical-slice/genre-shell/README.md) is implemented and is now the
+main scene: start screen, Portal, Inbox, Squad, Competition, Commercial, Finance,
+Staff and the embedded Company view; the internal console remains for development.
+Native verification passes at 1280×720 and 1920×1080; human review is pending.
+Gameplay mechanics are unchanged by this design pass.
+
 ### Rules v2 — continuous campaign — 2026-10-06
 
 By explicit user instruction the bounded 28-day fixture is replaced by

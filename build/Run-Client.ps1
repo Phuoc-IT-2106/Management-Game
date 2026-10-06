@@ -2,7 +2,7 @@ param([switch]$Smoke,[switch]$Headless,[switch]$Benchmark,[int]$Tab=0,[string]$C
 . "$PSScriptRoot/Environment.ps1"
 $evidence = Join-Path $RepoRoot 'docs/10-vertical-slice/evidence'
 New-Item -ItemType Directory -Force $evidence | Out-Null
-$clientArgs = @('--path',"$RepoRoot/game/Client",'--audio-driver','Dummy')
+$clientArgs = @('--path',"$RepoRoot/game/Client",'--audio-driver','Dummy','res://Main.tscn')
 if($Headless) { $clientArgs += '--headless' }
 $clientArgs += @('--',"--content=$RepoRoot/content/fixture.json","--saves=$RepoRoot/artifacts/client-saves","--tab=$Tab")
 if($Smoke) { $clientArgs += @('--smoke',"--hash=$evidence/host-Debug.hash") }

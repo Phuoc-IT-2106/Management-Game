@@ -8,6 +8,8 @@ using StatusIndicator = ManagementGame.UiKit.StatusIndicator;
 public partial class OperatingMap : Control
 {
     private MapSnapshot? liveSnapshot;
+    /// <summary>Hosted inside the genre shell, which owns the single development watermark.</summary>
+    public bool Embedded { get; set; }
     private Action<MapSituation, MapReturn>? liveEntry;
     public void ConfigureLive(MapSnapshot snapshot, Action<MapSituation, MapReturn> enter)
     { liveSnapshot = snapshot; liveEntry = enter; }
@@ -116,7 +118,7 @@ public partial class OperatingMap : Control
         affairsToggle = ui.Button(next is null ? "Affairs · no dated matters" : $"Affairs · next: {next.Name} · day {next.DueDay}", () => affairs.Visible = !affairs.Visible);
         shell.AddChild(affairsToggle);
         affairs = ui.Stack(); shell.AddChild(affairs); BuildAffairs(); affairs.Visible = false;
-        shell.AddChild(ui.Watermark());
+        if (!Embedded) shell.AddChild(ui.Watermark());
         if (GetViewportRect().Size.X < 2 * UiTokens.MinimumColumnWidth + ui.Tokens.Size(SizeRole.InspectorWidth)) navigation.ListMode = true;
         isWorkspace = false; RefreshSelection();
     }

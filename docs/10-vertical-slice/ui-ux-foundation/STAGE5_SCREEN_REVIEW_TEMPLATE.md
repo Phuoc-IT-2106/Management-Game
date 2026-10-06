@@ -72,6 +72,23 @@ collapse; a giant list is not the density solution. Company 1920×1080 evidence:
 useful relationships, operating state, consequences and evidence; no invented
 metrics or merely stretched layout. Record unresolved visual choices explicitly.
 
+## Genre-shell conformance (S1–S9)
+
+Source: [genre-shell amendment](../../01-governance/STAGE5_GENRE_SHELL_AMENDMENT.md).
+Record N/A where an element does not apply to the screen.
+
+| ID | Element | Conforms / N/A / FAIL | Evidence |
+| --- | --- | --- | --- |
+| S1 | Top bar: identity, season/day, cash, attention, Continue with block reason | | |
+| S2 | Navigation rail: ≤9 real sections, collapsible, keyboard shortcuts | | |
+| S3 | One dominant content area; optional context panel | | |
+| S4 | Portal: tasks, actionable inbox naming who is affected, next match, record, money | | |
+| S5 | Tables show all comparable facts; keyboard row flipping updates context | | |
+| S6 | Tiles ≤8, each answers a question and leads somewhere | | |
+| S7 | Charts only on analysis screens with question, units, source | | |
+| S8 | Identity marks generated from campaign data | | |
+| S9 | Staged events keep company/time context and return | | |
+
 ## Positive game-identity checks (P1–P8)
 
 Source: [game-identity thesis](../../01-governance/STAGE5_GAME_IDENTITY_THESIS.md).
@@ -82,7 +99,7 @@ These supplement the A–J audit and 14-part gate; a FAIL requires correction.
 | P1 | Ten-second test: names removed, viewer identifies a management game and what needs attention | | |
 | P2 | Current time, next stop and the supported way forward (or why it is blocked) are on the primary company space | | |
 | P3 | Own team/people and at least the next opponent are visible as actors where supported | | |
-| P4 | At least one material state is drawn as an instrument with a complete text equivalent | | |
+| P4 | Portal or decision workspace draws at least one material state as an instrument with a complete text equivalent | | |
 | P5 | No developer, contract or keyboard-legend text in player space beyond the single watermark | | |
 | P6 | Exactly one primary action; irreversible actions distinct from navigation | | |
 | P7 | State changes are visibly acknowledged; reduced motion still communicates them | | |

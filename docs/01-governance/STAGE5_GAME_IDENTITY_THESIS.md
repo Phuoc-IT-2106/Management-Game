@@ -24,6 +24,11 @@ whether the screen reads as a game. The review below found five causes:
 | Developer text in player view | Keyboard legends, contract notes ("Equal emphasis…", "evidence supplied by presentation record"), repeated fixture notices in warning color |
 | Prohibition-only process | No positive target, bottom-up generic kit, efficiency-only evaluation |
 
+The [genre-shell amendment](STAGE5_GENRE_SHELL_AMENDMENT.md) later supplies the
+structural skeleton (top bar, navigation rail, Portal, tables); this thesis governs
+how that skeleton feels. P4 now requires a drawn instrument on the Portal or a
+decision workspace rather than on every primary screen.
+
 This document supplies the missing positive target. It adds to, and never relaxes,
 the brief, its 14-part gate or the A–J audit.
 

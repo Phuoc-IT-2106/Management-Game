@@ -1,5 +1,8 @@
 # Company Operating Space — Stage 5 composition blueprint
 
+> **Role changed (2026-10-06):** under the [genre-shell amendment](../../01-governance/STAGE5_GENRE_SHELL_AMENDMENT.md)
+> this space is the optional **Company** section of the shell, not the default home.
+
 Blueprint COS-05 v1. Status: **DRAFT FOR DIRECTOR VISUAL REVIEW**.
 Date: 2026-10-06 (Asia/Saigon). Specification only; no implementation or visual
 acceptance. Review owner: Project Director, with UX/UI and technical review.
