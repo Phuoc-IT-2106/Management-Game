@@ -1,0 +1,1097 @@
+==================================================
+STAGE 5 — STRICT VISUAL / UX DESIGN GOVERNANCE
+==================================================
+
+The purpose of Stage 5 is NOT:
+
+"make the UI look modern"
+
+The purpose is:
+
+"create a coherent visual language for a company-management game
+that supports decision-making, information density, context and consequence."
+
+Visual polish must SERVE the accepted UX architecture.
+
+The UI must not drift into generic AI-generated SaaS/dashboard aesthetics.
+
+==================================================
+1. UX HAS AUTHORITY OVER VISUAL STYLE
+==================================================
+
+The hierarchy of authority is:
+
+GAMEPLAY DECISION
+→ USER CONTEXT
+→ INFORMATION PRIORITY
+→ INTERACTION
+→ LAYOUT
+→ VISUAL STYLE
+→ DECORATION
+
+Never reverse this order.
+
+Do not design a visually attractive screen first and then force gameplay information
+into it.
+
+Every visible region must answer at least one of:
+
+- Where am I?
+- What changed?
+- What requires attention?
+- What do I know?
+- What is uncertain?
+- What decision can I make?
+- What will this decision affect?
+- When will consequences occur?
+
+If an element answers none of these, challenge its existence.
+
+==================================================
+2. COMPANY-FIRST MUST REMAIN VISIBLE
+==================================================
+
+The interface must consistently reinforce:
+
+"I am operating a company"
+
+not:
+
+"I am using a collection of esports menus."
+
+Company identity/context must remain structurally above individual:
+
+- teams;
+- players;
+- competitions;
+- sponsors;
+- staff;
+- documents.
+
+Do not let the Primary Team become the permanent visual root.
+
+Esports is a current operating domain, not the permanent top-level identity.
+
+==================================================
+3. DECISION-FIRST, NOT DASHBOARD-FIRST
+==================================================
+
+Do not make the home experience a wall of:
+
+KPI cards
+charts
+percentage indicators
+activity cards
+notifications
+mini dashboards.
+
+Company overview exists to support:
+
+orientation
+attention
+prioritization
+decision entry
+
+not passive metric consumption.
+
+Metrics should appear when they change a decision.
+
+Do not surface information merely because it can be visualized.
+
+==================================================
+4. AVOID "AI DASHBOARD" COMPOSITION
+==================================================
+
+Do NOT default to:
+
+- a grid of equally sized cards;
+- 3-column KPI blocks;
+- icon + title + number + trend arrow repeated everywhere;
+- large decorative hero panels;
+- oversized greeting/header sections;
+- floating cards on every surface;
+- card-inside-card-inside-card layouts;
+- generic analytics dashboards;
+- equal visual weight for unrelated information.
+
+Prefer:
+
+- structural regions;
+- clear document areas;
+- persistent context;
+- lists;
+- tables;
+- inspectors;
+- decision workspaces;
+- timelines where causally justified;
+- bounded panels with distinct responsibilities.
+
+Cards are allowed only when the content is genuinely an independent unit.
+
+Do not use cards as the default container for every piece of information.
+
+==================================================
+5. NO DECORATIVE GLASSMORPHISM
+==================================================
+
+Avoid:
+
+- translucent glass panels;
+- blurred background layers;
+- frosted UI;
+- excessive glow;
+- neon outlines;
+- decorative gradients;
+- rainbow gradients;
+- floating translucent widgets.
+
+Use these only if a specific future art direction explicitly approves them.
+
+The provisional visual language should prioritize:
+
+clarity
+hierarchy
+contrast
+density
+structure.
+
+==================================================
+6. CONTROL CORNER RADIUS
+==================================================
+
+Do not give every UI element large rounded corners.
+
+Avoid the generic AI pattern:
+
+large radius panel
+inside large radius card
+inside rounded button
+inside pill badge.
+
+Use a small, consistent radius family.
+
+Suggested provisional rule:
+
+Primary surfaces:
+small/subtle radius
+
+Buttons:
+small radius
+
+Tags/status pills:
+pill form allowed where semantic
+
+Tables/lists/documents:
+mostly structural edges
+
+Do not use rounded rectangles to compensate for weak information hierarchy.
+
+==================================================
+7. SHADOWS MUST EXPRESS LAYERING
+==================================================
+
+Do not add shadows automatically.
+
+A shadow must represent:
+
+elevation
+temporary overlay
+modal state
+floating inspector
+dragged item
+
+not decoration.
+
+Persistent base panels should primarily use:
+
+surface contrast
+borders
+spacing
+grouping.
+
+==================================================
+8. SEMANTIC COLORS HAVE PRIORITY
+==================================================
+
+Color has specific responsibilities.
+
+Semantic color:
+
+Critical
+Warning
+Positive
+Information
+Unknown
+Disabled
+Selection
+Focus
+
+must remain independent from company branding.
+
+Player branding may affect:
+
+identity accents
+company markers
+selected organizational surfaces
+
+but may NOT override:
+
+warnings
+errors
+focus
+text readability
+uncertainty
+critical status.
+
+Never use arbitrary color merely to "make the screen less boring."
+
+==================================================
+9. LIMIT ACCENT COLORS
+==================================================
+
+Avoid AI-style multi-accent palettes.
+
+A normal screen should generally use:
+
+neutral surfaces
+one company/identity accent
+semantic colors only where required.
+
+Do not assign a unique bright color to every navigation category.
+
+Different modules should be distinguished primarily by:
+
+label
+location
+structure
+iconography
+context
+
+not rainbow navigation.
+
+==================================================
+10. TYPOGRAPHY MUST CREATE HIERARCHY
+==================================================
+
+Do not solve hierarchy using:
+
+huge headings
+excessive bold
+all caps everywhere
+multiple font families.
+
+Use a controlled type scale.
+
+The typical hierarchy should distinguish:
+
+Company/context
+Workspace title
+Section title
+Body/data
+Annotation
+Status/meta
+
+Dense management screens should favor readable medium-scale typography.
+
+Do not copy the oversized typography common in marketing websites or AI mockups.
+
+==================================================
+11. NO "WELCOME BACK, CEO" UI
+==================================================
+
+Do not add generic personalization text such as:
+
+"Welcome back"
+"Good morning, Manager"
+"Ready to dominate?"
+"Here's what's happening today"
+
+unless a real gameplay function requires it.
+
+The player should enter the simulation, not a productivity web app.
+
+Use actual company state as the opening context.
+
+==================================================
+12. INFORMATION DENSITY IS ALLOWED
+==================================================
+
+Do not interpret "clean UI" as "empty UI."
+
+Management games can legitimately be dense.
+
+The objective is:
+
+structured density
+
+not:
+
+minimal content.
+
+Prefer:
+
+hierarchy
+alignment
+spacing rhythm
+progressive disclosure
+
+over simply hiding information.
+
+Do not spread one decision across several screens only to preserve whitespace.
+
+==================================================
+13. WHITESPACE MUST HAVE A FUNCTION
+==================================================
+
+Whitespace is used to distinguish:
+
+sections
+hierarchy
+decision boundaries
+document structure
+
+not to imitate luxury web design.
+
+Avoid large empty gaps that reduce usable management space.
+
+1280×720 remains an important density stress case.
+
+==================================================
+14. PRIMARY / SECONDARY / TERTIARY INFORMATION
+==================================================
+
+Every workspace must explicitly classify information:
+
+PRIMARY
+required for current decision
+
+SECONDARY
+supports reasoning
+
+TERTIARY
+available on request
+
+HISTORICAL / RAW
+deep inspection
+
+Do not display every available value at equal prominence.
+
+Do not hide PRIMARY information inside tooltips.
+
+==================================================
+15. KNOWN / ESTIMATED / UNKNOWN MUST LOOK DIFFERENT
+==================================================
+
+The player must visually distinguish:
+
+KNOWN FACT
+
+ESTIMATE
+
+UNKNOWN
+
+without relying only on color.
+
+Use combinations such as:
+
+label
+icon
+typographic treatment
+supporting explanation.
+
+Never show fake precision such as:
+
+67.4% expected success
+
+unless the simulation genuinely produces that information.
+
+Unknown is not zero.
+
+==================================================
+16. SHOW CAUSE AND CONSEQUENCE
+==================================================
+
+Important decisions should visually communicate:
+
+CAUSE
+→ COMMITMENT
+→ EXPECTED / POSSIBLE CONSEQUENCE
+→ TIME
+
+Example:
+
+Sponsor agreement
+→ +25 organizational load
+→ capacity overload
+→ reduced future preparation conversion
+→ until contract end.
+
+Avoid detached "+5 / -3" modifier presentation when causal explanation is possible.
+
+==================================================
+17. DO NOT TURN EVERYTHING INTO PROGRESS BARS
+==================================================
+
+Progress bars should represent actual:
+
+progress
+capacity
+completion
+bounded quantity
+
+not arbitrary ratings.
+
+Avoid visualizing every stat as:
+
+bar
+radial gauge
+donut
+ring
+meter.
+
+Use plain numbers/text when they communicate better.
+
+==================================================
+18. CHARTS REQUIRE A QUESTION
+==================================================
+
+Before adding a chart, state:
+
+"What player question does this chart answer?"
+
+If the answer is unclear, do not add the chart.
+
+Do not add charts merely because Finance or Analytics exists.
+
+A table may be superior.
+
+==================================================
+19. TABLES ARE TOOLS, NOT THE GAME'S IDENTITY
+==================================================
+
+Tables are appropriate for:
+
+comparison
+rosters
+contracts
+finances
+history
+markets
+
+but the entire game must not become spreadsheet-only.
+
+Important decisions should combine:
+
+context
+entities
+documents
+comparison
+consequence
+
+around the table.
+
+==================================================
+20. ICONS MUST HAVE SEMANTIC PURPOSE
+==================================================
+
+Avoid placing an icon before every label.
+
+Icons are justified when they improve:
+
+recognition
+status scanning
+navigation
+resource identification
+interaction affordance.
+
+Do not use random Lucide-style icons simply because a component has empty space.
+
+Icon meaning must remain consistent globally.
+
+==================================================
+21. NO EMOJI AS CORE UI LANGUAGE
+==================================================
+
+Do not use emoji as production:
+
+navigation icons
+resource icons
+status icons
+company symbols.
+
+Temporary development markers may use simple symbols only when clearly internal.
+
+==================================================
+22. STATUS BADGE DISCIPLINE
+==================================================
+
+Avoid badge soup.
+
+Do not attach several pills to every entity.
+
+Use badges only for meaningful categorical state such as:
+
+Active
+Expired
+Warning
+Unknown
+Pending
+
+and only when the category affects interpretation.
+
+Metadata should usually remain metadata.
+
+==================================================
+23. BUTTON HIERARCHY MUST BE LIMITED
+==================================================
+
+Each workspace should normally have:
+
+one primary action
+a small number of secondary actions
+supporting navigation actions.
+
+Avoid screens with many identical colorful buttons.
+
+Primary action emphasis should represent decision importance, not decoration.
+
+Destructive/irreversible action must not visually resemble ordinary navigation.
+
+==================================================
+24. NAVIGATION IS NOT A COLLECTION OF TABS
+==================================================
+
+Do not solve every new system by adding another permanent top-level tab.
+
+Navigation must respect:
+
+Corporate Functions
++
+Operating Portfolio
++
+Contextual Workspace.
+
+New navigation surfaces require justification.
+
+Avoid future "tab explosion."
+
+==================================================
+25. ONE AUTHORITATIVE FACT, MULTIPLE VIEWS
+==================================================
+
+Do not duplicate state in presentation models without ownership.
+
+Company Cash shown in:
+
+header
+Finance
+Sponsor workspace
+
+must represent the same authoritative value.
+
+Presentation may reformat it but cannot independently calculate a different truth.
+
+==================================================
+26. CONTEXT MUST SURVIVE NAVIGATION
+==================================================
+
+Entering deeper workspaces must preserve:
+
+company
+scope
+entity
+matter
+decision origin
+
+where applicable.
+
+Back must return to meaningful context.
+
+Avoid web-style route transitions that discard the player's mental model.
+
+==================================================
+27. NO MODAL OVERUSE
+==================================================
+
+Do not use modal dialogs for ordinary inspection.
+
+Modal/confirmation is appropriate for:
+
+material commitment
+irreversible action
+destructive action
+critical interruption.
+
+Information belongs in the workspace.
+
+Do not create a "popup game."
+
+==================================================
+28. TOOLTIP IS SUPPORTING INFORMATION ONLY
+==================================================
+
+Critical decision information must never exist only in tooltips.
+
+Tooltips may explain:
+
+definitions
+calculation basis
+abbreviations
+secondary context.
+
+==================================================
+29. MOTION MUST EXPLAIN CHANGE
+==================================================
+
+Animation is permitted when it communicates:
+
+navigation
+state transition
+cause
+attention
+new result.
+
+Avoid:
+
+constant pulsing
+floating backgrounds
+decorative shimmer
+unnecessary card entrance animations
+large spring/bounce effects.
+
+Motion should be restrained.
+
+Reduced-motion mode must remain viable.
+
+==================================================
+30. VISUAL CHANGE SHOULD FOLLOW GAME STATE
+==================================================
+
+Screens should feel alive because:
+
+state changes
+situations appear
+commitments change
+deadlines approach
+results resolve
+
+not because decorative elements constantly animate.
+
+==================================================
+31. CHARACTER ART IS OPTIONAL
+==================================================
+
+No workflow may depend on character portraits.
+
+Person identity must function using:
+
+name
+role
+initials
+symbolic avatar
+status
+
+alone.
+
+Portraits may later enrich important characters but cannot repair weak UX.
+
+==================================================
+32. NO GENERATED DECORATIVE ART TO FILL SPACE
+==================================================
+
+Do not insert generic AI-generated:
+
+esports arenas
+office backgrounds
+futuristic buildings
+abstract corporate illustrations
+fake sponsor graphics
+
+simply to make screens visually rich.
+
+Artwork must have a real product/art-direction purpose.
+
+Until art direction exists, prefer intentional neutral composition.
+
+==================================================
+33. AVOID GENERIC FUTURISTIC ESPORTS AESTHETIC
+==================================================
+
+Do not default to:
+
+neon cyan
+purple gradients
+hexagonal panels
+cyberpunk lines
+HUD decorations
+glowing edges
+gaming RGB aesthetic.
+
+The project is a COMPANY MANAGEMENT SIMULATION.
+
+Esports is one business domain.
+
+The visual identity must be able to support future:
+
+sports
+media
+commercial
+corporate
+
+domains without redesigning the entire shell.
+
+==================================================
+34. AVOID GENERIC CORPORATE SAAS AESTHETIC
+==================================================
+
+Equally avoid:
+
+white dashboard
+rounded cards
+blue CTA
+analytics graphs
+left SaaS sidebar
+"workspace productivity" styling.
+
+The game should communicate simulation and consequence, not business software.
+
+==================================================
+35. GAME FEEL SHOULD COME FROM STATE AND CONSEQUENCE
+==================================================
+
+"Game-like" does not mean decorative gamification.
+
+Avoid unnecessary:
+
+XP bars
+achievement-looking cards
+progress rings
+sparkles
+gamified badges.
+
+Game feel should come from:
+
+changing world state
+strategic decisions
+commitments
+risk
+time
+feedback
+consequences.
+
+==================================================
+36. CONSISTENT GRID AND ALIGNMENT
+==================================================
+
+All production-direction screens must use a defined layout grid.
+
+Avoid AI-generated near-alignment.
+
+Elements that appear aligned must share actual layout anchors.
+
+Repeated structures must use identical spacing/tokens.
+
+No arbitrary 13px / 21px / 27px margins because they visually "look okay."
+
+==================================================
+37. COMPONENTS MAY NOT BE RESTYLED PER SCREEN
+==================================================
+
+A StatusIndicator is the same semantic component everywhere.
+
+A DocumentView is not redesigned differently for each workspace.
+
+A ResourceValue retains its role.
+
+Screens compose components.
+
+Screens do not redefine them.
+
+==================================================
+38. NO LOCAL VISUAL INVENTION WITHOUT JUSTIFICATION
+==================================================
+
+When a screen needs something not covered by the design system:
+
+FIRST:
+attempt composition using existing components.
+
+SECOND:
+identify why it fails.
+
+THIRD:
+propose the smallest reusable addition.
+
+Do not invent a one-off visual pattern automatically.
+
+==================================================
+39. SCREEN-SPEC BEFORE VISUAL IMPLEMENTATION
+==================================================
+
+Every major production-direction screen must define:
+
+Player goal
+Entry context
+Primary question
+Primary information
+Secondary information
+Actions
+Trade-offs
+Unknowns
+Return behavior
+Failure states
+
+before visual implementation.
+
+No "design by screenshot."
+
+==================================================
+40. SCREENSHOT IS NOT SOURCE OF TRUTH
+==================================================
+
+Generated mockups, screenshots and visual references are LOW-AUTHORITY.
+
+They may inspire:
+
+composition
+proportion
+visual tone
+
+but may not override:
+
+DEC decisions
+UX architecture
+component contracts
+screen specifications
+information boundaries.
+
+==================================================
+41. AI MAY COMPOSE, NOT INVENT THE SYSTEM
+==================================================
+
+AI implementation must receive:
+
+approved screen blueprint
+approved component catalog
+approved tokens
+approved interaction rules.
+
+AI may:
+
+compose
+refine
+implement
+test variants.
+
+AI may NOT silently:
+
+invent a new navigation paradigm
+invent new gameplay values
+invent new semantic colors
+create one-off components
+change information priority
+change interaction rules.
+
+==================================================
+42. ANTI-AI VISUAL REVIEW
+==================================================
+
+Every Stage 5 screen must be explicitly reviewed for:
+
+A. CARD OVERUSE
+Is every region unnecessarily inside a card?
+
+B. ROUNDING OVERUSE
+Are large rounded corners being used everywhere?
+
+C. BADGE OVERUSE
+Are pills substituting for actual hierarchy?
+
+D. GRADIENT / GLOW OVERUSE
+Is decoration driving the visual identity?
+
+E. EMPTY SPACE
+Is usable area being wasted to imitate marketing/web layouts?
+
+F. KPI DASHBOARD BIAS
+Are metrics shown without a decision reason?
+
+G. ICON NOISE
+Are icons repeated without semantic value?
+
+H. GENERIC SAAS FEEL
+Could this screen belong to project-management software?
+
+I. GENERIC ESPORTS FEEL
+Could this screen belong to any neon esports website?
+
+J. COMPONENT INCONSISTENCY
+Did AI locally redesign existing components?
+
+Any YES requires either:
+
+- correction;
+or
+- documented justification.
+
+==================================================
+43. MANAGEMENT-GAME IDENTITY TEST
+==================================================
+
+For every primary screen ask:
+
+"If branding, names and logos were removed,
+would this still read as a management/simulation game?"
+
+If NO:
+
+the screen relies too much on decoration.
+
+Then ask:
+
+"Could this exact screen be dropped into a generic SaaS product?"
+
+If YES:
+
+the screen needs stronger simulation context and decision structure.
+
+==================================================
+44. INFORMATION VALUE TEST
+==================================================
+
+For each visible block ask:
+
+"What decision becomes worse if this information is removed?"
+
+If no meaningful answer exists:
+
+move it to tertiary detail
+or remove it.
+
+==================================================
+45. REPETITION TEST
+==================================================
+
+A design must work after the player has seen it 100 times.
+
+Avoid layouts whose novelty comes from:
+
+large illustrations
+dramatic animation
+oversized cards
+decorative effects.
+
+Repeated management interactions should become:
+
+fast
+predictable
+scannable
+
+without becoming mechanically boring.
+
+==================================================
+46. 720P REALITY TEST
+==================================================
+
+Every main workspace must be inspected at 1280×720.
+
+At minimum preserve:
+
+context
+primary decision information
+primary action
+critical uncertainty
+current time/state.
+
+Do not fix overflow by:
+
+shrinking typography excessively
+removing decision context
+hiding uncertainty
+reducing touch/click targets below usability.
+
+==================================================
+47. 1080P MUST NOT BECOME EMPTY
+==================================================
+
+At 1920×1080 use additional space for:
+
+comparison
+supporting evidence
+history
+context
+
+where useful.
+
+Do not simply stretch panels.
+
+Do not fill space with decorative widgets.
+
+==================================================
+48. LONG CONTENT TEST
+==================================================
+
+Test:
+
+long company name
+long sponsor name
+long player name
+large currency values
+multiple-digit percentages
+localized text expansion
+
+where relevant.
+
+Do not design only for short English fixture strings.
+
+==================================================
+49. VISUAL COMPLEXITY BUDGET
+==================================================
+
+A screen should normally have:
+
+one dominant workspace
+one clear contextual hierarchy
+one primary interaction focus
+
+not several equally dominant regions.
+
+If everything attracts attention, nothing has priority.
+
+==================================================
+50. PRODUCT COHERENCE OVER SCREEN NOVELTY
+==================================================
+
+A new screen that looks less unique but fits the system is preferred over a visually
+novel screen that introduces a new design language.
+
+Consistency is a feature.
+
+==================================================
+STAGE 5 DESIGN REVIEW GATE
+==================================================
+
+A Stage 5 screen may not be accepted only because:
+
+"it looks good."
+
+Acceptance requires:
+
+1. company-first context is preserved;
+2. player purpose is immediately understandable;
+3. information hierarchy matches decision importance;
+4. uncertainty is visible;
+5. actions reflect actual gameplay;
+6. 720p remains usable;
+7. shared components remain consistent;
+8. semantic colors remain correct;
+9. no critical information depends on decoration;
+10. anti-AI visual review passes;
+11. screen does not resemble a generic SaaS dashboard;
+12. screen does not rely on generic neon esports styling;
+13. repeated-use scannability is plausible;
+14. no unsupported gameplay has been invented.
+
+If a visually attractive proposal violates these rules:
+
+REJECT THE VISUAL PROPOSAL.

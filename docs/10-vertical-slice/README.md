@@ -2,6 +2,10 @@
 
 Status: BUILD IN PROGRESS. Phase 5 remains open; Director review is required.
 
+Current presentation constraints: [Stage 5 visual / UX governance](../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md),
+received 2026-10-06. All 50 rules and the 14-part gate apply to Stage 5 screen work;
+this does not accept existing candidates or close Phase 5.
+
 Baseline: latest main `1aa3d6e` fetched and checked on 2026-10-04 (Asia/Saigon).
 Authority: DEC-001–022 and the user's Phase 5 instruction. The user explicitly
 approved a labeled fictional 5v5 development fixture in this task.

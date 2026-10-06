@@ -3,6 +3,14 @@
 Status: PROPOSAL for future implementation. No UI screenshots or UI Lab are
 created during this specification task. Historical evidence is not requalified.
 
+Current Stage 5 requirement (2026-10-06): apply the active
+[visual / UX governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md) and complete
+the [screen review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md) for each major screen.
+Explicitly inspect 720p, useful 1080p composition and relevant long/localized content;
+review A–J and all 14 acceptance criteria with evidence. These requirements add to
+the verification strategy below. Historical Stage 1 proposal labels and existing
+captures establish neither a new pass nor human approval.
+
 ## Future UI Lab
 
 An internal scene catalog should show approved canonical components independently

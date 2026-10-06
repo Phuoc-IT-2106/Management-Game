@@ -3,12 +3,19 @@
 Status: PROPOSAL mandatory workflow upon approval. Existing accepted decisions
 and the Director's current no-implementation constraints already apply.
 
+Current authority note (2026-10-06): the opening status describes Stage 1 delivery.
+DEC-023 accepts the architecture; subsequent stage instructions govern authorized
+implementation. The explicit [Stage 5 visual / UX governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md)
+now requires approved blueprint, component catalog, tokens and interaction rules
+before visual implementation, plus the [Stage 5 review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md).
+It does not grant blanket approval to illustrative screens or provisional designs.
+
 ## Authority
 
 Read in order: accepted project decisions → approved UX architecture → approved
 design system → component contracts → approved screen specification → visual
 reference/mockup. Check approval status and current project state; this proposed
-package does not override DEC-001–022. A screenshot never overrides any rule.
+package does not override DEC-001–023. A screenshot never overrides any rule.
 
 ## Required workflow and evidence
 
@@ -21,7 +28,7 @@ package does not override DEC-001–022. A screenshot never overrides any rule.
 | Implementation | Small presentation increment on current Application contracts; native controls and shared theme roles |
 | Automated checks | Relevant projection, command, stable-ID, stale-action, token and behavior checks |
 | Screenshot | Fixed reproducible state, viewport, build, content/branding identity; screenshots supplement behavior evidence |
-| Visual review | Human review of purpose, readability, state semantics, identity and regression; accept/revise with rationale |
+| Visual review | Human review of purpose, readability, state semantics, identity and regression; Stage 5 A–J audit and all 14 gate criteria with evidence; accept/revise/reject with rationale |
 
 Do not skip blueprint review because a concept image looks complete. If no new
 approval is needed under already accepted scope, proceed within that scope;

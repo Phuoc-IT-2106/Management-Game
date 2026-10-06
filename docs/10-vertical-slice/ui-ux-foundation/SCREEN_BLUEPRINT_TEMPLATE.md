@@ -5,6 +5,13 @@ every field or explain “not applicable.” It is not an artifact-template skil
 Blueprint approval precedes UI implementation; a mockup is optional subordinate
 reference, never the source of gameplay rules.
 
+Stage 5 use must also satisfy the active
+[visual / UX governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md).
+Complete the player goal, entry context, primary question, information priorities,
+actions, trade-offs, unknowns, return behavior and failure states before visual
+implementation. Attach a [Stage 5 review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md);
+the illustrative example below retains its original proposal status.
+
 ```text
 SCREEN / WORKSPACE NAME:
 Blueprint ID / version:
@@ -16,6 +23,7 @@ Current versus future scope:
 Role:
 Type (screen taxonomy):
 Hierarchy position (company, function, portfolio scope):
+Player goal:
 Player question:
 Primary decision (or inspection purpose):
 Entry conditions / originating situation:
@@ -55,6 +63,8 @@ Acceptance criteria (Given / When / Then):
 Automated checks:
 Golden capture cases / viewport / brand / states:
 UX review framework (all 11 dimensions with evidence):
+Stage 5 review record (region value audit, A–J review, all 14 gate criteria):
+720p / 1080p and long-content evidence; repeated-use and unbranded identity tests:
 Open questions / dependencies / migration and rollback:
 ```
 

@@ -4,6 +4,12 @@ Status: **ACCEPTED PRESENTATION ARCHITECTURE** under DEC-023.
 Date: 2026-10-04 (Asia/Saigon). Owner: Product UX Architect / UI Architecture Lead.
 Accepted: 2026-10-05 (Asia/Saigon). Approval owner: Project Director.
 
+Current Stage 5 visual work also follows the user's 2026-10-06
+[strict visual / UX governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md):
+all 50 rules and the 14-part gate apply. Use the
+[screen review record](STAGE5_SCREEN_REVIEW_TEMPLATE.md) alongside each blueprint.
+This instruction does not retroactively accept existing screens or final art.
+
 The player builds and operates their own company. Corporate functions describe
 what they are doing; the operating portfolio describes where it applies. A
 company operating map, contextual workspaces, entities/documents and affairs

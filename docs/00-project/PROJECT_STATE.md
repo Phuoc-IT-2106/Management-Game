@@ -202,6 +202,19 @@ development saves correctly reject. Schema 1 and simulation rules are unchanged.
 Phase 5 remains open; no new DEC, gameplay scope, full identity system, save
 migration or next UX stage is introduced. Historical QG-02 and wider DV gates remain.
 
+## Phase 5 UX Stage 5 design governance
+
+The user's 2026-10-06 [strict visual / UX instruction](../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md)
+is active for Stage 5 presentation work. Its full 50 rules and 14-part review gate
+are preserved, with a reusable screen review record linked from the blueprint and
+implementation workflow. Gameplay decision, context and information priority govern
+visual style; company-first structure and semantic components remain authoritative.
+
+This is a governance integration, not a screen implementation or acceptance pass.
+Stage 4 human review remains pending; provisional design tokens and candidate
+captures retain their status. DEC-001–023, gameplay scope, final-art restrictions
+and deferred validation obligations remain unchanged. Phase 5 stays open.
+
 ## Current Priority
 
 Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.
