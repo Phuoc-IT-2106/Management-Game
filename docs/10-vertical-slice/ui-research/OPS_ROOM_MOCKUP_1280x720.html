@@ -1,0 +1,861 @@
+<title>Phòng điều hành 1280×720</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Saira+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  /* Layout: trang tối một cột 1280px; khung game 1280×720 thật được thu nhỏ theo bề rộng, ghi chú và tự kiểm nằm ngoài khung */
+  --bg:#141516; --s1:#1B1C1F; --s2:#232427; --sel:#2F3237; --line:#2C2E32; --line2:#3D4046;
+  --tx:#ECEAE6; --tx2:#ADA9A2; --tx3:#949089;
+  --gold:#E6B04B; --gold-ink:#1A1405;
+  --pos:#72C08F; --warn:#E8955C; --crit:#E8665F; --est:#B4A2EE; --focus:#8DB8FF;
+  --seg1:#3A3D42; --seg2:#4B4F55; --seg3:#5E6269;
+  --onclub:#F5F2EC;
+  --ui:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  --disp:"Saira Condensed","Bahnschrift","Arial Narrow",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--ui);font-size:16px;line-height:24px}
+/* type scale: the only sizes allowed, inside and outside the frame */
+.f12{font-size:12px;line-height:16px}.f14{font-size:14px;line-height:20px}.f16{font-size:16px;line-height:24px}
+.f20{font-size:20px;line-height:28px}.f24{font-size:24px;line-height:32px}.f32{font-size:32px;line-height:40px}.f48{font-size:48px;line-height:60px}
+.w5{font-weight:500}.w6{font-weight:600}.tx2{color:var(--tx2)}.tx3{color:var(--tx3)}
+.num{font-variant-numeric:tabular-nums}
+.disp{font-family:var(--disp);font-weight:600}
+.pos{color:var(--pos)}.warn{color:var(--warn)}.crit{color:var(--crit)}.est{color:var(--est)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button,select{font:inherit;color:inherit}
+
+/* ---------- page ---------- */
+.page{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.page>h1{margin:0;font-size:32px;line-height:40px;font-weight:600}
+.page>h2{margin:56px 0 0;font-size:24px;line-height:32px;font-weight:600}
+.page>p{margin:12px 0 0;max-width:72ch;color:var(--tx2)}
+.sys p{margin:8px 0 0;color:var(--tx2)}
+code{font-family:Consolas,"Cascadia Mono",monospace;font-size:14px;line-height:20px;color:var(--tx)}
+.bar-ctl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:24px}
+.seg{display:inline-flex;background:var(--s1);border:1px solid var(--line);border-radius:4px;padding:2px}
+.seg button{background:transparent;border:0;border-radius:4px;padding:6px 14px;cursor:pointer;color:var(--tx2);font-size:14px;line-height:20px}
+.seg button.is-sel{background:var(--sel);color:var(--tx);font-weight:600}
+.plain{background:transparent;border:1px solid var(--line2);border-radius:4px;padding:6px 14px;cursor:pointer;font-size:14px;line-height:20px}
+.plain:hover{background:var(--s2)}
+.stage{margin-top:16px;width:100%;position:relative;overflow:hidden;border:1px solid var(--line2);border-radius:4px}
+.below{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px;margin-top:24px}
+.below>*{min-width:0}
+.below h3{margin:0;font-size:20px;line-height:28px;font-weight:600}
+.below ul{margin:12px 0 0;padding-left:20px;color:var(--tx2)}
+.below li{margin-top:8px}
+.audit{list-style:none;padding:0!important}
+.audit li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);margin:0!important}
+.audit .ok{color:var(--pos);font-weight:600}.audit .no{color:var(--crit);font-weight:600}
+.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:32px;margin-top:16px}
+.sys>div{min-width:0}
+.sys h3{margin:0 0 8px;font-size:16px;line-height:24px;font-weight:600}
+.scale div{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding:4px 0}
+.scale span:first-child{width:40px;color:var(--tx3);font-size:12px;line-height:16px}
+.sw{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:4px 0;font-size:14px;line-height:20px}
+.sw i{width:24px;height:24px;border-radius:4px;border:1px solid var(--line2)}
+.parts{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.parts figure{margin:0;text-align:center;font-size:12px;line-height:16px;color:var(--tx3)}
+.gaps{color:var(--tx2);padding-left:20px;margin:12px 0 0}
+.gaps li{margin-top:8px}
+
+/* ---------- game frame ---------- */
+.frame{width:1280px;height:720px;position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;background:var(--bg)}
+.top{position:absolute;left:0;right:0;top:0;height:56px;display:flex;align-items:center;gap:40px;padding:0 24px;background:var(--s1);border-bottom:1px solid var(--line)}
+.top .grow{flex:1}
+.rail{position:absolute;left:0;top:56px;bottom:0;width:208px;background:var(--s1);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;gap:4px}
+.club{display:flex;gap:12px;align-items:center;padding:0 4px 16px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.nav{display:flex;justify-content:space-between;align-items:center;height:40px;padding:0 12px;border-radius:4px;background:transparent;border:0;cursor:pointer;text-align:left;color:var(--tx2)}
+.nav:hover{background:var(--s2)}
+.is-sel{background:var(--sel)!important;color:var(--tx)!important;font-weight:600}
+.rail .sys-btns{margin-top:auto;display:flex;gap:8px}
+.content{position:absolute;left:208px;right:0;top:56px;bottom:0;padding:24px;overflow:auto}
+.btn{height:40px;padding:0 16px;border-radius:4px;border:1px solid var(--line2);background:transparent;cursor:pointer;font-weight:600;font-size:14px;line-height:20px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.btn:hover{background:var(--s2)}
+.btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+.btn.gold:hover{filter:brightness(1.06)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.small{height:32px;padding:0 12px}
+.onclub .btn{border-color:rgba(245,242,236,.6);color:var(--onclub)}
+.onclub .btn:hover{background:rgba(0,0,0,.2)}
+h2.h,h3.h{margin:0;font-weight:600}
+
+/* portal */
+.hero{height:296px;display:flex;flex-direction:column}
+.halves{position:relative;flex:1;display:grid;grid-template-columns:1fr 1fr}
+.half{display:flex;align-items:center;gap:20px;padding:0 32px;color:var(--onclub);transition:filter .5s}
+.half.them{flex-direction:row-reverse;text-align:right}
+.half.dim{filter:saturate(.25) brightness(.6)}
+.when{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg);padding:12px 20px;border-radius:4px;text-align:center;min-width:200px}
+.band{min-height:96px;background:var(--s1);display:grid;grid-template-columns:560px 1fr;gap:24px;align-items:center;padding:12px 24px}
+.lower{display:grid;grid-template-columns:1fr 400px;gap:32px;margin-top:24px}
+.drow{display:grid;grid-template-columns:1.45fr 1.5fr .9fr auto;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.gauge{position:relative;height:8px;background:var(--s2);border-radius:4px;margin-top:8px}
+.gauge i{position:absolute;left:0;top:0;bottom:0;background:var(--tx2);border-radius:4px}
+.gauge u{position:absolute;top:0;bottom:0;background:var(--tx)}
+.gauge b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--tx)}
+.stack>*+*{margin-top:24px}
+.hatch{background:repeating-linear-gradient(135deg,var(--est) 0 2px,transparent 2px 6px);border:2px solid var(--est)}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:14px;line-height:20px;font-weight:600;color:var(--tx2);text-align:left;padding:8px 12px 8px 8px;border-bottom:1px solid var(--line2);white-space:nowrap}
+.tbl td{font-size:14px;line-height:20px;padding:10px 12px 10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr[data-act]{cursor:pointer}
+.tbl tr[data-act]:hover td{background:var(--s2)}
+.tbl tr.is-sel td{background:var(--sel)}
+.tbl .r{text-align:right}
+.sortb{background:transparent;border:0;padding:0;cursor:pointer;color:var(--tx2);font-weight:600;font-size:14px;line-height:20px}
+.sortb.is-on{color:var(--tx)}
+.rng{position:relative;height:12px;width:120px;background:var(--s2);border-radius:2px}
+.rng .hatch{position:absolute;top:0;bottom:0}
+.rng b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--tx)}
+.two{display:grid;grid-template-columns:1fr 320px;gap:32px}
+.panel{background:var(--s1);padding:20px;border-radius:4px}
+.tabs{display:flex;gap:4px;margin:16px 0}
+.tab{height:32px;padding:0 12px;border-radius:4px;border:0;background:transparent;cursor:pointer;color:var(--tx2);font-size:14px;line-height:20px}
+.tab:hover{background:var(--s2)}
+
+/* competition */
+.comp{display:grid;grid-template-columns:1fr 416px;gap:32px}
+.alloc{position:relative;height:44px;display:flex;margin-top:8px;user-select:none;touch-action:none}
+.alloc .sg{display:flex;align-items:center;padding:0 10px;overflow:hidden;white-space:nowrap;color:var(--tx)}
+.alloc .h{position:absolute;top:-4px;bottom:-4px;width:12px;margin-left:-6px;background:var(--tx);border:0;border-radius:4px;cursor:ew-resize;padding:0}
+.stance{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px}
+.stance button{height:40px;border:1px solid var(--line2);border-radius:4px;background:transparent;cursor:pointer;color:var(--tx2);font-size:14px;line-height:20px}
+.lu{display:grid;grid-template-columns:72px 1fr;gap:4px 12px;align-items:center;margin-top:8px}
+.lu select{height:36px;background:var(--s1);border:1px solid var(--line2);border-radius:4px;padding:0 8px;font-size:14px;line-height:20px}
+.preview{background:var(--s1);padding:16px 20px;border-radius:4px}
+.preview p{margin:8px 0 0}
+
+/* commercial */
+.cmp{display:grid;grid-template-columns:200px 1fr 1fr;border-top:1px solid var(--line2)}
+.cmp>div{padding:12px 16px 12px 0;border-bottom:1px solid var(--line)}
+
+/* overlay */
+.scrim{position:absolute;inset:0;background:rgba(10,10,11,.66);display:flex;align-items:center;justify-content:center}
+.dialog{width:520px;background:var(--s2);border-radius:4px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.ba{display:grid;grid-template-columns:1fr auto;gap:8px 16px;margin-top:16px}
+.dialog .acts{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
+
+/* match day */
+.matchday{position:absolute;left:0;right:0;top:56px;bottom:0;display:grid;grid-template-columns:1fr 1fr}
+.mhalf{display:flex;flex-direction:column;align-items:flex-start;padding:40px 64px 0;gap:8px;color:var(--onclub);transition:filter .6s}
+.mhalf.them{align-items:flex-end;text-align:right}
+.mhalf.dim{filter:saturate(.25) brightness(.55)}
+.bug{position:absolute;left:50%;top:16px;transform:translateX(-50%);background:var(--bg);padding:8px 16px;border-radius:4px;text-align:center}
+.plate{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);width:520px;background:var(--bg);border-radius:4px;padding:20px 24px}
+.zones{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-top:8px;position:relative}
+.zones span{height:8px;background:var(--s2)}
+.zones span.on{background:var(--tx2)}
+.zones b{position:absolute;top:-6px;width:3px;height:20px;background:var(--tx);transition:left .4s}
+.frow{display:grid;grid-template-columns:1fr auto;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);transition:opacity .35s}
+.frow.hidden{opacity:0}
+@media (prefers-reduced-motion:reduce){.half,.mhalf,.frow,.zones b{transition:none}}
+</style>
+
+<div class="page">
+  <h1>Phòng điều hành 1280×720</h1>
+  <p>Mockup bấm được, dựng theo bước 3. Màn hình quản lý hằng ngày theo hướng "phòng điều hành yên tĩnh", còn nhận diện đội và ngày thi đấu theo hướng "phát sóng giải đấu". Dữ liệu lấy từ ảnh chụp genre shell ngày 1. Tên công ty "Halong Tide Esports" và màu đội là ví dụ người chơi tự chọn. Kết quả trận là minh hoạ, tính theo đúng công thức trong <code>Competition.Resolve</code>.</p>
+  <p>Thử theo luồng: Prepare match, chốt kế hoạch, Continue tới ngày 6, xem trận, rồi xem sponsor ở Commercial trước khi hết hạn vào ngày 7. Ctrl+Enter là Continue, Esc để huỷ hộp xác nhận, phím mũi tên để đổi người trong Squad.</p>
+  <div class="bar-ctl">
+    <span class="f14 tx2">Chuỗi trong game</span>
+    <div class="seg" role="group" aria-label="Game language"><button type="button" data-lang="en" class="is-sel">English</button><button type="button" data-lang="vi">Tiếng Việt</button></div>
+    <button type="button" class="plain" id="reset">Đặt lại về ngày 1</button>
+  </div>
+  <div class="stage" id="stage"><div class="frame" id="frame"></div></div>
+  <div class="below">
+    <div><h3 id="notesTitle">Màn hình này</h3><ul id="notes"></ul></div>
+    <div><h3>Tự kiểm theo quy tắc</h3><ul class="audit" id="audit"></ul></div>
+  </div>
+
+  <h2>Hệ thống dùng chung</h2>
+  <div class="sys">
+    <div><h3>Thang chữ, 7 cỡ</h3><div class="scale" id="scale"></div><p class="f14">Dòng tối thiểu 1.25 cho cỡ lớn để dấu tiếng Việt chồng tầng không chạm dòng trên. In hoa chỉ cho mã đội và nhãn nút, giãn 0.04em.</p></div>
+    <div><h3>Màu</h3><div id="swatches"></div><p class="f14">Màu đội không bao giờ là màu hành động hay màu ngữ nghĩa. Gạch chéo chỉ có một nghĩa: khoảng ước tính.</p></div>
+    <div><h3>Huy hiệu không chữ</h3><p class="f14" style="margin-top:0">Ghép từ 3 dáng khiên, 6 cách chia và 5 hình học. Màu và hình lấy từ hash tên tổ chức, nên cùng seed luôn ra cùng huy hiệu. Mã đội đặt cạnh huy hiệu, sinh từ một hàm duy nhất.</p><div class="parts" id="parts"></div></div>
+    <div><h3>Quy ước khác</h3><ul class="gaps" style="margin-top:0">
+      <li>Một kiểu "đang chọn": nền sáng hơn và chữ đậm. Áp cho rail, tab, hàng bảng, lựa chọn lối chơi.</li>
+      <li>Bo góc 4px cho control và hộp nhỏ. Vùng lớn không bo, tách bằng khoảng trắng và đường kẻ.</li>
+      <li>Portal dùng thời gian tương đối ("còn 5 ngày"). Lịch và bảng dùng ngày tuyệt đối.</li>
+      <li>Tiền làm tròn đến đơn vị. Lương tính theo tuần. Dự báo là khoảng, làm tròn đến 10.</li>
+      <li>Khả năng thắng là mức có tên, không hiện phần trăm.</li>
+    </ul></div>
+  </div>
+
+  <h2>Chưa có trong mockup</h2>
+  <ul class="gaps">
+    <li>Staff và Company mới ở mức tối thiểu. Chưa có quyền tự quyết của HLV, chủ động tiếp cận thương hiệu, màn hình bắt đầu chọn màu đội, tooltip lồng cho thuật ngữ.</li>
+    <li>Save, Load và Menu chỉ báo trạng thái, không lưu thật.</li>
+    <li>Cầu thủ ký mới giữ năng lực dạng khoảng ước tính cho tới khi ra sân; mockup chưa mô phỏng việc khoảng này thu hẹp dần.</li>
+    <li>Mới kiểm ở hai ngôn ngữ và một khổ 1280×720. Chưa kiểm 1920×1080, DPI thật và bàn phím vật lý (DV-03/04).</li>
+  </ul>
+</div>
+
+<script>
+(function(){
+"use strict";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- identity: crests and codes ---------- */
+function hash(s){ let h = 2166136261 >>> 0; for (const c of s){ h ^= c.codePointAt(0); h = Math.imul(h, 16777619) >>> 0; } return h; }
+// Each palette carries a hue family; rivals never share the player's family, so the two halves always read apart. No grey: a club colour must not look like the interface.
+const PALS = [["#14506B","#E9D9B8","blue"],["#9A4A1C","#F1E4CF","orange"],["#2F5D3A","#E8E2CF","green"],["#7A1F2B","#EADFCB","red"],["#1F3C78","#D7E1F0","blue"],["#A11D33","#F3E3D3","red"],["#0F6B63","#F0E6D2","blue"],["#5B6B20","#EEF0DA","green"]];
+const SHIELDS = ["M6 6 H94 V52 C94 86 72 106 50 116 C28 106 6 86 6 52 Z","M6 6 H94 V70 A44 44 0 0 1 6 70 Z","M6 6 H94 V72 L50 116 L6 72 Z"];
+const DIVS = [s => "", s => `<rect x="50" y="0" width="50" height="120" fill="${s}"/>`, s => `<rect x="0" y="62" width="100" height="58" fill="${s}"/>`,
+  s => `<path d="M0 0 L100 120 L0 120 Z" fill="${s}"/>`, s => `<path d="M0 88 L50 58 L100 88 V110 L50 80 L0 110 Z" fill="${s}"/>`, s => `<rect x="36" y="0" width="28" height="120" fill="${s}"/>`];
+function charge(k, cx, cy, fill, stroke){
+  const st = stroke ? ` stroke="${stroke}" stroke-width="3"` : "";
+  if (k === 0) return `<circle cx="${cx}" cy="${cy}" r="14" fill="${fill}"${st}/>`;
+  if (k === 1) return `<path d="M${cx} ${cy-19} L${cx+14} ${cy} L${cx} ${cy+19} L${cx-14} ${cy} Z" fill="${fill}"${st}/>`;
+  if (k === 2){ let d = ""; for (let i = 0; i < 10; i++){ const r = i % 2 ? 7 : 17, a = -Math.PI/2 + i * Math.PI/5; d += (i ? "L" : "M") + (cx + r*Math.cos(a)).toFixed(1) + " " + (cy + r*Math.sin(a)).toFixed(1) + " "; } return `<path d="${d}Z" fill="${fill}"${st}/>`; }
+  if (k === 3) return `<circle cx="${cx}" cy="${cy}" r="12" fill="none" stroke="${fill}" stroke-width="7"/>`;
+  return `<path d="M${cx-16} ${cy-13} H${cx+16} L${cx} ${cy+16} Z" fill="${fill}"${st}/>`;
+}
+let crestN = 0;
+function crest(arms, h){
+  const [p, s] = arms.pal, id = "cl" + (++crestN), w = Math.round(h * 100 / 120);
+  const split = arms.div === 1 || arms.div === 3, cy = arms.div === 4 ? 36 : 50;
+  const fill = split ? "#F4F1EA" : arms.div === 5 ? p : s;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 100 120" role="img" aria-label="${esc(arms.name)} crest" style="flex:none"><defs><clipPath id="${id}"><path d="${SHIELDS[arms.shape]}"/></clipPath></defs>`
+    + `<path d="${SHIELDS[arms.shape]}" fill="${p}"/><g clip-path="url(#${id})">${DIVS[arms.div](s)}</g>`
+    + charge(arms.charge, 50, cy, fill, split ? "#15171A" : "")
+    + `<path d="${SHIELDS[arms.shape]}" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="2"/></svg>`;
+}
+function shade(hex, k){ const n = parseInt(hex.slice(1), 16), f = c => Math.round(c * (1 - k)); return "#" + [n >> 16, (n >> 8) & 255, n & 255].map(c => f(c).toString(16).padStart(2, "0")).join(""); }
+function fold(s){ return s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D"); }
+function makeClubs(own, rivals){
+  const taken = new Set(), usedPal = new Set([String(own.pal)]), ownFamily = own.pal[2];
+  const code = name => { const w = fold(name).split(/\s+/).filter(Boolean); let c = w[0].slice(0,3).toUpperCase(); if (taken.has(c) && w[1]) c = (w[0].slice(0,2) + w[1][0]).toUpperCase(); taken.add(c); return c; };
+  const arms = (name, pal) => { const h = hash(name); return {name, pal, shape: h % 3, div: (h >>> 3) % 6, charge: (h >>> 7) % 5}; };
+  const out = {};
+  out.us = {id:"us", name: own.name, code: code(own.name), arms: arms(own.name, own.pal)};
+  // Order-independent: rivals are sorted before codes and palettes are assigned.
+  for (const r of [...rivals].sort((a,b) => a.name.localeCompare(b.name))){
+    let i = hash(r.name) % PALS.length; while (usedPal.has(String(PALS[i])) || PALS[i][2] === ownFamily) i = (i + 1) % PALS.length; usedPal.add(String(PALS[i]));
+    out[r.id] = Object.assign({}, r, {code: code(r.name), arms: arms(r.name, PALS[i])});
+  }
+  return out;
+}
+
+/* ---------- data (day 1 capture) ---------- */
+const SEASON = 56, CAP = 88, BASE_LOAD = 53, COACH_WAGE = 85;
+const RIVALS = [
+  {id:"sal", name:"Saltmarsh Five", s:68, lo:61, hi:75, post:0, conf:1},
+  {id:"nor", name:"Northwind Gaming", s:64, lo:57, hi:71, post:2, conf:0},
+  {id:"sil", name:"Silver Current", s:71, lo:64, hi:78, post:1, conf:1},
+  {id:"sto", name:"Stormhaven", s:59, lo:52, hi:66, post:0, conf:2}];
+const CLUBS = makeClubs({name:"Halong Tide Esports", pal:PALS[0]}, RIVALS);
+const FIX = [[6,"sal",1],[11,"nor",1],[16,"sil",1],[21,"sto",1],[26,"nor",2],[31,"sal",2],[36,"sil",2],[41,"sto",2]].map(([day,r,x], i) => ({day, r, x, n: i + 1}));
+const PLAYERS = [
+  {id:"p1",name:"Seo-yeon Morales",role:"A",ex:76,rd:82,wage:81,end:56},{id:"p2",name:"Noor Romero",role:"B",ex:75,rd:91,wage:79,end:112},
+  {id:"p3",name:"Oskar Fischer",role:"C",ex:74,rd:93,wage:77,end:56},{id:"p4",name:"An Dubois",role:"D",ex:64,rd:85,wage:57,end:112},
+  {id:"p5",name:"Leo Vo",role:"E",ex:65,rd:88,wage:59,end:56},{id:"p6",name:"Yuki Novak",role:"E",ex:64,rd:81,wage:57,end:56}];
+const AGENTS = [
+  {id:"a1",name:"Linh Petrov",role:"E",lo:50,hi:80,fee:159,wage:56,until:28},{id:"a2",name:"Mai Kowalski",role:"C",lo:50,hi:80,fee:154,wage:54,until:28},
+  {id:"a3",name:"Kai Nakamura",role:"E",lo:70,hi:100,fee:296,wage:104,until:28},{id:"a4",name:"Wei Hoang",role:"E",lo:50,hi:80,fee:185,wage:65,until:28}];
+const OFFERS = {lumen:{id:"lumen",name:"Lumenfield Mobile",sector:"tele",pay:370,days:84,load:16,deadline:7},kestrel:{id:"kestrel",name:"Kestrel Peripherals",sector:"hw",pay:380,days:56,load:20,deadline:7}};
+const COACH = {name:"Arjun Mehta", prep:66, anal:61, adapt:58, cap:88, end:56};
+const COACHES = [{name:"Tomasz Lind",lo:55,hi:75,fee:240,wage:77,until:28},{name:"Hana Sato",lo:65,hi:85,fee:410,wage:112,until:28}];
+
+/* ---------- strings ---------- */
+const POST = {en:["Conservative","Balanced","Aggressive"], vi:["Thận trọng","Cân bằng","Tấn công"]};
+const POSTL = {en:["conservative","balanced","aggressive"], vi:["thận trọng","cân bằng","tấn công"]};
+const LEVEL = {en:["Underdog","Slight underdog","Even","Slight favourite","Favourite"], vi:["Cửa dưới","Hơi cửa dưới","Ngang cơ","Hơi cửa trên","Cửa trên"]};
+const L = {
+ en:{
+  season:n=>`Season ${n}`, dayOf:(d,l)=>`Day ${d} of ${l}`, cash:"Cash", cont:"Continue", blocked:"Commit a match plan first", demoEnd:"End of the demo season", watching:"Match in progress",
+  nav:{portal:"Portal",inbox:"Inbox",squad:"Squad",competition:"Competition",commercial:"Commercial",finance:"Finance",staff:"Staff",company:"Company"},
+  save:"Save", load:"Load", saved:"Saved to slot 1", loaded:"Loaded slot 1",
+  matchIn:n=> n===0?"Match today": n===1?"Match tomorrow":`Match in ${n} days`, stakes:x=> x>1?"Double stakes":"Regular stakes",
+  intent:p=>`They usually play ${POSTL.en[p]}`, conf:c=>["low confidence","moderate confidence","high confidence"][c],
+  winBefore:l=>`Win chance before preparation: ${l}`, range:(a,b)=>a===b?a:`${a} to ${b.toLowerCase()}`,
+  prepare:"Prepare match", reviewPlan:"Review plan", planDone:(p,a)=>`Plan committed: ${POSTL.en[p]}, ${a}`, noMatch:"No matches left this season",
+  decide:(n,d)=> `${n===2?"Two sponsors want":"One sponsor wants"} an answer ${d===0?"today":d===1?"by tomorrow":`within ${d} days`}`,
+  slotFree:"One sponsor slot is free, so only one of them can be signed.", slotsFull:"Both sponsor slots are taken.", nothing:"Nothing needs a decision", nothingSub:"New offers and contract matters will appear here.",
+  perWeek:(p,w)=>`${p} CU a week for ${w} weeks`, loadAB:(a,b)=>`Load ${a} → ${b}`, review:"Review",
+  loadHolds:(l,c)=>`Load holds at ${l} of ${c}`, spare:s=>`${s} spare, with no change in the next four weeks.`,
+  cash4:"Cash in four weeks", cash4note:"Estimate. The upper end assumes every match is won.",
+  record:"Season record", recordLine:(w,l,r)=>`${w} won, ${l} lost, ${r} to play`,
+  sectors:{tele:"Telecom", hw:"Hardware"},
+  inboxH:(n,k)=> k ? `${n} messages, ${k} need an answer` : `${n} messages, none need an answer`,
+  tabs:{all:"All",offer:"Offers",contract:"Contracts",match:"Matches"}, colDay:"Day", colFrom:"From", colMsg:"Message", colStatus:"Status",
+  league:"League office", kinds:{offer:"Offer",contract:"Contract",match:"Match"},
+  mOffer:o=>`Offers ${o.pay} CU a week for ${o.days/7} weeks, adding ${o.load} delivery load.`, mSchedule:"The season 1 schedule is out: 8 matches, with the second half at double stakes.",
+  mResult:(w,o)=>`${w?"Won":"Lost"} against ${o}.`, mExpired:b=>`${b} withdrew its offer.`, mSigned:n=>`${n} signed a contract.`, mAccepted:b=>`${b} agreement starts today.`,
+  stAnswer:d=> d===0?"Answer today":`Answer within ${d} days`, stAccepted:"Accepted", stExpired:"Expired", stNone:"",
+  squadH:(n,ok)=> `${n===6?"Six":n===7?"Seven":"Eight"} players, ${ok?"every role covered":"a role is missing"}`,
+  colPlayer:"Player", colRole:"Role", colExec:"Execution", colReady:"Readiness", colWage:"Wage a week", colEnd:"Contract ends", dayN:d=>`Day ${d}`,
+  fa:"Free agents", colName:"Name", colAbility:"Ability, estimate", colFee:"Fee", colUntil:"Available until",
+  roleUnder:r=>`Role ${r}, under contract`, execKnown:"Execution, known from competition", execEst:"Execution, estimate until they play", readiness:n=>`Readiness ${n}`,
+  contractLine:(d,r)=>`Contract ends on day ${d}. Renewal talks open on day ${r}.`, contractLong:d=>`Contract ends on day ${d}.`,
+  renew:"Renew", release:"Release", onlyRole:r=>`Only player in role ${r}. Sign a replacement before releasing.`, renewLater:r=>`Renewal opens on day ${r}.`,
+  faRole:r=>`Free agent, role ${r}`, ability:(a,b)=>`Ability ${a}–${b}, estimate`, holder:(r,n,x)=>`Current role ${r} player: ${n}, ${x}`,
+  feeWage:(f,w)=>`Fee ${f} CU, wage ${w} CU a week`, sign:"Sign", rosterFull:"The squad is full.",
+  planFor:o=>`Plan for ${o}`, prep:"Preparation", seg:["Execution","Opponent study","Meta adaptation"], posture:"Posture", lineup:"Lineup", roleN:r=>`Role ${r}`,
+  ifCommit:"If you commit this plan", mu3:"Matchup +3: your posture matches the public meta (balanced).", mu1:"Matchup −1: your posture differs from the public meta (balanced).",
+  spread:["Result spread: narrow.","Result spread: medium.","Result spread: wide."], winMove:(a,b)=>`Win chance now: ${a.toLowerCase()}. With this plan: ${b.toLowerCase()}.`, winSame:a=>`Win chance stays ${a.toLowerCase()}.`,
+  prepNote:"Preparation work builds up daily until match day and is not counted here.", commit:"Commit", committed:"Plan committed.", dupe:"Each player can fill only one role.",
+  season1:"Season 1", secondHalf:"Second half, double stakes", won:"Won", lost:"Lost", today:"Today",
+  h2h:"Head to head", colRival:"Rival", colW:"Won", colL:"Lost", colLeft:"To play", allocLine:(e,o,m)=>`Execution ${e}%, opponent study ${o}%, meta adaptation ${m}%.`,
+  slotH:"One sponsor slot is free", slotsH:"Both sponsor slots are taken", noOffers:"No offers waiting",
+  rowWeek:"A week", rowLen:"Length", rowTotal:"If it runs its course", rowLoad:"Load after signing", rowSpare:"Spare after signing", weeks:w=>`${w} weeks`,
+  loadOf:(a,b,c)=>`${a} → ${b} of ${c}`, accept:"Accept", answerIn:d=> d===0?"Answer today":`Answer within ${d} days`, wasAccepted:"Signed", wasExpired:"Expired", slotTaken:"No free slot",
+  current:"Current agreements", agreeLine:(p,e,l,b)=>`${p} CU a week until day ${e}. Load ${l}${b?`, win bonus ${b} CU`:""}.`, slotsUsed:(a,b)=>`Sponsor slots: ${a} of ${b} used`,
+  finH:n=> n<0?`Cash falls about ${-n} CU a week after sponsor income`:`Cash grows about ${n} CU a week after sponsor income`,
+  finLegend:"Line: expected cash. Hatched band: the extra if every match is won. Prize money is not included.", week:"A typical week",
+  rIncome:"Sponsor income", rPlayers:"Player wages", rCoach:"Head coach", rNet:"Net", noArrears:"No unpaid bills.",
+  coachH:n=>`Head coach: ${n}`, attrs:["Preparation","Analysis","Adaptability","Work capacity"], coachEnd:d=>`Contract ends on day ${d}. Wage ${COACH_WAGE} CU a week.`,
+  coachMarket:"Coach market", colSkill:"Skill, estimate", hire:"Hire",
+  compH:"Company", colours:"Colours chosen when the company was founded", rep:"Reputation", aud:"Audience", slotsK:"Sponsor slots", loadK:"Load",
+  confirmSponsor:b=>`Accept ${b}?`, cLoad:"Load", cIncome:"Sponsor income a week", cSlots:"Sponsor slots", otherGone:o=>`${o} can no longer be signed.`,
+  confirmSign:n=>`Sign ${n}?`, cCash:"Cash", cWages:"Wages a week", cSquad:"Squad size", cancel:"Cancel",
+  matchNo:(s,n)=>`Season ${s}, match ${n}`, winChance:"Win chance", skip:"Skip",
+  factors:[["Lineup against their strength",(a,b)=>`${a} against ${b}`],["Preparation",()=>"From the committed plan"],["Matchup",()=>"Posture against the public meta"],["Adaptation",()=>"Players and head coach"],["Match-day variance",()=>"Decided on the day"]],
+  result:w=> w?"Win":"Loss", resultSub:(w,o)=> w?`Halong Tide beat ${o}.`:`${o} beat Halong Tide.`
+ },
+ vi:{
+  season:n=>`Mùa ${n}`, dayOf:(d,l)=>`Ngày ${d}/${l}`, cash:"Tiền mặt", cont:"Tiếp tục", blocked:"Cần chốt kế hoạch trận trước", demoEnd:"Hết mùa của bản demo", watching:"Trận đang diễn ra",
+  nav:{portal:"Tổng quan",inbox:"Hộp thư",squad:"Đội hình",competition:"Thi đấu",commercial:"Thương mại",finance:"Tài chính",staff:"Ban huấn luyện",company:"Công ty"},
+  save:"Lưu", load:"Tải", saved:"Đã lưu vào ô 1", loaded:"Đã tải ô 1",
+  matchIn:n=> n===0?"Thi đấu hôm nay": n===1?"Thi đấu ngày mai":`Còn ${n} ngày tới trận`, stakes:x=> x>1?"Hệ số gấp đôi":"Hệ số thường",
+  intent:p=>`Họ thường chơi ${POSTL.vi[p]}`, conf:c=>["độ tin cậy thấp","độ tin cậy vừa","độ tin cậy cao"][c],
+  winBefore:l=>`Khả năng thắng trước khi chuẩn bị: ${l}`, range:(a,b)=>a===b?a:`${a} đến ${b.toLowerCase()}`,
+  prepare:"Chuẩn bị trận", reviewPlan:"Xem kế hoạch", planDone:(p,a)=>`Đã chốt kế hoạch: ${POSTL.vi[p]}, ${a}`, noMatch:"Mùa này đã hết trận",
+  decide:(n,d)=> `${n===2?"Hai nhà tài trợ":"Một nhà tài trợ"} cần câu trả lời ${d===0?"trong hôm nay":d===1?"trước ngày mai":`trong ${d} ngày`}`,
+  slotFree:"Còn một suất tài trợ, nên chỉ ký được một bên.", slotsFull:"Đã dùng hết hai suất tài trợ.", nothing:"Không có việc cần quyết", nothingSub:"Đề nghị mới và việc hợp đồng sẽ hiện ở đây.",
+  perWeek:(p,w)=>`${p} CU mỗi tuần trong ${w} tuần`, loadAB:(a,b)=>`Tải ${a} → ${b}`, review:"Xem",
+  loadHolds:(l,c)=>`Tải giữ ở mức ${l}/${c}`, spare:s=>`Còn trống ${s}, không đổi trong bốn tuần tới.`,
+  cash4:"Tiền mặt sau bốn tuần", cash4note:"Ước tính. Mức trên giả định thắng mọi trận.",
+  record:"Thành tích mùa", recordLine:(w,l,r)=>`Thắng ${w}, thua ${l}, còn ${r} trận`,
+  sectors:{tele:"Viễn thông", hw:"Phần cứng"},
+  inboxH:(n,k)=> k ? `${n} thư, ${k} thư cần trả lời` : `${n} thư, không thư nào cần trả lời`,
+  tabs:{all:"Tất cả",offer:"Tài trợ",contract:"Hợp đồng",match:"Trận đấu"}, colDay:"Ngày", colFrom:"Từ", colMsg:"Nội dung", colStatus:"Trạng thái",
+  league:"Ban tổ chức giải", kinds:{offer:"Tài trợ",contract:"Hợp đồng",match:"Trận đấu"},
+  mOffer:o=>`Đề nghị ${o.pay} CU mỗi tuần trong ${o.days/7} tuần, thêm ${o.load} tải giao hàng.`, mSchedule:"Lịch mùa 1 đã công bố: 8 trận, lượt về hệ số gấp đôi.",
+  mResult:(w,o)=>`${w?"Thắng":"Thua"} trước ${o}.`, mExpired:b=>`${b} đã rút đề nghị.`, mSigned:n=>`${n} đã ký hợp đồng.`, mAccepted:b=>`Hợp đồng với ${b} bắt đầu hôm nay.`,
+  stAnswer:d=> d===0?"Trả lời hôm nay":`Trả lời trong ${d} ngày`, stAccepted:"Đã nhận", stExpired:"Đã hết hạn", stNone:"",
+  squadH:(n,ok)=> `${n} cầu thủ, ${ok?"đủ mọi vai trò":"đang thiếu một vai trò"}`,
+  colPlayer:"Cầu thủ", colRole:"Vai trò", colExec:"Thực thi", colReady:"Sẵn sàng", colWage:"Lương mỗi tuần", colEnd:"Hết hợp đồng", dayN:d=>`Ngày ${d}`,
+  fa:"Cầu thủ tự do", colName:"Tên", colAbility:"Năng lực, ước tính", colFee:"Phí", colUntil:"Còn đến",
+  roleUnder:r=>`Vai trò ${r}, đang có hợp đồng`, execKnown:"Thực thi, đã biết qua thi đấu", execEst:"Thực thi, ước tính tới khi ra sân", readiness:n=>`Sẵn sàng ${n}`,
+  contractLine:(d,r)=>`Hợp đồng hết vào ngày ${d}. Đàm phán gia hạn mở từ ngày ${r}.`, contractLong:d=>`Hợp đồng hết vào ngày ${d}.`,
+  renew:"Gia hạn", release:"Giải phóng", onlyRole:r=>`Là người duy nhất ở vai trò ${r}. Hãy ký người thay trước khi giải phóng.`, renewLater:r=>`Gia hạn mở từ ngày ${r}.`,
+  faRole:r=>`Cầu thủ tự do, vai trò ${r}`, ability:(a,b)=>`Năng lực ${a}–${b}, ước tính`, holder:(r,n,x)=>`Đang giữ vai trò ${r}: ${n}, ${x}`,
+  feeWage:(f,w)=>`Phí ${f} CU, lương ${w} CU mỗi tuần`, sign:"Ký hợp đồng", rosterFull:"Đội đã đủ người.",
+  planFor:o=>`Kế hoạch trận gặp ${o}`, prep:"Chuẩn bị", seg:["Thực thi","Nghiên cứu đối thủ","Thích nghi meta"], posture:"Lối chơi", lineup:"Đội hình ra sân", roleN:r=>`Vai trò ${r}`,
+  ifCommit:"Nếu chốt kế hoạch này", mu3:"Đối đầu +3: lối chơi khớp meta hiện tại (cân bằng).", mu1:"Đối đầu −1: lối chơi lệch meta hiện tại (cân bằng).",
+  spread:["Độ dao động kết quả: hẹp.","Độ dao động kết quả: vừa.","Độ dao động kết quả: rộng."], winMove:(a,b)=>`Khả năng thắng hiện tại: ${a.toLowerCase()}. Với kế hoạch này: ${b.toLowerCase()}.`, winSame:a=>`Khả năng thắng giữ ở mức ${a.toLowerCase()}.`,
+  prepNote:"Công chuẩn bị tích luỹ mỗi ngày tới ngày thi đấu, chưa tính ở đây.", commit:"Chốt", committed:"Đã chốt kế hoạch.", dupe:"Mỗi cầu thủ chỉ giữ được một vai trò.",
+  season1:"Mùa 1", secondHalf:"Lượt về, hệ số gấp đôi", won:"Thắng", lost:"Thua", today:"Hôm nay",
+  h2h:"Đối đầu từng đội", colRival:"Đối thủ", colW:"Thắng", colL:"Thua", colLeft:"Còn", allocLine:(e,o,m)=>`Thực thi ${e}%, nghiên cứu đối thủ ${o}%, thích nghi meta ${m}%.`,
+  slotH:"Còn một suất tài trợ", slotsH:"Đã dùng hết hai suất tài trợ", noOffers:"Không có đề nghị nào đang chờ",
+  rowWeek:"Mỗi tuần", rowLen:"Thời hạn", rowTotal:"Nếu chạy hết hạn", rowLoad:"Tải sau khi ký", rowSpare:"Còn trống sau khi ký", weeks:w=>`${w} tuần`,
+  loadOf:(a,b,c)=>`${a} → ${b}/${c}`, accept:"Nhận", answerIn:d=> d===0?"Trả lời hôm nay":`Trả lời trong ${d} ngày`, wasAccepted:"Đã ký", wasExpired:"Đã hết hạn", slotTaken:"Hết suất",
+  current:"Hợp đồng đang chạy", agreeLine:(p,e,l,b)=>`${p} CU mỗi tuần tới ngày ${e}. Tải ${l}${b?`, thưởng thắng ${b} CU`:""}.`, slotsUsed:(a,b)=>`Suất tài trợ: đã dùng ${a}/${b}`,
+  finH:n=> n<0?`Sau thu tài trợ, tiền mặt giảm khoảng ${-n} CU mỗi tuần`:`Sau thu tài trợ, tiền mặt tăng khoảng ${n} CU mỗi tuần`,
+  finLegend:"Đường liền: tiền dự kiến. Dải gạch chéo: phần thêm nếu thắng mọi trận. Chưa tính tiền thưởng giải.", week:"Một tuần điển hình",
+  rIncome:"Thu tài trợ", rPlayers:"Lương cầu thủ", rCoach:"HLV trưởng", rNet:"Chênh lệch", noArrears:"Không có khoản nợ quá hạn.",
+  coachH:n=>`HLV trưởng: ${n}`, attrs:["Chuẩn bị","Phân tích","Thích nghi","Sức chứa công việc"], coachEnd:d=>`Hợp đồng hết vào ngày ${d}. Lương ${COACH_WAGE} CU mỗi tuần.`,
+  coachMarket:"Thị trường HLV", colSkill:"Trình độ, ước tính", hire:"Thuê",
+  compH:"Công ty", colours:"Màu chọn khi thành lập công ty", rep:"Danh tiếng", aud:"Khán giả", slotsK:"Suất tài trợ", loadK:"Tải",
+  confirmSponsor:b=>`Nhận tài trợ của ${b}?`, cLoad:"Tải", cIncome:"Thu tài trợ mỗi tuần", cSlots:"Suất tài trợ", otherGone:o=>`Sẽ không ký được ${o} nữa.`,
+  confirmSign:n=>`Ký hợp đồng với ${n}?`, cCash:"Tiền mặt", cWages:"Lương mỗi tuần", cSquad:"Số cầu thủ", cancel:"Huỷ",
+  matchNo:(s,n)=>`Mùa ${s}, trận ${n}`, winChance:"Khả năng thắng", skip:"Bỏ qua",
+  factors:[["Đội hình so với sức mạnh đối thủ",(a,b)=>`${a} so với ${b}`],["Chuẩn bị",()=>"Từ kế hoạch đã chốt"],["Đối đầu",()=>"Lối chơi so với meta"],["Thích nghi",()=>"Cầu thủ và HLV trưởng"],["Biến động ngày thi đấu",()=>"Quyết định trong ngày"]],
+  result:w=> w?"Thắng":"Thua", resultSub:(w,o)=> w?`Halong Tide thắng ${o}.`:`${o} thắng Halong Tide.`
+ }
+};
+const NOTES = {
+  portal:["Khối trận tới chiếm gần nửa vùng nội dung. Hai nửa mang màu hai đội, đội mình luôn bên trái, mã đội cỡ 48 (overlay phát sóng LCK).","Điểm đội hình của ta và khoảng sức mạnh đối thủ nằm trên cùng một trục. Khả năng thắng là mức có tên, không có phần trăm (bài học XCOM).","Thư cần trả lời gộp vào danh sách quyết định, nên Portal không còn khối Inbox riêng (Football Manager 26, Victoria 3).","Load không đổi nên chỉ là một câu và một thước đo (Frostpunk). Lịch bốn tuần nằm ở Competition, để mỗi thông tin xuất hiện một lần.","Continue không ghi điểm dừng, vì khối trận tới đã nói điều đó."],
+  inbox:["Hộp thư dạng danh sách có người gửi, ngày và trạng thái, không phải chat (Football Manager 26 đã thử kiểu WhatsApp rồi bỏ).","Loại thư là một cột chữ, không có sọc màu bên trái.","Bấm một thư để tới đúng khu vực xử lý nó."],
+  squad:["Tên người luôn hiện đầy đủ, không cắt. Không có chữ cái chìm hay ô chữ cái đầu tên.","Sắp theo vai trò hoặc theo hạn hợp đồng, hai cách nghĩ khác nhau về cùng một đội (Victoria 3).","Bảng là phần tóm tắt, hồ sơ là một cú bấm, và phím mũi tên đổi người (OOTP).","Năng lực cầu thủ tự do là khoảng gạch chéo, kèm vạch của người đang giữ vai đó. Lương tính theo tuần, làm tròn."],
+  competition:["Một thanh tổng luôn bằng 100% thay cho ba spinbox. Màu đoạn lấy từ thang xám chung, không dùng tím.","Hệ quả hiện ngay cạnh nút Chốt, trước khi cam kết (Into the Breach). Mức thắng lấy từ công thức thật, gồm khoảng sức mạnh và đối đầu ±3/−1.","Dải mùa cao 120px, vạch Hôm nay dịch chuyển khi bấm Continue.","Đổi đội hình là điểm của đội mình trên Portal đổi theo.","Bỏ bảng đối đầu từng đội: dải mùa đã cho thấy kết quả từng trận, giữ mỗi thông tin một lần."],
+  commercial:["So sánh theo hệ quả: tải sau khi ký, phần còn trống, tổng tiền nếu chạy hết hạn (Into the Breach).","Chỉ còn một suất, nên ký một bên thì bên kia bị khoá và hộp xác nhận nói rõ điều đó.","Nút Nhận là nút phụ. Màu vàng chỉ xuất hiện ở nút Chốt trong hộp xác nhận."],
+  finance:["Tiền mặt như bản dự báo thời tiết bốn tuần, có trục, mốc ngày và nhãn (Frostpunk).","Dải gạch chéo là phần ước tính duy nhất trên màn hình: tiền thêm nếu thắng mọi trận.","Một tuần điển hình thay cho bảng 14 dòng, số làm tròn đến đơn vị."],
+  staff:["Thuộc tính HLV là thanh Known. Ứng viên là khoảng ước tính trên cùng thang, kèm vạch của HLV hiện tại.","Màn hình tối thiểu, chưa có quyền tự quyết của HLV."],
+  company:["Màn hình nhận diện: huy hiệu không chữ, màu đội, mã đội.","Bản thật sẽ gồm phần không gian vận hành đã có ở genre shell."],
+  match:["Ngày thi đấu là một chương trình riêng: rail ẩn, Continue ẩn cho tới khi có kết quả, kiểu \"overlay im lặng khi trận ồn\" (LHM, LCK).","Từng thành phần của CompetitiveOutcome hiện lần lượt, mức thắng chạy theo (Balatro). Tăng màu xanh, giảm màu đỏ, đều là màu ngữ nghĩa có sẵn.","Nửa của đội thua nhạt đi khi lộ kết quả. Reduced motion hiện đủ ngay lập tức.","Số điểm từng thành phần là minh hoạ, công thức là thật."]
+};
+
+/* ---------- state ---------- */
+let S, timers = [];
+function fresh(lang){
+  return {lang: lang || "en", screen:"portal", day:1, cash:2600, plan:null, played:{}, results:[], offers:{lumen:"open", kestrel:"open"},
+    sponsors:[{id:"north",name:"Northfield Coffee",pay:300,load:12,bonus:25,start:-3,end:56}],
+    players: PLAYERS.map(p => ({...p})), agents: AGENTS.map(a => ({...a})), sel:"p1", alloc:[50,80], posture:1, lineup:["p1","p2","p3","p4","p5"],
+    tab:"all", sort:"role", confirm:null, match:null, toast:"", notice:"",
+    msgs:[{day:1,kind:"offer",ref:"lumen"},{day:1,kind:"offer",ref:"kestrel"},{day:1,kind:"match",ref:"schedule"}]};
+}
+const T = () => L[S.lang];
+const nf = n => new Intl.NumberFormat(S.lang === "vi" ? "vi-VN" : "en-US", {maximumFractionDigits:0}).format(Math.round(n));
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+const load = () => BASE_LOAD + S.sponsors.reduce((a, s) => a + (S.day <= s.end ? s.load : 0), 0);
+const weeklyWages = () => S.players.reduce((a, p) => a + p.wage, 0);
+const pending = () => Object.keys(S.offers).filter(k => S.offers[k] === "open");
+const freeSlots = () => 2 - S.sponsors.filter(s => S.day <= s.end).length;
+const nextFix = () => FIX.find(f => f.day > S.day || (f.day === S.day && !S.played[f.day]));
+const todayFix = () => FIX.find(f => f.day === S.day && !S.played[f.day]);
+const person = id => S.players.find(p => p.id === id);
+function lineupValue(ids){
+  const ps = ids.map(person).filter(Boolean);
+  const lo = ps.reduce((a, p) => a + (p.ex != null ? p.ex : p.lo) * p.rd / 100, 0) / ps.length;
+  const hi = ps.reduce((a, p) => a + (p.ex != null ? p.ex : p.hi) * p.rd / 100, 0) / ps.length;
+  return [Math.round(lo), Math.round(hi)];
+}
+function levelIdx(p){ return p < 35 ? 0 : p < 45 ? 1 : p <= 55 ? 2 : p <= 65 ? 3 : 4; }
+function levelRange(our, rv, extra){
+  const lo = 50 + (our[0] - rv.hi + extra) * 1.2, hi = 50 + (our[1] - rv.lo + extra) * 1.2;
+  return T().range(LEVEL[S.lang][levelIdx(lo)], LEVEL[S.lang][levelIdx(hi)]);
+}
+function sponsorPays(s, d){ return d > s.start && d <= s.end && (d - s.start) % 7 === 0; }
+function forecast(days){
+  let cash = S.cash, bonus = 0; const out = [{d:S.day, base:cash, hi:cash}];
+  const wins = S.sponsors.reduce((a, s) => a + s.bonus, 0);
+  for (let d = S.day + 1; d <= S.day + days; d++){
+    cash -= (weeklyWages() + COACH_WAGE) / 7;
+    for (const s of S.sponsors) if (sponsorPays(s, d)) cash += s.pay;
+    if (FIX.some(f => f.day === d)) bonus += wins;
+    out.push({d, base:cash, hi:cash + bonus});
+  }
+  return out;
+}
+const r10 = n => Math.round(n / 10) * 10;
+
+/* ---------- rendering ---------- */
+const frame = document.getElementById("frame");
+function render(){
+  const t = T();
+  frame.innerHTML = topBar(t) + (S.match ? matchView(t) : rail(t) + `<main class="content" id="content">${screen(t)}</main>`) + (S.confirm ? dialog(t) : "");
+  bindAlloc();
+  document.getElementById("notesTitle").textContent = "Màn hình này: " + (S.match ? "ngày thi đấu" : L.vi.nav[S.screen].toLowerCase());
+  document.getElementById("notes").innerHTML = NOTES[S.match ? "match" : S.screen].map(n => `<li>${esc(n)}</li>`).join("");
+  requestAnimationFrame(audit);
+}
+function continueState(){
+  if (S.match) return S.match.done ? {ok:true} : {ok:false, why:T().watching, hidden:true};
+  const f = todayFix();
+  if (f && (!S.plan || S.plan.day !== f.day)) return {ok:false, why:T().blocked};
+  if (S.day >= SEASON) return {ok:false, why:T().demoEnd};
+  return {ok:true};
+}
+function topBar(t){
+  const c = continueState();
+  return `<header class="top">
+    <div><div class="f14 tx2">${t.season(1)}</div><div class="f20 w6 num">${t.dayOf(S.day, SEASON)}</div></div>
+    <div><div class="f14 tx2">${t.cash}</div><div class="f20 w6 num">${nf(S.cash)} CU</div></div>
+    <div class="grow"></div>
+    ${S.toast ? `<div class="f14 tx2" role="status">${esc(S.toast)}</div>` : ""}
+    ${!c.ok && !c.hidden ? `<div class="f14 warn" data-must>${esc(c.why)}</div>` : ""}
+    ${c.hidden ? "" : `<button class="btn gold" data-gold data-must data-act="continue" ${c.ok ? "" : "disabled"}>${t.cont}</button>`}
+  </header>`;
+}
+function rail(t){
+  const us = CLUBS.us, unread = S.msgs.filter(m => m.kind === "offer" && S.offers[m.ref] === "open").length;
+  const items = ["portal","inbox","squad","competition","commercial","finance","staff","company"];
+  return `<nav class="rail" aria-label="Sections">
+    <div class="club">${crest(us.arms, 48)}<div><div class="f16 w6">${esc(us.name)}</div><div class="f14 tx2 disp">${us.code}</div></div></div>
+    ${items.map((k, i) => `<button class="nav f16${S.screen === k ? " is-sel" : ""}" data-act="nav" data-id="${k}" aria-current="${S.screen === k}" title="Alt+${i+1}"><span>${t.nav[k]}</span>${k === "inbox" && unread ? `<span class="f14 tx2 num">${unread}</span>` : ""}</button>`).join("")}
+    <div class="sys-btns"><button class="btn small" data-act="save">${t.save}</button><button class="btn small" data-act="loadgame">${t.load}</button></div>
+  </nav>`;
+}
+function screen(t){
+  return ({portal, inbox, squad, competition, commercial, finance, staff, company})[S.screen](t);
+}
+
+/* axis: our value or range against their estimated range, same scale */
+let svgN = 0;
+function hatchDef(id){ return `<pattern id="${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" style="fill:var(--est)" fill-opacity=".12"/><line x1="0" y1="0" x2="0" y2="6" style="stroke:var(--est)" stroke-width="2"/></pattern>`; }
+function axisSVG(our, rv, w){
+  const id = "ax" + (++svgN), h = 64, pl = 8, pr = 8, X = v => pl + (v - 40) / 50 * (w - pl - pr);
+  let o = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Lineup ${our.join("–")} against strength ${rv.lo}–${rv.hi}"><defs>${hatchDef(id)}</defs>`;
+  o += `<line x1="${X(40)}" x2="${X(90)}" y1="32" y2="32" style="stroke:var(--line2)" stroke-width="2"/>`;
+  for (let v = 40; v <= 90; v += 10){ o += `<line x1="${X(v)}" x2="${X(v)}" y1="28" y2="36" style="stroke:var(--line2)"/>`; if (our[0] !== our[1] || Math.abs(v - our[0]) >= 7) o += `<text x="${X(v)}" y="58" font-size="12" text-anchor="middle" style="fill:var(--tx3)">${v}</text>`; }
+  o += `<rect x="${X(rv.lo)}" y="24" width="${X(rv.hi) - X(rv.lo)}" height="16" fill="url(#${id})" style="stroke:var(--est)" stroke-width="2"/>`;
+  o += `<text x="${(X(rv.lo) + X(rv.hi)) / 2}" y="16" font-size="12" text-anchor="middle" style="fill:var(--est)">${CLUBS[rv.id].code} ${rv.lo}–${rv.hi}</text>`;
+  if (our[0] === our[1]) o += `<rect x="${X(our[0]) - 2}" y="18" width="4" height="28" style="fill:var(--tx)"/><text x="${X(our[0])}" y="58" font-size="12" font-weight="600" text-anchor="middle" style="fill:var(--tx)" paint-order="stroke" stroke-width="6" stroke="#1B1C1F">${CLUBS.us.code} ${our[0]}</text>`;
+  else o += `<rect x="${X(our[0])}" y="26" width="${X(our[1]) - X(our[0])}" height="12" fill="url(#${id})" style="stroke:var(--tx)" stroke-width="2"/>`;
+  return o + `</svg>`;
+}
+
+function portal(t){
+  const f = nextFix(), us = CLUBS.us;
+  let hero;
+  if (f){
+    const rv = CLUBS[f.r], our = lineupValue(S.lineup), planned = S.plan && S.plan.day === f.day;
+    hero = `<section class="hero" data-must aria-label="Next match">
+      <div class="halves">
+        <div class="half us onclub" style="background:${shade(us.arms.pal[0], .3)}">${crest(us.arms, 112)}<div><div class="f48 disp num">${us.code}</div><div class="f16">${esc(us.name)}</div></div></div>
+        <div class="half them onclub" style="background:${shade(rv.arms.pal[0], .3)}">${crest(rv.arms, 112)}<div><div class="f48 disp num">${rv.code}</div><div class="f16">${esc(rv.name)}</div></div></div>
+        <div class="when"><div class="f20 w6">${t.matchIn(f.day - S.day)}</div><div class="f14 tx2">${t.stakes(f.x)}</div></div>
+      </div>
+      <div class="band">
+        ${axisSVG(our, rv, 560)}
+        <div><div class="f14 tx2">${t.intent(rv.post)}, ${t.conf(rv.conf)}</div><div class="f16 w6">${t.winBefore(levelRange(our, rv, 0))}</div>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:8px">${planned ? `<span class="f14 tx2">${t.planDone(S.plan.posture, S.plan.alloc)}</span><button class="btn small" data-act="nav" data-id="competition">${t.reviewPlan}</button>` : `<button class="btn small" data-act="nav" data-id="competition">${t.prepare}</button>`}</div></div>
+      </div></section>`;
+  } else hero = `<section class="hero" data-must><div class="panel f20 w6">${t.noMatch}</div></section>`;
+  const open = pending(), dleft = 7 - S.day;
+  const decide = open.length ? `<h2 class="h f20" data-must>${t.decide(open.length, dleft)}</h2><p class="f14 tx2" style="margin:4px 0 0">${freeSlots() > 0 ? t.slotFree : t.slotsFull}</p>
+      ${open.map(k => { const o = OFFERS[k]; return `<div class="drow"><div><div class="f16 w6">${o.name}</div><div class="f14 tx2">${t.sectors[o.sector]}</div></div><div class="f14 num">${t.perWeek(o.pay, o.days/7)}</div><div class="f14 num">${t.loadAB(load(), load() + o.load)}</div><button class="btn small" data-act="nav" data-id="commercial">${t.review}</button></div>`; }).join("")}`
+    : `<h2 class="h f20" data-must>${t.nothing}</h2><p class="f14 tx2" style="margin:4px 0 0">${t.nothingSub}</p>`;
+  const fc = forecast(28), end = fc[fc.length - 1], l = load();
+  const w = S.results.filter(r => r.won).length, lo = S.results.length - w;
+  return hero + `<div class="lower"><div>${decide}</div>
+    <div class="stack">
+      <div><div class="f20 w6 num">${t.loadHolds(l, CAP)}</div><div class="gauge" role="img" aria-label="${l} of ${CAP}"><i style="width:${l/110*100}%"></i><b style="left:${CAP/110*100}%"></b></div><div class="f14 tx2" style="margin-top:8px">${t.spare(CAP - l)}</div></div>
+      <div><div class="f14 tx2">${t.cash4}</div><div class="f24 w6 est num">${nf(r10(end.base))}–${nf(r10(end.hi))} CU</div><div class="f14 tx2">${t.cash4note}</div></div>
+      <div><div class="f14 tx2">${t.record}</div><div class="f16 w6 num">${t.recordLine(w, lo, FIX.length - S.results.length)}</div></div>
+    </div></div>`;
+}
+
+function msgView(m){
+  const t = T();
+  if (m.kind === "offer"){ const o = OFFERS[m.ref], st = S.offers[m.ref]; return {from:o.name, text:t.mOffer(o), status: st === "open" ? t.stAnswer(7 - S.day) : st === "accepted" ? t.stAccepted : st === "closed" ? t.slotTaken : t.stExpired, go:"commercial", warn: st === "open"}; }
+  if (m.ref === "schedule") return {from:t.league, text:t.mSchedule, status:"", go:"competition"};
+  if (m.ref === "result") return {from:t.league, text:t.mResult(m.won, CLUBS[m.r].name), status:"", go:"competition"};
+  if (m.ref === "expired") return {from:OFFERS[m.o].name, text:t.mExpired(OFFERS[m.o].name), status:"", go:"commercial"};
+  if (m.ref === "accepted") return {from:OFFERS[m.o].name, text:t.mAccepted(OFFERS[m.o].name), status:"", go:"commercial"};
+  if (m.ref === "signed") return {from:m.name, text:t.mSigned(m.name), status:"", go:"squad"};
+  return {from:"", text:"", status:"", go:"portal"};
+}
+function inbox(t){
+  const all = [...S.msgs].reverse(), list = all.filter(m => S.tab === "all" || m.kind === S.tab), need = pending().length;
+  return `<h2 class="h f20" data-must>${t.inboxH(S.msgs.length, need)}</h2>
+    <div class="tabs" role="tablist">${["all","offer","contract","match"].map(k => `<button class="tab${S.tab === k ? " is-sel" : ""}" role="tab" aria-selected="${S.tab === k}" data-act="tab" data-id="${k}">${t.tabs[k]}</button>`).join("")}</div>
+    <table class="tbl"><thead><tr><th>${t.colDay}</th><th>${t.colFrom}</th><th>${t.colStatus}</th><th style="width:55%">${t.colMsg}</th></tr></thead><tbody>
+    ${list.map(m => { const v = msgView(m); return `<tr data-act="nav" data-id="${v.go}" tabindex="0"><td class="num">${m.day}</td><td class="w6">${esc(v.from)}<div class="f14 tx2" style="font-weight:400">${t.kinds[m.kind]}</div></td><td class="${v.warn ? "warn" : "tx2"}">${esc(v.status)}</td><td>${esc(v.text)}</td></tr>`; }).join("")}
+    </tbody></table>`;
+}
+
+function squad(t){
+  const roles = ["A","B","C","D","E"], covered = roles.every(r => S.players.some(p => p.role === r));
+  const ps = [...S.players].sort(S.sort === "role" ? (a,b) => a.role.localeCompare(b.role) || a.name.localeCompare(b.name) : (a,b) => a.end - b.end || a.role.localeCompare(b.role));
+  const ex = p => p.ex != null ? `${p.ex}` : `<span class="est">${p.lo}–${p.hi}</span>`;
+  const table = `<table class="tbl" id="ptable"><thead><tr><th><span>${t.colPlayer}</span></th><th><button class="sortb${S.sort === "role" ? " is-on" : ""}" data-act="sort" data-id="role">${t.colRole}</button></th><th class="r">${t.colExec}</th><th class="r">${t.colReady}</th><th class="r">${t.colWage}</th><th><button class="sortb${S.sort === "end" ? " is-on" : ""}" data-act="sort" data-id="end">${t.colEnd}</button></th></tr></thead><tbody>
+    ${ps.map(p => `<tr class="${S.sel === p.id ? "is-sel" : ""}" data-act="sel" data-id="${p.id}" tabindex="0"><td class="w6">${esc(p.name)}</td><td>${p.role}</td><td class="r num">${ex(p)}</td><td class="r num">${p.rd}</td><td class="r num">${p.wage}</td><td class="num">${t.dayN(p.end)}</td></tr>`).join("")}</tbody></table>`;
+  const holderOf = r => S.players.filter(p => p.role === r && p.ex != null).sort((a,b) => b.ex - a.ex)[0];
+  const sc = v => (v - 40) / 60 * 100;
+  const fa = S.agents.length ? `<h3 class="h f20" style="margin-top:24px">${t.fa}</h3><table class="tbl"><thead><tr><th>${t.colName}</th><th>${t.colRole}</th><th>${t.colAbility}</th><th class="r">${t.colFee}</th><th class="r">${t.colWage}</th><th>${t.colUntil}</th></tr></thead><tbody>
+    ${S.agents.map(a => { const h = holderOf(a.role); return `<tr class="${S.sel === a.id ? "is-sel" : ""}" data-act="sel" data-id="${a.id}" tabindex="0"><td class="w6">${esc(a.name)}</td><td>${a.role}</td><td><div style="display:flex;align-items:center;gap:12px"><div class="rng"><span class="hatch" style="left:${sc(a.lo)}%;width:${sc(a.hi) - sc(a.lo)}%"></span>${h ? `<b style="left:${sc(h.ex)}%"></b>` : ""}</div><span class="est num">${a.lo}–${a.hi}</span></div></td><td class="r num">${a.fee}</td><td class="r num">${a.wage}</td><td class="num">${t.dayN(a.until)}</td></tr>`; }).join("")}</tbody></table>` : "";
+  return `<div class="two"><div><h2 class="h f20" style="margin-bottom:12px">${t.squadH(S.players.length, covered)}</h2>${table}${fa}</div><aside class="panel" data-must aria-label="Profile">${profile(t)}</aside></div>`;
+}
+function profile(t){
+  const p = person(S.sel);
+  if (p){
+    const only = S.players.filter(q => q.role === p.role).length === 1, renewOpen = S.day >= p.end - 21;
+    return `<div class="f24 w6">${esc(p.name)}</div><div class="f14 tx2">${t.roleUnder(p.role)}</div>
+      <div style="margin-top:20px" class="f48 disp num">${p.ex != null ? p.ex : `<span class="est">${p.lo}–${p.hi}</span>`}</div><div class="f14 tx2">${p.ex != null ? t.execKnown : t.execEst}</div>
+      <div style="margin-top:16px" class="f14">${t.readiness(p.rd)}</div><div class="gauge"><i style="width:${p.rd}%"></i></div>
+      <p class="f14" style="margin:16px 0 0">${p.end <= SEASON ? t.contractLine(p.end, p.end - 21) : t.contractLong(p.end)}</p>
+      <div style="display:flex;gap:12px;margin-top:16px"><button class="btn small" ${renewOpen ? "" : "disabled"}>${t.renew}</button><button class="btn small" ${only ? "disabled" : ""}>${t.release}</button></div>
+      ${only ? `<p class="f14 tx2" style="margin:8px 0 0">${t.onlyRole(p.role)}</p>` : !renewOpen && p.end <= SEASON ? `<p class="f14 tx2" style="margin:8px 0 0">${t.renewLater(p.end - 21)}</p>` : ""}`;
+  }
+  const a = S.agents.find(x => x.id === S.sel);
+  if (!a) return "";
+  const h = S.players.filter(q => q.role === a.role && q.ex != null).sort((x,y) => y.ex - x.ex)[0], full = S.players.length >= 8;
+  return `<div class="f24 w6">${esc(a.name)}</div><div class="f14 tx2">${t.faRole(a.role)}</div>
+    <div style="margin-top:20px" class="f48 disp num est">${a.lo}–${a.hi}</div><div class="f14 tx2">${t.ability(a.lo, a.hi)}</div>
+    ${h ? `<p class="f14" style="margin:16px 0 0">${t.holder(a.role, esc(h.name), h.ex)}</p>` : ""}
+    <p class="f14" style="margin:8px 0 0">${t.feeWage(a.fee, a.wage)}</p>
+    <div style="margin-top:16px"><button class="btn small" data-act="ask-sign" data-id="${a.id}" ${full ? "disabled" : ""}>${t.sign}</button></div>${full ? `<p class="f14 tx2" style="margin:8px 0 0">${t.rosterFull}</p>` : ""}`;
+}
+
+function seasonStrip(w){
+  const t = T(), h = 124, X = d => 12 + (d - 1) / 55 * (w - 24);
+  let o = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Season 1, day ${S.day}">`;
+  o += `<rect x="${X(29)}" y="0" width="${X(56) - X(29) + 6}" height="${h}" style="fill:var(--s1)"/><text x="${X(29) + 6}" y="14" font-size="12" style="fill:var(--tx3)">${t.secondHalf}</text>`;
+  o += `<line x1="${X(1)}" x2="${X(56)}" y1="54" y2="54" style="stroke:var(--line2)" stroke-width="2"/>`;
+  for (const f of FIX){
+    const x = X(f.day), res = S.results.find(r => r.day === f.day), tall = f.x > 1 ? 18 : 11;
+    o += `<rect x="${x - 2}" y="${54 - tall}" width="4" height="${tall * 2}" style="fill:${res ? "var(--tx3)" : "var(--tx)"}"/>`;
+    o += `<text x="${x}" y="30" font-size="12" text-anchor="middle" font-weight="600" style="fill:var(--tx2);font-family:var(--disp)">${CLUBS[f.r].code}</text>`;
+    o += `<text x="${x}" y="88" font-size="12" text-anchor="middle" style="fill:var(--tx3)">${f.day}</text>`;
+    if (res) o += `<text x="${x}" y="104" font-size="12" text-anchor="middle" style="fill:${res.won ? "var(--pos)" : "var(--crit)"}">${res.won ? t.won : t.lost}</text>`;
+  }
+  const tx = X(S.day);
+  o += `<line x1="${tx}" x2="${tx}" y1="18" y2="${h - 16}" style="stroke:var(--tx)" stroke-width="2" stroke-dasharray="3 3"/><text x="${Math.min(tx + 4, w - 56)}" y="${h - 2}" font-size="12" style="fill:var(--tx)">${t.today} ${S.day}</text>`;
+  return o + `</svg>`;
+}
+function competition(t){
+  const f = nextFix();
+  if (!f) return `<h2 class="h f20">${t.noMatch}</h2>`;
+  const rv = CLUBS[f.r], [a, b] = S.alloc, segs = [a, b - a, 100 - b], our = lineupValue(S.lineup);
+  const mu = S.posture === 1 ? 3 : -1, before = levelRange(our, rv, 0), after = levelRange(our, rv, mu);
+  const dupe = new Set(S.lineup).size !== S.lineup.length, planned = S.plan && S.plan.day === f.day;
+  const roles = ["A","B","C","D","E"];
+  const opts = (r, cur) => S.players.map(p => `<option value="${p.id}" ${p.id === cur ? "selected" : ""}>${esc(p.name)}, ${p.role}, ${p.ex != null ? p.ex : p.lo + "–" + p.hi}</option>`).join("");
+  return `<div class="comp"><div>
+      <h2 class="h f20">${t.planFor(esc(rv.name))}</h2>
+      <div style="margin-top:16px" class="f14 tx2">${t.prep}</div>
+      <div class="alloc" id="alloc">${segs.map((v, i) => `<div class="sg f14" style="width:${v}%;background:var(--seg${i+1})" data-label="${esc(t.seg[i])} ${v}"></div>`).join("")}
+        <button class="h" id="h1" role="slider" aria-label="${esc(t.seg[0])} / ${esc(t.seg[1])}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${a}" style="left:${a}%"></button>
+        <button class="h" id="h2" role="slider" aria-label="${esc(t.seg[1])} / ${esc(t.seg[2])}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${b}" style="left:${b}%"></button></div>
+      <div class="f14 tx2 num" style="margin-top:8px">${t.allocLine(...segs)}</div>
+      <div style="margin-top:16px" class="f14 tx2">${t.posture}</div>
+      <div class="stance" role="group">${POST[S.lang].map((p, i) => `<button type="button" class="${S.posture === i ? "is-sel" : ""}" aria-pressed="${S.posture === i}" data-act="posture" data-id="${i}">${p}</button>`).join("")}</div>
+      <div style="margin-top:16px" class="f14 tx2">${t.lineup}</div>
+      <div class="lu">${roles.map((r, i) => `<label class="f14" for="lu${i}">${t.roleN(r)}</label><select id="lu${i}" data-act="lineup" data-id="${i}">${opts(r, S.lineup[i])}</select>`).join("")}</div>
+    </div>
+    <div>
+      <div class="preview" data-must><div class="f16 w6">${t.ifCommit}</div>
+        <p class="f14">${S.posture === 1 ? t.mu3 : t.mu1}</p><p class="f14">${t.spread[S.posture]}</p>
+        <p class="f14 w6">${before === after ? t.winSame(after) : t.winMove(before, after)}</p><p class="f14 tx2">${t.prepNote}</p>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:16px"><button class="btn gold" data-gold data-act="commit" ${dupe ? "disabled" : ""}>${t.commit}</button><span class="f14 ${dupe ? "warn" : "tx2"}">${dupe ? t.dupe : planned ? t.committed : ""}</span></div></div>
+      <h3 class="h f16" style="margin-top:24px">${t.season1}</h3>${seasonStrip(416)}
+    </div></div>`;
+}
+
+function commercial(t){
+  const open = pending(), keys = ["lumen","kestrel"], l = load(), free = freeSlots();
+  const head = k => { const o = OFFERS[k], st = S.offers[k]; return `<div><div class="f20 w6">${o.name}</div><div class="f14 tx2">${t.sectors[o.sector]}</div><div class="f14 ${st === "open" ? "warn" : "tx2"}">${st === "open" ? t.answerIn(7 - S.day) : st === "accepted" ? t.wasAccepted : st === "closed" ? t.slotTaken : t.wasExpired}</div></div>`; };
+  const loadCell = k => { const o = OFFERS[k], after = l + o.load; return `<div><div class="f14 num">${t.loadOf(l, after, CAP)}</div><div class="gauge" style="width:220px"><i style="width:${l/110*100}%"></i><u style="left:${l/110*100}%;width:${o.load/110*100}%"></u><b style="left:${CAP/110*100}%"></b></div></div>`; };
+  const act = k => { const st = S.offers[k]; if (st !== "open") return `<div class="f14 tx2">${st === "accepted" ? t.wasAccepted : st === "closed" ? t.slotTaken : t.wasExpired}</div>`; return free > 0 ? `<div><button class="btn small" data-must data-act="ask-sponsor" data-id="${k}">${t.accept}</button></div>` : `<div class="f14 tx2">${t.slotTaken}</div>`; };
+  const showCmp = keys.some(k => S.offers[k] !== "expired");
+  const cmp = showCmp ? `<div class="cmp" style="margin-top:16px"><div></div>${keys.map(head).join("")}
+      <div class="f14 tx2">${t.rowWeek}</div>${keys.map(k => `<div class="f20 w6 num">${OFFERS[k].pay} CU</div>`).join("")}
+      <div class="f14 tx2">${t.rowLen}</div>${keys.map(k => `<div class="f20 w6 num">${t.weeks(OFFERS[k].days/7)}</div>`).join("")}
+      <div class="f14 tx2">${t.rowTotal}</div>${keys.map(k => `<div class="f20 w6 num">${nf(OFFERS[k].pay * OFFERS[k].days / 7)} CU</div>`).join("")}
+      <div class="f14 tx2">${t.rowLoad}</div>${keys.map(loadCell).join("")}
+      <div class="f14 tx2">${t.rowSpare}</div>${keys.map(k => { const s = CAP - l - OFFERS[k].load; return `<div class="f20 w6 num ${s < 5 ? "warn" : ""}">${s}</div>`; }).join("")}
+      <div></div>${keys.map(act).join("")}</div>` : "";
+  return `<div class="two"><div><h2 class="h f20" data-must>${open.length ? (free > 0 ? t.slotH : t.slotsH) : t.noOffers}</h2>${cmp}</div>
+    <aside><h3 class="h f16">${t.current}</h3>${S.sponsors.map(s => `<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="f16 w6">${s.name}</div><div class="f14 tx2">${t.agreeLine(s.pay, s.end, s.load, s.bonus)}</div></div>`).join("")}<p class="f14 tx2" style="margin:12px 0 0">${t.slotsUsed(2 - free, 2)}</p></aside></div>`;
+}
+
+function finance(t){
+  const fc = forecast(28), income = S.sponsors.filter(s => S.day <= s.end).reduce((a, s) => a + s.pay, 0), pw = weeklyWages(), net = income - pw - COACH_WAGE;
+  const w = 1024, h = 260, pl = 64, pr = 96, pt = 16, pb = 40, id = "fh" + (++svgN);
+  const vals = fc.flatMap(p => [p.base, p.hi]), lo = Math.floor((Math.min(...vals) - 100) / 200) * 200, hi = Math.ceil((Math.max(...vals) + 100) / 200) * 200;
+  const X = d => pl + (d - S.day) / 28 * (w - pl - pr), Y = v => pt + (hi - v) / (hi - lo) * (h - pt - pb);
+  let o = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Cash forecast, next 28 days"><defs>${hatchDef(id)}</defs>`;
+  for (let v = lo; v <= hi; v += 400) o += `<line x1="${pl}" x2="${w - pr}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line)"/><text x="${pl - 8}" y="${Y(v) + 4}" font-size="12" text-anchor="end" style="fill:var(--tx3)">${nf(v)}</text>`;
+  for (let k = 0; k <= 4; k++){ const d = S.day + 7*k; o += `<line x1="${X(d)}" x2="${X(d)}" y1="${h - pb}" y2="${h - pb + 6}" style="stroke:var(--line2)"/><text x="${X(d)}" y="${h - 16}" font-size="12" text-anchor="middle" style="fill:var(--tx3)">${T().dayN(d)}</text>`; }
+  let band = `M${X(fc[0].d)} ${Y(fc[0].hi)}`; fc.forEach(p => band += ` L${X(p.d)} ${Y(p.hi)}`); for (let i = fc.length - 1; i >= 0; i--) band += ` L${X(fc[i].d)} ${Y(fc[i].base)}`;
+  o += `<path d="${band} Z" fill="url(#${id})"/>`;
+  o += `<path d="${fc.map((p, i) => (i ? "L" : "M") + X(p.d) + " " + Y(p.base)).join(" ")}" fill="none" style="stroke:var(--tx)" stroke-width="2"/>`;
+  for (const p of fc.slice(1)) for (const s of S.sponsors) if (sponsorPays(s, p.d)) o += `<text x="${X(p.d)}" y="${Y(p.base) - 10}" font-size="12" text-anchor="middle" style="fill:var(--pos)">+${s.pay}</text>`;
+  const e = fc[fc.length - 1];
+  o += `<circle cx="${X(fc[0].d)}" cy="${Y(fc[0].base)}" r="4" style="fill:var(--tx)"/><text x="${X(e.d) + 10}" y="${Y(e.base) + 4}" font-size="14" font-weight="600" style="fill:var(--tx)">${nf(r10(e.base))}</text><text x="${X(e.d) + 10}" y="${Y(e.hi) - 4}" font-size="12" style="fill:var(--est)">${nf(r10(e.hi))}</text></svg>`;
+  return `<h2 class="h f20" data-must>${t.finH(net)}</h2>${o}<p class="f14 tx2" style="margin:4px 0 0">${t.finLegend}</p>
+    <div class="two" style="margin-top:24px"><div><h3 class="h f16">${t.week}</h3><table class="tbl" style="max-width:520px"><tbody>
+      <tr><td>${t.rIncome}</td><td class="r num pos">+${nf(income)} CU</td></tr><tr><td>${t.rPlayers}</td><td class="r num">−${nf(pw)} CU</td></tr>
+      <tr><td>${t.rCoach}</td><td class="r num">−${COACH_WAGE} CU</td></tr><tr><td class="w6">${t.rNet}</td><td class="r num w6">${net < 0 ? "−" : "+"}${nf(Math.abs(net))} CU</td></tr></tbody></table></div>
+      <div><p class="f14 tx2" style="margin:28px 0 0">${t.noArrears}</p></div></div>`;
+}
+
+function staff(t){
+  const sc = v => (v - 40) / 60 * 100, vals = [COACH.prep, COACH.anal, COACH.adapt];
+  return `<div class="two"><div><h2 class="h f20">${t.coachH(COACH.name)}</h2>
+    ${t.attrs.map((a, i) => i < 3 ? `<div style="display:grid;grid-template-columns:200px 1fr 48px;gap:16px;align-items:center;margin-top:12px"><span class="f14">${a}</span><div class="gauge" style="margin:0"><i style="width:${vals[i]}%;background:var(--tx)"></i></div><span class="f16 w6 num" style="text-align:right">${vals[i]}</span></div>` : `<div style="display:grid;grid-template-columns:200px 1fr 48px;gap:16px;align-items:center;margin-top:12px"><span class="f14">${a}</span><div class="f14 tx2">${t.loadHolds(load(), CAP)}</div><span class="f16 w6 num" style="text-align:right">${COACH.cap}</span></div>`).join("")}
+    <p class="f14 tx2" style="margin:16px 0 0">${t.coachEnd(COACH.end)}</p>
+    <h3 class="h f20" style="margin-top:32px">${t.coachMarket}</h3>
+    <table class="tbl"><thead><tr><th>${t.colName}</th><th>${t.colSkill}</th><th class="r">${t.colFee}</th><th class="r">${t.colWage}</th><th>${t.colUntil}</th><th></th></tr></thead><tbody>
+    ${COACHES.map(c => `<tr><td class="w6">${c.name}</td><td><div style="display:flex;align-items:center;gap:12px"><div class="rng"><span class="hatch" style="left:${sc(c.lo)}%;width:${sc(c.hi) - sc(c.lo)}%"></span><b style="left:${sc(COACH.prep)}%"></b></div><span class="est num">${c.lo}–${c.hi}</span></div></td><td class="r num">${c.fee}</td><td class="r num">${c.wage}</td><td class="num">${t.dayN(c.until)}</td><td><button class="btn small" disabled>${t.hire}</button></td></tr>`).join("")}
+    </tbody></table></div><div></div></div>`;
+}
+function company(t){
+  const us = CLUBS.us, free = freeSlots();
+  return `<div style="display:flex;gap:32px;align-items:center">${crest(us.arms, 192)}<div><h2 class="h f32">${esc(us.name)}</h2><div class="f24 disp tx2">${us.code}</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:12px"><i style="width:24px;height:24px;border-radius:4px;background:${us.arms.pal[0]}"></i><i style="width:24px;height:24px;border-radius:4px;background:${us.arms.pal[1]}"></i><span class="f14 tx2">${t.colours}</span></div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:16px 56px;margin-top:40px">
+      <div><div class="f14 tx2">${t.rep}</div><div class="f32 w6 num">45</div></div><div><div class="f14 tx2">${t.aud}</div><div class="f32 w6 num">${nf(3200)}</div></div>
+      <div><div class="f14 tx2">${t.slotsK}</div><div class="f32 w6 num">${2 - free}/2</div></div><div><div class="f14 tx2">${t.loadK}</div><div class="f32 w6 num">${load()}/${CAP}</div></div></div>`;
+}
+
+function dialog(t){
+  const c = S.confirm; let title, rows, note = "";
+  if (c.kind === "sponsor"){
+    const o = OFFERS[c.id], l = load(), inc = S.sponsors.reduce((a, s) => a + s.pay, 0), other = Object.keys(OFFERS).find(k => k !== c.id && S.offers[k] === "open");
+    title = t.confirmSponsor(o.name);
+    rows = [[t.cLoad, t.loadOf(l, l + o.load, CAP)], [t.cIncome, `${nf(inc)} → ${nf(inc + o.pay)} CU`], [t.cSlots, `${2 - freeSlots()} → ${3 - freeSlots()} / 2`]];
+    if (other && freeSlots() === 1) note = t.otherGone(OFFERS[other].name);
+  } else {
+    const a = S.agents.find(x => x.id === c.id), pw = weeklyWages();
+    title = t.confirmSign(a.name);
+    rows = [[t.cCash, `${nf(S.cash)} → ${nf(S.cash - a.fee)} CU`], [t.cWages, `${nf(pw)} → ${nf(pw + a.wage)} CU`], [t.cSquad, `${S.players.length} → ${S.players.length + 1}`]];
+  }
+  return `<div class="scrim"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgT"><h2 class="h f20" id="dlgT">${esc(title)}</h2>
+    <div class="ba">${rows.map(([k, v]) => `<span class="f14 tx2">${k}</span><span class="f16 w6 num">${v}</span>`).join("")}</div>
+    ${note ? `<p class="f14 warn" style="margin:16px 0 0">${esc(note)}</p>` : ""}
+    <div class="acts"><button class="btn" data-act="cancel">${t.cancel}</button><button class="btn gold" data-gold data-must data-act="confirm">${t.commit}</button></div></div></div>`;
+}
+
+function matchView(t){
+  const m = S.match, us = CLUBS.us, rv = CLUBS[m.f.r], done = m.done;
+  const running = 50 + m.factors.slice(0, m.shown).reduce((a, f) => a + f.v, 0) * 1.2, lv = levelIdx(Math.max(5, Math.min(95, running)));
+  const pos = (Math.max(5, Math.min(95, running)) - 5) / 90 * 100;
+  return `<div class="matchday">
+    <div class="mhalf onclub${done && !m.won ? " dim" : ""}" style="background:${shade(us.arms.pal[0], .3)}">${crest(us.arms, 128)}<div class="f48 disp">${us.code}</div><div class="f16">${esc(us.name)}</div></div>
+    <div class="mhalf them onclub${done && m.won ? " dim" : ""}" style="background:${shade(rv.arms.pal[0], .3)}">${crest(rv.arms, 128)}<div class="f48 disp">${rv.code}</div><div class="f16">${esc(rv.name)}</div></div>
+    <div class="bug"><div class="f14 w6">${t.matchNo(1, m.f.n)}</div><div class="f12 tx2">${t.stakes(m.f.x)}</div></div>
+    <div class="plate" data-must>
+      ${done ? `<div class="f48 w6 ${m.won ? "pos" : "crit"}">${t.result(m.won)}</div><div class="f14 tx2">${esc(t.resultSub(m.won, rv.name))}</div>` : `<div class="f14 tx2">${t.winChance}</div><div class="f32 w6">${LEVEL[S.lang][lv]}</div>`}
+      <div class="zones" aria-hidden="true">${[0,1,2,3,4].map(i => `<span class="${i === lv ? "on" : ""}"></span>`).join("")}<b style="left:calc(${pos}% - 1px)"></b></div>
+      <div style="margin-top:12px">${m.factors.map((f, i) => `<div class="frow${i < m.shown ? "" : " hidden"}"><div><div class="f14 w6">${t.factors[i][0]}</div><div class="f12 tx2">${t.factors[i][1](f.a, f.b)}</div></div><div class="f20 w6 num ${f.v >= 0 ? "pos" : "crit"}">${f.v >= 0 ? "+" : "−"}${Math.abs(f.v)}</div></div>`).join("")}</div>
+      ${done ? "" : `<div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn small" data-act="skip">${t.skip}</button></div>`}
+    </div></div>`;
+}
+
+/* ---------- actions ---------- */
+function addMsg(m){ S.msgs.push(m); }
+function advance(){
+  const cands = [S.day + 7, SEASON];
+  const f = FIX.find(x => x.day > S.day); if (f) cands.push(f.day);
+  if (pending().length && S.day < 7) cands.push(7);
+  const to = Math.min(...cands);
+  for (let d = S.day + 1; d <= to; d++){
+    S.cash -= (weeklyWages() + COACH_WAGE) / 7;
+    for (const s of S.sponsors) if (sponsorPays(s, d)) S.cash += s.pay;
+    if (d > 7) for (const k of pending()){ S.offers[k] = "expired"; addMsg({day:d, kind:"offer", ref:"expired", o:k}); }
+  }
+  S.day = to; S.toast = "";
+}
+function startMatch(f){
+  const rv = RIVALS.find(r => r.id === f.r), our = lineupValue(S.lineup), base = Math.round((our[0] + our[1]) / 2);
+  const [a, b] = S.plan.alloc.split("/").map(Number), prep = Math.round((a + b * (S.plan.posture === rv.post ? 1 : .6) + (100 - a - b) * .7) / 30);
+  const spread = [4, 8, 12][S.plan.posture], hv = hash("variance" + f.day + rv.id), variance = hv % (2 * spread + 1) - spread;
+  const factors = [{v: base - rv.s, a: base, b: rv.s}, {v: prep}, {v: S.plan.posture === 1 ? 3 : -1}, {v: 2}, {v: variance}];
+  const p = Math.max(5, Math.min(95, 50 + factors.reduce((x, y) => x + y.v, 0) * 1.2)), won = (hash("result" + f.day) % 1000) / 10 < p;
+  S.match = {f, factors, won, shown: reduce ? factors.length : 0, done: false};
+  if (reduce) finishMatch(); else stepMatch();
+}
+function stepMatch(){
+  const m = S.match; render();
+  if (m.shown < m.factors.length) timers.push(setTimeout(() => { m.shown++; stepMatch(); }, 650));
+  else timers.push(setTimeout(finishMatch, 700));
+}
+function finishMatch(){
+  const m = S.match; if (!m || m.done) return;
+  m.shown = m.factors.length; m.done = true;
+  S.played[m.f.day] = true; S.results.push({day:m.f.day, r:m.f.r, won:m.won});
+  if (m.won) S.cash += S.sponsors.reduce((a, s) => a + s.bonus, 0);
+  addMsg({day:S.day, kind:"match", ref:"result", r:m.f.r, won:m.won}); S.plan = null;
+  render();
+}
+function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+function doContinue(){
+  if (!continueState().ok) return;
+  if (S.match && S.match.done){ S.match = null; S.screen = "portal"; render(); return; }
+  const f = todayFix();
+  if (f) { startMatch(f); return; }
+  advance(); render();
+}
+
+frame.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el || el.disabled) return;
+  const id = el.dataset.id, act = el.dataset.act;
+  if (act === "nav"){ S.screen = id; S.toast = ""; render(); }
+  else if (act === "continue") doContinue();
+  else if (act === "tab"){ S.tab = id; render(); }
+  else if (act === "sort"){ S.sort = id; render(); }
+  else if (act === "sel"){ S.sel = id; render(); const r = frame.querySelector(`tr[data-id="${id}"]`); if (r) r.focus(); }
+  else if (act === "posture"){ S.posture = +id; render(); }
+  else if (act === "commit"){ const f = nextFix(); S.plan = {day:f.day, posture:S.posture, alloc:`${S.alloc[0]}/${S.alloc[1] - S.alloc[0]}/${100 - S.alloc[1]}`}; render(); }
+  else if (act === "ask-sponsor" || act === "ask-sign"){ S.confirm = {kind: act === "ask-sponsor" ? "sponsor" : "sign", id}; render(); frame.querySelector('[data-act="confirm"]').focus(); }
+  else if (act === "cancel"){ S.confirm = null; render(); }
+  else if (act === "confirm"){
+    const c = S.confirm;
+    if (c.kind === "sponsor"){ const o = OFFERS[c.id]; S.offers[c.id] = "accepted"; S.sponsors.push({id:o.id, name:o.name, pay:o.pay, load:o.load, bonus:0, start:S.day, end:S.day + o.days}); addMsg({day:S.day, kind:"offer", ref:"accepted", o:c.id}); if (freeSlots() <= 0) for (const k of pending()) S.offers[k] = "closed"; }
+    else { const a = S.agents.find(x => x.id === c.id); S.cash -= a.fee; S.players.push({id:a.id, name:a.name, role:a.role, lo:a.lo, hi:a.hi, rd:80, wage:a.wage, end:S.day + 56}); S.agents = S.agents.filter(x => x.id !== a.id); addMsg({day:S.day, kind:"contract", ref:"signed", name:a.name}); }
+    S.confirm = null; render();
+  }
+  else if (act === "skip"){ clearTimers(); finishMatch(); }
+  else if (act === "save" || act === "loadgame"){ S.toast = act === "save" ? T().saved : T().loaded; render(); }
+});
+frame.addEventListener("change", e => {
+  const el = e.target.closest('[data-act="lineup"]'); if (!el) return;
+  S.lineup[+el.dataset.id] = el.value; render();
+});
+frame.addEventListener("keydown", e => {
+  const row = e.target.closest && e.target.closest("tr[data-act]");
+  if (row && (e.key === "Enter" || e.key === " ")){ row.click(); e.preventDefault(); return; }
+  if (row && (e.key === "ArrowDown" || e.key === "ArrowUp") && row.dataset.act === "sel"){
+    const rows = [...row.parentElement.querySelectorAll("tr[data-act]")], i = rows.indexOf(row), n = rows[i + (e.key === "ArrowDown" ? 1 : -1)];
+    if (n){ S.sel = n.dataset.id; render(); const r = frame.querySelector(`tr[data-id="${n.dataset.id}"]`); if (r) r.focus(); }
+    e.preventDefault();
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && S.confirm){ S.confirm = null; render(); }
+  if (e.key === "Enter" && e.ctrlKey){ doContinue(); e.preventDefault(); }
+  if (e.altKey && /^[1-8]$/.test(e.key) && !S.match){ S.screen = ["portal","inbox","squad","competition","commercial","finance","staff","company"][+e.key - 1]; render(); e.preventDefault(); }
+});
+
+/* allocation bar: drag handles or arrow keys, 5% steps, labels only where they fit */
+function bindAlloc(){
+  const box = document.getElementById("alloc"); if (!box) return;
+  box.querySelectorAll(".sg").forEach(sg => { const span = document.createElement("span"); span.textContent = sg.dataset.label; sg.appendChild(span); if (span.offsetWidth > sg.clientWidth - 20) span.textContent = sg.dataset.label.split(" ").pop(); if (span.offsetWidth > sg.clientWidth - 20) span.remove(); });
+  const set = (w, v) => { v = Math.round(v / 5) * 5; if (w === 1) S.alloc[0] = Math.max(0, Math.min(S.alloc[1], v)); else S.alloc[1] = Math.max(S.alloc[0], Math.min(100, v)); };
+  [["h1",1],["h2",2]].forEach(([hid, w]) => {
+    const h = document.getElementById(hid);
+    h.addEventListener("keydown", e => { const cur = S.alloc[w - 1]; if (e.key === "ArrowLeft" || e.key === "ArrowRight"){ set(w, cur + (e.key === "ArrowRight" ? 5 : -5)); render(); document.getElementById(hid).focus(); e.preventDefault(); } });
+    h.addEventListener("pointerdown", e => {
+      h.setPointerCapture(e.pointerId);
+      const move = ev => { const r = box.getBoundingClientRect(); set(w, (ev.clientX - r.left) / r.width * 100); const [a, b] = S.alloc, segs = [a, b - a, 100 - b];
+        box.querySelectorAll(".sg").forEach((sg, i) => { sg.style.width = segs[i] + "%"; }); document.getElementById("h1").style.left = a + "%"; document.getElementById("h2").style.left = b + "%"; };
+      const up = () => { h.removeEventListener("pointermove", move); h.removeEventListener("pointerup", up); render(); const nh = document.getElementById(hid); if (nh) nh.focus(); };
+      h.addEventListener("pointermove", move); h.addEventListener("pointerup", up);
+    });
+  });
+}
+
+/* ---------- self audit against the agreed rules ---------- */
+function audit(){
+  const allowed = new Set([12,14,16,20,24,32,48]), sizes = new Set(), caps = [], cut = [], gold = [];
+  const fr = frame.getBoundingClientRect(), scale = fr.width / 1280 || 1;
+  for (const el of frame.querySelectorAll("*")){
+    const own = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+    const cs = getComputedStyle(el);
+    if (own && cs.display !== "none") sizes.add(Math.round(parseFloat(cs.fontSize)));
+    if (own && cs.textTransform === "uppercase" && !el.closest(".btn")) caps.push(el.textContent.trim());
+    if (own && el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(cs.overflowX)) cut.push(el.textContent.trim().slice(0, 30));
+    if (cs.backgroundColor === "rgb(230, 176, 75)" || (own && cs.color === "rgb(230, 176, 75)")) gold.push(el);
+  }
+  const badSizes = [...sizes].filter(s => !allowed.has(s)).sort((a,b) => a-b);
+  const goldBad = gold.filter(el => !el.hasAttribute("data-gold"));
+  const must = [...frame.querySelectorAll("[data-must]")], outside = must.filter(el => (el.getBoundingClientRect().bottom - fr.top) / scale > 720.5 || (el.getBoundingClientRect().right - fr.left) / scale > 1280.5);
+  const dots = frame.innerText.includes(" · ");
+  const rows = [
+    [badSizes.length === 0, `Cỡ chữ đang dùng: ${[...sizes].sort((a,b) => a-b).join(", ")}px${badSizes.length ? `. Ngoài thang: ${badSizes.join(", ")}` : ""}.`],
+    [goldBad.length === 0, `Màu vàng xuất hiện ở ${gold.length} phần tử, ${goldBad.length ? "có phần tử không phải Continue hay Commit" : "đều là Continue hoặc Commit"}.`],
+    [caps.length === 0, caps.length ? `In hoa ngoài nút: ${caps.slice(0,3).join(", ")}.` : "Không có chữ in hoa bằng CSS ngoài nhãn nút. Mã đội là chữ in hoa sẵn trong dữ liệu."],
+    [cut.length === 0, cut.length ? `Chữ bị cắt: ${cut.slice(0,3).join(", ")}.` : "Không có chữ bị cắt."],
+    [outside.length === 0, outside.length ? `${outside.length} phần tử bắt buộc nằm ngoài khung 1280×720.` : `${must.length} phần tử bắt buộc (khối chính, quyết định chính, Continue) đều nằm trong khung 1280×720 mà không cần cuộn.`],
+    [!dots, dots ? "Có dấu ' · ' trong khung." : "Không có dấu ' · ' nối thông tin."]
+  ];
+  document.getElementById("audit").innerHTML = rows.map(([ok, txt]) => `<li><span class="${ok ? "ok" : "no"}">${ok ? "Đạt" : "Chưa đạt"}</span><span class="f14 tx2">${esc(txt)}</span></li>`).join("");
+}
+
+/* ---------- scaling, controls, system section ---------- */
+const stage = document.getElementById("stage");
+function fit(){ const w = stage.clientWidth, s = Math.min(1, w / 1280); frame.style.transform = `scale(${s})`; stage.style.height = Math.round(720 * s) + "px"; }
+new ResizeObserver(() => { fit(); requestAnimationFrame(audit); }).observe(stage);
+document.querySelectorAll("[data-lang]").forEach(b => b.addEventListener("click", () => {
+  S.lang = b.dataset.lang; document.querySelectorAll("[data-lang]").forEach(x => x.classList.toggle("is-sel", x === b)); render();
+}));
+document.getElementById("reset").addEventListener("click", () => { clearTimers(); S = fresh(S.lang); render(); });
+
+document.getElementById("scale").innerHTML = [48,32,24,20,16,14,12].map(s => `<div><span>${s}</span><span class="f${s}${s >= 24 ? " w6" : ""}">${s >= 32 ? "Hợp đồng" : "Đàm phán gia hạn"}</span></div>`).join("");
+const SW = [["--bg","Nền"],["--s1","Bề mặt"],["--sel","Đang chọn"],["--tx","Chữ"],["--tx2","Chữ phụ"],["--gold","Continue, Commit"],["--pos","Tăng, tốt"],["--warn","Cảnh báo"],["--crit","Giảm, nguy"],["--est","Ước tính"]];
+const root = getComputedStyle(document.documentElement);
+document.getElementById("swatches").innerHTML = SW.map(([v, n]) => `<div class="sw"><i style="background:var(${v})"></i><span>${n}</span><span class="tx3 f12">${root.getPropertyValue(v).trim()}</span></div>`).join("");
+const partArms = [];
+for (let i = 0; i < 3; i++) partArms.push({name:"shape" + i, pal:PALS[0], shape:i, div:0, charge:0});
+for (let i = 1; i < 6; i++) partArms.push({name:"div" + i, pal:PALS[4], shape:0, div:i, charge:(i + 1) % 5});
+for (let i = 0; i < 5; i++) partArms.push({name:"charge" + i, pal:PALS[2], shape:1, div:0, charge:i});
+document.getElementById("parts").innerHTML = partArms.map(a => `<figure>${crest(a, 48)}</figure>`).join("") + Object.values(CLUBS).map(c => `<figure>${crest(c.arms, 48)}<figcaption class="disp">${c.code}</figcaption></figure>`).join("");
+
+// Deep links for review: #squad, #vi-competition, #match ...
+S = fresh("en");
+const tok = (location.hash || "").slice(1).split("-");
+if (tok[0] === "vi"){ S.lang = "vi"; tok.shift(); document.querySelectorAll("[data-lang]").forEach(x => x.classList.toggle("is-sel", x.dataset.lang === "vi")); }
+if (["portal","inbox","squad","competition","commercial","finance","staff","company"].includes(tok[0])) S.screen = tok[0];
+fit();
+if (tok[0] === "match"){ S.plan = {day:6, posture:1, alloc:"50/30/20"}; S.day = 6; S.cash = 2600 - 5 * 70.74 + 300; startMatch(FIX[0]); clearTimers(); finishMatch(); }
+else render();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { render(); });
+})();
+</script>

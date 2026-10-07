@@ -1,0 +1,1054 @@
+<title>Hướng giao diện Phòng điều hành</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  /* Layout: một cột đọc ~1120px như bản trình Director; mỗi mockup game nằm trong khung "màn hình" riêng, dùng đúng vật liệu đề xuất D1 */
+  --ink:#0B0F17; --ink2:#131A26; --ink3:#1B2433; --inset:#0F1520; --rule:#253044;
+  --fg:#ECEFF4; --fg2:#AEB8C8; --fg3:#8591A4;
+  --gold:#F2B33D; --gold-ink:#1C1404;
+  --pos:#5CC98A; --warn:#FF8A5B; --crit:#EE5560; --est:#B9A6F2; --focus:#9CC3FF;
+  --k-offer:#C9A86A; --k-contract:#7FA7C9; --k-match:#9DB89A;
+  --display:"Barlow Condensed","Bahnschrift","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ink);color:var(--fg);font:15px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:44px 96px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;margin:0;text-wrap:balance;letter-spacing:.005em}
+h1{font-size:clamp(40px,7vw,68px);text-transform:uppercase}
+h2{font-size:clamp(28px,4vw,38px);text-transform:uppercase;margin-bottom:10px}
+h3{font-size:22px;margin-bottom:6px}
+p{margin:0 0 12px;max-width:68ch}
+.kicker{font:600 12px/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
+.lede{font-size:17px;color:var(--fg2);max-width:64ch;margin-top:14px}
+.num{font-variant-numeric:tabular-nums}
+code{font-family:Consolas,"Cascadia Mono",monospace;font-size:.88em;background:var(--ink3);padding:1px 5px;border-radius:3px;color:var(--fg)}
+pre{background:var(--inset);border:1px solid var(--rule);border-radius:4px;padding:14px 16px;overflow-x:auto;font:13px/1.5 Consolas,"Cascadia Mono",monospace;color:var(--fg2);margin:0}
+section{border-top:1px solid var(--rule);padding-top:36px;margin-top:52px}
+.sub{color:var(--fg2)}
+.muted{color:var(--fg3)}
+a{color:var(--focus)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button{font:inherit;color:inherit}
+
+/* header */
+.mast .kicker{margin-bottom:14px}
+.tldr{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;margin-top:28px;overflow:hidden}
+.tldr div{background:var(--ink2);padding:16px 18px}
+.tldr b{display:block;font:600 19px/1.15 var(--display);text-transform:uppercase;letter-spacing:.02em;margin-bottom:6px}
+.tldr span{color:var(--fg2);font-size:14px}
+
+/* diagnosis */
+.diag{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px 32px;margin-top:20px}
+.diag article{border-top:2px solid var(--rule);padding-top:12px;min-width:0}
+.diag h3{font-size:20px}
+.diag p{font-size:14.5px;color:var(--fg2);margin-bottom:6px}
+.diag .fix{color:var(--fg);font-size:14px}
+.diag .fix::before{content:"Đề xuất · ";color:var(--gold);font-weight:600}
+
+/* generic two-col */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;margin-top:22px}
+.cols>*{min-width:0}
+.panel{background:var(--ink2);border-top:1px solid var(--rule);padding:18px;border-radius:2px}
+.caption{font-size:13px;color:var(--fg3);margin-top:10px;max-width:none}
+
+/* screen frame */
+.screen{background:var(--ink);border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin-top:22px}
+.screen-label{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 14px;background:var(--inset);border-bottom:1px solid var(--rule);font-size:12px;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase}
+
+/* ===== Portal mock ===== */
+.pm{--club:#1F6F6B;--club2:#E9DFC7;font-size:14px}
+.pm-top{display:grid;grid-template-columns:auto minmax(160px,1fr) auto auto auto;align-items:center;gap:18px;padding:10px 14px;background:var(--ink2);border-bottom:3px solid var(--club)}
+.pm-id{display:flex;align-items:center;gap:10px;min-width:0}
+.pm-id .name{font:700 22px/1 var(--display);text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
+.pm-id .menu{font-size:11px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase}
+.pm-ribbon{min-width:0}
+.pm-ribbon .kicker{font-size:10.5px;margin-bottom:4px}
+.pm-cash{text-align:right}
+.pm-cash b{display:block;font:600 22px/1 var(--display)}
+.pm-cash span{font-size:11.5px;color:var(--pos)}
+.pm-dec{text-align:center;line-height:1.1}
+.pm-dec b{display:block;font:700 24px/1 var(--display);color:var(--gold)}
+.pm-dec span{font-size:11px;color:var(--fg2);text-transform:uppercase;letter-spacing:.08em}
+.continue{background:var(--gold);color:var(--gold-ink);border:0;border-radius:3px;padding:8px 18px;text-align:left;cursor:pointer;line-height:1.1}
+.continue b{display:block;font:700 20px/1 var(--display);text-transform:uppercase;letter-spacing:.06em}
+.continue span{font-size:11.5px;font-weight:500}
+.continue:hover{filter:brightness(1.07)}
+.pm-body{display:grid;grid-template-columns:150px minmax(0,1fr)}
+.rail{background:var(--ink2);border-right:1px solid var(--rule);padding:10px 0;display:flex;flex-direction:column}
+.rail a{display:flex;justify-content:space-between;align-items:baseline;padding:8px 14px 8px 13px;border-left:3px solid transparent;color:var(--fg2);text-decoration:none;font:600 16px/1.1 var(--display);text-transform:uppercase;letter-spacing:.05em}
+.rail a.on{border-left-color:var(--fg);background:var(--ink3);color:var(--fg)}
+.rail a i{font-style:normal;color:var(--gold);font-size:15px}
+.pm-content{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:1px;background:var(--rule)}
+.pm-content>div{background:var(--ink);padding:16px 18px;min-width:0}
+.pm-hero{background:linear-gradient(90deg,color-mix(in srgb,var(--club) 26%,var(--ink)) 0%,var(--ink) 62%)!important}
+.pm-wide{grid-column:1/-1}
+.headline{font:600 26px/1.1 var(--display);margin:6px 0 12px;text-wrap:balance}
+.headline.warn{color:var(--warn)}
+.versus{display:flex;align-items:center;gap:14px;margin:10px 0 14px}
+.versus .vs{font:600 15px var(--display);color:var(--fg3);letter-spacing:.12em}
+.versus .tm{display:flex;flex-direction:column;align-items:center;gap:4px;font:600 13px var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--fg2)}
+.btn2{background:transparent;border:1px solid var(--fg3);color:var(--fg);border-radius:3px;padding:6px 14px;font:600 15px var(--display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.btn2:hover{border-color:var(--fg)}
+.agenda{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.agenda li{display:grid;grid-template-columns:3px 1fr auto;gap:10px;align-items:center;background:var(--ink2);padding:8px 10px 8px 0;border-radius:2px}
+.agenda li::before{content:"";align-self:stretch;background:var(--k)}
+.agenda .t{font-weight:500;line-height:1.25}
+.agenda .t small{display:block;color:var(--fg3);font-size:12px}
+.agenda .d{text-align:right;font:600 18px/1 var(--display)}
+.agenda .d small{display:block;font:500 11px var(--body);color:var(--fg3)}
+.dispatch{display:grid;grid-template-columns:3px minmax(0,1fr) auto;gap:12px;padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);align-items:center}
+.dispatch:last-child{border-bottom:0}
+.dispatch::before{content:"";align-self:stretch;background:var(--k)}
+.dispatch .from{font:700 15px/1.1 var(--display);text-transform:uppercase;letter-spacing:.06em}
+.dispatch .from small{font:500 11px var(--body);color:var(--fg3);letter-spacing:.06em;margin-left:6px}
+.dispatch .msg{color:var(--fg2);font-size:13.5px;line-height:1.4}
+.dispatch .due{text-align:right;font:600 16px/1.1 var(--display);white-space:nowrap}
+.dispatch .due small{display:block;font:500 11px var(--body);color:var(--fg3)}
+.money b{font:600 30px/1 var(--display)}
+.state{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--fg2)}
+
+/* range bars / info states */
+.tape{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:center;font-size:13px}
+.tape .lab{color:var(--fg2)}
+.tape .val{font:600 17px/1 var(--display);text-align:right;white-space:nowrap}
+.bar{position:relative;height:12px;background:var(--inset);border-radius:1px}
+.bar .known{position:absolute;top:0;bottom:0;left:0;background:var(--fg)}
+.bar .range{position:absolute;top:1px;bottom:1px;background:repeating-linear-gradient(135deg,var(--est) 0 2px,transparent 2px 6px);border:1.5px solid var(--est)}
+.bar .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+.bar .unk{position:absolute;inset:0;border:1.5px dashed var(--fg3);background:transparent}
+.legend3{display:grid;gap:12px}
+.legend3 .row{display:grid;grid-template-columns:120px 1fr 74px;gap:12px;align-items:center}
+.legend3 .nm{font:600 15px var(--display);text-transform:uppercase;letter-spacing:.06em}
+.legend3 .ds{grid-column:1/-1;font-size:13px;color:var(--fg3);margin-top:-6px}
+
+/* rail demo */
+.raildemo{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.raildemo .rail{border:1px solid var(--rule);border-radius:3px;width:170px}
+.raildemo .rail.collapsed{width:64px}
+.raildemo .rail.collapsed a{justify-content:center;padding-inline:4px;font-size:15px;flex-direction:column;align-items:center;gap:2px}
+.raildemo .rail.collapsed a i{font-size:12px}
+
+/* crests */
+.crests{display:flex;flex-wrap:wrap;gap:18px;margin-top:14px}
+.crests figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:96px;text-align:center}
+.crests figcaption{font-size:12px;color:var(--fg2);line-height:1.25}
+.crests figcaption b{display:block;font:700 15px var(--display);letter-spacing:.1em;color:var(--fg)}
+.field{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.field input{background:var(--inset);border:1px solid var(--rule);color:var(--fg);border-radius:3px;padding:7px 10px;font:inherit;min-width:0;width:240px;max-width:100%}
+
+/* palettes */
+.pals{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:22px}
+.pal{background:var(--p-base);color:var(--p-fg);border:1px solid var(--p-rule);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.pal.rec{outline:2px solid var(--gold);outline-offset:3px}
+.pal header{padding:16px 16px 10px}
+.pal h3{color:var(--p-fg);font-size:26px;text-transform:uppercase}
+.pal .mood{font-size:13.5px;color:var(--p-fg2);margin:4px 0 0}
+.pal .badge{display:inline-block;font:600 11px var(--body);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--gold-ink);padding:2px 7px;border-radius:2px;margin-bottom:8px}
+.sw{display:grid;grid-template-columns:repeat(8,1fr);height:44px}
+.sw span{position:relative}
+.sw span em{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font:500 9.5px var(--body);font-style:normal;color:var(--p-fg2);letter-spacing:.04em;white-space:nowrap;overflow:hidden}
+.pv{margin:26px 12px 14px;border:1px solid var(--p-rule);border-radius:3px;overflow:hidden;font-size:12.5px}
+.pv-top{display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--p-raised);border-bottom:3px solid var(--p-club)}
+.pv-top .n{font:700 16px/1 var(--display);text-transform:uppercase;letter-spacing:.03em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-top .c{font:600 15px var(--display)}
+.pv-top .go{background:var(--p-act);color:var(--p-act-ink);font:700 13px var(--display);letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:2px}
+.pv-row{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;padding:7px 9px;border-bottom:1px solid var(--p-rule)}
+.pv-row:last-child{border-bottom:0}
+.pv-row .r{position:relative;height:9px;background:var(--p-inset)}
+.pv-row .r i{position:absolute;top:0;bottom:0;border:1.5px solid var(--p-est);background:repeating-linear-gradient(135deg,var(--p-est) 0 2px,transparent 2px 5px)}
+.pv .s{font-weight:600}
+.pal .cr{padding:0 16px 14px;font-size:12px;color:var(--p-fg2);margin-top:auto}
+table.map{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+table.map th,table.map td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule)}
+table.map th{font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--fg3)}
+table.map td:first-child{font-family:Consolas,monospace;font-size:12.5px;color:var(--fg2)}
+.chip{display:inline-block;width:14px;height:14px;border-radius:2px;vertical-align:-2px;margin-right:8px;border:1px solid var(--rule)}
+.scroll{overflow-x:auto}
+
+/* type specimen */
+.spec{display:grid;gap:14px}
+.spec .d1{font:700 52px/0.95 var(--display);text-transform:uppercase;letter-spacing:.01em}
+.spec .d2{font:600 30px/1 var(--display)}
+.spec .d3{font:600 13px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--fg3)}
+.spec .nums{font:600 40px/1 var(--display);font-variant-numeric:tabular-nums}
+
+/* day track demo */
+.tabs{display:flex;gap:2px;flex-wrap:wrap;margin-top:18px;border-bottom:1px solid var(--rule)}
+.tabs button{background:transparent;border:0;border-bottom:3px solid transparent;padding:8px 14px;cursor:pointer;color:var(--fg2);font:600 16px var(--display);text-transform:uppercase;letter-spacing:.06em}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--gold)}
+.trackbox{padding:16px 18px 18px}
+.trackhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.trackhead .headline{margin:4px 0 2px}
+.trackhead .facts{color:var(--fg2);font-size:13.5px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.toggle{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--fg2);background:var(--ink2);border:1px solid var(--rule);border-radius:3px;padding:5px 10px;cursor:pointer}
+.toggle input{accent-color:var(--gold)}
+.toggle[aria-disabled="true"]{opacity:.45}
+svg text{font-family:var(--body)}
+.svgwrap{width:100%;margin-top:12px}
+details{margin-top:10px;font-size:13px;color:var(--fg2)}
+summary{cursor:pointer;color:var(--fg3)}
+details ul{margin:8px 0 0;padding-left:18px}
+.week{overflow-x:auto;margin-top:12px}
+.weekgrid{display:grid;grid-template-columns:repeat(7,minmax(84px,1fr));gap:2px;min-width:620px}
+.weekgrid .wl{grid-column:1/-1;font:600 12px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--fg3);padding:8px 2px 2px}
+.cell{background:var(--ink2);min-height:92px;padding:6px 7px 8px;display:flex;flex-direction:column;gap:3px;position:relative}
+.cell.today{box-shadow:inset 0 0 0 2px var(--gold)}
+.cell.s2{background:repeating-linear-gradient(135deg,var(--ink2) 0 6px,var(--inset) 6px 12px)}
+.cell .dn{font:600 17px/1 var(--display);color:var(--fg2);display:flex;justify-content:space-between}
+.cell .dn small{font:600 10px var(--body);color:var(--gold);letter-spacing:.1em;text-transform:uppercase}
+.cell .ev{font-size:11.5px;line-height:1.25}
+.cell .ev.m{font:700 14px/1.1 var(--display);letter-spacing:.06em}
+.cell .ev.m.next{color:var(--gold)}
+.cell .ev.r{color:var(--pos)}
+.cell .ev.dl{color:var(--warn)}
+.cell .ev.o{color:var(--fg3)}
+.cell .ld{margin-top:auto;height:6px;background:var(--inset);position:relative}
+.cell .ld i{position:absolute;left:0;top:0;bottom:0;background:var(--est);opacity:.75}
+.cell .ld i.over{background:var(--crit);opacity:1}
+.cell .ld b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+
+/* signatures */
+.sig{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:22px;margin-top:22px}
+.sig>.screen{margin-top:0}
+.sig .inner{padding:16px 18px}
+.alloc{position:relative;height:46px;display:flex;border-radius:2px;overflow:visible;margin:12px 0 6px;user-select:none;touch-action:none}
+.alloc .seg{display:flex;align-items:center;padding:0 10px;font:600 14px var(--display);letter-spacing:.05em;text-transform:uppercase;overflow:hidden;white-space:nowrap;min-width:0}
+.alloc .seg b{margin-left:6px;font-size:17px}
+.alloc .s1{background:#3D5A80;color:var(--fg)}
+.alloc .s2{background:#5B4A7A;color:var(--fg)}
+.alloc .s3{background:#35605A;color:var(--fg)}
+.alloc .h{position:absolute;top:-5px;bottom:-5px;width:14px;margin-left:-7px;background:var(--fg);border:0;border-radius:2px;cursor:ew-resize;padding:0}
+.alloc .h::after{content:"";position:absolute;left:5px;right:5px;top:12px;bottom:12px;border-left:1px solid var(--ink);border-right:1px solid var(--ink)}
+.stance{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:8px}
+.stance button{background:var(--ink2);border:0;padding:9px 6px;cursor:pointer;font:600 15px var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--fg2)}
+.stance button[aria-pressed="true"]{background:var(--fg);color:var(--ink)}
+.effect{font-size:13px;color:var(--fg2);margin-top:8px;min-height:2.6em}
+.terms{display:grid;grid-template-columns:minmax(110px,auto) 1fr 1fr;gap:0;font-size:13px}
+.terms>div{padding:8px 10px;border-bottom:1px solid var(--rule);min-width:0}
+.terms .hd{font:700 17px/1.1 var(--display);text-transform:uppercase;letter-spacing:.04em}
+.terms .hd small{display:block;font:500 11px var(--body);color:var(--fg3);letter-spacing:.05em}
+.terms .lb{color:var(--fg3);font-size:12px;letter-spacing:.06em;text-transform:uppercase;align-self:center}
+.terms .v{font:600 18px/1 var(--display)}
+.terms .v small{font:500 11.5px var(--body);color:var(--fg3);margin-left:4px}
+.loadbar{position:relative;height:8px;background:var(--inset);margin-top:6px}
+.loadbar i{position:absolute;top:0;bottom:0;left:0;background:var(--fg3)}
+.loadbar u{position:absolute;top:0;bottom:0;background:var(--est)}
+.loadbar b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg)}
+.note{font-size:12.5px;color:var(--fg3);margin-top:10px}
+.plates{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;margin-top:10px}
+.plate{background:var(--ink2);padding:10px 9px;position:relative;overflow:hidden;min-width:0}
+.plate .role{position:absolute;right:6px;top:-6px;font:700 52px/1 var(--display);color:var(--ink3)}
+.plate .av{width:34px;height:34px;border-radius:2px;display:grid;place-items:center;font:700 15px var(--display);letter-spacing:.04em;position:relative}
+.plate .nm{font-weight:600;font-size:13px;margin-top:8px;line-height:1.2;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plate .ex{font:700 30px/1 var(--display);position:relative;margin-top:4px}
+.plate .ex small{font:500 10.5px var(--body);color:var(--fg3);margin-left:3px;letter-spacing:.06em}
+.plate .rd{height:5px;background:var(--inset);margin-top:6px;position:relative}
+.plate .rd i{position:absolute;inset:0 auto 0 0;background:var(--pos)}
+.plate .ct{font-size:11px;color:var(--fg3);margin-top:6px;position:relative;line-height:1.3}
+.plate .ct.soon{color:var(--warn)}
+.fa{display:grid;grid-template-columns:minmax(0,1.2fr) 26px minmax(0,2fr) 64px;gap:6px 10px;align-items:center;font-size:13px;margin-top:12px}
+.fa .h{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--fg3)}
+.fa .rr{font:600 15px var(--display);text-align:right}
+@media (max-width:860px){
+  .pm-top{grid-template-columns:1fr auto;}
+  .pm-ribbon{grid-column:1/-1;order:5}
+  .pm-dec{display:none}
+  .pm-body{grid-template-columns:1fr}
+  .pm-body>.rail{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--rule);padding:0}
+  .pm-body>.rail a{border-left:0;border-bottom:3px solid transparent;white-space:nowrap;gap:6px}
+  .pm-body>.rail a.on{border-bottom-color:var(--fg)}
+  .pm-content{grid-template-columns:1fr}
+  .plates{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.steps{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:2px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;background:var(--ink2);padding:14px 16px;align-items:start;counter-increment:s}
+.steps li::before{content:counter(s);font:700 30px/1 var(--display);color:var(--gold)}
+.steps b{font:600 18px/1.2 var(--display);text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:3px}
+.steps p{font-size:14px;color:var(--fg2);margin:0}
+.steps .sz{font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--fg3);white-space:nowrap}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;margin-top:16px}
+.rules div{background:var(--ink2);padding:14px 16px;font-size:14px;color:var(--fg2)}
+.rules b{display:block;color:var(--fg);font:600 17px var(--display);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.rules.avoid b{color:var(--crit)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Strategic Company Simulator · Stage 5 · đề xuất trình Director, chưa phải quyết định</div>
+  <h1>Hướng giao diện<br>Phòng điều hành</h1>
+  <p class="lede">Đề xuất màu, chữ, bố cục và art cho genre shell hiện tại, với ba ràng buộc: không dùng icon, dải ngày phải kể được tuần sắp tới thay vì xếp 28 cột giống nhau, và mỗi khu vực có một hình thức riêng. Mọi mockup dùng số liệu thật từ ảnh chụp genre shell ngày 1 (seed mặc định). Khi trang dùng số minh hoạ, trang ghi rõ điều đó.</p>
+  <div class="tldr">
+    <div><b>Màu</b><span>Nền "Đêm thi đấu" (mực xanh đen, vàng sân đấu cho hành động chính, tím nhạt cho ước tính), cộng lớp màu câu lạc bộ sinh theo seed.</span></div>
+    <div><b>Không icon</b><span>Dùng chữ condensed, mã 3 chữ, huy hiệu sinh từ dữ liệu, và hình học mang nghĩa cho Known / Estimated / Unknown.</span></div>
+    <div><b>Dải ngày</b><span>Thành "chân trời 4 tuần" trôi theo Continue. Tiêu đề là câu trả lời, sự kiện nằm ngay trên trục, dữ liệu phẳng chỉ vẽ một đường.</span></div>
+    <div><b>Đa dạng</b><span>Mỗi khu vực một hình chủ đạo: đối đầu, thanh phân bổ, so sánh điều khoản, đường tiền mặt, giải phẫu kết quả.</span></div>
+  </div>
+</header>
+
+<!-- ============ PORTAL MOCK ============ -->
+<section id="portal">
+  <div class="kicker">Hình dung tổng thể</div>
+  <h2>Portal sau khi đổi</h2>
+  <p class="sub">Cùng dữ liệu với ảnh chụp <code>portal-1920x1080.png</code>, nhưng có một khối chính (trận tới), hàng quyết định có đếm ngược, dải chân trời và thư đến có người gửi. Save/Load chuyển vào menu mở từ huy hiệu, nên Continue là nút duy nhất trên top bar.</p>
+  <div class="screen pm" id="pm">
+    <div class="screen-label"><span>Mockup · Portal · 1280 px</span><span>Tên công ty "Red River Esports" là ví dụ do người chơi đặt</span></div>
+    <div class="pm-top">
+      <div class="pm-id"><span data-crest="Red River Esports" data-size="44"></span><div><div class="name">Red River Esports</div><div class="menu">Menu · Save · Load</div></div></div>
+      <div class="pm-ribbon"><div class="kicker num" id="pmRibbonLabel">Season 1 · day 1 / 56</div><div id="pmRibbon"></div></div>
+      <div class="pm-cash"><b class="num">2,600 CU</b><span>Stable finances</span></div>
+      <div class="pm-dec"><b>3</b><span>to decide</span></div>
+      <button class="continue" type="button"><b>Continue</b><span>Next stop: match vs SAL, day 6</span></button>
+    </div>
+    <div class="pm-body">
+      <nav class="rail" aria-label="Sections (mockup)">
+        <a href="#portal" class="on">Portal</a><a href="#portal">Inbox <i>2</i></a><a href="#portal">Squad</a><a href="#portal">Competition</a><a href="#portal">Commercial</a><a href="#portal">Finance</a><a href="#portal">Staff</a><a href="#portal">Company</a>
+      </nav>
+      <div class="pm-content">
+        <div class="pm-hero">
+          <div class="kicker">Next match · day 6 · in 5 days</div>
+          <div class="versus">
+            <div class="tm"><span data-crest="Red River Esports" data-size="64"></span>RRE</div>
+            <span class="vs">VS</span>
+            <div class="tm"><span data-crest="Saltmarsh Five" data-size="64"></span>SAL</div>
+          </div>
+          <div class="headline warn">Saltmarsh Five, and no plan yet</div>
+          <div class="tape">
+            <span class="lab">Our lineup</span><div class="bar"><span class="known" style="width:44.4%"></span></div><span class="val num">62</span>
+            <span class="lab">Their strength</span><div class="bar"><span class="range" style="left:42.2%;width:28%"></span></div><span class="val num" style="color:var(--est)">61–75</span>
+          </div>
+          <p class="caption" style="margin-top:8px">Thang 40–90. Đội mình là giá trị Known (thanh đặc); đối thủ là khoảng Estimated (gạch chéo). Họ thường chơi thận trọng, độ tin cậy vừa.</p>
+          <button class="btn2" type="button">Prepare match</button>
+        </div>
+        <div>
+          <div class="kicker">Decide · 3</div>
+          <ul class="agenda">
+            <li style="--k:var(--k-match)"><span class="t">Prepare for Saltmarsh Five<small>Blocks Continue on match day</small></span><span class="d num">5 days<small>day 6</small></span></li>
+            <li style="--k:var(--k-offer)"><span class="t">Answer Kestrel Peripherals<small>380 CU / week · 56 days</small></span><span class="d num">6 days<small>day 7</small></span></li>
+            <li style="--k:var(--k-offer)"><span class="t">Answer Lumenfield Mobile<small>370 CU / week · 84 days</small></span><span class="d num">6 days<small>day 7</small></span></li>
+          </ul>
+        </div>
+        <div class="pm-wide" id="pmHorizon"></div>
+        <div>
+          <div class="kicker">Inbox · 2 new</div>
+          <div class="dispatch" style="--k:var(--k-offer)"><div><div class="from">Lumenfield Mobile<small>Telecom</small></div><div class="msg">Offers 370 CU per week for 84 days. Adds 16 delivery load.</div></div><div class="due num">day 7<small>6 days left</small></div></div>
+          <div class="dispatch" style="--k:var(--k-offer)"><div><div class="from">Kestrel Peripherals<small>Hardware</small></div><div class="msg">Offers 380 CU per week for 56 days. Adds 20 delivery load.</div></div><div class="due num">day 7<small>6 days left</small></div></div>
+        </div>
+        <div class="money">
+          <div class="kicker">Money</div>
+          <b class="num">2,600 CU</b> <span class="state"><svg width="10" height="10" aria-hidden="true"><rect width="10" height="10" fill="#ECEFF4"/></svg>Known</span>
+          <div id="pmRunway"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIAGNOSIS ============ -->
+<section id="diag">
+  <div class="kicker">Hiện trạng · từ ảnh chụp genre shell</div>
+  <h2>Vì sao màn hình đang trông máy móc</h2>
+  <div class="diag">
+    <article><h3>Mọi khối nặng như nhau</h3><p>Portal có năm panel cùng nền, cùng viền, cùng cỡ tiêu đề. Mắt không biết nhìn đâu trước.</p><p class="fix">Mỗi màn hình có một khối chính. Phần còn lại tách bằng khoảng trắng và đường kẻ mảnh, không đóng khung bốn phía.</p></article>
+    <article><h3>Câu hỏi in thành phụ đề</h3><p>Panel nào cũng có một dòng kiểu "Who do we face, and are we ready?" nên màn hình đọc như phiếu khảo sát.</p><p class="fix">Tiêu đề là câu trả lời: "Saltmarsh Five, and no plan yet". Câu hỏi chuyển thành mô tả trợ năng.</p></article>
+    <article><h3>Glyph hệ thống lẫn phong cách</h3><p><code>⌂ ✉ ♟ ⚑ ¤ Σ ◎ ▣</code> lấy từ font hệ thống, mỗi ký tự một kiểu nét. ¤ và Σ không gợi ra Commercial hay Finance.</p><p class="fix">Bỏ hết. Dùng chữ in hoa condensed, rail thu gọn dùng mã 3 chữ.</p></article>
+    <article><h3>Thang xám một màu</h3><p>Accent tổ chức <code>#BAC4CF</code> gần trùng màu chữ. Continue chỉ sáng hơn Save/Load một chút. Không có màu nào thuộc về công ty.</p><p class="fix">Một màu hành động duy nhất, một màu cho ước tính, và màu câu lạc bộ trên bề mặt nhận diện.</p></article>
+    <article><h3>Day 1–28 vẽ 28 cột giống hệt</h3><p>Load bằng 65 suốt 28 ngày, nên 28 cột không cho thêm thông tin gì. Trận và tiền về nằm ở hàng ký hiệu riêng, phải dóng mắt xuống trục. Cửa sổ ghi cố định "Day 1–28" dù mùa dài 56 ngày.</p><p class="fix">Dải chân trời bắt đầu từ hôm nay. Dữ liệu phẳng chỉ vẽ một đường, sự kiện gắn thẳng lên trục.</p></article>
+    <article><h3>Bảng thay cho câu chuyện</h3><p>Finance có 14 dòng thì 12 dòng là −70.74. Competition là spinbox và dropdown. Số đúng, nhưng người chơi phải tự hình dung.</p><p class="fix">Dùng đường tiền mặt, thanh phân bổ, so sánh điều khoản theo hệ quả. Bảng vẫn còn làm text tương đương.</p></article>
+  </div>
+</section>
+
+<!-- ============ NO ICONS ============ -->
+<section id="noicon">
+  <div class="kicker">Ràng buộc · không dùng icon</div>
+  <h2>Nhận diện bằng chữ, tên, màu và hình học</h2>
+  <p class="sub">Mọi thứ thay icon đều đọc ra từ trạng thái game: tên tổ chức, mã đội, màu câu lạc bộ, và hình dạng mã hoá mức độ chắc chắn. Không có hình vẽ trang trí.</p>
+  <div class="cols">
+    <div>
+      <h3>Thanh điều hướng chữ</h3>
+      <p class="sub" style="font-size:14px">Khi mở rộng, rail chỉ có nhãn in hoa condensed. Khi thu gọn, dùng mã 3 chữ kiểu bảng tỉ số esports. Số thư chưa đọc là chữ số vàng, không phải chấm đỏ.</p>
+      <div class="raildemo">
+        <nav class="rail" aria-label="Expanded rail demo"><a class="on">Portal</a><a>Inbox <i>2</i></a><a>Squad</a><a>Competition</a><a>Commercial</a><a>Finance</a><a>Staff</a><a>Company</a></nav>
+        <nav class="rail collapsed" aria-label="Collapsed rail demo"><a class="on">PTL</a><a>INB<i>2</i></a><a>SQD</a><a>CMP</a><a>CML</a><a>FIN</a><a>STF</a><a>ORG</a></nav>
+      </div>
+      <p class="caption">Một phương án khác là nhãn xoay dọc 90°. Mã 3 chữ dễ quét hơn và giữ nguyên Alt+1…8.</p>
+    </div>
+    <div>
+      <h3>Huy hiệu sinh từ dữ liệu (S8)</h3>
+      <p class="sub" style="font-size:14px">Hình nền, cặp màu và hoạ tiết lấy từ hash của tên/ID tổ chức, nên cùng seed luôn ra cùng huy hiệu. Mã đội 3 chữ dùng trong lịch, dải ngày và kết quả, giống thói quen esports (T1, G2, FNC).</p>
+      <div class="field"><label for="crestName" class="muted" style="font-size:13px">Thử tên công ty</label><input id="crestName" value="Red River Esports" maxlength="40" autocomplete="off"></div>
+      <div class="crests" id="crests"></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:28px">
+    <h3>Mức độ chắc chắn bằng hình học, thay cho ● ◐ ○</h3>
+    <p class="sub" style="font-size:14px">Ba trạng thái vẫn phân biệt được khi không nhìn màu (yêu cầu bất biến của governance). Màu tím chỉ là lớp phụ trợ.</p>
+    <div class="legend3">
+      <div class="row"><span class="nm">Known</span><div class="bar"><span class="known" style="width:44%"></span></div><span class="val num" style="font:600 18px var(--display);text-align:right">62</span></div>
+      <div class="ds">Thanh đặc, một con số. Ví dụ: sức mạnh đội hình tính từ chỉ số đã quan sát.</div>
+      <div class="row"><span class="nm" style="color:var(--est)">Estimated</span><div class="bar"><span class="range" style="left:42%;width:28%"></span></div><span class="val num" style="font:600 18px var(--display);text-align:right;color:var(--est)">61–75</span></div>
+      <div class="ds">Khoảng có gạch chéo, luôn hiện hai đầu. Không bao giờ thu về một điểm giả chính xác.</div>
+      <div class="row"><span class="nm" style="color:var(--fg3)">Unknown</span><div class="bar"><span class="unk"></span></div><span class="val" style="font:600 18px var(--display);text-align:right;color:var(--fg3)">?</span></div>
+      <div class="ds">Viền nét đứt, không có số. Ví dụ: chuẩn bị bí mật của đối thủ, độ lệch ngày thi đấu.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PALETTES ============ -->
+<section id="palette">
+  <div class="kicker">Phối màu · ba hướng</div>
+  <h2>Bảng màu</h2>
+  <p class="sub">Cả ba hướng giữ nguyên các vai trò màu trong <code>UiTokens.cs</code>, nên đổi bảng màu không phải sửa component. Màu ngữ nghĩa (tốt / cảnh báo / nguy) không bao giờ lấy từ màu thương hiệu.</p>
+  <div class="pals" id="pals"></div>
+  <p style="margin-top:22px"><b>Khuyến nghị:</b> D1 làm vật liệu nền, cộng lớp màu câu lạc bộ của D3 trên top bar, huy hiệu và màn hình trận. Giữ D2 làm hướng thử nếu Director muốn chất "sân bãi" rõ hơn.</p>
+  <div class="scroll" style="margin-top:12px">
+    <table class="map" id="maptable"><thead><tr><th>ColorRole</th><th>D1 · hex</th><th>Tương phản trên SurfaceBase</th><th>Dùng cho</th></tr></thead><tbody></tbody></table>
+  </div>
+  <p class="caption">Tỉ lệ tương phản tính trực tiếp trên trang theo cùng công thức với <code>Rgb.Contrast</code>. Ngưỡng hiện có: chữ ≥ 4.5, đồ hoạ ≥ 3.0.</p>
+</section>
+
+<!-- ============ TYPE ============ -->
+<section id="type">
+  <div class="kicker">Chữ</div>
+  <h2>Hai mặt chữ, số là hình ảnh</h2>
+  <div class="cols">
+    <div class="spec">
+      <span class="d3">Display · Barlow Condensed 600–700</span>
+      <span class="d1">Saltmarsh Five</span>
+      <span class="nums num">2,600 CU · 62 · 61–75</span>
+      <span class="d3">Body · IBM Plex Sans 400–600</span>
+      <span style="max-width:52ch">Offers 370 CU per week for 84 days. Adds 16 delivery load. Answer by day 7. Phạm Thị Thu Hà gia hạn hợp đồng.</span>
+    </div>
+    <div>
+      <ul style="margin:0;padding-left:18px;color:var(--fg2);display:grid;gap:8px">
+        <li><b style="color:var(--fg)">Display condensed</b> cho tên đội, tiêu đề, nhãn rail và số lớn. Chữ hoa có giãn chữ nhẹ, kiểu bảng tỉ số và đồ hoạ truyền hình thể thao.</li>
+        <li><b style="color:var(--fg)">Body nhân văn</b> cho đoạn văn và bảng, luôn dùng số tabular.</li>
+        <li>Cả hai là OFL nên đóng gói được vào Godot. <code>Bahnschrift</code> hiện tại chỉ có trên Windows và không được phân phối lại.</li>
+        <li>Cả hai có bộ ký tự tiếng Việt, khớp với các bài test replay vi-VN và tên người sinh từ pool.</li>
+        <li>Thứ bậc mỗi khối: kicker in hoa 12px, rồi headline trả lời 26–28px, rồi nội dung. Bỏ dòng phụ đề câu hỏi.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAYOUT ============ -->
+<section id="layout">
+  <div class="kicker">Bố cục</div>
+  <h2>Thứ bậc trước, khung sau</h2>
+  <div class="rules">
+    <div><b>Top bar nói điểm dừng</b>Huy hiệu và tên; dải mùa 56 ngày thay cho chữ "day 1 of 56"; tiền; số việc cần quyết. Khối Continue màu vàng ghi điểm dừng kế tiếp. Save/Load chuyển vào menu huy hiệu hoặc phím Esc.</div>
+    <div><b>Một khối chính</b>Mỗi màn hình có đúng một khối được nâng nền hoặc phủ màu câu lạc bộ. Các khối còn lại nằm trên nền chung, tách bằng hairline.</div>
+    <div><b>Tiêu đề trả lời</b>Kicker nêu chủ đề, headline nêu kết luận tính từ dữ liệu ("Load stays within capacity for 4 weeks"). Chi tiết và text tương đương nằm dưới.</div>
+    <div><b>Vật liệu</b>Bỏ viền bốn phía. Bo góc 2–3px. Chỉ overlay xác nhận mới có bóng đổ. Phân lớp bằng 3 tông nền và đường kẻ 1px.</div>
+    <div><b>Lưới 12 cột</b>Nội dung 8/4 hoặc 7/5 với panel ngữ cảnh bên phải (S3). Khối rộng như dải ngày và bảng chiếm đủ 12 cột.</div>
+    <div><b>720p trước</b>Ở 1280×720, khối chính, hàng quyết định và Continue phải nằm trong màn hình đầu. Phần còn lại cuộn được.</div>
+  </div>
+</section>
+
+<!-- ============ DAY TRACK ============ -->
+<section id="track">
+  <div class="kicker">Biểu đồ ngày · thay "Day 1–28"</div>
+  <h2>Chân trời bốn tuần</h2>
+  <p class="sub">Ba cách vẽ cùng một dữ liệu: load so với capacity 88, trận đấu, tiền tài trợ về, hạn trả lời offer, mốc mở gia hạn và ranh giới mùa. Bấm Continue để xem cửa sổ trôi theo thời gian, và bật xem trước offer để thấy hệ quả trước → sau.</p>
+  <div class="screen">
+    <div class="tabs" role="tablist" aria-label="Day track variants">
+      <button role="tab" aria-selected="true" data-v="horizon" id="tab-horizon">A · Chân trời</button>
+      <button role="tab" aria-selected="false" data-v="week" id="tab-week">B · Lịch tuần</button>
+      <button role="tab" aria-selected="false" data-v="season" id="tab-season">C · Nhịp mùa</button>
+    </div>
+    <div class="trackbox">
+      <div class="trackhead">
+        <div style="min-width:0">
+          <div class="kicker" id="trKicker">Next 4 weeks</div>
+          <div class="headline" id="trHeadline">…</div>
+          <div class="facts num" id="trFacts"></div>
+        </div>
+        <div class="controls">
+          <label class="toggle" id="tgLumenWrap"><input type="checkbox" id="tgLumen"> Preview Lumenfield (+16)</label>
+          <label class="toggle" id="tgKestrelWrap"><input type="checkbox" id="tgKestrel"> Preview Kestrel (+20)</label>
+          <button class="continue" type="button" id="trContinue"><b>Continue</b><span id="trNext">Next stop: day 6</span></button>
+        </div>
+      </div>
+      <div id="trView" class="svgwrap"></div>
+      <details><summary>Text equivalent</summary><ul id="trText"></ul></details>
+    </div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Vì sao bớt máy móc</h3>
+      <ul style="margin:0;padding-left:18px;color:var(--fg2);display:grid;gap:7px;font-size:14.5px">
+        <li>Tiêu đề là kết luận tính từ dữ liệu, không phải "Day 1–28".</li>
+        <li>Dữ liệu phẳng chỉ vẽ một đường, kèm phần còn trống ("23 spare"). Mắt dồn vào chỗ có thay đổi.</li>
+        <li>Trận gắn mã đối thủ, tiền về ghi số tiền, hạn chót có nhãn. Đọc một lượt là biết tuần này có gì.</li>
+        <li>Cửa sổ bắt đầu từ hôm nay và trượt khi bấm Continue. Thời gian là nhịp tim (trụ cột 1 của game-identity thesis).</li>
+        <li>Lịch mùa 2 chưa được tạo nên hiện là vùng Unknown. Trang không bịa lịch.</li>
+        <li>Xem trước offer là bóng mờ trước → sau. Phần vượt capacity tô đỏ đúng ngày bị vượt.</li>
+      </ul>
+      <p class="caption">A cho Portal và workspace tài trợ. B cho Competition/Staff, nơi người chơi lên kế hoạch theo tuần. C cho top bar và màn hình tổng kết mùa.</p>
+    </div>
+    <div>
+      <h3>Thay đổi hợp đồng dữ liệu</h3>
+      <pre>// Presentation.cs: thay DayRow/DayMarkShape bằng sự kiện có tên
+public enum DayEventKind { Match, Receipt, Deadline, RenewalOpens, ContractEnd }
+public sealed record DayEvent(int Day, DayEventKind Kind, string Tag,
+    string Detail, InformationState State, bool Emphasis = false);
+public sealed record DayProposal(string Label, ImmutableArray&lt;int&gt; Load);
+public sealed record DayTrackData(string Headline, int Today, int Days,
+    int SeasonLastDay, int Limit, ImmutableArray&lt;int&gt; Load,
+    ImmutableArray&lt;DayProposal&gt; Proposals,
+    ImmutableArray&lt;DayEvent&gt; Events, string Assumption);</pre>
+      <p class="caption">Headline do Application/presenter tính, không do canvas tự suy. Text tương đương vẫn sinh từ cùng dữ liệu, như <code>PresentationText.DayTrackSummary</code> hiện nay.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SIGNATURES ============ -->
+<section id="sections">
+  <div class="kicker">Đa dạng hoá từng khu vực</div>
+  <h2>Mỗi khu vực một hình chủ đạo</h2>
+  <p class="sub">Shell giữ chung để người chơi quen tay. Nội dung mỗi khu vực có một hình thức riêng gắn với quyết định ở đó, để tám màn hình không còn là tám bảng giống nhau.</p>
+  <div class="sig">
+    <div class="screen">
+      <div class="screen-label"><span>Competition · đối đầu + phân bổ</span><span>Thay 3 spinbox và dropdown</span></div>
+      <div class="inner">
+        <div class="kicker">Preparation · Saltmarsh Five · day 6</div>
+        <div class="alloc" id="alloc" aria-label="Preparation allocation">
+          <div class="seg s1" id="seg1">Execution<b class="num">50</b></div>
+          <div class="seg s2" id="seg2">Opponent<b class="num">30</b></div>
+          <div class="seg s3" id="seg3">Meta<b class="num">20</b></div>
+          <button class="h" id="h1" role="slider" aria-label="Execution / opponent boundary" aria-valuemin="0" aria-valuemax="100"></button>
+          <button class="h" id="h2" role="slider" aria-label="Opponent / meta boundary" aria-valuemin="0" aria-valuemax="100"></button>
+        </div>
+        <div class="note num" id="allocText" style="margin-top:4px"></div>
+        <div class="kicker" style="margin-top:16px">Posture</div>
+        <div class="stance" id="stance">
+          <button type="button" aria-pressed="false" data-p="0">Conservative</button>
+          <button type="button" aria-pressed="true" data-p="1">Balanced</button>
+          <button type="button" aria-pressed="false" data-p="2">Aggressive</button>
+        </div>
+        <div class="effect" id="stanceEffect"></div>
+        <p class="note">Một thanh tổng 100% nên không thể nhập tổng sai. Kéo hai tay nắm hoặc dùng phím ← → (bước 5%). Hệ quả lấy đúng luật trong <code>Competition.Resolve</code>: posture trùng meta công khai thì matchup +3, khác thì −1; posture càng mạnh thì độ lệch kết quả càng rộng.</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="screen-label"><span>Commercial · so sánh theo hệ quả</span><span>Hai offer thật ngày 1</span></div>
+      <div class="inner">
+        <div class="headline" style="font-size:22px;margin-top:0">One sponsor slot free: pick one</div>
+        <div class="terms num">
+          <div></div>
+          <div class="hd">Lumenfield<small>Mobile · Telecom</small></div>
+          <div class="hd">Kestrel<small>Peripherals · Hardware</small></div>
+          <div class="lb">Per week</div><div class="v">370<small>CU</small></div><div class="v">380<small>CU</small></div>
+          <div class="lb">Length</div><div class="v">12<small>weeks</small></div><div class="v">8<small>weeks</small></div>
+          <div class="lb">If kept</div><div class="v">4,440<small>CU</small></div><div class="v">3,040<small>CU</small></div>
+          <div class="lb">Load after</div>
+          <div><span class="v">65 → 81</span><div class="loadbar"><i style="width:59.1%"></i><u style="left:59.1%;width:14.5%"></u><b style="left:80%"></b></div></div>
+          <div><span class="v">65 → 85</span><div class="loadbar"><i style="width:59.1%"></i><u style="left:59.1%;width:18.2%"></u><b style="left:80%"></b></div></div>
+          <div class="lb">Spare</div><div class="v" style="color:var(--fg)">7</div><div class="v" style="color:var(--warn)">3</div>
+        </div>
+        <p class="note">Vạch trắng là capacity 88. Phần tím là load mà offer thêm vào. Giá trị trọn hợp đồng giả định hợp đồng chạy hết thời hạn, chưa tính thưởng thắng. Slot 1/2 đang dùng, nên chỉ ký được một offer.</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="screen-label"><span>Finance · đường tiền mặt</span><span>Thay bảng 14 dòng</span></div>
+      <div class="inner">
+        <div class="kicker">Cash · next 4 weeks</div>
+        <div class="headline" id="runHeadline" style="font-size:22px;margin-top:4px">…</div>
+        <div id="runway"></div>
+        <p class="note">Đường liền: tiền dự kiến với lương chạy mỗi ngày (70.74 CU) và tiền Northfield về các ngày 4/11/18/25. Dải tím: phần thêm nếu thắng mọi trận (thưởng thắng 25 CU). Tiền giải đấu chưa tính. Nhịp này lấy từ bảng 14 ngày trong ảnh chụp và kéo dài ra 28 ngày.</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="screen-label"><span>Squad · đội hình theo vai trò</span><span>Bảng đầy đủ vẫn ở dưới (S5)</span></div>
+      <div class="inner">
+        <div class="kicker">Starting five · roles A–E</div>
+        <div class="plates" id="plates"></div>
+        <div class="fa" id="freeagents"></div>
+        <p class="note">Thẻ người là chữ cái đầu trên nền màu câu lạc bộ, chưa cần ảnh chân dung. Free agent hiện khoảng ước tính, kèm vạch trắng là người đang giữ vai đó. Nhìn vào là thấy Kai Nakamura (70–100) có thể vượt Leo Vo (65).</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="screen-label"><span>Match day (S9) · giải phẫu kết quả</span><span>Số minh hoạ</span></div>
+      <div class="inner">
+        <div class="versus" style="margin-top:0"><div class="tm"><span data-crest="Red River Esports" data-size="48"></span>RRE</div><span class="vs">VS</span><div class="tm"><span data-crest="Saltmarsh Five" data-size="48"></span>SAL</div><div style="margin-left:auto;text-align:right"><div class="kicker">Win chance</div><div style="font:700 34px/1 var(--display)" class="num" id="anaTotal">—</div></div></div>
+        <div id="anatomy"></div>
+        <button class="btn2" type="button" id="anaReplay" style="margin-top:8px">Replay reveal</button>
+        <p class="note">Công thức đúng như <code>Competition.Resolve</code>: 50% cộng tổng các điểm × 1.2 điểm %, giới hạn trong 5–95%. Mọi thành phần đã có sẵn trong <code>CompetitiveOutcome</code> (Base, Preparation, Matchup, Adaptation, Variance), nên màn hình kết quả không cần cơ chế mới. Số trong mockup là minh hoạ.</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="screen-label"><span>Inbox, Staff, Company</span><span>Hình chủ đạo còn lại</span></div>
+      <div class="inner" style="display:grid;gap:14px">
+        <div><b style="font:600 18px var(--display);text-transform:uppercase;letter-spacing:.04em">Inbox · công văn</b><p class="note" style="margin-top:4px">Mỗi thư có vạch màu theo loại (offer / hợp đồng / trận & mùa), tên người gửi in hoa, đếm ngược hạn bên phải và một hành động dẫn tới đúng khu vực. Đã thấy trong mockup Portal ở trên.</p></div>
+        <div><b style="font:600 18px var(--display);text-transform:uppercase;letter-spacing:.04em">Staff · hồ sơ HLV</b><p class="note" style="margin-top:4px">HLV hiện tại có bốn thanh Known (Preparation, Analysis, Adaptability, Capacity). Ứng viên hiện khoảng Estimated đặt trên cùng thang, có vạch so với HLV đương nhiệm, giống phần free agent.</p></div>
+        <div><b style="font:600 18px var(--display);text-transform:uppercase;letter-spacing:.04em">Company · không gian vận hành</b><p class="note" style="margin-top:4px">Giữ làm khu vực tuỳ chọn như amendment đã duyệt, chỉ đổi sang vật liệu mới: huy hiệu ở tâm, nhánh đội thi đấu mang màu câu lạc bộ, đường nối tải giao hàng về capacity dùng cùng ngôn ngữ với dải chân trời.</p></div>
+        <div><b style="font:600 18px var(--display);text-transform:uppercase;letter-spacing:.04em">Tổng kết mùa (S9)</b><p class="note" style="margin-top:4px">Dải nhịp mùa (biến thể C) đã điền kết quả, thắng–thua với từng đối thủ, tiền, danh tiếng và khán giả thay đổi bao nhiêu, và hợp đồng nào hết hạn. Chỉ dùng dữ liệu đã có.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ART ============ -->
+<section id="art">
+  <div class="kicker">Art direction khi chưa có art cuối</div>
+  <h2>Chất game mà không cần hình minh hoạ</h2>
+  <div class="rules">
+    <div><b>Màu câu lạc bộ</b>Mỗi tổ chức có cặp màu sinh theo seed. Người chơi có thể chọn lại cặp màu ở màn hình bắt đầu. Màu này chỉ xuất hiện trên top bar, huy hiệu, dải gradient nhẹ sau khối chính và màn hình trận.</div>
+    <div><b>Màn hình trận chia đôi</b>Trận đấu là sự kiện có dàn dựng: hai nửa màn hình mang màu hai đội, mã đội cỡ lớn, rồi hiện dần từng thành phần xác suất trước khi lộ kết quả.</div>
+    <div><b>Thẻ người</b>Chữ cái đầu trên nền màu câu lạc bộ, chữ vai trò A–E cỡ lớn chìm phía sau. Khi có art direction, thẻ này đổi sang chân dung mà bố cục không đổi.</div>
+    <div><b>Chuyển động giải thích</b>Dải ngày trượt khi Continue. Con số thay đổi được nháy sáng 0.7s (ChangeHighlight đã có). Thành phần kết quả hiện lần lượt. Reduced motion tắt hết mà không mất thông tin.</div>
+    <div><b>Vật liệu</b>Mực xanh đen, ba tông nền, hairline 1px. Có thể thêm hạt nhiễu ≤3% chỉ trên top bar và màn hình trận để bớt phẳng kiểu web.</div>
+    <div><b>Watermark dev</b>Giữ đúng một dòng "development fixture" ở góc như hiện nay. Không đưa chú thích kỹ thuật vào khu vực người chơi.</div>
+  </div>
+  <div class="rules avoid" style="margin-top:2px">
+    <div><b>Tránh</b>Neon/cyberpunk esports, gradient tím–xanh, card bo tròn xếp chồng, CTA xanh dương trên nền trắng.</div>
+    <div><b>Tránh</b>Ảnh minh hoạ lấp chỗ trống, KPI tile không gắn câu hỏi, hơn 8 tile một màn hình.</div>
+    <div><b>Tránh</b>Glyph và emoji thay nhãn, chấm màu không kèm hình dạng, số giả chính xác cho giá trị ước tính.</div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section id="roadmap">
+  <div class="kicker">Triển khai · theo thứ tự</div>
+  <h2>Lộ trình vào code</h2>
+  <ol class="steps">
+    <li><div><b>Token D1</b><p>Thêm bộ <code>operations-room-v3</code> trong <code>UiTokens.cs</code>. Lấy màu câu lạc bộ qua <code>BrandResolver.cs</code>. Các kiểm tra tương phản giữ nguyên.</p></div><span class="sz">Nhỏ</span></li>
+    <li><div><b>Font</b><p>Đóng gói Barlow Condensed và IBM Plex Sans (OFL) vào <code>game/Client</code>, trỏ <code>UiTheme</code> sang hai font này, bỏ phụ thuộc Bahnschrift.</p></div><span class="sz">Nhỏ</span></li>
+    <li><div><b>Bỏ glyph</b><p>Thay mảng <code>Sections</code> ở <code>GameShell.cs:29–33</code> bằng mã 3 chữ. Đổi kiểm tra "collapses to glyphs" ở <code>ShellVerification.cs:104</code>. Bỏ dòng phụ đề câu hỏi, chuyển sang tiêu đề trả lời.</p></div><span class="sz">Nhỏ</span></li>
+    <li><div><b>Component thông tin</b><p>Thêm <code>Crest</code>, <code>RangeBar</code> (Estimated), <code>UnknownSlot</code>. Thay ký tự ● ◐ ○ trong <code>ConfidenceIndicator</code>.</p></div><span class="sz">Vừa</span></li>
+    <li><div><b>Chân trời</b><p>Viết <code>HorizonTrack</code> thay <code>DayTrackCanvas</code> và mở rộng <code>DayTrackData</code> với Today/Events/Proposals. Sponsor workspace và Company dùng chung component này.</p></div><span class="sz">Vừa–lớn</span></li>
+    <li><div><b>Chữ ký từng khu vực</b><p>Làm thanh phân bổ ở Competition trước, vì nó bỏ được spinbox. Sau đó đến đường tiền mặt ở Finance, so sánh điều khoản ở Commercial, thẻ đội hình ở Squad.</p></div><span class="sz">Lớn · nhiều lượt</span></li>
+    <li><div><b>Match day (S9)</b><p>Thêm màn hình trận có dàn dựng, dựa trên dữ liệu <code>CompetitiveOutcome</code> đã có.</p></div><span class="sz">Lớn</span></li>
+  </ol>
+  <p class="caption" style="margin-top:14px">Sau mỗi bước: chạy <code>Verify-Shell.ps1</code> và <code>Capture-Shell.ps1</code> ở 1280×720 và 1920×1080, rồi cập nhật screen review record. Palette, font và art cuối cùng là quyết định của Director theo Stage 5 governance. Đề xuất này giữ nguyên các điều không đổi: Known/Estimated/Unknown phân biệt được không cần màu, màu ngữ nghĩa độc lập với brand, mọi hình vẽ có text tương đương, và 720p luôn giữ Continue cùng quyết định chính.</p>
+</section>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const C = {ink:"#0B0F17",ink2:"#131A26",ink3:"#1B2433",inset:"#0F1520",rule:"#253044",fg:"#ECEFF4",fg2:"#AEB8C8",fg3:"#8591A4",gold:"#F2B33D",pos:"#5CC98A",warn:"#FF8A5B",crit:"#EE5560",est:"#B9A6F2"};
+const fmt = n => Math.round(n).toLocaleString("en-US");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- crest ---------- */
+function hash(str){ let h = 2166136261 >>> 0; for (const ch of str){ h ^= ch.codePointAt(0); h = Math.imul(h, 16777619) >>> 0; } return h; }
+const PAIRS = [["#1F6F6B","#E9DFC7"],["#7A2E3A","#E8D9B5"],["#2B4C7E","#D9E2EC"],["#3E5F3A","#E6E0C8"],["#5B3F8C","#E4DCF0"],["#8A5A1F","#F1E3C4"],["#2F3A45","#F0B53A"],["#6B1F2A","#D8C3A5"],["#24505F","#F2C6A0"],["#4A4A52","#E8E4D8"]];
+const SHAPES = [
+  "M50 4 L92 16 V50 C92 74 74 90 50 97 C26 90 8 74 8 50 V16 Z",
+  "M50 4 L90 27 V73 L50 96 L10 73 V27 Z",
+  "M18 6 H82 L94 18 V82 L82 94 H18 L6 82 V18 Z",
+  "M50 4 A46 46 0 1 1 49.99 4 Z"
+];
+function words(name){ return String(name).split(/[\s_\-]+/).filter(w => /[A-Za-zÀ-ỹ0-9]/.test(w)); }
+function initials(name){ const w = words(name); if (!w.length) return "?"; if (w.length === 1) return w[0].slice(0,2).toUpperCase(); return (w[0][0] + w[1][0]).toUpperCase(); }
+function tag(name){ const w = words(name); return w.length ? w[0].slice(0,3).toUpperCase() : "???"; }
+let crestId = 0;
+function crestColors(name){ return PAIRS[hash(name || "?") % PAIRS.length]; }
+function crest(name, size){
+  const h = hash(name || "?"); const [p, s] = crestColors(name); const shape = SHAPES[(h >>> 4) % SHAPES.length]; const pat = (h >>> 8) % 4; const id = "cr" + (++crestId);
+  const ini = initials(name); const fs = ini.length > 2 ? 30 : 38;
+  const patterns = ["",
+    `<rect x="0" y="60" width="100" height="13" fill="${s}"/>`,
+    `<rect x="50" y="0" width="50" height="100" fill="${s}" opacity=".2"/>`,
+    `<path d="M0 66 L50 82 L100 66 V77 L50 93 L0 77 Z" fill="${s}"/>`];
+  const ty = pat === 1 || pat === 3 ? 44 : 53;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="${esc(name)} crest"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs><path d="${shape}" fill="${p}"/><g clip-path="url(#${id})">${patterns[pat]}</g><path d="${shape}" fill="none" stroke="${s}" stroke-width="3" transform="translate(5 5) scale(.9)"/><text x="50" y="${ty}" text-anchor="middle" dominant-baseline="central" font-family="Barlow Condensed, Bahnschrift, Arial Narrow, sans-serif" font-weight="700" font-size="${fs}" fill="${s}" letter-spacing="1">${esc(ini)}</text></svg>`;
+}
+function paintCrests(root){ (root || document).querySelectorAll("[data-crest]").forEach(el => { el.innerHTML = crest(el.dataset.crest, +el.dataset.size || 48); }); }
+paintCrests();
+// Club colors follow the player's crest.
+const pm = document.getElementById("pm"); const club = crestColors("Red River Esports");
+pm.style.setProperty("--club", club[0]); pm.style.setProperty("--club2", club[1]);
+
+const crestBox = document.getElementById("crests"); const crestInput = document.getElementById("crestName");
+const RIVALS = ["Northwind Gaming","Saltmarsh Five","Silver Current","Stormhaven"];
+function renderCrests(){
+  const own = crestInput.value.trim() || "Unnamed";
+  crestBox.innerHTML = [own, ...RIVALS].map((n, i) => `<figure>${crest(n, 72)}<figcaption><b>${esc(tag(n))}</b>${esc(n)}${i === 0 ? "<br><span class='muted'>(bạn)</span>" : ""}</figcaption></figure>`).join("");
+}
+crestInput.addEventListener("input", renderCrests); renderCrests();
+
+/* ---------- palettes ---------- */
+const PALS = [
+  {id:"D1", name:"Đêm thi đấu", rec:true, mood:"Mực xanh đen như phòng điều hành giữa trận đêm. Vàng sân đấu chỉ dành cho hành động chính (Continue, Commit). Tím nhạt dành riêng cho 'ước tính' trên mọi màn hình.",
+   base:"#0B0F17", raised:"#131A26", inset:"#0F1520", rule:"#253044", fg:"#ECEFF4", fg2:"#AEB8C8", act:"#F2B33D", actInk:"#1C1404", pos:"#5CC98A", warn:"#FF8A5B", crit:"#EE5560", est:"#B9A6F2", club:"#1F6F6B"},
+  {id:"D2", name:"Bảng chiến thuật", mood:"Xanh đá phiến như bảng phấn của HLV, chữ trắng phấn, vàng phấn cho hành động. Chất 'sân bãi' rất rõ. Đổi lại, nền xanh làm màu tích cực khó tách, nên positive phải chuyển sang xanh ngọc.",
+   base:"#0E1714", raised:"#15211D", inset:"#101A17", rule:"#26352F", fg:"#E9EFE6", fg2:"#AFBFB5", act:"#E8D36B", actInk:"#1A1704", pos:"#7FD8C8", warn:"#F2A65A", crit:"#F07468", est:"#C9B6F4", club:"#7A2E3A"},
+  {id:"D3", name:"Màu câu lạc bộ", mood:"Than chì trung tính. Màu công ty (sinh theo seed hoặc do người chơi chọn) phủ lên top bar, huy hiệu, mục đang chọn và màn hình trận. Màu ngữ nghĩa giữ cố định, không lấy từ brand.",
+   base:"#111214", raised:"#1A1B1F", inset:"#151619", rule:"#2A2C31", fg:"#F1F0EE", fg2:"#B9B6B0", act:"#E9DFC7", actInk:"#15130F", pos:"#66C78F", warn:"#F2A541", crit:"#EF6461", est:"#B9A6F2", club:"#2B4C7E"}
+];
+function lum(hex){ const v = [1,3,5].map(i => parseInt(hex.slice(i,i+2),16)/255).map(c => c <= .04045 ? c/12.92 : Math.pow((c+.055)/1.055, 2.4)); return .2126*v[0] + .7152*v[1] + .0722*v[2]; }
+function contrast(a, b){ const x = lum(a), y = lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); }
+document.getElementById("pals").innerHTML = PALS.map(p => {
+  const sw = [["base",p.base],["raised",p.raised],["text",p.fg],["action",p.act],["positive",p.pos],["warning",p.warn],["critical",p.crit],["estimate",p.est]];
+  const vars = `--p-base:${p.base};--p-raised:${p.raised};--p-inset:${p.inset};--p-rule:${p.rule};--p-fg:${p.fg};--p-fg2:${p.fg2};--p-act:${p.act};--p-act-ink:${p.actInk};--p-est:${p.est};--p-club:${p.club}`;
+  return `<article class="pal${p.rec ? " rec" : ""}" style="${vars}">
+    <header>${p.rec ? '<span class="badge">Khuyến nghị nền</span><br>' : ""}<h3>${p.id} · ${esc(p.name)}</h3><p class="mood">${esc(p.mood)}</p></header>
+    <div class="sw">${sw.map(([n,c]) => `<span style="background:${c}"><em>${n}</em></span>`).join("")}</div>
+    <div class="pv">
+      <div class="pv-top"><span data-crest="Red River Esports" data-size="26"></span><span class="n">Red River Esports</span><span class="c num">2,600 CU</span><span class="go">Continue</span></div>
+      <div class="pv-row"><span>Saltmarsh Five · strength</span><div class="r"><i style="left:42%;width:28%"></i></div></div>
+      <div class="pv-row"><span class="s" style="color:${p.pos}">Victory vs Northwind</span><span style="color:${p.fg2}" class="num">+2 rep</span></div>
+      <div class="pv-row"><span class="s" style="color:${p.warn}">No preparation plan yet</span><span style="color:${p.fg2}">day 6</span></div>
+      <div class="pv-row"><span class="s" style="color:${p.crit}">Arrears: 140 CU missed</span><span style="color:${p.fg2}">day 9</span></div>
+    </div>
+    <div class="cr num">Chữ trên nền ${contrast(p.fg,p.base).toFixed(1)}:1 · chữ trên nút ${contrast(p.actInk,p.act).toFixed(1)}:1 · ước tính ${contrast(p.est,p.base).toFixed(1)}:1 · cảnh báo ${contrast(p.warn,p.base).toFixed(1)}:1</div>
+  </article>`;
+}).join("");
+paintCrests(document.getElementById("pals"));
+const MAP = [["SurfaceBase","#0B0F17","nền chính"],["SurfaceRaised","#131A26","top bar, rail, khối được nâng"],["SurfaceInset","#0F1520","rãnh thanh, ô nhập"],["SurfaceOverlay","#1B2433","overlay xác nhận"],["Divider","#253044","hairline giữa khối"],["TextPrimary","#ECEFF4","chữ chính, giá trị Known"],["TextSecondary","#AEB8C8","nhãn, mô tả"],["TextMuted","#8591A4","kicker, chú thích"],["ActionPrimary","#F2B33D","Continue, Commit, Accept (một nút mỗi workspace)"],["TextOnAction","#1C1404","chữ trên nút chính"],["StatePositive","#5CC98A","thắng, ổn định"],["StateWarning","#FF8A5B","thiếu kế hoạch, gần ngưỡng"],["StateCritical","#EE5560","vượt capacity, nợ quá hạn"],["InformationEstimated","#B9A6F2","khoảng ước tính (kèm gạch chéo)"],["InformationUnknown","#8591A4","viền nét đứt"],["FocusRing","#9CC3FF","vòng focus bàn phím"],["AccentOrganization","màu CLB","top bar, huy hiệu, màn hình trận"]];
+document.querySelector("#maptable tbody").innerHTML = MAP.map(([r,h,u]) => {
+  const isHex = h.startsWith("#"); const cr = isHex ? contrast(h, "#0B0F17") : null;
+  const text = r === "TextOnAction" ? `${contrast(h,"#F2B33D").toFixed(1)}:1 trên ActionPrimary` : (r === "SurfaceBase" ? "—" : (cr ? cr.toFixed(1)+":1" : "theo seed, kiểm tra khi sinh"));
+  return `<tr><td>${r}</td><td>${isHex ? `<span class="chip" style="background:${h}"></span>` : ""}${h}</td><td class="num">${text}</td><td>${esc(u)}</td></tr>`;
+}).join("");
+
+/* ---------- campaign data (day 1 capture) ---------- */
+const SEASON = 56, CAP = 88, BASE = 65, WIN = 28;
+const MATCHES = [[6,"Saltmarsh Five",1],[11,"Northwind Gaming",1],[16,"Silver Current",1],[21,"Stormhaven",1],[26,"Northwind Gaming",2],[31,"Saltmarsh Five",2],[36,"Silver Current",2],[41,"Stormhaven",2]].map(([d,o,x]) => ({d,o,x,t:tag(o)}));
+const RECEIPTS = [4,11,18,25,32,39,46,53];
+const OFFERS = {lumen:{name:"Lumenfield",load:16,days:84}, kestrel:{name:"Kestrel",load:20,days:56}};
+const DEADLINE = 7, RENEW = 35, ENDS = 56;
+const state = {today:1, view:1, lumen:false, kestrel:false, variant:"horizon", anim:0};
+
+function preview(){ return Object.entries(OFFERS).filter(([k]) => state[k] && state.today <= DEADLINE).map(([,o]) => o); }
+function loadAt(d, withPreview){ let v = BASE; if (withPreview) for (const o of preview()) if (d > state.today && d <= state.today + o.days) v += o.load; return v; }
+function inWindow(d, start){ return d >= Math.floor(start) && d < start + WIN; }
+function eventsFor(today){
+  const ev = [];
+  for (const m of MATCHES) if (m.d >= today && m.d < today + WIN) ev.push({d:m.d, k:"match", label: m.t + (m.x > 1 ? " ×2" : ""), text:`Match vs ${m.o}${m.x > 1 ? " (double stakes)" : ""}`});
+  for (const r of RECEIPTS) if (r >= today && r < today + WIN) ev.push({d:r, k:"receipt", label:"+300", text:"Northfield Coffee pays 300 CU"});
+  if (DEADLINE >= today && DEADLINE < today + WIN) ev.push({d:DEADLINE, k:"deadline", label:"2 offers expire", text:"Lumenfield and Kestrel offers expire"});
+  if (RENEW >= today && RENEW < today + WIN) ev.push({d:RENEW, k:"renew", label:"Renewal talks open · 4", text:"Renewal window opens for 4 players"});
+  if (ENDS >= today && ENDS < today + WIN) ev.push({d:ENDS, k:"end", label:"4 contracts end", text:"4 player contracts and the Northfield agreement end"});
+  return ev.sort((a,b) => a.d - b.d);
+}
+function nextStop(today){
+  const c = [today + 7, SEASON];
+  for (const m of MATCHES) if (m.d > today) { c.push(m.d); break; }
+  for (const d of [DEADLINE, RENEW]) if (d > today) c.push(d);
+  return Math.min(...c);
+}
+function summary(){
+  const t = state.today, last = Math.min(SEASON, t + WIN - 1), prev = preview().length > 0;
+  let over = 0, peak = 0;
+  for (let d = t; d <= last; d++){ const v = loadAt(d, prev); peak = Math.max(peak, v); if (!over && v > CAP) over = d; }
+  const ev = eventsFor(t);
+  const nm = ev.filter(e => e.k === "match").length, nr = ev.filter(e => e.k === "receipt").length;
+  let headline, cls = "";
+  if (over){ headline = `Over capacity from day ${over} if signed`; cls = "crit"; }
+  else if (prev){ headline = `Still within capacity with the offer: ${CAP - peak} spare`; }
+  else headline = last < t + WIN - 1 ? `Load stays within capacity until the season ends` : `Load stays within capacity for 4 weeks`;
+  const facts = [`${nm} match${nm === 1 ? "" : "es"}`, `${nr} payment${nr === 1 ? "" : "s"}`];
+  if (t <= DEADLINE) facts.push(`2 offers expire day ${DEADLINE}`);
+  if (t + WIN - 1 > SEASON) facts.push(`season ends day ${SEASON}`);
+  return {headline, cls, facts:facts.join(" · "), peak, ev, last};
+}
+
+/* ---------- variant A: horizon ---------- */
+function horizonSVG(W, opts){
+  const compact = !!opts.compact, start = opts.start, today = state.today, prev = !compact && preview().length > 0;
+  const H = compact ? 200 : 252, padL = 8, padR = compact ? 64 : 82, plotW = Math.max(120, W - padL - padR), cell = plotW / WIN;
+  const fy0 = 6, fH = 22, cTop = compact ? 64 : 70, cBot = compact ? 132 : 160, laneA = cBot + 16, laneB = cBot + 33, axY = compact ? 182 : 214;
+  const X = d => padL + (d - start) * cell;            // left edge of day d's cell
+  const XC = d => X(d) + cell / 2;
+  let maxV = 110; for (let d = today; d < today + WIN; d++) maxV = Math.max(maxV, loadAt(d, prev) * 1.06);
+  const Y = v => cBot - v / maxV * (cBot - cTop);
+  const right = padL + plotW, seasonEdge = X(SEASON + 1);
+  const o = [];
+  o.push(`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Load against capacity with matches, payments and deadlines for the next four weeks">`);
+  o.push(`<defs><clipPath id="clipH${compact?1:0}"><rect x="${padL}" y="0" width="${plotW}" height="${H}"/></clipPath>
+    <pattern id="hEst${compact?1:0}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="${C.est}" fill-opacity=".08"/><line x1="0" y1="0" x2="0" y2="6" stroke="${C.est}" stroke-opacity=".35" stroke-width="1.5"/></pattern>
+    <pattern id="hUnk${compact?1:0}" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="${C.rule}" stroke-width="2"/></pattern>
+    <pattern id="hCrit${compact?1:0}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="${C.crit}" fill-opacity=".25"/><line x1="0" y1="0" x2="0" y2="5" stroke="${C.crit}" stroke-width="2"/></pattern></defs>`);
+  const sfx = compact ? 1 : 0;
+  // zones
+  o.push(`<rect x="${padL}" y="${cTop}" width="${plotW}" height="${Y(CAP) - cTop}" fill="${C.crit}" fill-opacity=".06"/>`);
+  o.push(`<rect x="${padL}" y="${Y(CAP)}" width="${plotW}" height="${Y(CAP*0.85) - Y(CAP)}" fill="${C.fg}" fill-opacity=".035"/>`);
+  o.push(`<g clip-path="url(#clipH${sfx})">`);
+  // season boundary / unknown next season
+  if (seasonEdge < right){
+    o.push(`<rect x="${seasonEdge}" y="${fy0}" width="${right - seasonEdge + 4}" height="${cBot - fy0}" fill="url(#hUnk${sfx})"/>`);
+    o.push(`<line x1="${seasonEdge}" x2="${seasonEdge}" y1="${fy0}" y2="${axY - 12}" stroke="${C.fg3}" stroke-width="1.5"/>`);
+    if (right - seasonEdge > 70) o.push(`<text x="${seasonEdge + 6}" y="${fy0 + 15}" fill="${C.fg2}" font-size="11" font-weight="600" letter-spacing="1.2">SEASON 2</text><text x="${seasonEdge + 6}" y="${fy0 + 30}" fill="${C.fg3}" font-size="10.5">schedule not drawn yet</text>`);
+  }
+  // week dividers
+  for (let k = 0; k <= 4; k++){ const x = X(today + 7*k); o.push(`<line x1="${x}" x2="${x}" y1="${cTop - 4}" y2="${axY - 12}" stroke="${C.rule}" stroke-width="1"/>`); }
+  // load area + line (estimated projection)
+  const lastD = Math.min(SEASON, Math.ceil(start) + WIN);
+  let path = `M${X(today)} ${cBot}`, line = "";
+  for (let d = today; d <= lastD; d++){ const y = Y(loadAt(d, false)); path += ` L${X(d)} ${y} L${X(d+1)} ${y}`; line += `${d === today ? "M" : "L"}${X(d)} ${y} L${X(d+1)} ${y} `; }
+  path += ` L${X(lastD+1)} ${cBot} Z`;
+  o.push(`<path d="${path}" fill="url(#hEst${sfx})"/>`);
+  o.push(`<path d="${line}" fill="none" stroke="${C.est}" stroke-width="2" stroke-dasharray="7 4"/>`);
+  // proposal ghost
+  if (prev){
+    let g = "";
+    for (let d = today; d <= lastD; d++){ const v = loadAt(d, true), y = Y(v); g += `${d === today ? "M" : "L"}${X(d)} ${y} L${X(d+1)} ${y} `; if (v > CAP) o.push(`<rect x="${X(d)}" y="${y}" width="${cell + .5}" height="${Y(CAP) - y}" fill="url(#hCrit${sfx})"/>`); }
+    o.push(`<path d="${g}" fill="none" stroke="${C.fg}" stroke-width="1.6" stroke-dasharray="2 3"/>`);
+  }
+  // match stems & flags
+  const ms = MATCHES.filter(m => m.d >= Math.floor(start) - 1 && m.d < start + WIN + 1 && m.d <= SEASON);
+  const nextM = MATCHES.find(m => m.d >= today);
+  let lastFlagEnd = -1e9, row = 0;
+  for (const m of ms){
+    const x = XC(m.d), label = m.t + (m.x > 1 ? " ×2" : ""), fw = label.length * 7.6 + 14;
+    row = (x < lastFlagEnd + 4) ? 1 - row : 0; lastFlagEnd = x + fw;
+    const fy = fy0 + row * (fH + 4) + (compact ? 0 : 8), isNext = nextM && m.d === nextM.d;
+    o.push(`<line x1="${x}" x2="${x}" y1="${fy + fH}" y2="${Y(loadAt(m.d, false))}" stroke="${isNext ? C.gold : C.fg3}" stroke-width="1.2" stroke-dasharray="${isNext ? "" : "2 3"}"/>`);
+    o.push(`<rect x="${x}" y="${fy}" width="${fw}" height="${fH}" rx="1.5" fill="${isNext ? C.gold : C.ink3}" stroke="${isNext ? C.gold : C.rule}"/>`);
+    if (m.x > 1) o.push(`<rect x="${x}" y="${fy + fH - 3}" width="${fw}" height="3" fill="${isNext ? C.ink : C.fg2}"/>`);
+    o.push(`<text x="${x + 7}" y="${fy + 15.5}" fill="${isNext ? "#1C1404" : C.fg}" font-size="13.5" font-weight="700" font-family="Barlow Condensed, Bahnschrift, sans-serif" letter-spacing=".8">${label}</text>`);
+  }
+  // receipts (lane A)
+  for (const r of RECEIPTS) if (r >= Math.floor(start) - 1 && r < start + WIN + 1){ const x = XC(r); o.push(`<line x1="${x}" x2="${x}" y1="${cBot}" y2="${cBot + 5}" stroke="${C.pos}" stroke-width="2"/><text x="${x}" y="${laneA + 4}" fill="${C.pos}" font-size="11.5" font-weight="600" text-anchor="middle">+300</text>`); }
+  // deadlines etc (lane B), not in compact
+  const marks = [[DEADLINE, "2 offers expire", C.warn, today <= DEADLINE],[RENEW, "Renewal talks open · 4", C.fg2, true],[ENDS, "4 contracts end", C.fg2, true]];
+  for (const [d, label, col, show] of marks){
+    if (!show || d < Math.floor(start) - 1 || d >= start + WIN + 1) continue;
+    const x = XC(d);
+    o.push(`<line x1="${x}" x2="${x}" y1="${cTop - 6}" y2="${cBot}" stroke="${col}" stroke-width="1.3" stroke-dasharray="4 3"/>`);
+    if (!compact){ const tw = label.length * 6.1, anchorEnd = x + tw > right - 2; o.push(`<text x="${anchorEnd ? x - 4 : x + 4}" y="${laneB + 4}" fill="${col}" font-size="11.5" font-weight="600" text-anchor="${anchorEnd ? "end" : "start"}">${label}</text>`); }
+  }
+  // today marker + known dot
+  const tx = X(today), ty = Y(loadAt(today, false));
+  o.push(`<line x1="${tx}" x2="${tx}" y1="${cTop - 6}" y2="${axY - 12}" stroke="${C.gold}" stroke-width="2"/>`);
+  o.push(`<rect x="${tx}" y="${ty - 4}" width="${Math.min(cell, 10)}" height="8" fill="${C.fg}"/>`);
+  o.push(`</g>`);
+  // capacity line + gutter labels
+  o.push(`<line x1="${padL}" x2="${right}" y1="${Y(CAP)}" y2="${Y(CAP)}" stroke="${C.fg2}" stroke-width="1.3"/>`);
+  const gx = right + 8, vNow = loadAt(Math.min(lastD, today + WIN - 1), false);
+  o.push(`<text x="${gx}" y="${Y(CAP) - 4}" fill="${C.fg2}" font-size="11">capacity</text><text x="${gx}" y="${Y(CAP) + 10}" fill="${C.fg}" font-size="13" font-weight="700" font-family="Barlow Condensed, Bahnschrift, sans-serif">${CAP}</text>`);
+  const ly = Math.max(Y(vNow) + 4, Y(CAP) + 30);
+  o.push(`<text x="${gx}" y="${ly + 8}" fill="${C.est}" font-size="17" font-weight="700" font-family="Barlow Condensed, Bahnschrift, sans-serif">${vNow}</text><text x="${gx}" y="${ly + 22}" fill="${C.fg3}" font-size="10.5">${CAP - vNow} spare</text>`);
+  if (prev){ const pv = Math.max(...Array.from({length: Math.max(1, lastD - today + 1)}, (_, i) => loadAt(today + i, true))); o.push(`<text x="${gx}" y="${cTop + 2}" fill="${pv > CAP ? C.crit : C.fg}" font-size="11" font-weight="600">with offer</text><text x="${gx}" y="${cTop + 18}" fill="${pv > CAP ? C.crit : C.fg}" font-size="16" font-weight="700" font-family="Barlow Condensed, Bahnschrift, sans-serif">${pv}</text>`); }
+  // axis (week labels relative to today)
+  const names = ["Today", "Next week", "+2 weeks", "+3 weeks"];
+  for (let k = 0; k < 4; k++){
+    const d = today + 7*k, x = X(d) + 4; if (x > right - 30) continue;
+    const label = k === 0 ? `Today · day ${today}` : names[k];
+    o.push(`<text x="${x}" y="${axY}" fill="${k === 0 ? C.gold : C.fg2}" font-size="11" font-weight="600" letter-spacing="1">${label.toUpperCase()}</text>`);
+    if (k > 0 && !compact) o.push(`<text x="${x}" y="${axY + 15}" fill="${C.fg3}" font-size="10.5">day ${d}</text>`);
+  }
+  if (!compact) o.push(`<text x="${padL}" y="${H - 2}" fill="${C.fg3}" font-size="10.5">Dashed violet: projected load (estimate) · white block: today (known)</text>`);
+  o.push(`</svg>`);
+  return o.join("");
+}
+
+/* ---------- variant B: week planner ---------- */
+function weekHTML(){
+  const t = state.today, prev = preview().length > 0, ev = eventsFor(t), nextM = MATCHES.find(m => m.d >= t);
+  const scale = 110; let html = `<div class="weekgrid">`;
+  for (let w = 0; w < 4; w++){
+    html += `<div class="wl">${w === 0 ? "This week" : w === 1 ? "Next week" : "+" + w + " weeks"}</div>`;
+    for (let i = 0; i < 7; i++){
+      const d = t + w*7 + i;
+      if (d > SEASON){ html += `<div class="cell s2"><div class="dn">${d}<small style="color:var(--fg3)">S2</small></div><div class="ev o">Season 2 · not drawn</div></div>`; continue; }
+      const es = ev.filter(e => e.d === d), v = loadAt(d, prev);
+      html += `<div class="cell${d === t ? " today" : ""}"><div class="dn"><span>${d}</span>${d === t ? "<small>Today</small>" : ""}</div>`;
+      for (const e of es){
+        if (e.k === "match") html += `<div class="ev m${nextM && e.d === nextM.d ? " next" : ""}">vs ${e.label}</div>`;
+        else if (e.k === "receipt") html += `<div class="ev r">+300 CU</div>`;
+        else if (e.k === "deadline") html += `<div class="ev dl">Offers expire</div>`;
+        else html += `<div class="ev o">${esc(e.label)}</div>`;
+      }
+      html += `<div class="ld" title="Load ${v} of ${CAP}"><i class="${v > CAP ? "over" : ""}" style="width:${Math.min(100, v/scale*100)}%"></i><b style="left:${CAP/scale*100}%"></b></div></div>`;
+    }
+  }
+  return html + `</div><p class="caption">Thanh dưới mỗi ô: load dự kiến (tím), vạch trắng là capacity ${CAP}. Ô viền vàng là hôm nay.</p>`;
+}
+
+/* ---------- variant C: season pulse (also top-bar ribbon) ---------- */
+function seasonSVG(W, mini){
+  const H = mini ? 22 : 150, padL = mini ? 0 : 8, padR = mini ? 0 : 8, plotW = W - padL - padR, cell = plotW / SEASON;
+  const X = d => padL + (d - 1) * cell, t = state.today, y0 = mini ? 11 : 70;
+  const o = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Season 1 timeline, day ${t} of ${SEASON}">`];
+  o.push(`<rect x="${padL}" y="${y0 - 2}" width="${plotW}" height="4" fill="${C.rule}"/>`);
+  o.push(`<rect x="${padL}" y="${y0 - 2}" width="${X(t) - padL}" height="4" fill="${C.fg3}"/>`);
+  const half = X(29); o.push(`<line x1="${half}" x2="${half}" y1="${y0 - (mini ? 8 : 40)}" y2="${y0 + (mini ? 8 : 40)}" stroke="${C.fg3}" stroke-dasharray="2 3"/>`);
+  if (!mini){
+    o.push(`<text x="${padL}" y="14" fill="${C.fg2}" font-size="11" font-weight="600" letter-spacing="1">FIRST HALF</text><text x="${half + 6}" y="14" fill="${C.fg2}" font-size="11" font-weight="600" letter-spacing="1">SECOND HALF · DOUBLE STAKES</text>`);
+    const ws = X(t), we = X(Math.min(SEASON + 1, t + WIN));
+    o.push(`<path d="M${ws} ${y0 + 30} V${y0 + 36} H${we} V${y0 + 30}" fill="none" stroke="${C.est}" stroke-width="1.5"/><text x="${ws}" y="${y0 + 52}" fill="${C.est}" font-size="11" font-weight="600">4-week horizon</text>`);
+  }
+  for (const m of MATCHES){
+    const x = X(m.d) + cell/2, played = m.d < t, next = MATCHES.find(q => q.d >= t) === m;
+    const h = mini ? (m.x > 1 ? 9 : 6) : (m.x > 1 ? 26 : 16);
+    o.push(`<rect x="${x - (mini ? 1.5 : 2)}" y="${y0 - h}" width="${mini ? 3 : 4}" height="${h * 2}" fill="${next ? C.gold : played ? C.fg3 : C.fg}"/>`);
+    if (!mini) o.push(`<text x="${x}" y="${y0 - h - 6}" fill="${next ? C.gold : C.fg2}" font-size="11.5" font-weight="700" text-anchor="middle" font-family="Barlow Condensed, Bahnschrift, sans-serif">${m.t}</text>`);
+  }
+  if (!mini) for (const r of RECEIPTS){ const x = X(r) + cell/2; o.push(`<circle cx="${x}" cy="${y0 + 14}" r="2.5" fill="${C.pos}"/>`); }
+  o.push(`<rect x="${X(t)}" y="${y0 - (mini ? 10 : 34)}" width="2" height="${mini ? 20 : 68}" fill="${C.gold}"/>`);
+  if (!mini){ o.push(`<text x="${padL}" y="${H - 6}" fill="${C.fg3}" font-size="10.5">Bars: matches (taller = double stakes) · green dots: sponsor payments · gold: today</text>`); }
+  o.push(`</svg>`);
+  return o.join("");
+}
+
+/* ---------- runway ---------- */
+function runwayData(){
+  const pts = []; let cash = 2600, bonus = 0;
+  for (let d = 1; d <= 28; d++){
+    if (d > 1) cash -= 70.74;
+    if (RECEIPTS.includes(d)) cash += 300;
+    if (MATCHES.some(m => m.d === d)) bonus += 25;
+    pts.push({d, cash, hi: cash + bonus});
+  }
+  return pts;
+}
+function runwaySVG(W, compact){
+  const pts = runwayData(), H = compact ? 70 : 190, padL = compact ? 0 : 46, padR = compact ? 4 : 58, padT = compact ? 6 : 14, padB = compact ? 6 : 26;
+  const lo = 1700, hi = 2800, plotW = W - padL - padR, X = d => padL + (d - 1) / 27 * plotW, Y = v => padT + (hi - v) / (hi - lo) * (H - padT - padB);
+  const o = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Projected cash for the next 28 days">`];
+  if (!compact) for (const v of [1800, 2200, 2600]){ o.push(`<line x1="${padL}" x2="${padL + plotW}" y1="${Y(v)}" y2="${Y(v)}" stroke="${C.rule}"/><text x="${padL - 6}" y="${Y(v) + 4}" fill="${C.fg3}" font-size="10.5" text-anchor="end">${fmt(v)}</text>`); }
+  let band = `M${X(1)} ${Y(pts[0].hi)}`; pts.forEach(p => band += ` L${X(p.d)} ${Y(p.hi)}`); for (let i = pts.length - 1; i >= 0; i--) band += ` L${X(pts[i].d)} ${Y(pts[i].cash)}`;
+  o.push(`<path d="${band} Z" fill="${C.est}" fill-opacity=".22"/>`);
+  let line = ""; pts.forEach((p, i) => line += `${i ? "L" : "M"}${X(p.d)} ${Y(p.cash)} `);
+  o.push(`<path d="${line}" fill="none" stroke="${C.fg}" stroke-width="2"/>`);
+  if (!compact){
+    for (const r of RECEIPTS.filter(r => r <= 28)){ const p = pts[r - 1]; o.push(`<text x="${X(r)}" y="${Y(p.cash) - 8}" fill="${C.pos}" font-size="10.5" font-weight="600" text-anchor="middle">+300</text>`); }
+    for (const k of [1, 7, 14, 21, 28]) o.push(`<text x="${X(k)}" y="${H - 8}" fill="${C.fg3}" font-size="10.5" text-anchor="middle">day ${k}</text>`);
+    const end = pts[pts.length - 1];
+    o.push(`<circle cx="${X(28)}" cy="${Y(end.cash)}" r="3.5" fill="${C.fg}"/><text x="${X(28) + 8}" y="${Y(end.cash) + 4}" fill="${C.fg}" font-size="13" font-weight="700" font-family="Barlow Condensed, Bahnschrift, sans-serif">${fmt(end.cash)}</text><text x="${X(28) + 8}" y="${Y(end.hi) - 2}" fill="${C.est}" font-size="10.5">≤${fmt(end.hi)}</text>`);
+  } else {
+    const end = pts[pts.length - 1]; o.push(`<circle cx="${X(28)}" cy="${Y(end.cash)}" r="3" fill="${C.fg}"/>`);
+  }
+  o.push(`</svg>`); return o.join("");
+}
+
+/* ---------- day track controller ---------- */
+const view = document.getElementById("trView");
+function width(el){ return Math.max(260, Math.floor(el.clientWidth)); }
+function renderTrack(){
+  const s = summary();
+  const hl = document.getElementById("trHeadline"); hl.textContent = s.headline; hl.style.color = s.cls === "crit" ? "var(--crit)" : "";
+  document.getElementById("trFacts").textContent = s.facts;
+  document.getElementById("trKicker").textContent = state.variant === "season" ? `Season 1 · day ${state.today} of ${SEASON}` : `Next 4 weeks · from day ${state.today}`;
+  const ns = nextStop(state.today), m = MATCHES.find(q => q.d === ns);
+  document.getElementById("trNext").textContent = state.today >= SEASON ? "Back to day 1 (demo)" : `Next stop: day ${ns}${m ? " · vs " + m.t : ""}`;
+  for (const k of ["lumen","kestrel"]){ const ok = state.today <= DEADLINE, wrap = document.getElementById(k === "lumen" ? "tgLumenWrap" : "tgKestrelWrap"), cb = wrap.querySelector("input"); cb.disabled = !ok; wrap.setAttribute("aria-disabled", String(!ok)); if (!ok) cb.checked = false; }
+  if (state.variant === "horizon") view.innerHTML = horizonSVG(width(view), {start: state.view});
+  else if (state.variant === "week") view.innerHTML = `<div class="week">${weekHTML()}</div>`;
+  else view.innerHTML = seasonSVG(width(view), false);
+  const tx = document.getElementById("trText");
+  const lines = [`Load ${BASE} of ${CAP} today (known); projected unchanged through day ${s.last} (estimate).`];
+  if (preview().length) for (const o of preview()) lines.push(`Preview ${o.name}: +${o.load} load from day ${state.today + 1}.`);
+  s.ev.forEach(e => lines.push(`Day ${e.d}: ${e.text}.`));
+  if (state.today + WIN - 1 > SEASON) lines.push(`After day ${SEASON}: season 2 schedule not drawn yet (unknown).`);
+  tx.innerHTML = lines.map(l => `<li>${esc(l)}</li>`).join("");
+  renderPortal();
+}
+function renderPortal(){
+  const h = document.getElementById("pmHorizon"), s = summary();
+  h.innerHTML = `<div class="kicker">Next 4 weeks · load, matches, payments</div><div class="headline" style="font-size:21px;margin:4px 0 0">${esc(s.headline)}</div>` + horizonSVG(Math.max(260, h.clientWidth - 36), {start: state.view, compact: true});
+  const rb = document.getElementById("pmRibbon"); rb.innerHTML = seasonSVG(Math.max(140, rb.clientWidth), true);
+  document.getElementById("pmRibbonLabel").textContent = `Season 1 · day ${state.today} / ${SEASON}`;
+}
+function go(to){
+  const from = state.view; state.today = to;
+  if (reduce || Math.abs(to - from) > 30){ state.view = to; renderTrack(); return; }
+  const t0 = performance.now(), dur = 520, id = ++state.anim;
+  const step = now => {
+    if (id !== state.anim) return;
+    const k = Math.min(1, (now - t0) / dur), e = k < .5 ? 2*k*k : 1 - Math.pow(-2*k + 2, 2) / 2;
+    state.view = from + (to - from) * e;
+    if (state.variant === "horizon") view.innerHTML = horizonSVG(width(view), {start: state.view});
+    const h = document.getElementById("pmHorizon"); const svg = h.querySelector("svg"); if (svg) svg.outerHTML = horizonSVG(Math.max(260, h.clientWidth - 36), {start: state.view, compact: true});
+    if (k < 1) requestAnimationFrame(step); else { state.view = to; renderTrack(); }
+  };
+  renderTrack(); state.view = from; requestAnimationFrame(step);
+}
+document.getElementById("trContinue").addEventListener("click", () => go(state.today >= SEASON ? 1 : nextStop(state.today)));
+document.getElementById("tgLumen").addEventListener("change", e => { state.lumen = e.target.checked; renderTrack(); });
+document.getElementById("tgKestrel").addEventListener("change", e => { state.kestrel = e.target.checked; renderTrack(); });
+document.querySelectorAll('.tabs [role="tab"]').forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll('.tabs [role="tab"]').forEach(x => x.setAttribute("aria-selected", String(x === b)));
+  state.variant = b.dataset.v; renderTrack();
+}));
+
+/* ---------- allocation bar ---------- */
+const alloc = {a:50, b:80};
+const allocEl = document.getElementById("alloc"), h1 = document.getElementById("h1"), h2 = document.getElementById("h2");
+function renderAlloc(){
+  const e = alloc.a, o = alloc.b - alloc.a, m = 100 - alloc.b;
+  [["seg1",e,"Execution"],["seg2",o,"Opponent"],["seg3",m,"Meta"]].forEach(([id,v,n]) => { const s = document.getElementById(id); s.style.width = v + "%"; s.innerHTML = v >= 14 ? `${n}<b class="num">${v}</b>` : (v >= 6 ? `<b class="num" style="margin:0">${v}</b>` : ""); });
+  h1.style.left = alloc.a + "%"; h2.style.left = alloc.b + "%";
+  h1.setAttribute("aria-valuenow", alloc.a); h1.setAttribute("aria-valuetext", `Execution ${e}%, opponent study ${o}%`);
+  h2.setAttribute("aria-valuenow", alloc.b); h2.setAttribute("aria-valuetext", `Opponent study ${o}%, meta adaptation ${m}%`);
+  document.getElementById("allocText").textContent = `Team execution ${e}% · opponent study ${o}% · meta adaptation ${m}% · total 100%`;
+}
+function setHandle(which, v){ v = Math.round(v / 5) * 5; if (which === 1) alloc.a = Math.max(0, Math.min(alloc.b, v)); else alloc.b = Math.max(alloc.a, Math.min(100, v)); renderAlloc(); }
+[[h1,1],[h2,2]].forEach(([h,w]) => {
+  h.addEventListener("keydown", ev => { const cur = w === 1 ? alloc.a : alloc.b; if (ev.key === "ArrowLeft" || ev.key === "ArrowDown"){ setHandle(w, cur - 5); ev.preventDefault(); } if (ev.key === "ArrowRight" || ev.key === "ArrowUp"){ setHandle(w, cur + 5); ev.preventDefault(); } });
+  h.addEventListener("pointerdown", ev => {
+    h.setPointerCapture(ev.pointerId); h.focus();
+    const move = e2 => { const r = allocEl.getBoundingClientRect(); setHandle(w, (e2.clientX - r.left) / r.width * 100); };
+    const up = () => { h.removeEventListener("pointermove", move); h.removeEventListener("pointerup", up); };
+    h.addEventListener("pointermove", move); h.addEventListener("pointerup", up);
+  });
+});
+renderAlloc();
+const STANCE = ["Conservative","Balanced","Aggressive"], SPREAD = ["narrow","medium","wide"];
+function renderStance(p){
+  document.querySelectorAll("#stance button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.p === p)));
+  const match = p === 1;
+  document.getElementById("stanceEffect").innerHTML = `${match ? `<b style="color:var(--pos)">Matches the public meta (balanced): matchup +3.</b>` : `<b style="color:var(--warn)">Differs from the public meta (balanced): matchup −1.</b>`} Result spread: <b>${SPREAD[p]}</b>.`;
+}
+document.querySelectorAll("#stance button").forEach(b => b.addEventListener("click", () => renderStance(+b.dataset.p)));
+renderStance(1);
+
+/* ---------- squad plates ---------- */
+const LINEUP = [["A","Seo-yeon Morales",76,82,56],["B","Noor Romero",75,91,112],["C","Oskar Fischer",74,93,56],["D","An Dubois",64,85,112],["E","Leo Vo",65,88,56]];
+document.getElementById("plates").innerHTML = LINEUP.map(([r,n,ex,rd,end]) => `<div class="plate"><span class="role">${r}</span><span class="av" style="background:${club[0]};color:${club[1]}">${initials(n)}</span><div class="nm" title="${esc(n)}">${esc(n)}</div><div class="ex num">${ex}<small>EXEC</small></div><div class="rd" title="Readiness ${rd}"><i style="width:${rd}%"></i></div><div class="ct${end <= 56 ? " soon" : ""}">${end <= 56 ? "Ends day 56 · renew from 35" : "Ends day 112"}</div></div>`).join("");
+const FA = [["Linh Petrov","E",50,80],["Mai Kowalski","C",50,80],["Kai Nakamura","E",70,100],["Wei Hoang","E",50,80]];
+const holder = {A:76,B:75,C:74,D:64,E:65};
+const sc = v => (v - 40) / 60 * 100;
+document.getElementById("freeagents").innerHTML = `<span class="h">Free agent</span><span class="h">Role</span><span class="h">Ability · estimate vs holder</span><span class="h" style="text-align:right">Range</span>` + FA.map(([n,r,lo,hi]) => `<span>${esc(n)}</span><span style="font:600 15px var(--display)">${r}</span><div class="bar"><span class="range" style="left:${sc(lo)}%;width:${sc(hi) - sc(lo)}%"></span><span class="tick" style="left:${sc(holder[r])}%"></span></div><span class="rr num" style="color:var(--est)">${lo}–${hi}</span>`).join("");
+
+/* ---------- result anatomy (illustrative) ---------- */
+const ANA = [["Lineup vs rival strength","62 vs 68",-6],["Preparation","plan + work",4],["Matchup","posture = meta",3],["Adaptation","players + coach",2],["Match-day variance","rolled",1]];
+function renderAnatomy(reveal){
+  const box = document.getElementById("anatomy"), W = Math.max(280, box.clientWidth), rowH = 30, H = ANA.length * rowH + 44, padL = Math.min(170, W * .42), plotW = W - padL - 16;
+  const X = p => padL + (p - 30) / 40 * plotW;   // 30%–70%
+  let acc = 50; const rows = ANA.map(([n,s,v]) => { const from = acc; acc += v * 1.2; return {n,s,v,from,to:acc}; });
+  const o = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Illustrative win chance breakdown">`];
+  for (const p of [30,40,50,60,70]) o.push(`<line x1="${X(p)}" x2="${X(p)}" y1="4" y2="${H - 22}" stroke="${p === 50 ? C.fg3 : C.rule}" ${p === 50 ? "" : 'stroke-dasharray="2 3"'}/><text x="${X(p)}" y="${H - 6}" fill="${C.fg3}" font-size="10.5" text-anchor="middle">${p}%</text>`);
+  rows.forEach((r, i) => {
+    const y = 8 + i * rowH, x0 = X(Math.min(r.from, r.to)), w = Math.abs(X(r.to) - X(r.from)), col = r.v >= 0 ? C.pos : C.crit;
+    const delay = reveal ? i * 260 : 0;
+    o.push(`<text x="0" y="${y + 13}" fill="${C.fg}" font-size="12.5" font-weight="600">${esc(r.n)}</text><text x="0" y="${y + 26}" fill="${C.fg3}" font-size="10.5">${esc(r.s)}</text>`);
+    o.push(`<g style="${reveal ? `opacity:0;animation:anaIn .35s ease-out ${delay}ms forwards` : ""}"><rect x="${x0}" y="${y + 4}" width="${Math.max(2, w)}" height="16" fill="${col}" fill-opacity=".85"/><text x="${r.v >= 0 ? X(r.to) + 5 : X(r.to) - 5}" y="${y + 16}" fill="${col}" font-size="12" font-weight="700" text-anchor="${r.v >= 0 ? "start" : "end"}">${r.v >= 0 ? "+" : "−"}${Math.abs(r.v * 1.2).toFixed(1)}</text></g>`);
+    if (i < rows.length - 1) o.push(`<line x1="${X(r.to)}" x2="${X(r.to)}" y1="${y + 20}" y2="${y + rowH + 4}" stroke="${C.fg3}" stroke-width="1"/>`);
+  });
+  o.push(`</svg>`); box.innerHTML = o.join("");
+  document.getElementById("anaTotal").textContent = acc.toFixed(1) + "%";
+}
+const st = document.createElement("style"); st.textContent = "@keyframes anaIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}"; document.head.appendChild(st);
+document.getElementById("anaReplay").addEventListener("click", () => renderAnatomy(!reduce));
+
+/* ---------- finance + layout ---------- */
+function renderStatic(){
+  const rw = document.getElementById("runway"); rw.innerHTML = runwaySVG(Math.max(260, rw.clientWidth), false);
+  const pts = runwayData(), end = pts[pts.length - 1];
+  document.getElementById("runHeadline").textContent = `About ${fmt(end.cash)} CU by day 28, falling ~70 CU a day between payments`;
+  const pr = document.getElementById("pmRunway"); pr.innerHTML = `<div class="caption" style="margin:8px 0 4px"><span style="color:var(--est)">Estimate:</span> about ${fmt(end.cash)} CU in 4 weeks</div>` + runwaySVG(Math.max(160, pr.clientWidth), true);
+  renderAnatomy(false);
+}
+let rt; const ro = new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { renderTrack(); renderStatic(); }, 80); });
+ro.observe(document.querySelector(".wrap"));
+renderTrack(); renderStatic();
+})();
+</script>

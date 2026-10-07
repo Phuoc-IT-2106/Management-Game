@@ -1,0 +1,264 @@
+<title>Bài học từ 16 game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  /* Layout: một cột đọc 720px như bản ghi nghiên cứu; chỉ bảng đối chiếu được rộng hơn. Thang chữ đúng 7 cỡ 12/14/16/20/24/32/48 */
+  --paper:#F5F6F4; --ink:#16191D; --ink2:#4E555D; --rule:#D3D8D2; --link:#1C6A50; --tint:#E9EDE8;
+  --font:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  --t12:.75rem; --t14:.875rem; --t16:1rem; --t20:1.25rem; --t24:1.5rem; --t32:2rem; --t48:3rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#131518;--ink:#E6E8EA;--ink2:#A3A9B0;--rule:#2C3035;--link:#86CDB0;--tint:#1B1F23;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#131518;--ink:#E6E8EA;--ink2:#A3A9B0;--rule:#2C3035;--link:#86CDB0;--tint:#1B1F23;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:var(--t16);line-height:1.65;margin:0}
+.page{max-width:720px;margin:0 auto;padding-inline:20px;padding-block:56px 96px}
+.wide{max-width:1040px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-weight:600;line-height:1.25;margin:0;text-wrap:balance}
+h1{font-size:var(--t48);letter-spacing:-.01em}
+h2{font-size:var(--t32);margin-top:72px;padding-top:24px;border-top:1px solid var(--rule)}
+h3{font-size:var(--t24);margin-top:48px}
+p{margin:12px 0 0}
+.lede{font-size:var(--t20);line-height:1.5;color:var(--ink2);margin-top:20px}
+.meta{font-size:var(--t14);color:var(--ink2);margin-top:4px}
+.src{font-size:var(--t14);color:var(--ink2);margin-top:12px}
+a{color:var(--link);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+q{font-style:italic}
+dl{margin:16px 0 0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px}
+dt{font-weight:600}
+dd{margin:0}
+.intro-list{margin:16px 0 0;padding-left:20px}
+.intro-list li{margin-top:6px}
+.tablewrap{overflow-x:auto;margin-top:24px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:var(--t14);line-height:1.5}
+th,td{text-align:left;vertical-align:top;padding:12px 16px 12px 0;border-bottom:1px solid var(--rule)}
+th{font-weight:600;border-bottom-color:var(--ink2)}
+td:first-child{font-weight:600;white-space:nowrap}
+.check{margin-top:16px;padding-left:20px}
+.check li{margin-top:12px}
+.check b{font-weight:600}
+.dir{margin-top:24px;padding:20px 24px;background:var(--tint);border-radius:4px}
+.dir h3{margin-top:0;font-size:var(--t20)}
+.dir + .dir{margin-top:16px}
+.note{font-size:var(--t14);color:var(--ink2)}
+ol.sources{font-size:var(--t14);color:var(--ink2);padding-left:20px;margin-top:16px}
+ol.sources li{margin-top:6px;overflow-wrap:anywhere}
+@media (max-width:560px){h1{font-size:var(--t32)} h2{font-size:var(--t24)} h3{font-size:var(--t20)} .lede{font-size:var(--t16)} dl{grid-template-columns:1fr;gap:2px} dd{margin-bottom:8px}}
+</style>
+
+<article>
+<div class="page">
+  <h1>Bài học từ 16 game</h1>
+  <p class="lede">Đây là bước 1 của việc làm lại giao diện: xem các game được khen nhiều (và một game bị chê nặng) giải quyết bài toán màn hình nhiều số liệu thế nào. Sau đó áp từng kỹ thuật vào màn hình của ta và kiểm lại theo bản nhận xét về đề xuất trước.</p>
+  <p>Trang gồm bốn phần:</p>
+  <ul class="intro-list">
+    <li><a href="#cases">16 game, chia bốn nhóm.</a> Mỗi game ghi họ làm gì, ta lấy gì và không lấy gì, kèm nguồn.</li>
+    <li><a href="#map">Đối chiếu theo màn hình.</a> Kỹ thuật nào dùng ở đâu, và nó sửa điểm nào trong bản nhận xét.</li>
+    <li><a href="#rules">Kiểm theo quy tắc.</a> Những kỹ thuật phải sửa lại mới dùng được.</li>
+    <li><a href="#next">Hai hướng cho bước 3.</a> Cần bạn chọn trước khi dựng lại mockup.</li>
+  </ul>
+  <p class="note">Nguồn là bài đánh giá, dev diary của nhà phát triển, phỏng vấn và bài phân tích thiết kế. Tôi chưa xem được các bài nói GDC dạng video, nên phần Into the Breach dựa vào nguồn thứ cấp. Các câu tiếng Anh trong ngoặc kép là trích nguyên văn từ nguồn.</p>
+
+  <h2 id="cases">Cùng thể loại: quản lý thể thao</h2>
+
+  <h3>Football Manager 26</h3>
+  <div class="meta">Sports Interactive, 2025</div>
+  <p>Khi chuyển sang Unity, họ bỏ hộp thư kiểu email và thay bằng Portal cùng hệ thống ô (tile). Chính nhà phát triển thừa nhận các ô <q>created more issues than expected regarding usability and accessibility</q>. Họ cũng đã thử giao diện nhắn tin kiểu WhatsApp rồi bỏ, vì <q>FM wasn't a game suited for mobile-style communication</q>. Người chơi phàn nàn thông tin bị <q>locked away behind a series of different windows</q>.</p>
+  <dl><dt>Lấy</dt><dd>Hộp thư dạng danh sách, có người gửi và hạn. Mọi thông tin quan trọng chỉ cách tối đa một cú bấm.</dd><dt>Không lấy</dt><dd>Lưới ô và giao diện kiểu chat.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.invenglobal.com/articles/23673/fm26-developer-why-we-had-to-change-the-ui">Inven Global, phỏng vấn nhà phát triển</a>, <a href="https://www.planetfootball.com/latest/football-manager-26-reviews-verdict-critics">Planet Football, tổng hợp đánh giá</a>, <a href="https://soccergaming.com/football-manager-26-review-a-disastrous-start-but-signs-of-promise/">SoccerGaming, bài đánh giá</a></p>
+
+  <h3>Out of the Park Baseball 26</h3>
+  <div class="meta">OOTP Developments, 2025</div>
+  <p>Màn hình "office" cho người chơi tự chọn thông tin muốn thấy ngay. Thẻ cầu thủ cho <q>more information at a glance</q>, còn phần chi tiết nằm <q>just a click/screen away</q>. Một bản làm lại giao diện gom vào một chỗ <q>reminders of critical dates and items that need your attention</q>.</p>
+  <dl><dt>Lấy</dt><dd>Thẻ người gồm phần tóm tắt và một cú bấm tới hồ sơ đầy đủ. Một danh sách ngày quan trọng duy nhất, không rải ra nhiều khối.</dd><dt>Không lấy</dt><dd>Trang chủ tự tuỳ biến. Game chưa đủ nội dung để việc này đáng làm.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.sportsgamersonline.com/news/reviews/out-of-the-park-baseball-26-review-a-baseball-nerds-dream/">Sports Gamers Online</a>, <a href="https://gamingtrend.com/reviews/gilding-the-baseball-lily-out-of-the-park-baseball-19-review">Gaming Trend (OOTP 19)</a>, <a href="https://gamecritics.com/richard-naik/out-of-the-park-baseball-14-review/">GameCritics (OOTP 14)</a></p>
+
+  <h3>Motorsport Manager</h3>
+  <div class="meta">Playsport Games, 2016</div>
+  <p>Một nhà phê bình nhận xét menu đen đơn giản, chia tab theo phòng ban, khiến game trông <q>like commercial business management software</q>. Điểm làm game khác biệt lại nằm ở cuộc đua: game nhấn vào hành động trong cuộc đua chứ không chỉ việc lên kế hoạch giữa các chặng.</p>
+  <dl><dt>Lấy</dt><dd>Trận đấu phải là lúc game sống dậy, không chỉ là một dòng kết quả trong hộp thư.</dd><dt>Không lấy</dt><dd>Menu trông như phần mềm doanh nghiệp. Đó chính là vấn đề ta đang gặp.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.digitallydownloaded.net/?p=45287">Digitally Downloaded</a>, <a href="https://totalgamingaddicts.com/motorsport-manager-review/">Total Gaming Addicts</a>, <a href="https://gamingtrend.com/reviews/take-road-watching-to-the-next-level-motorsport-manager-review">Gaming Trend</a></p>
+
+  <h3>F1 Manager, và đồ hoạ phát sóng esports</h3>
+  <div class="meta">Frontier Developments, 2022–2024</div>
+  <p>Frontier dựng lại trải nghiệm xem F1 trên truyền hình: tháp thời gian, góc máy lấy từ cảnh quay phát sóng, bình luận viên thật. Các phần tử giao diện được thiết kế <q>to look much like the official broadcast</q>.</p>
+  <p>Esports cũng có ngôn ngữ phát sóng riêng. Bản nhận diện mới của LCK dùng <q>simplified shapes and bright colors</q> để tuyển thủ là ngôi sao. Một hướng dẫn dựng overlay Liên Minh xếp thông tin theo thứ tự: danh tính đội, tỉ số loạt trận, thời gian, kinh tế, rồi mới tới số liệu phụ. Hướng dẫn đó có hai câu đáng chép lại: <q>team identity and map side should not rely on the same color cue</q>, và <q>The overlay should become quieter when the game becomes louder</q>.</p>
+  <dl><dt>Lấy</dt><dd>Mượn ngôn ngữ hình ảnh có sẵn của chính môn thể thao thay vì của dashboard. Danh tính đội gồm màu, vị trí cố định (đội mình luôn bên trái) và mã đội. Vào ngày thi đấu thì bớt khung phụ.</dd><dt>Không lấy</dt><dd>Hiệu ứng AR hay neon của sân khấu giải đấu. Governance hiện tại vẫn cấm phong cách neon.</dd></dl>
+  <p class="src">Nguồn: <a href="https://the-race.com/gaming/what-first-look-at-f1-manager-2022-tells-us">The Race</a>, <a href="https://www.gamedeveloper.com/production/deep-dive-f1-manager-2022">Game Developer, deep dive</a>, <a href="https://labs.invenglobal.com/articles/12982/the-new-era-of-lck-is-here-a-visual-journey-into-the-new-broadcast-and-lol-park">Inven Global về nhận diện LCK</a>, <a href="https://lhm.gg/blog/what-makes-a-good-lol-broadcast-overlay">LHM.gg về overlay</a></p>
+
+  <h2>Chiến lược nhiều dữ liệu</h2>
+
+  <h3>Crusader Kings III</h3>
+  <div class="meta">Paradox Development Studio, 2020</div>
+  <p>Tooltip lồng nhau: thuật ngữ được tô sáng mở ra một tooltip, trong đó lại có thuật ngữ khác mở tiếp, tạo thành <q>a wiki-like reference</q> ngay trong game. Victoria 3 và Europa Universalis V dùng lại hệ thống này. Huy hiệu không có chữ, được ghép từ nền hoa văn, màu, bố cục và hơn một nghìn hình emblem.</p>
+  <dl><dt>Lấy</dt><dd>Tooltip lồng cho thuật ngữ như Load, Readiness, Meta, Delivery load, thay cho dòng phụ đề câu hỏi trên mọi khối. Huy hiệu không chữ ghép từ ba lớp: cách chia khiên, cặp màu và một hình học trong bộ cố định.</dd><dt>Không lấy</dt><dd>Kho hơn nghìn emblem. Một bộ nhỏ cố định là đủ cho số tổ chức trong một campaign.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.pcgamesn.com/victoria-3/nested-tooltip-system">PCGamesN</a>, <a href="https://www.gamewatcher.com/crusader-kings-3-coat-of-arms-designer-patch-1-5">GameWatcher về hệ huy hiệu</a></p>
+
+  <h3>Victoria 3</h3>
+  <div class="meta">Paradox Development Studio, 2022</div>
+  <p>Người chơi chọn từng loại thông báo hiển thị thế nào và có tự dừng game hay không. Nhờ mặc định tốt hơn, số thông báo giảm khoảng một nửa. Tooltip đưa thông tin liên quan lên <q>higher up in the information hierarchy</q>. Danh sách sắp xếp được theo nhiều cách nghĩ, ví dụ tuyến thương mại theo hàng hoá hoặc theo quốc gia. Outliner ghim được mục và hiện số liệu kèm theo.</p>
+  <dl><dt>Lấy</dt><dd>Điều kiện dừng của Continue thành cài đặt theo loại tin. Hộp thư chỉ hiện tin liên quan tới công ty. Bảng Squad sắp được theo vai trò hoặc theo ngày hết hợp đồng.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.paradoxinteractive.com/games/victoria-3/news/dev-diary-74-ux-improvements">Paradox, Dev Diary #74</a></p>
+
+  <h3>Frostpunk</h3>
+  <div class="meta">11 bit studios, 2018</div>
+  <p>Nhiệt độ nằm <q>front and centre and larger than any other display on the screen</q>, kèm dự báo thời tiết để người chơi lên kế hoạch. Hope và Discontent là hai thanh ở đáy màn hình. Người đánh giá ghi nhận những thứ quan trọng nhất to và nằm giữa mà không cản trở.</p>
+  <dl><dt>Lấy</dt><dd>Một thước đo duy nhất to hơn mọi thứ khác, kèm dự báo. Với ta, đó là trận tới cộng load so với capacity. Tiền mặt trình bày như một bản dự báo cho vài tuần tới.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.fandom.com/articles/frostpunk-review">Fandom</a>, <a href="https://checkpointgaming.net/reviews/2018/04/frost-punk-review-not-winter-wonderland/">Checkpoint Gaming</a></p>
+
+  <h3>Civilization VII, bài học ngược</h3>
+  <div class="meta">Firaxis Games, 2025</div>
+  <p>Lúc mở bán sớm, chỉ 43% đánh giá trên Steam là tích cực, và lời chê chính nhắm vào giao diện. Người chơi viết <q>I can't find any of the information that's relevant to my gameplay ever</q>, rằng giao diện như <q>ported from the console in the worst way possible</q>, và game thiếu cả phím tắt. Firaxis phải công khai hứa sửa.</p>
+  <dl><dt>Lấy</dt><dd>Đủ thông tin và đủ phím tắt quan trọng hơn vẻ ngoài. Game nhiều số liệu bị phạt rất nặng khi giấu thông tin.</dd></dl>
+  <p class="src">Nguồn: <a href="https://itc.ua/en/news/alpha-stage-civilization-vii-received-devastating-criticism-from-early-players-with-only-43-positive-reviews">ITC.ua</a>, <a href="https://www.inkl.com/news/fans-rip-civilization-vii-s-ui-despite-new-gameplay-mechanics-is-this-the-game-we-expected">inkl</a>, <a href="https://www.cgmagonline.com/news/civilization-vii-quality-of-life-updates">CGMagazine</a></p>
+
+  <h2>Trình bày quyết định và xác suất</h2>
+
+  <h3>Into the Breach</h3>
+  <div class="meta">Subset Games, 2018</div>
+  <p>Kẻ địch báo trước nước đi, nên mỗi lượt thành một câu đố cần tính. Giao diện được giới phê bình khen là dễ hiểu. Một người hâm mộ làm lớp lưới kiểu bàn cờ trên Twitch, và chỉ một hai ngày sau Subset đưa nó vào game thành tuỳ chọn.</p>
+  <dl><dt>Lấy</dt><dd>Cho thấy hệ quả trước khi cam kết: ký offer, ký hợp đồng, chốt kế hoạch trận.</dd></dl>
+  <p class="src">Nguồn: <a href="https://en.wikipedia.org/wiki/Into_the_Breach">Wikipedia</a>, <a href="https://vice.com/en/article/into-the-breach-solved-a-big-problem-how-to-show-off-your-strategies">Vice</a></p>
+
+  <h3>Slay the Spire</h3>
+  <div class="meta">Mega Crit, 2019</div>
+  <p>Ý định của kẻ địch hiện ngay trên đầu nó. Mỗi loại ý định có <q>a very specific signature</q>, kèm con số khi cần. Người chơi gần như có đủ thông tin, nên lên kế hoạch chính xác được.</p>
+  <dl><dt>Lấy</dt><dd>Phần "đối thủ định làm gì" đặt ngay cạnh đối thủ: xu hướng posture và khoảng sức mạnh.</dd><dt>Không lấy</dt><dd>Icon. Họ dùng icon, ta dùng chữ và hình dạng.</dd></dl>
+  <p class="src">Nguồn: <a href="https://www.lesswrong.com/posts/MEimkSwwuRgiPaZaY/review-slay-the-spire">LessWrong, bài đánh giá</a>, <a href="https://roytang.net/2019/02/slay-the-spire/">Roy Tang</a></p>
+
+  <h3>XCOM</h3>
+  <div class="meta">Firaxis Games, 2012 và 2016</div>
+  <p>Jake Solomon nói người chơi nhìn thấy 85% thì không nghĩ đó là 15% khả năng trượt. Game còn có bộ điều chỉnh may mắn ẩn, ghi đè lên con số hiển thị ở độ khó thấp.</p>
+  <dl><dt>Lấy</dt><dd>Không hiện phần trăm thắng chính xác. Dùng mức có tên, ví dụ Underdog, Even, Favoured, kèm khoảng. Không có điều chỉnh ẩn: mô phỏng của ta deterministic và có causal trace, nên mọi thành phần đều giải thích được.</dd></dl>
+  <p class="src">Nguồn: <a href="https://games.softpedia.com/blog/Lead-XCOM-Designer-Regrets-Fixed-Hit-Chance-Results-319573.shtml">Softpedia</a>, <a href="https://cogconnected.com/feature/xcom-2-warps-sense-probability/">COGconnected</a></p>
+
+  <h3>Balatro</h3>
+  <div class="meta">LocalThunk, 2024</div>
+  <p>Từng joker kích hoạt lần lượt từ trái sang phải, tổng điểm cập nhật sau mỗi bước. Một bài phân tích viết rằng cách này <q>replaces a 10-page tutorial with 300ms of sequential animation</q>. Hai loại giá trị luôn mang hai màu cố định: <q>color IS the label</q>.</p>
+  <dl><dt>Lấy</dt><dd>Kết quả trận hiện lần lượt từng thành phần của CompetitiveOutcome, tổng chạy theo. Tăng và giảm luôn dùng hai màu ngữ nghĩa có sẵn.</dd><dt>Không lấy</dt><dd>Rung màn hình, hạt, scanline CRT.</dd></dl>
+  <p class="src">Nguồn: <a href="https://blakecrosley.com/guides/design/balatro">Blake Crosley, phân tích thiết kế</a></p>
+
+  <h2>Chữ, màu và cá tính</h2>
+
+  <h3>Mini Metro</h3>
+  <div class="meta">Dinosaur Polo Club, 2015</div>
+  <p>Loại ga nhận ra bằng hình dạng tương phản. Đồng hồ, lịch và điểm nằm gọn ở góc trên bên phải. Sông vẽ bằng màu <q>low-contrast</q> để không tranh chỗ với các tuyến tàu.</p>
+  <dl><dt>Lấy</dt><dd>Thông tin phụ dồn ra rìa. Cấu trúc nền tương phản thấp. Màu mạnh chỉ dành cho thứ người chơi điều khiển.</dd></dl>
+  <p class="src">Nguồn: <a href="https://mechanicsofmagic.com/2023/04/22/visual-design-of-games-mini-metro/">Mechanics of Magic</a></p>
+
+  <h3>Persona 5</h3>
+  <div class="meta">Atlus, 2016</div>
+  <p>Chữ là bản sắc của game. Mục đang chọn to lên và đổi sang màu xanh, tương phản với bộ đỏ, đen, trắng. Nhưng chính cách này cũng bị phê bình: chữ trên nhiều trục chuyển động và đường chân chữ xô lệch đặt phong cách lên trên thông tin. Atlus cũng nói menu kiểu này rất tốn công làm.</p>
+  <dl><dt>Lấy</dt><dd>Một cách đánh dấu mục đang chọn (to hơn và tương phản hơn), dùng giống nhau ở mọi nơi.</dd><dt>Không lấy</dt><dd>Chữ siêu đậm nhét vào chỗ hẹp, đường chân chữ xô lệch.</dd></dl>
+  <p class="src">Nguồn: <a href="https://mechanicsofmagic.com/2022/04/23/visual-design-of-games-persona-5/">Mechanics of Magic</a>, <a href="https://robinrendle.com/adventures/video-games-and-wiggletech/">Robin Rendle</a>, <a href="https://www.actugaming.net/les-menus-stylises-de-persona-et-metaphor-refantazio-sont-tres-beaux-mais-aussi-tres-penibles-a-concevoir-selon-atlus-678450/">ActuGaming</a></p>
+
+  <h3>Disco Elysium</h3>
+  <div class="meta">ZA/UM, 2019</div>
+  <p>Cột chữ bên phải cuộn lên như dòng Twitter, vì theo Robert Kurvitz, người ta lướt để nắm ý chứ không đọc kỹ từng dòng. Kiểu chữ trang trí chỉ dùng cho logo và key art, còn giao diện dùng mặt chữ dễ đọc cho hàng nghìn chữ. Tỉ lệ thành công hiện khi rê chuột, và kết quả phủ màu cả màn hình.</p>
+  <dl><dt>Lấy</dt><dd>Nhật ký sự kiện là một cột dễ lướt. Chữ trang trí chỉ dành cho khoảnh khắc nhận diện, như tên đội trên màn hình trận.</dd></dl>
+  <p class="src">Nguồn: <a href="https://80.lv/articles/disco-elysium-working-on-ui-design">80 Level</a>, <a href="https://madegooddesigns.com/?p=10893">Made Good Designs, về font</a>, <a href="https://tommartin.myblog.arts.ac.uk/?p=168">case study giao diện hội thoại</a></p>
+
+  <h3>Hades</h3>
+  <div class="meta">Supergiant Games, 2020</div>
+  <p>Hình, giao diện, hiệu ứng và âm thanh theo chung một triết lý: <q>clarity under pressure and personality everywhere else</q>. Độ sáng và mật độ chi tiết được kiểm soát để thông tin vẫn đọc được khi màn hình đầy màu.</p>
+  <dl><dt>Lấy</dt><dd>Lúc ra quyết định thì rõ ràng tối đa. Cá tính dồn vào nhận diện và các sự kiện có dàn dựng.</dd></dl>
+  <p class="src">Nguồn: <a href="https://geekchamp.com/the-art-of-hades-showcases-the-talent-that-went-into-this-beautifully-vibrant-game/">GeekChamp</a>, <a href="https://www.invenglobal.com/datalab/articles/14783/supergiant-games-how-indie-developers-made-goty-hades">Inven Global, phỏng vấn Supergiant</a></p>
+</div>
+
+<div class="wide">
+  <h2 id="map">Đối chiếu theo màn hình</h2>
+  <p style="max-width:720px">Cột cuối ghi điểm nào trong bản nhận xét được sửa. Mỗi màn hình chỉ lấy một hoặc hai kỹ thuật, để tránh lặp lại lỗi "mọi khối cùng một công thức".</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Màn hình</th><th>Kỹ thuật</th><th>Học từ</th><th>Sửa điểm nào</th></tr></thead>
+      <tbody>
+        <tr><td>Top bar</td><td>Continue nêu điểm dừng kế tiếp; người chơi chọn loại tin nào làm dừng. Ngày và tiền nằm gọn ở rìa.</td><td>Victoria 3, Mini Metro</td><td>Năm thứ tranh sự chú ý. "Menu Save Load" không giống nút bấm.</td></tr>
+        <tr><td>Portal</td><td>Một thước đo lớn kèm dự báo. Một danh sách ngày quan trọng duy nhất.</td><td>Frostpunk, OOTP</td><td>Khối chính không nổi. Offer xuất hiện ba lần, trận ngày 6 bốn lần.</td></tr>
+        <tr><td>Trận tới</td><td>Hai nửa mang màu hai đội, đội mình luôn bên trái, mã đội lớn. Ý định đối thủ đặt cạnh đối thủ.</td><td>Overlay LCK, Slay the Spire</td><td>Huy hiệu 64px, màu câu lạc bộ gần như vô hình.</td></tr>
+        <tr><td>Inbox</td><td>Danh sách thư có người gửi và hạn, không phải chat. Ít tin hơn nhờ mặc định tốt.</td><td>Football Manager 26, Victoria 3</td><td>Thẻ có sọc màu bên trái. Thư cần trả lời gộp vào danh sách quyết định.</td></tr>
+        <tr><td>Squad</td><td>Thẻ người gồm tóm tắt và một cú bấm tới hồ sơ. Sắp theo vai trò hoặc theo hạn hợp đồng.</td><td>OOTP, Victoria 3</td><td>Tên bị cắt. Chữ cái chìm và ô chữ cái đầu tên.</td></tr>
+        <tr><td>Competition</td><td>Hệ quả hiện trước khi chốt. Khả năng thắng là mức có tên kèm khoảng.</td><td>Into the Breach, XCOM</td><td>Số giả chính xác "54.8%".</td></tr>
+        <tr><td>Commercial</td><td>So sánh trước và sau khi ký. Tooltip lồng giải thích "delivery load".</td><td>Into the Breach, Crusader Kings III</td><td>Cho xem trước cả hai offer dù chỉ còn một slot.</td></tr>
+        <tr><td>Finance</td><td>Tiền mặt như bản dự báo vài tuần tới, có trục và mốc ngày.</td><td>Frostpunk</td><td>Biểu đồ nhỏ không trục, lương "70.74 CU".</td></tr>
+        <tr><td>Ngày thi đấu</td><td>Ngôn ngữ phát sóng, khung phụ im lặng. Từng thành phần kết quả hiện lần lượt.</td><td>F1 Manager, overlay LCK, Balatro</td><td>Trận đấu chưa có khoảnh khắc riêng.</td></tr>
+        <tr><td>Nhận diện</td><td>Huy hiệu không chữ ghép từ cách chia khiên, màu và hình học. Mã đội đặt cạnh huy hiệu, sinh từ một hàm.</td><td>Crusader Kings III</td><td>Huy hiệu chứa chữ. Mã đội không thống nhất (RRE, RED, SF, SAL).</td></tr>
+        <tr><td>Thuật ngữ</td><td>Tooltip lồng thay cho dòng phụ đề câu hỏi.</td><td>Crusader Kings III, Victoria 3</td><td>Nhãn và phụ đề lặp trên đầu mọi khối.</td></tr>
+        <tr><td>Chữ</td><td>Một mặt chữ dễ đọc cho nội dung. Kiểu trang trí chỉ cho tên đội ở khoảnh khắc nhận diện.</td><td>Disco Elysium, Hades</td><td>25 cỡ chữ, in hoa tràn lan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="page" style="padding-block:0 96px">
+  <h2 id="rules">Kiểm theo quy tắc</h2>
+  <p>Không kỹ thuật nào được bê nguyên. Đây là những chỗ phải sửa lại cho khớp với bản nhận xét:</p>
+  <ul class="check">
+    <li><b>Ý định đối thủ của Slay the Spire</b> dựa trên icon. Ở đây viết bằng chữ ("likely conservative"), kèm khoảng sức mạnh vẽ gạch chéo. Gạch chéo chỉ mang một nghĩa là khoảng ước tính.</li>
+    <li><b>Hai màu cố định của Balatro</b> là xanh dương và đỏ. Ở đây dùng hai màu ngữ nghĩa có sẵn cho tăng và giảm, không thêm màu ngoài bảng. Khi bật reduced motion, mọi thành phần hiện đủ ngay lập tức.</li>
+    <li><b>Thước đo lớn của Frostpunk</b> chỉ một cái trên mỗi màn hình. Khi load không đổi, thước đo là một câu kết luận cộng đồng hồ 65/88, không phải biểu đồ tô vùng.</li>
+    <li><b>Màu đội kiểu phát sóng</b> phải đủ lớn để nhìn thấy (hai nửa khối chính), nhưng không bao giờ được dùng làm màu hành động hay màu ngữ nghĩa. Đội còn được nhận ra bằng vị trí cố định, không chỉ bằng màu.</li>
+    <li><b>Cách đánh dấu mục đang chọn của Persona 5</b> là to hơn và tương phản hơn. Màu vàng không dùng cho trạng thái này, vì vàng chỉ dành cho Continue và Commit.</li>
+    <li><b>Huy hiệu kiểu Crusader Kings III</b> dùng một bộ nhỏ cố định (vài dáng khiên, vài cách chia, vài hình học) và không có chữ.</li>
+    <li><b>Mức thắng thay cho phần trăm</b> vẫn phải đúng luật: mỗi mức ứng với một khoảng xác suất cố định, và lý do nằm trong tooltip lồng.</li>
+    <li><b>Chữ trang trí kiểu Disco Elysium</b> chỉ dùng cho tên đội ở màn hình trận và màn hình bắt đầu. Mọi chỗ khác dùng thang 7 cỡ. In hoa chỉ cho mã đội và nhãn nút.</li>
+  </ul>
+
+  <h3>Không học theo</h3>
+  <p>Lưới ô của Football Manager 26, chính nhà phát triển đã thừa nhận là gây vấn đề khả dụng. Cảm giác "console port" và thiếu phím tắt của Civilization VII. Menu kiểu phần mềm doanh nghiệp của Motorsport Manager. Đường chân chữ xô lệch của Persona 5. Rung màn hình và hạt của Balatro.</p>
+
+  <h2 id="next">Hai hướng cho bước 3</h2>
+  <p>Hai hướng dưới đây ghép được với nhau. Bạn chọn cái nào làm chính, rồi tôi dựng lại mockup ở khung 1280×720 thật, có kiểm chuỗi tiếng Việt.</p>
+  <div class="dir">
+    <h3>Phát sóng giải đấu</h3>
+    <p>Nhận diện mượn từ đồ hoạ phát sóng esports: thanh tỉ số, màu đội theo vị trí, mã đội. Portal giống bàn tin trước trận. Ngày thi đấu là một chương trình riêng, có hai nửa màu đội và kết quả hiện lần lượt. Học từ F1 Manager, overlay LCK và Balatro.</p>
+  </div>
+  <div class="dir">
+    <h3>Phòng điều hành yên tĩnh</h3>
+    <p>Mỗi màn hình có một thước đo lớn kèm dự báo, mọi thứ khác tương phản thấp và dồn ra rìa. Cá tính chỉ nằm ở huy hiệu và trận đấu. Học từ Frostpunk, Mini Metro và Hades.</p>
+  </div>
+  <p>Tôi khuyên dùng hướng thứ hai cho các màn hình quản lý hằng ngày, và hướng thứ nhất cho nhận diện cùng ngày thi đấu. Đó cũng là cách Hades chia: rõ ràng khi chịu áp lực, cá tính ở mọi chỗ khác. Về chữ, bước 3 sẽ thử vài mặt chữ có thiết kế riêng cho dấu tiếng Việt chồng tầng, vì đây là lỗi thật đã được chỉ ra.</p>
+
+  <h2>Nguồn</h2>
+  <ol class="sources">
+    <li><a href="https://www.invenglobal.com/articles/23673/fm26-developer-why-we-had-to-change-the-ui">Inven Global: FM26 developer, "Why we had to change the UI"</a></li>
+    <li><a href="https://www.planetfootball.com/latest/football-manager-26-reviews-verdict-critics">Planet Football: Football Manager 26 reviews verdict</a></li>
+    <li><a href="https://soccergaming.com/football-manager-26-review-a-disastrous-start-but-signs-of-promise/">SoccerGaming: Football Manager 26 review</a></li>
+    <li><a href="https://www.sportsgamersonline.com/news/reviews/out-of-the-park-baseball-26-review-a-baseball-nerds-dream/">Sports Gamers Online: OOTP 26 review</a></li>
+    <li><a href="https://gamingtrend.com/reviews/gilding-the-baseball-lily-out-of-the-park-baseball-19-review">Gaming Trend: OOTP 19 review</a></li>
+    <li><a href="https://gamecritics.com/richard-naik/out-of-the-park-baseball-14-review/">GameCritics: OOTP 14 review</a></li>
+    <li><a href="https://www.digitallydownloaded.net/?p=45287">Digitally Downloaded: Motorsport Manager review</a></li>
+    <li><a href="https://totalgamingaddicts.com/motorsport-manager-review/">Total Gaming Addicts: Motorsport Manager review</a></li>
+    <li><a href="https://gamingtrend.com/reviews/take-road-watching-to-the-next-level-motorsport-manager-review">Gaming Trend: Motorsport Manager review</a></li>
+    <li><a href="https://the-race.com/gaming/what-first-look-at-f1-manager-2022-tells-us">The Race: first look at F1 Manager 2022</a></li>
+    <li><a href="https://www.gamedeveloper.com/production/deep-dive-f1-manager-2022">Game Developer: deep dive into F1 Manager 2022</a></li>
+    <li><a href="https://labs.invenglobal.com/articles/12982/the-new-era-of-lck-is-here-a-visual-journey-into-the-new-broadcast-and-lol-park">Inven Global: the new LCK broadcast</a></li>
+    <li><a href="https://lhm.gg/blog/what-makes-a-good-lol-broadcast-overlay">LHM.gg: what makes a good LoL broadcast overlay</a></li>
+    <li><a href="https://www.pcgamesn.com/victoria-3/nested-tooltip-system">PCGamesN: nested tooltip system</a></li>
+    <li><a href="https://www.gamewatcher.com/crusader-kings-3-coat-of-arms-designer-patch-1-5">GameWatcher: CK3 coat of arms designer</a></li>
+    <li><a href="https://www.paradoxinteractive.com/games/victoria-3/news/dev-diary-74-ux-improvements">Paradox: Victoria 3 Dev Diary #74, UX improvements</a></li>
+    <li><a href="https://www.fandom.com/articles/frostpunk-review">Fandom: Frostpunk review</a></li>
+    <li><a href="https://checkpointgaming.net/reviews/2018/04/frost-punk-review-not-winter-wonderland/">Checkpoint Gaming: Frostpunk review</a></li>
+    <li><a href="https://itc.ua/en/news/alpha-stage-civilization-vii-received-devastating-criticism-from-early-players-with-only-43-positive-reviews">ITC.ua: Civilization VII early criticism</a></li>
+    <li><a href="https://www.inkl.com/news/fans-rip-civilization-vii-s-ui-despite-new-gameplay-mechanics-is-this-the-game-we-expected">inkl: fans rip Civilization VII UI</a></li>
+    <li><a href="https://www.cgmagonline.com/news/civilization-vii-quality-of-life-updates">CGMagazine: Firaxis acknowledges Civilization VII UI problems</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Into_the_Breach">Wikipedia: Into the Breach</a></li>
+    <li><a href="https://vice.com/en/article/into-the-breach-solved-a-big-problem-how-to-show-off-your-strategies">Vice: Into the Breach overlay story</a></li>
+    <li><a href="https://www.lesswrong.com/posts/MEimkSwwuRgiPaZaY/review-slay-the-spire">LessWrong: review of Slay the Spire</a></li>
+    <li><a href="https://roytang.net/2019/02/slay-the-spire/">Roy Tang: Slay the Spire</a></li>
+    <li><a href="https://games.softpedia.com/blog/Lead-XCOM-Designer-Regrets-Fixed-Hit-Chance-Results-319573.shtml">Softpedia: XCOM designer on hit chance</a></li>
+    <li><a href="https://cogconnected.com/feature/xcom-2-warps-sense-probability/">COGconnected: XCOM 2 and probability</a></li>
+    <li><a href="https://blakecrosley.com/guides/design/balatro">Blake Crosley: Balatro feedback design</a></li>
+    <li><a href="https://mechanicsofmagic.com/2023/04/22/visual-design-of-games-mini-metro/">Mechanics of Magic: visual design of Mini Metro</a></li>
+    <li><a href="https://mechanicsofmagic.com/2022/04/23/visual-design-of-games-persona-5/">Mechanics of Magic: visual design of Persona 5</a></li>
+    <li><a href="https://robinrendle.com/adventures/video-games-and-wiggletech/">Robin Rendle: video games and wiggletech</a></li>
+    <li><a href="https://www.actugaming.net/les-menus-stylises-de-persona-et-metaphor-refantazio-sont-tres-beaux-mais-aussi-tres-penibles-a-concevoir-selon-atlus-678450/">ActuGaming: Atlus on stylised menus</a></li>
+    <li><a href="https://80.lv/articles/disco-elysium-working-on-ui-design">80 Level: Disco Elysium UI design</a></li>
+    <li><a href="https://madegooddesigns.com/?p=10893">Made Good Designs: what font does Disco Elysium use</a></li>
+    <li><a href="https://tommartin.myblog.arts.ac.uk/?p=168">Critical Play Project: Disco Elysium dialogue UI case study</a></li>
+    <li><a href="https://geekchamp.com/the-art-of-hades-showcases-the-talent-that-went-into-this-beautifully-vibrant-game/">GeekChamp: the art of Hades</a></li>
+    <li><a href="https://www.invenglobal.com/datalab/articles/14783/supergiant-games-how-indie-developers-made-goty-hades">Inven Global: Supergiant interview</a></li>
+  </ol>
+</div>
+</article>
