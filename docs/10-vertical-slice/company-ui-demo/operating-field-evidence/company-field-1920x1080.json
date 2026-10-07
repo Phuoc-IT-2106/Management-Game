@@ -1,0 +1,55 @@
+{
+  "Prototype": "COS-05 A / DEVELOPMENT / NONCANONICAL",
+  "StartingHead": "7ca1daef337444d46022ad3c3a767e94f6ad5e42",
+  "SourceDigest": "6e5fcfbd4e55192b06c85f856f884524ee952ec87ecbd8b807bea0b1af68ce20",
+  "Viewport": {
+    "Width": 1920,
+    "Height": 1080
+  },
+  "StateHash": "0858ad9fa39ab3c68ce9e56dc638f90ffcc98591ff6621136fb463f9e0cc9a9a",
+  "CampaignId": "campaign:development",
+  "CompanyId": "company:player",
+  "Revision": 0,
+  "Day": 1,
+  "Offer": {
+    "OfferId": "offer:atlas",
+    "Name": "Atlas Hardware",
+    "Availability": "Available",
+    "Load": 25,
+    "LoadIfAccepted": 90,
+    "ForecastIfAccepted": 274400,
+    "Deadline": 8,
+    "ScheduledPayments": [
+      {
+        "Id": "agreement:offer:atlas:day:4",
+        "DueDay": 4,
+        "Amount": 35000,
+        "Remaining": 35000
+      },
+      {
+        "Id": "agreement:offer:atlas:day:11",
+        "DueDay": 11,
+        "Amount": 35000,
+        "Remaining": 35000
+      },
+      {
+        "Id": "agreement:offer:atlas:day:18",
+        "DueDay": 18,
+        "Amount": 35000,
+        "Remaining": 35000
+      },
+      {
+        "Id": "agreement:offer:atlas:day:25",
+        "DueDay": 25,
+        "Amount": 35000,
+        "Remaining": 35000
+      }
+    ]
+  },
+  "Load": 65,
+  "Capacity": 80,
+  "Cash": 260000,
+  "NextCheckpoint": 6,
+  "PlayerReadBoundary": "SponsorSnapshot \u002B Situation; no hidden World inputs",
+  "Layout": "field \u002B contextual DayTrack and financial evidence"
+}
