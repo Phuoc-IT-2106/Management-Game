@@ -2,6 +2,13 @@
   <Folder Name="/game/">
     <Project Path="game/Client/Client.csproj" />
   </Folder>
+  <Folder Name="/qualification/">
+    <Project Path="qualification/Application/Application.csproj" />
+    <Project Path="qualification/Domain/Domain.csproj" />
+    <Project Path="qualification/Host/Host.csproj">
+      <BuildType Project="Debug" />
+    </Project>
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/ManagementGame.Application/ManagementGame.Application.csproj" />
     <Project Path="src/ManagementGame.Domain/ManagementGame.Domain.csproj" />
