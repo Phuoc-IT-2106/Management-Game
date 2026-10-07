@@ -12,15 +12,27 @@ public static class Observations
         ("lapse:", "Market"), ("meta:", "Meta"), ("commercial:", "Commercial")
     ];
     /// <summary>World-originated messages, newest first; the player's own decisions are not inbox mail.</summary>
-    public static ImmutableArray<InboxRow> Inbox(Company c) => c.Reviews
+    public static ImmutableArray<InboxRow> Inbox(Company c) => Rows(c, _ => "");
+    /// <summary>Inbox rows with the stable ID of the entity each message concerns, resolved from records, never from text.</summary>
+    public static ImmutableArray<InboxRow> Inbox(Campaign s) => Rows(s.Company, r => Subject(s, r));
+    private static ImmutableArray<InboxRow> Rows(Company c, Func<ReviewEntry, string> subject) => c.Reviews
         .Select(r => (Review: r, Kind: Kinds.FirstOrDefault(k => r.Id.StartsWith(k.Prefix, StringComparison.Ordinal)).Kind))
         .Where(x => x.Kind is not null).Reverse().Take(40)
-        .Select(x => new InboxRow(x.Review.Id, x.Review.Day, x.Kind!, x.Review.Text, x.Review.CauseId)).ToImmutableArray();
+        .Select(x => new InboxRow(x.Review.Id, x.Review.Day, x.Kind!, x.Review.Text, x.Review.CauseId, subject(x.Review))).ToImmutableArray();
+    private static string Subject(Campaign s, ReviewEntry r)
+    {
+        var w = s.World;
+        if (w.Results.FirstOrDefault(x => x.Id == r.Id || x.Id == r.CauseId) is { } result) return result.RivalId;
+        if (w.Offers.FirstOrDefault(o => o.Id == r.CauseId) is { } offer) return offer.BrandId;
+        if (w.Negotiations.FirstOrDefault(n => n.Id == r.CauseId) is { } negotiation) return negotiation.BrandId;
+        if (s.Company.Employment.FirstOrDefault(e => e.Id == r.CauseId) is { } contract) return contract.PersonId;
+        return "";
+    }
     private static string Outcome(CompetitiveOutcome r) => r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat";
     public static ImmutableArray<FixtureRow> FixtureRows(Campaign s) => s.World.Fixtures.Select(f =>
     {
         var result = s.World.Results.FirstOrDefault(r => r.FixtureId == f.Id);
-        return new FixtureRow(f.Id, f.Day, s.World.Rivals.Single(r => r.Id == f.RivalId).Name, f.Importance, result is null ? "" : Outcome(result));
+        return new FixtureRow(f.Id, f.Day, s.World.Rivals.Single(r => r.Id == f.RivalId).Name, f.Importance, result is null ? "" : Outcome(result), f.RivalId);
     }).ToImmutableArray();
     public static ImmutableArray<RivalRow> RivalRows(Campaign s) => s.World.Rivals.OrderBy(r => r.Name, StringComparer.Ordinal).Select(r =>
     {
@@ -80,7 +92,7 @@ public static class Observations
             w.CoachCandidates.Where(x => x.Deadline >= day).Select(x => new CoachCandidateRow(x.Coach.Id, x.Coach.Name,
                 Band((x.Coach.Preparation + x.Coach.Analysis + x.Coach.Adaptability) / 3), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
             brands, w.Negotiations.Select(n => new NegotiationRow(n.Id, Market.Brand(content, n.BrandId).Name, n.Payment, n.DurationDays, n.ResponseDay)).ToImmutableArray(),
-            b.SponsorSlots, active, Inbox(c), FixtureRows(s), RivalRows(s));
+            b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "");
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
             ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover every role A–E."

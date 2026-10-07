@@ -13,7 +13,8 @@ public enum ColorRole
     Border, HoverSurface, SelectedSurface, BrandTextLight, BrandTextDark,
     ActionPrimary, ActionPrimaryHover, TextOnAction, Divider
 }
-public enum TypographyRole { CompanyIdentity, WorkspaceTitle, SectionTitle, Body, Data, Label, Annotation }
+// Sizes follow one 7-step scale: 12, 14, 16, 20, 24, 32, 48 (no one-off sizes). Caption and Display extend the scale ends.
+public enum TypographyRole { CompanyIdentity, WorkspaceTitle, SectionTitle, Body, Data, Label, Annotation, Caption, Display, Strong }
 public enum SpaceRole { SpaceInline, SpaceRelated, SpaceGroup, SpaceSection, SpaceWorkspace }
 public enum SizeRole { ControlCompact, ControlDefault, ControlComfortable, InspectorWidth, ReadingMeasure }
 public enum MotionRole { Acknowledge, ContextTransition, ChangeHighlight }
@@ -45,7 +46,7 @@ public readonly record struct Rgb(byte R, byte G, byte B)
 /// <summary>Single replaceable aesthetic source. Values are development choices, not final art direction.</summary>
 public sealed class UiTokens
 {
-    public const string Version = "operations-room-v2";
+    public const string Version = "operations-room-v3";
     public const string Notice = "PROVISIONAL DEVELOPMENT THEME";
     public const double TextContrast = 4.5;
     public const double GraphicContrast = 3.0;
@@ -62,27 +63,29 @@ public sealed class UiTokens
     public static bool PreferReducedMotion { get; set; }
     public static readonly ImmutableDictionary<ColorRole, Rgb> Colors = new Dictionary<ColorRole, string>
     {
-        [ColorRole.SurfaceBase] = "12151A", [ColorRole.SurfaceRaised] = "1B2028",
-        [ColorRole.SurfaceInset] = "161A20", [ColorRole.SurfaceOverlay] = "252B34",
-        [ColorRole.TextPrimary] = "F2F4F7", [ColorRole.TextSecondary] = "C5CCD5",
-        [ColorRole.TextMuted] = "A7B0BC", [ColorRole.TextOnAccent] = "101419",
-        [ColorRole.StatePositive] = "A8DBB7", [ColorRole.StateWarning] = "F3CE83",
-        [ColorRole.StateCritical] = "FFB0AA", [ColorRole.StateNeutral] = "C5CCD5",
+        // Deep navy operations room (approved Portal reference): low-contrast surface tiers, near-white text. Secondary and
+        // muted text are two distinct steps so primary / secondary / tertiary read apart (both stay above 4.5:1 everywhere).
+        [ColorRole.SurfaceBase] = "0C121B", [ColorRole.SurfaceRaised] = "121A25",
+        [ColorRole.SurfaceInset] = "0F1620", [ColorRole.SurfaceOverlay] = "1A2431",
+        [ColorRole.TextPrimary] = "EEF1F5", [ColorRole.TextSecondary] = "B4BFCC",
+        [ColorRole.TextMuted] = "8E9BAC", [ColorRole.TextOnAccent] = "101419",
+        [ColorRole.StatePositive] = "4FD1B5", [ColorRole.StateWarning] = "F2C46D",
+        [ColorRole.StateCritical] = "F07A72", [ColorRole.StateNeutral] = "C5CCD5",
         [ColorRole.SystemError] = "FFB0D1", [ColorRole.FocusRing] = "C2D9FF",
         [ColorRole.InformationKnown] = "C5CCD5", [ColorRole.InformationEstimated] = "E2CC9A",
         [ColorRole.InformationUnknown] = "BFC4D0", [ColorRole.AccentOrganization] = "BAC4CF",
-        [ColorRole.AccentOrganizationSecondary] = "AAB6C4", [ColorRole.OrganizationSurface] = "161A20",
-        [ColorRole.Border] = "8592A3", [ColorRole.HoverSurface] = "2A313B",
-        [ColorRole.SelectedSurface] = "2F3A48", [ColorRole.BrandTextLight] = "FFFFFF", [ColorRole.BrandTextDark] = "000000",
-        [ColorRole.ActionPrimary] = "E3E8EF", [ColorRole.ActionPrimaryHover] = "FFFFFF",
-        [ColorRole.TextOnAction] = "0F1318", [ColorRole.Divider] = "2C333D"
+        [ColorRole.AccentOrganizationSecondary] = "AAB6C4", [ColorRole.OrganizationSurface] = "0F1620",
+        [ColorRole.Border] = "6B809A", [ColorRole.HoverSurface] = "1C2734",
+        [ColorRole.SelectedSurface] = "24303F", [ColorRole.BrandTextLight] = "FFFFFF", [ColorRole.BrandTextDark] = "000000",
+        [ColorRole.ActionPrimary] = "E0AE4A", [ColorRole.ActionPrimaryHover] = "EDBF63",
+        [ColorRole.TextOnAction] = "1A1405", [ColorRole.Divider] = "223042"
     }.ToImmutableDictionary(k => k.Key, v => Rgb.Hex(v.Value));
 
     private static readonly ImmutableDictionary<TypographyRole, int> Fonts = new Dictionary<TypographyRole, int>
     {
-        [TypographyRole.CompanyIdentity] = 24, [TypographyRole.WorkspaceTitle] = 28,
-        [TypographyRole.SectionTitle] = 20, [TypographyRole.Body] = 17, [TypographyRole.Data] = 18,
-        [TypographyRole.Label] = 16, [TypographyRole.Annotation] = 14
+        [TypographyRole.CompanyIdentity] = 24, [TypographyRole.WorkspaceTitle] = 32,
+        [TypographyRole.SectionTitle] = 20, [TypographyRole.Body] = 16, [TypographyRole.Data] = 20,
+        [TypographyRole.Label] = 16, [TypographyRole.Annotation] = 14, [TypographyRole.Caption] = 12, [TypographyRole.Display] = 48, [TypographyRole.Strong] = 16
     }.ToImmutableDictionary();
     public UiDensity Density { get; }
     public double TextScale { get; }

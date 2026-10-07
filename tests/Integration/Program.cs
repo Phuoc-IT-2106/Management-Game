@@ -215,6 +215,57 @@ Check(afterMatch.Inbox[0].Kind == "Match" || afterMatch.Inbox.Any(r => r.Kind ==
 Check(afterMatch.Rivals.Sum(r => r.Wins + r.Losses) == 1 && afterMatch.Fixtures.Count(f => f.Result.Length > 0) == 1, "head-to-head and fixtures record the result");
 Check(ShellSections.ForInbox("Offer") == ShellSections.Commercial && ShellSections.ForInbox("Renewal") == ShellSections.Squad && ShellSections.ForInbox("Match") == ShellSections.Competition, "inbox kinds route to their owning section");
 
+// Portal read model: everything comes from the observation, identities and routes use stable IDs.
+var portal = PortalProjection.Build(start);
+Check(portal.Company.Id == start.CompanyId && portal.Company.Name == start.Company && portal.Company.CrestAssetId == AssetIds.Crest(start.CompanyId), "portal company identity and crest come from the stable company ID");
+Check(portal.Decisions.Select(d => d.Id).SequenceEqual(startTasks.Select(t => t.Id)) && portal.Decisions.All(d => d.Section.Length > 0 && d.Subject.Length > 0),
+    "portal decisions are the typed task list with a section and subject");
+Check(portal.Decisions.Where(d => d.Category == DecisionCategory.Commercial).All(d => start.Offers.Any(o => o.Id == d.TargetId)) &&
+    portal.Decisions.Where(d => d.Category == DecisionCategory.Competition).All(d => d.TargetId == start.NextFixtureId), "decision targets are stable record IDs, not display text");
+Check(portal.NextMatch is { } next && next.FixtureId == start.NextFixtureId && next.Opponent.Id == start.OpponentId && next.Opponent.CrestAssetId == AssetIds.Crest(start.OpponentId)
+    && next.Us.Id == start.CompanyId && next.MatchNumber == 1 && next.SeasonMatches == start.Fixtures.Length, "next match binds fixture, opponent and crests by ID");
+Check(portal.News.Length == Math.Min(PortalProjection.NewsLimit, start.Inbox.Length) && portal.News.All(n => start.Inbox.Any(r => r.Id == n.Id))
+    && portal.News.Where(n => n.Category == "Offer").All(n => n.SubjectId.StartsWith("brand:", StringComparison.Ordinal) && n.ImageAssetId == AssetIds.BrandLogo(n.SubjectId)),
+    "news preview is the inbox with subjects and image IDs resolved from records");
+Check(portal.Horizon.Length == PortalProjection.HorizonWeeks && portal.Horizon[0].Current && portal.Horizon.Skip(1).All(w => !w.Current)
+    && portal.Horizon.Zip(portal.Horizon.Skip(1)).All(p => p.Second.FirstDay == p.First.LastDay + 1), "four consecutive season weeks, the first is current");
+var horizonEvents = portal.Horizon.SelectMany(w => w.Events).ToArray();
+Check(horizonEvents.Where(e => e.Kind == HorizonKind.Match).All(e => start.Fixtures.Any(f => f.Id == e.TargetId && f.Day == e.Day))
+    && horizonEvents.Where(e => e.Kind == HorizonKind.OfferDeadline).All(e => e.Count > 1
+        ? e.TargetId.Length == 0 && start.Offers.Count(o => o.Availability == "Available" && o.Deadline == e.Day) == e.Count
+        : start.Offers.Any(o => o.Id == e.TargetId && o.Deadline == e.Day && o.Name == e.Subject))
+    && horizonEvents.Where(e => e.Kind == HorizonKind.Receipt).All(e => e.Amount == start.Bills.Where(x => x.Incoming && x.DueDay == e.Day).Sum(x => x.Remaining)),
+    "horizon events come only from fixtures, offers and scheduled receipts, with typed subject and amount");
+Check(horizonEvents.Where(e => e.Kind == HorizonKind.Match).All(e => start.Fixtures.Any(f => f.Id == e.TargetId && f.Opponent == e.Subject))
+    && horizonEvents.GroupBy(e => (e.Day, e.Kind, e.Section)).All(g => g.Count() == 1), "one event per day, kind and section; grouped deadlines keep the count");
+var offerNews = portal.News.Where(n => n.Category == "Offer").ToArray();
+bool OfferHeadline(PortalNews n)
+{
+    var cause = start.Inbox.Single(r => r.Id == n.Id).CauseId;
+    if (start.Offers.FirstOrDefault(o => o.Id == cause) is not { } offer) return true;
+    return n.Headline.StartsWith(offer.Name, StringComparison.Ordinal) && !n.Headline.Contains("CU", StringComparison.Ordinal)
+        && n.Detail.Contains((offer.Payment / 100m).ToString("N0", System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal);
+}
+Check(offerNews.Length > 0 && offerNews.All(OfferHeadline), "an open offer reads as a headline from its typed record; terms move to the summary");
+var distressPortal = PortalProjection.Build(start with { Status = "Distress" });
+Check(distressPortal.Decisions[0].Category == DecisionCategory.Finance && distressPortal.Decisions[0].Urgency == TaskUrgency.Blocking
+    && distressPortal.Decisions.Length == portal.Decisions.Length + 1, "distress is the first, blocking decision and counts toward the total");
+Check(portal.Season.Won == 0 && portal.Season.Lost == 0 && portal.Season.ToPlay == start.Fixtures.Length && portal.Season.Recent.IsEmpty, "season summary on day one");
+Check(portal.Finance.Cash == start.Cash && portal.Finance.Forecast == start.Forecast && portal.Finance.ReceiptsAhead >= 0 && portal.Finance.PaymentsAhead > 0 && portal.Finance.Arrears == 0,
+    "money snapshot: known cash, estimated forecast and payments");
+var portalAfter = PortalProjection.Build(afterMatch);
+Check(portalAfter.Season.Won + portalAfter.Season.Lost == 1 && portalAfter.Season.Recent.Length == 1 && portalAfter.News.Any(n => n.Category == "Match" && n.SubjectId.StartsWith("rival:", StringComparison.Ordinal)
+    && n.ImageAssetId == AssetIds.Crest(n.SubjectId)), "after a match the record and a crest-backed result story appear");
+var quiet = start with { Inbox = [], Offers = [], NextFixtureId = "", OpponentId = "", Fixtures = [], CommittedPlan = null };
+var quietPortal = PortalProjection.Build(quiet);
+Check(quietPortal.News.IsEmpty && quietPortal.NextMatch is null && quietPortal.Time.Phase == SeasonPhase.Complete && quietPortal.Horizon.All(w => w.Events.All(e => e.Kind != HorizonKind.Match)),
+    "empty states stay empty: no invented news, opponent or matches");
+Check(AssetIds.ForSubject("", "Season") == AssetIds.NewsFallback("Season") && AssetIds.ForSubject("person:g00001", "Contract") == AssetIds.Portrait("person:g00001"),
+    "asset IDs derive from the subject's stable ID kind, with a category fallback");
+var longName = new string('N', 60);
+var named = New(company: longName).Observe();
+Check(PortalProjection.Build(named).Company.Name == longName && PortalProjection.Build(named).Company.CrestAssetId == AssetIds.Crest(named.CompanyId), "a long player company name passes through; the crest key never uses the name");
+
 // Recomputed checksums are not a substitute for semantic validation.
 void RejectSave(string name, Func<SaveEnvelope, SaveEnvelope> change)
 {

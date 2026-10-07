@@ -9,10 +9,13 @@ public static class UiTheme
     public static Theme Build(UiTokens tokens)
     {
         var font = new SystemFont { FontNames = UiTokens.UiFontNames, AllowSystemFallback = true };
-        var display = new SystemFont { FontNames = UiTokens.DisplayFontNames, FontWeight = UiTokens.DisplayWeight, AllowSystemFallback = true };
-        // Tabular figures keep columns of values aligned without a code/monospace face.
-        var numeric = new FontVariation { BaseFont = new SystemFont { FontNames = UiTokens.NumericFontNames, AllowSystemFallback = true },
+        // Tabular figures keep changing values (cash, days, records) aligned without a code/monospace face; letters are unaffected.
+        FontVariation Tabular(Font face) => new() { BaseFont = face,
             OpentypeFeatures = new Godot.Collections.Dictionary { { TextServerManager.GetPrimaryInterface().NameToTag("tnum"), 1 } } };
+        var display = Tabular(new SystemFont { FontNames = UiTokens.DisplayFontNames, FontWeight = UiTokens.DisplayWeight, AllowSystemFallback = true });
+        // Emphasis inside running UI text: the same face, semibold, never the condensed display face.
+        var strong = Tabular(new SystemFont { FontNames = UiTokens.UiFontNames, FontWeight = UiTokens.DisplayWeight, AllowSystemFallback = true });
+        var numeric = Tabular(new SystemFont { FontNames = UiTokens.NumericFontNames, AllowSystemFallback = true });
         var theme = new Theme { DefaultFont = font, DefaultFontSize = tokens.FontSize(TypographyRole.Body) };
         foreach (var role in Enum.GetValues<ColorRole>()) theme.SetColor(role.ToString(), "Semantic", ToGodot(tokens.Color(role)));
         foreach (var role in Enum.GetValues<TypographyRole>())
@@ -22,7 +25,8 @@ public static class UiTheme
             theme.SetFont("font", role.ToString(), role switch
             {
                 TypographyRole.Data => numeric,
-                TypographyRole.CompanyIdentity or TypographyRole.WorkspaceTitle or TypographyRole.SectionTitle => display,
+                TypographyRole.Strong => strong,
+                TypographyRole.CompanyIdentity or TypographyRole.WorkspaceTitle or TypographyRole.SectionTitle or TypographyRole.Display => display,
                 _ => font
             });
         }
@@ -47,6 +51,50 @@ public static class UiTheme
         theme.SetStylebox("hover", "Entity", Flat(tokens, ColorRole.HoverSurface));
         theme.SetStylebox("pressed", "Entity", Flat(tokens, ColorRole.SelectedSurface));
         theme.SetStylebox("hover_pressed", "Entity", Flat(tokens, ColorRole.SelectedSurface));
+        // Bounded actionable rows inside a region (Portal decisions): the inset tier with a divider edge, so a region reads as
+        // raised workspace over inset rows rather than a card inside a card.
+        theme.SetTypeVariation("Card", "Button");
+        foreach (var (state, surface) in new[] { ("normal", ColorRole.SurfaceInset), ("disabled", ColorRole.SurfaceInset), ("hover", ColorRole.HoverSurface),
+            ("pressed", ColorRole.SelectedSurface), ("hover_pressed", ColorRole.SelectedSurface) })
+        {
+            var card = Box(tokens, surface); card.BorderColor = ToGodot(tokens.Color(ColorRole.Divider));
+            theme.SetStylebox(state, "Card", card);
+        }
+        // Navigation rail (approved Portal reference): flat items; the current section carries a restrained gold tint and edge.
+        theme.SetTypeVariation("Nav", "Button");
+        theme.SetStylebox("normal", "Nav", Flat(tokens, null));
+        theme.SetStylebox("hover", "Nav", Flat(tokens, ColorRole.HoverSurface));
+        theme.SetStylebox("pressed", "Nav", Flat(tokens, ColorRole.SelectedSurface));
+        theme.SetStylebox("hover_pressed", "Nav", Flat(tokens, ColorRole.SelectedSurface));
+        // Current section: a dark surface with a restrained warm tint, a solid leading edge and a faint outline; text stays
+        // high-contrast primary. The edge, not the fill, carries the selection.
+        theme.SetTypeVariation("NavSelected", "Button");
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed", "disabled" })
+        {
+            var nav = Box(tokens, ColorRole.SurfaceRaised);
+            nav.BgColor = ToGodot(tokens.Color(ColorRole.SelectedSurface).Mix(tokens.Color(ColorRole.ActionPrimary), state.StartsWith("hover") ? .2 : .14));
+            nav.BorderColor = ToGodot(tokens.Color(ColorRole.SurfaceRaised).Mix(tokens.Color(ColorRole.ActionPrimary), .45));
+            nav.BorderWidthLeft = UiTokens.SelectionWidth;
+            theme.SetStylebox(state, "NavSelected", nav);
+        }
+        // Strong secondary action (e.g. "Prepare match" while no plan exists): a dark teal fill with a bright teal edge. It
+        // is discoverable next to content without competing with the gold global Continue.
+        theme.SetTypeVariation("SecondaryAction", "Button");
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed" })
+        {
+            var fill = Box(tokens, ColorRole.SurfaceInset);
+            fill.BgColor = ToGodot(tokens.Color(ColorRole.SurfaceInset).Mix(tokens.Color(ColorRole.StatePositive), state == "normal" ? .2 : .3));
+            fill.BorderColor = ToGodot(tokens.Color(ColorRole.StatePositive));
+            theme.SetStylebox(state, "SecondaryAction", fill);
+        }
+        // Secondary workspace route (e.g. "Review match plan"): an outline in the positive accent, never a filled primary.
+        theme.SetTypeVariation("AccentOutline", "Button");
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed" })
+        {
+            var outline = Box(tokens, state == "normal" ? ColorRole.SurfaceRaised : ColorRole.HoverSurface);
+            outline.BorderColor = ToGodot(tokens.Color(ColorRole.StatePositive)); outline.DrawCenter = state != "normal";
+            theme.SetStylebox(state, "AccentOutline", outline);
+        }
         theme.SetTypeVariation("SelectedEntity", "Button");
         // Leading edge bar keeps selection perceivable without relying on surface color alone.
         foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed", "disabled" })

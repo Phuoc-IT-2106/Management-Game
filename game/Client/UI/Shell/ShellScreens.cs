@@ -76,60 +76,6 @@ public partial class GameShell
     private string Due(int? day) => day is null ? "" : day == view.Day ? " · today" : $" · day {day}";
     private static string ResultMarker(string result) => result switch { "Victory" => PresentationText.PositiveMarker, "" => "", _ => PresentationText.CriticalMarker };
 
-    // ---------- Portal (S4) ----------
-    private Control PortalScreen()
-    {
-        var page = Page(out var body, "Portal", $"Season {view.Season} · day {view.DayOfSeason} of {view.SeasonLength} · reputation {view.Reputation} · audience {view.Audience:N0}");
-        var tasks = PortalTasks.Build(view);
-        body.AddChild(SectionHeader.Create(ui, "Decisions", tasks.IsEmpty ? "Nothing needs a decision. Continue when ready." : "Blocking items must be resolved before time moves on."));
-        var strip = ui.Flow(); strip.Name = "Tasks"; body.AddChild(strip);
-        for (var i = 0; i < tasks.Length; i++)
-        {
-            var task = tasks[i];
-            var button = ui.Button($"{Marker(task.Urgency)} {task.Text}{Due(task.DueDay)}", () => Navigate(task.Section));
-            button.Name = "Task_" + i; button.AutowrapMode = TextServer.AutowrapMode.Off;
-            if (task.Urgency == TaskUrgency.Blocking) Tone(button, ColorRole.StateWarning);
-            strip.AddChild(button);
-        }
-        Columns(body, out var left, out var right);
-        var inbox = Card(left, "Inbox", "What has the world told the company?");
-        foreach (var row in view.Inbox.Take(6))
-        {
-            var unread = !seenInbox.Contains(row.Id);
-            var entry = new Button { ThemeTypeVariation = "Entity", Alignment = HorizontalAlignment.Left, AutowrapMode = TextServer.AutowrapMode.WordSmart,
-                Text = $"{(unread ? "● " : "")}Day {row.Day} · {row.Kind} — {row.Text}", FocusMode = FocusModeEnum.All };
-            entry.Pressed += () => { seenInbox.Add(row.Id); Navigate(ShellSections.ForInbox(row.Kind)); };
-            inbox.AddChild(entry);
-        }
-        if (view.Inbox.IsEmpty) Line(inbox, "No messages yet.", tone: ColorRole.TextSecondary);
-        inbox.AddChild(ui.Button("Open inbox", () => Navigate(ShellSections.Inbox)));
-        // P4: the four-week instrument is drawn, with its full text equivalent.
-        var horizon = ui.Stack(); left.AddChild(ui.Panel(horizon, ColorRole.SurfaceRaised));
-        horizon.AddChild(DayTrack.Create(ui, SponsorPresentation.Track(((ISponsorSession)session!).ObserveSponsors(), null)));
-
-        var match = Card(right, "Next match", "Who do we face, and are we ready?");
-        if (view.NextFixtureId.Length == 0) Line(match, "No match until next season.", tone: ColorRole.TextSecondary);
-        else
-        {
-            Line(match, view.Opponent, TypographyRole.SectionTitle);
-            Line(match, view.NextMatchDay == view.Day ? "Today" : $"Day {view.NextMatchDay} · in {view.NextMatchDay - view.Day} days");
-            match.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, $"Strength {view.OpponentEstimate}; likely {view.OpponentTendency.ToLowerInvariant()} · {view.Confidence.ToLowerInvariant()}"));
-            Line(match, view.CommittedPlan is null ? (view.Delegation == Delegation.Autonomous ? "The coach will plan this match." : $"{PresentationText.WarningMarker} No preparation plan yet.")
-                : $"Plan committed: {view.CommittedPlan.Execution}/{view.CommittedPlan.Opponent}/{view.CommittedPlan.Meta} · {view.CommittedPlan.Posture}",
-                tone: view.CommittedPlan is null && view.Delegation != Delegation.Autonomous ? ColorRole.StateWarning : ColorRole.TextSecondary);
-            match.AddChild(ui.Button("Prepare match", () => Navigate(ShellSections.Competition)));
-        }
-        var season = Card(right, "Season record", "How are we doing against each rival?");
-        var played = view.Fixtures.Where(f => f.Result.Length > 0).ToArray();
-        Line(season, $"{played.Count(f => f.Result == "Victory")} wins · {played.Count(f => f.Result != "Victory")} losses · {view.Fixtures.Length - played.Length} to play", TypographyRole.Data);
-        foreach (var rival in view.Rivals) Line(season, $"{rival.Name}  {rival.Wins}–{rival.Losses}{(rival.Remaining > 0 ? $"  ({rival.Remaining} left)" : "")}", tone: ColorRole.TextSecondary);
-        var money = Card(right, "Money", "Can we afford our commitments?");
-        money.AddChild(ResourceValue.Create(ui, new("Cash", view.Cash / 100m, "CU", InformationState.Known, "Settled today.")));
-        money.AddChild(ResourceValue.Create(ui, new("7-day forecast", view.Forecast / 100m, "CU", InformationState.Estimated, "Scheduled items and running wages; unearned wins excluded.")));
-        Line(money, $"Sponsor slots {view.ActiveSponsors}/{view.SponsorSlots} · load {view.Load}/{view.Capacity}", tone: view.Load > view.Capacity ? ColorRole.StateWarning : ColorRole.TextSecondary);
-        return page;
-    }
-
     // ---------- Inbox ----------
     private Control InboxScreen()
     {

@@ -32,9 +32,10 @@ public sealed record CoachCandidateRow(string Id, string Name, string SkillEstim
 public sealed record BrandRow(string Id, string Name, string Sector, int MinimumReputation, int MinimumAudience, string Availability,
     long GuideLow, long GuideHigh, ImmutableArray<int> DurationDays);
 public sealed record NegotiationRow(string Id, string Brand, long Payment, int DurationDays, int ResponseDay);
-/// <summary>A message the world sent the company; Kind is a stable category, CauseId the affected record.</summary>
-public sealed record InboxRow(string Id, int Day, string Kind, string Text, string CauseId);
-public sealed record FixtureRow(string Id, int Day, string Opponent, int Importance, string Result);
+/// <summary>A message the world sent the company; Kind is a stable category, CauseId the affected record and
+/// SubjectId the stable ID of the organization, brand or person it concerns (empty when none is known).</summary>
+public sealed record InboxRow(string Id, int Day, string Kind, string Text, string CauseId, string SubjectId = "");
+public sealed record FixtureRow(string Id, int Day, string Opponent, int Importance, string Result, string RivalId = "");
 /// <summary>Current-season head-to-head record against one rival organization.</summary>
 public sealed record RivalRow(string Id, string Name, int Wins, int Losses, int Remaining);
 public sealed record Situation(long Revision, int Day, int Season, int DayOfSeason, int SeasonLength, string Company, string Status,
@@ -46,7 +47,8 @@ public sealed record Situation(long Revision, int Day, int Season, int DayOfSeas
     ImmutableArray<BillRow> Bills, ImmutableArray<ResultRow> Results, ImmutableArray<string> Review,
     string PendingConsequences, string FixtureLabel, StaffRow CoachContract, ImmutableArray<CoachCandidateRow> CoachCandidates,
     ImmutableArray<BrandRow> Brands, ImmutableArray<NegotiationRow> Negotiations, int SponsorSlots, int ActiveSponsors,
-    ImmutableArray<InboxRow> Inbox, ImmutableArray<FixtureRow> Fixtures, ImmutableArray<RivalRow> Rivals);
+    ImmutableArray<InboxRow> Inbox, ImmutableArray<FixtureRow> Fixtures, ImmutableArray<RivalRow> Rivals,
+    string CompanyId = "", string OpponentId = "");
 
 public interface IGameSession
 {
