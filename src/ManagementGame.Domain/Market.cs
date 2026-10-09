@@ -159,14 +159,15 @@ public static class Market
     {
         var b = content.Balance; var next = w.NextId;
         var players = w.Candidates.Where(x => x.Deadline >= day).ToList();
-        var missing = Generator.Roles.Where(r => !c.People.Any(p => p.Role == r.ToString()) && !players.Any(x => x.Person.Role == r.ToString())).ToList();
+        var season = Seasons.Of(day, b);
+        var missing = Roles.All.Where(r => !c.People.Any(p => p.Role == r) && !players.Any(x => x.Person.Role == r)).ToList();
         while (players.Count < b.CandidateCount || missing.Count > 0)
         {
             var id = $"person:g{++next:D5}";
-            var role = missing.Count > 0 ? missing[0] : Generator.Roles[KeyedRandom.Range(seed, "talent", id, "role", 5)];
+            var role = missing.Count > 0 ? missing[0] : Roles.All[KeyedRandom.Range(seed, "talent", id, "role", Roles.All.Length)];
             if (missing.Count > 0) missing.RemoveAt(0);
-            var person = Generator.Player(seed, content, id, role.ToString(), content.Generation.Prospect);
-            var salary = Pay.Player(person.Execution);
+            var person = Generator.Player(seed, content, id, role, season);
+            var salary = Pay.Player(person, season, content);
             players.Add(new Candidate(person, salary * 20, salary, salary * 3, day + b.TalentRefreshInterval - 1));
         }
         var coaches = w.CoachCandidates.Where(x => x.Deadline >= day).ToList();
@@ -182,7 +183,7 @@ public static class Market
     /// <summary>Records a completed move in transfer history: who moved, from where to where (null: the open market), on which
     /// day and because of which command or contract. Written once, when the move happens; nothing rewrites it.</summary>
     public static World Moved(World w, int day, string cause, Person person, MoveReason reason, string? from, string? to) =>
-        Moved(w, new Move($"move:{cause}:{person.Id}", day, person.Id, person.Name, Personnel.Player, person.Role, reason, from, to, cause));
+        Moved(w, new Move($"move:{cause}:{person.Id}", day, person.Id, person.Handle, Personnel.Player, person.Role, reason, from, to, cause));
     public static World Moved(World w, int day, string cause, Coach coach, MoveReason reason, string? from, string? to) =>
         Moved(w, new Move($"move:{cause}:{coach.Id}", day, coach.Id, coach.Name, Personnel.HeadCoach, "", reason, from, to, cause));
     private static World Moved(World w, Move move) => w with { Moves = w.Moves.Add(move) };
@@ -211,11 +212,11 @@ public static class Market
                 Plan = c.Plan is { } plan && plan.Lineup.Contains(person.Id) ? null : c.Plan };
             w = w with { Candidates = w.Candidates.Add(new Candidate(person, contract.Salary * 5, contract.Salary, contract.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
             w = Moved(w, day, contract.Id, person, MoveReason.ContractEnded, c.Id, null);
-            c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"{person.Name} (role {person.Role}) left as a free agent when the contract ended.");
+            c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"{person.Handle} ({Roles.Name(person.Role)}) left as a free agent when the contract ended.");
         }
         foreach (var contract in c.Employment.Where(e => e.EndDay - day == b.RenewalWindow))
         {
-            var name = contract.PersonId == c.Coach.Id ? "Head coach " + c.Coach.Name : c.People.Single(p => p.Id == contract.PersonId).Name;
+            var name = contract.PersonId == c.Coach.Id ? "Head coach " + c.Coach.Name : c.People.Single(p => p.Id == contract.PersonId).Handle;
             c = Notice(c, "renewal:" + contract.Id, day, contract.Id, $"{name}'s contract ends on day {contract.EndDay}. Renew it or let them leave.");
         }
         return (c, w);

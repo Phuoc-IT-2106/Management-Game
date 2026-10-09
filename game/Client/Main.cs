@@ -47,7 +47,7 @@ public partial class Main : Control
             Build(); Refresh();
             benchmark = OS.GetCmdlineUserArgs().Contains("--benchmark");
             if (OS.GetCmdlineUserArgs().Contains("--smoke")) CallDeferred(MethodName.RunSmoke);
-            if (benchmark) { tabs.CurrentTab = 1; stressRows = Enumerable.Range(0,1000).Select(i => new PersonRow($"stress:{i:D6}","Synthetic person " + i,"ABCDE"[i%5].ToString(),70,90,i,0,false)).ToImmutableArray(); memoryBefore = GC.GetTotalMemory(true); controlsBefore = CountControls(this); lastFrame = Stopwatch.GetTimestamp(); }
+            if (benchmark) { tabs.CurrentTab = 1; stressRows = Enumerable.Range(0,1000).Select(i => new PersonRow($"stress:{i:D6}","Synthetic person " + i,ManagementGame.Domain.Roles.All[i%5],70,90,i,0,false)).ToImmutableArray(); memoryBefore = GC.GetTotalMemory(true); controlsBefore = CountControls(this); lastFrame = Stopwatch.GetTimestamp(); }
             if (int.TryParse(Arg("--tab"), out var tab)) tabs.CurrentTab = Math.Clamp(tab,0,5);
         }
         catch (Exception e) { GD.PrintErr(e.ToString()); GetTree().Quit(1); }
@@ -87,11 +87,11 @@ public partial class Main : Control
         shell.MoveChild(tabs, shell.GetChildCount() - 1);
         shell.AddChild(companyEntry);
         var team = Tab("Team & people"); var filters = new HBoxContainer(); team.AddChild(filters); filters.AddChild(search);
-        roleFilter.AddItem("All roles"); foreach (var role in new[] { "A", "B", "C", "D", "E" }) roleFilter.AddItem(role);
+        roleFilter.AddItem("All roles"); foreach (var role in ManagementGame.Domain.Roles.All) roleFilter.AddItem(role);
         foreach (var key in new[] { "Name", "Salary", "Readiness" }) sort.AddItem(key);
         filters.AddChild(roleFilter); filters.AddChild(sort); filters.AddChild(Button("Previous", () => { page--; BindRoster(); })); filters.AddChild(Button("Next", () => { page++; BindRoster(); })); team.AddChild(rosterCount);
         roster.Columns = 6; roster.ColumnTitlesVisible = true; roster.HideRoot = true; roster.SizeFlagsVertical = SizeFlags.ExpandFill; roster.CustomMinimumSize = new Vector2(0, 230); roster.SelectMode = Tree.SelectModeEnum.Row;
-        var columns = new[] { "Player", "Role", "Execution · fact", "Readiness · fact", "Daily salary", "Contract ends" };
+        var columns = new[] { "Player", "Role", "Rating · fact", "Readiness · fact", "Daily salary", "Contract ends" };
         for (var i = 0; i < columns.Length; i++) { roster.SetColumnTitle(i, columns[i]); roster.SetColumnExpand(i, true); }
         team.AddChild(roster); root = roster.CreateItem();
         roster.ItemSelected += () => { if (!refreshing) { selectedId = roster.GetSelected()?.GetMetadata(0).AsString(); UpdateRelease(); } };
@@ -133,7 +133,7 @@ public partial class Main : Control
         foreach (var name in Enum.GetNames<Delegation>()) authority.AddItem(name);
         posture.Selected = 1; ceiling.Selected = 2; AddField(allocations, "Posture", posture);
         var selection = new HBoxContainer(); preparation.AddChild(selection);
-        foreach (var role in new[] { "A", "B", "C", "D", "E" }) { var choice = new OptionButton(); lineup.Add(role, choice); AddField(selection, "Role " + role, choice); }
+        foreach (var role in ManagementGame.Domain.Roles.All) { var choice = new OptionButton(); lineup.Add(role, choice); AddField(selection, "Role " + role, choice); }
         var actions = new HBoxContainer(); preparation.AddChild(actions);
         actions.AddChild(Button("Use coach recommendation", () => { if (view.Recommendation is { } plan) SetDraft(plan); }));
         commit = Button("Commit preparation & lineup", () => Send(new PreparationDecision(view.NextFixtureId, (int)execution.Value, (int)opponentWork.Value, (int)meta.Value,
@@ -186,10 +186,10 @@ public partial class Main : Control
         foreach (var (role, choice) in lineup)
         {
             var old = choice.ItemCount > 0 ? choice.GetSelectedMetadata().AsString() : null; choice.Clear();
-            foreach (var p in view.People.Where(p => p.Role == role)) { choice.AddItem(p.Name); choice.SetItemMetadata(choice.ItemCount - 1, p.Id); }
-            SelectId(choice, old ?? view.Recommendation?.Lineup.FirstOrDefault(id => view.People.Any(p => p.Id == id && p.Role == role)));
+            foreach (var p in view.People.Where(p => p.Role == role || p.SecondaryRole == role)) { choice.AddItem(p.Name); choice.SetItemMetadata(choice.ItemCount - 1, p.Id); }
+            SelectId(choice, old ?? view.Recommendation?.Lineup.FirstOrDefault(id => view.People.Any(p => p.Id == id && (p.Role == role || p.SecondaryRole == role))));
         }
-        candidates.Clear(); foreach (var c in view.Candidates) { candidates.AddItem($"{c.Name} · role {c.Role} · ability {c.AbilityEstimate}"); candidates.SetItemMetadata(candidates.ItemCount - 1, c.Id); } sign.Disabled = candidates.ItemCount == 0;
+        candidates.Clear(); foreach (var c in view.Candidates) { candidates.AddItem($"{c.Name} · role {c.Role} · rating {c.RatingEstimate}"); candidates.SetItemMetadata(candidates.ItemCount - 1, c.Id); } sign.Disabled = candidates.ItemCount == 0;
         offers.Clear(); foreach (var o in view.Offers) { offers.AddItem($"{o.Name} · {o.Availability}"); offers.SetItemMetadata(offers.ItemCount - 1, o.Id); } sponsor.Disabled = offers.ItemCount == 0;
         coachCandidates.Clear(); foreach (var c in view.CoachCandidates) { coachCandidates.AddItem($"{c.Name} · skill {c.SkillEstimate} · {Money(c.Salary)}/day · until day {c.Deadline}"); coachCandidates.SetItemMetadata(coachCandidates.ItemCount - 1, c.Id); }
         hire.Disabled = coachCandidates.ItemCount == 0; renewCoach.Disabled = !view.CoachContract.CanRenew;
@@ -229,7 +229,7 @@ public partial class Main : Control
         while (rows.Count > result.Rows.Length) { rows[^1].Free(); rows.RemoveAt(rows.Count - 1); }
         for (var i = 0; i < rows.Count; i++)
         {
-            var p = result.Rows[i]; var item = rows[i]; item.SetMetadata(0, p.Id); var values = new[] { p.Name, p.Role, p.Execution.ToString(), p.Readiness.ToString(), Money(p.Salary), p.ContractEnd == 0 ? "—" : "day " + p.ContractEnd };
+            var p = result.Rows[i]; var item = rows[i]; item.SetMetadata(0, p.Id); var values = new[] { p.Name, p.Role, p.Rating.ToString(), p.Readiness.ToString(), Money(p.Salary), p.ContractEnd == 0 ? "—" : "day " + p.ContractEnd };
             for (var j = 0; j < values.Length; j++) if (item.GetText(j) != values[j]) item.SetText(j, values[j]); item.Deselect(0); if (p.Id == selectedId) item.Select(0);
         }
         rosterCount.Text = $"{result.Total} people · page {page + 1} · {rows.Count} bound rows · actions use stable person IDs"; refreshing = false; binds.Add(Stopwatch.GetElapsedTime(start).TotalMilliseconds);

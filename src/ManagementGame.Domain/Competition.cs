@@ -2,7 +2,7 @@ namespace ManagementGame.Domain;
 
 // Pure resolver: receives competitive inputs only; cannot mutate finance or commercial state.
 public sealed record CompetitionInput(ulong Seed, Fixture Fixture, Plan Plan, Work Work,
-    System.Collections.Immutable.ImmutableArray<Person> Lineup, Coach Coach, Rival Rival, Posture Meta,
+    System.Collections.Immutable.ImmutableArray<Person> Lineup, System.Collections.Immutable.ImmutableArray<int> Ratings, Coach Coach, Rival Rival, Posture Meta,
     int RepeatedPosture, Balance Balance);
 
 public static class Competition
@@ -10,14 +10,14 @@ public static class Competition
     public static CompetitiveOutcome Resolve(CompetitionInput input)
     {
         var x = input;
-        var baseValue = (int)Numbers.Divide(x.Lineup.Sum(p => (long)p.Execution * p.Readiness), x.Lineup.Length * 100);
+        var baseValue = (int)Numbers.Divide(x.Lineup.Select((p, i) => (long)x.Ratings[i] * p.Readiness).Sum(), x.Lineup.Length * 100);
         var opponentMatch = x.Plan.ExpectedOpponent == x.Rival.Posture ? 100 : 25;
         var prep = (int)Numbers.Divide(x.Work.Execution + x.Work.Opponent * opponentMatch / 100
             + x.Work.Meta * (x.Meta == Posture.Balanced ? 70 : 120) / 100, x.Balance.PreparationScale);
         var matchup = x.Plan.Posture == x.Meta ? 3 : -1;
-        var adaptation = (int)Numbers.Divide(x.Lineup.Sum(p => (long)p.Adaptability) / x.Lineup.Length + x.Coach.Adaptability, 30)
+        var adaptation = (int)Numbers.Divide(x.Lineup.Sum(p => (long)p.Skills.ChampionPool) / x.Lineup.Length + x.Coach.Adaptability, 30)
             - x.RepeatedPosture * x.Rival.Analysis / 30;
-        var consistency = x.Lineup.Sum(p => p.Consistency) / x.Lineup.Length;
+        var consistency = x.Lineup.Sum(p => p.Mind.Consistency) / x.Lineup.Length;
         var spread = Math.Max(1, x.Balance.Variance + (int)x.Plan.Posture * 4 - consistency / 20);
         var variance = KeyedRandom.Range(x.Seed, "competition", x.Fixture.Id, "variance", spread * 2 + 1) - spread;
         var probability = Math.Clamp(500_000 + (baseValue - x.Rival.Strength + prep + matchup + adaptation + variance) * x.Balance.MatchScale, 50_000, 950_000);

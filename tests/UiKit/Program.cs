@@ -211,7 +211,8 @@ Check(PresentationText.ResourceAmount(new("Cash", 2476m, "USD", InformationState
     && PresentationText.Resource(new("Cash", 2476m, "USD", InformationState.Known, "settled", "$2,476")).StartsWith("Cash: $2,476 · Known", StringComparison.Ordinal)
     && PresentationText.ResourceAmount(new("Cash", null, "USD", InformationState.Unknown, "none", "$0")) == "Cash: Unknown",
     "a pre-formatted amount shows as given, and unknown still hides any backing value");
-var mockupSamples = new[] { "Nexus", "Raven Arena", "Titan Forge", "Phoenix Gaming", "Spring Cup", "Kael", "Sorin", "Mako", "Laner", "Jungler", "AD Carry", "182,450", "Apr 14", "Apr 19",
+// Role nouns ("Top laner", "Jungler") left this list on 2026-10-09: the five roles are a rule of v4, not mockup samples.
+var mockupSamples = new[] { "Nexus", "Raven Arena", "Titan Forge", "Phoenix Gaming", "Spring Cup", "Kael", "Sorin", "Mako", "AD Carry", "182,450", "Apr 14", "Apr 19",
     "2,476", "Week 1 of 8", "6 / 56", "3 pending" };
 var presentationSources = Directory.GetFiles(Path.Combine(repo.FullName, "game", "Client", "UI"), "*.cs", SearchOption.AllDirectories)
     .Concat(Directory.GetFiles(Path.Combine(repo.FullName, "src", "ManagementGame.Application"), "*.cs")).ToArray();

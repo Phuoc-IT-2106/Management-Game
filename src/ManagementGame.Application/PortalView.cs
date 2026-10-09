@@ -146,6 +146,11 @@ public static class PortalProjection
             .Select(x => x.Story)];
     }
     private sealed record Told(MoveRow Move, int Order, JourneySide From, JourneySide To);
+    /// <summary>What a player of a role is called in a story ("Top laner", "Jungler", ...).</summary>
+    public static string RoleNoun(string role) => role switch
+    {
+        "top" => "Top laner", "jungle" => "Jungler", "mid" => "Mid laner", "bot" => "Bot laner", "support" => "Support", _ => "Player"
+    };
 
     /// <summary>Several players who made the same move on the same day: one story with the shared journey. The summary
     /// names two of them whole and counts the rest; each is still in the Inbox or on the market.</summary>
@@ -174,7 +179,7 @@ public static class PortalProjection
     private static TransferStory Story(Told t, MoveRow? left, Told[] history)
     {
         var (m, from, to) = (t.Move, t.From, t.To);
-        var who = m.Coach ? "Head coach" : $"Role {m.Role} player";
+        var who = m.Coach ? "Head coach" : RoleNoun(m.Role);
         string? Partner(MoveKind kind) => history.FirstOrDefault(p => p.Move.CauseId == m.CauseId && p.Move.Kind == kind && p.Move.Id != m.Id)?.Move.Name;
         var gap = left is null ? "" : (m.Day - left.Day) switch { <= 0 => "the same day", 1 => "a day", var n => $"{Figures.Count(n)} days" };
         var how = left?.Kind switch { MoveKind.Release => "being released", MoveKind.Replacement => "being replaced", _ => "the contract ended" };

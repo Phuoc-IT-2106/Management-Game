@@ -37,9 +37,9 @@ if (args.FirstOrDefault(a => a.StartsWith("--seasons=", StringComparison.Ordinal
     {
         var v = session.Observe();
         foreach (var offer in v.Offers.Where(o => o.Availability == "Available").OrderByDescending(o => o.Payment).Take(1)) Send(new SponsorDecision(offer.Id), false);
-        foreach (var person in v.People.Where(p => p.CanRenew && p.Execution >= 66)) Send(new RenewalDecision(person.Id, 1), false);
+        foreach (var person in v.People.Where(p => p.CanRenew && p.Rating >= 66)) Send(new RenewalDecision(person.Id, 1), false);
         if (v.CoachContract.CanRenew) Send(new RenewalDecision(v.CoachContract.Id, 1), false);
-        foreach (var role in "ABCDE".Select(r => r.ToString()).Where(r => !v.People.Any(p => p.Role == r)))
+        foreach (var role in ManagementGame.Domain.Roles.All.Where(r => !v.People.Any(p => p.Role == r)))
             if (v.Candidates.FirstOrDefault(c => c.Role == role) is { } cover) Send(new SigningDecision(cover.Id), false);
         var advanced = Send(new AdvanceDecision(), false);
         if (!advanced.Accepted) { Console.WriteLine("BLOCKED day " + v.Day + ": " + advanced.Message); break; }
@@ -79,12 +79,12 @@ if (args.Contains("--scale"))
     var reports = new List<object>();
     foreach (var size in new[] { 1000,10000,100000 })
     {
-        var rows = Enumerable.Range(0,size).Select(i => new PersonRow($"person:{i:D6}","Player " + (i%1000), "ABCDE"[i%5].ToString(),70,i%100,i*10L,0,true)).ToImmutableArray();
+        var rows = Enumerable.Range(0,size).Select(i => new PersonRow($"person:{i:D6}","Player " + (i%1000), ManagementGame.Domain.Roles.All[i%5],70,i%100,i*10L,0,true)).ToImmutableArray();
         var samples = new List<double>(); var retained = GC.GetTotalMemory(true);
         for(var i=0;i<35;i++)
         {
             var timer = Stopwatch.StartNew();
-            var result = RosterTable.Query(rows, new RosterQuery(i%2==0?"Player":"7",i%3==0?"B":"",i%2==0?"Salary":"Name",i%2==0,i%10),"person:000007");
+            var result = RosterTable.Query(rows, new RosterQuery(i%2==0?"Player":"7",i%3==0?"jungle":"",i%2==0?"Salary":"Name",i%2==0,i%10),"person:000007");
             if(result.Rows.Length>25 || result.SelectedId != "person:000007") throw new Exception("Scale query correctness failed.");
             if(i>=5) samples.Add(timer.Elapsed.TotalMilliseconds);
         }

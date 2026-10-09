@@ -58,7 +58,7 @@ public static class ContentLoader
     public static void Validate(Content c)
     {
         void Require(bool valid, string field) { if (!valid) throw new InvalidDataException("content/fixture.json: " + field); }
-        Require(c.Format == "management-game-development-content" && c.Schema == 3 && c.RulesVersion == "slice-rules-v3", "unsupported schema/rules");
+        Require(c.Format == "management-game-development-content" && c.Schema == 4 && c.RulesVersion == "slice-rules-v4", "unsupported schema/rules");
         Require(c.Label.Contains("NONCANONICAL", StringComparison.Ordinal), "fixture label required");
         Require(c.DefaultCompanyName.Trim().Length is > 0 and <= 60, "default company name");
         var b = c.Balance;
@@ -80,11 +80,29 @@ public static class ContentLoader
             && b.ReputationRegression is >= 0 and <= 100 && b.ReputationTargetLow is >= 0 && b.ReputationTargetLow <= b.ReputationTargetHigh && b.ReputationTargetHigh <= 100
             && b.PredictabilityWindow is >= 0 and <= 16, "rules v3 incentive bounds");
         bool Range(AttributeRange r, int min, int max) => r.Min >= min && r.Max <= max && r.Min <= r.Max;
+        bool Unique(IEnumerable<string> values) { var array = values.ToArray(); return array.Distinct(StringComparer.Ordinal).Count() == array.Length; }
         var g = c.Generation;
-        Require(Range(g.Talent, 1, 100) && Range(g.Prospect, 1, 100) && Range(g.CoachSkill, 1, 100) && Range(g.CoachCapacity, 20, 1000) && Range(g.Rival, 6, 95), "generation ranges");
+        Require(Range(g.CoachSkill, 1, 100) && Range(g.CoachCapacity, 20, 1000) && Range(g.Rival, 6, 95) && Range(g.Mind, 1, 99) && Range(g.Personality, 1, 99)
+            && g.SkillJitter is >= 0 and <= 20 && g.SecondaryRoleChance is >= 0 and <= 10_000, "generation ranges");
+        // Rules v4 player generation: ability bands, ages and age profiles, and archetypes covering every role.
+        Require(g.AbilityBands.Length > 0 && g.AbilityBands.All(x => x.Value is >= 1 and <= 99 && x.Weight > 0) && Unique(g.AbilityBands.Select(x => x.Value.ToString())), "ability bands");
+        Require(g.Ages.Length > 0 && g.Ages.All(x => x.Value is >= 14 and <= 40 && x.Weight > 0) && Unique(g.Ages.Select(x => x.Value.ToString())), "age weights");
+        Require(g.AgeProfiles.Length > 0 && Unique(g.AgeProfiles.Select(x => x.MaxAge.ToString())) && g.AgeProfiles.Max(x => x.MaxAge) >= g.Ages.Max(x => x.Value)
+            && g.AgeProfiles.All(x => x.Shift is >= -30 and <= 30 && x.HeadroomMin >= 0 && x.HeadroomMin <= x.HeadroomMax && x.HeadroomMax <= 40), "age profiles");
+        Require(Unique(g.Archetypes.Select(a => a.Id)) && g.Archetypes.All(a => Id(a.Id) && a.Weight > 0 && a.Roles.Length > 0 && a.Roles.All(Roles.Valid)
+            && a.Offsets.Length == 5 && a.Offsets.All(o => o is >= -30 and <= 30) && a.Communication is >= -30 and <= 30)
+            && Roles.All.All(r => g.Archetypes.Any(a => a.Roles.Contains(r))), "archetypes must be valid and cover every role");
+        Require(c.RoleWeights.Length == Roles.All.Length && Roles.All.All(r => c.RoleWeights.Count(w => w.Role == r) == 1)
+            && c.RoleWeights.All(w => w.Weights.Length == 5 && w.Weights.All(x => x >= 0) && w.Weights.Sum() == 10_000), "role weights: five skills per role summing to 10000");
         bool Name(string value) => value.Trim().Length is > 0 and <= 40;
-        Require(c.Names.Given.Length >= 10 && c.Names.Family.Length >= 10 && c.Names.Given.All(Name) && c.Names.Family.All(Name), "name pools need at least ten valid entries each");
-        Require(c.Names.Given.Distinct(StringComparer.Ordinal).Count() == c.Names.Given.Length && c.Names.Family.Distinct(StringComparer.Ordinal).Count() == c.Names.Family.Length, "name pools must not repeat");
+        Require(c.Nationalities.Length > 0 && Unique(c.Nationalities.Select(n => n.Id)) && c.Nationalities.All(n => n.Id.Length == 2 && n.Id.All(char.IsAsciiLetterUpper)
+            && n.Weight > 0 && n.Given.Length >= 10 && n.Family.Length >= 10 && n.Given.All(Name) && n.Family.All(Name) && Unique(n.Given) && Unique(n.Family)),
+            "nationalities need a code, a weight and at least ten unique given and family names");
+        bool Part(string value) => value.Length is >= 1 and <= 8 && value.All(char.IsAsciiLetter);
+        Require(c.Handles.Prefixes.Length >= 10 && c.Handles.Suffixes.Length >= 5 && c.Handles.Prefixes.All(Part) && c.Handles.Suffixes.All(Part)
+            && Unique(c.Handles.Prefixes) && Unique(c.Handles.Suffixes), "handle parts");
+        Require(c.Calibration.Source.Trim().Length > 0 && (c.Calibration.ReportSha256.Length == 0 || c.Calibration.ReportSha256.Length == 64 && c.Calibration.ReportSha256.All(char.IsAsciiHexDigitLower)),
+            "calibration provenance");
         Require(c.OrganizationNames.Length >= b.RivalCount && c.OrganizationNames.All(x => x.Trim().Length is > 0 and <= 60)
             && c.OrganizationNames.Distinct(StringComparer.Ordinal).Count() == c.OrganizationNames.Length, "organization names cover every rival without repeats");
         Require(c.Brands.Length >= 6 && c.Brands.Select(x => x.Id).Distinct(StringComparer.Ordinal).Count() == c.Brands.Length

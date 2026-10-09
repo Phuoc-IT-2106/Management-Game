@@ -137,10 +137,10 @@ public static class Measurement
         }
         var people = v.People;
         // Every policy covers a role the roster lacks (a forfeit helps no owner); the thrifty owner picks the cheapest.
-        foreach (var role in "ABCDE".Select(r => r.ToString()).Where(r => !people.Any(p => p.Role == r)))
+        foreach (var role in Roles.All.Where(r => !people.Any(p => p.Role == r)))
         {
             var options = v.Candidates.Where(c => c.Role == role && c.Fee <= v.Cash);
-            var pick = policy == Thrift ? options.OrderBy(c => c.Fee + c.Salary * 28).FirstOrDefault() : options.OrderByDescending(c => Midpoint(c.AbilityEstimate)).FirstOrDefault();
+            var pick = policy == Thrift ? options.OrderBy(c => c.Fee + c.Salary * 28).FirstOrDefault() : options.OrderByDescending(c => Midpoint(c.RatingEstimate)).FirstOrDefault();
             if (pick is not null) send(new SigningDecision(pick.Id));
         }
         switch (policy)
@@ -148,19 +148,19 @@ public static class Measurement
             case Thrift:
                 // Never renews; releases a second player in a role when the exit cost is below the wages it saves.
                 foreach (var spare in people.Where(p => p.CanRelease && (long)(p.ContractEnd - v.Day) * p.Salary > p.ExitCost && p.ExitCost <= v.Cash)
-                    .GroupBy(p => p.Role).Select(g => g.OrderBy(p => p.Execution).First()).Take(1))
+                    .GroupBy(p => p.Role).Select(g => g.OrderBy(p => p.Rating).First()).Take(1))
                     send(new ReleaseDecision(spare.Id));
                 break;
             case Balanced:
-                foreach (var person in people.Where(p => p.CanRenew && (p.Execution >= 66 || people.Count(x => x.Role == p.Role) == 1 || people.Length <= v.MinimumRosterOrDefault())))
+                foreach (var person in people.Where(p => p.CanRenew && (p.Rating >= 66 || people.Count(x => x.Role == p.Role) == 1 || people.Length <= v.MinimumRosterOrDefault())))
                     send(new RenewalDecision(person.Id, 1));
                 if (v.CoachContract.CanRenew) send(new RenewalDecision(v.CoachContract.Id, 1));
                 // Keep the registered roster at the league minimum (six when no rule says otherwise) with the best affordable player.
-                if (people.Length < v.MinimumRosterOrDefault() && v.Candidates.Where(c => c.Fee <= v.Forecast).OrderByDescending(c => Midpoint(c.AbilityEstimate)).FirstOrDefault() is { } depth)
+                if (people.Length < v.MinimumRosterOrDefault() && v.Candidates.Where(c => c.Fee <= v.Forecast).OrderByDescending(c => Midpoint(c.RatingEstimate)).FirstOrDefault() is { } depth)
                     send(new SigningDecision(depth.Id));
                 break;
             default:
-                foreach (var person in people.Where(p => p.CanRenew && (policy == Coach || p.Execution >= 66))) send(new RenewalDecision(person.Id, 1));
+                foreach (var person in people.Where(p => p.CanRenew && (policy == Coach || p.Rating >= 66))) send(new RenewalDecision(person.Id, 1));
                 if (v.CoachContract.CanRenew) send(new RenewalDecision(v.CoachContract.Id, 1));
                 break;
         }

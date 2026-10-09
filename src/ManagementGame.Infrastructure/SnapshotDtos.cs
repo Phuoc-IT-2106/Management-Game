@@ -1,19 +1,35 @@
-// Explicit schema-4 DTOs (continuous seasons; rules v3 sponsor termination clause; schema 4 adds transfer history, World.Moves).
+// Explicit schema-5 DTOs (continuous seasons; rules v3 sponsor termination clause; schema 4 added transfer history,
+// World.Moves; schema 5 is rules v4: role-weighted skills, mind, career, condition and popularity on Person, Coach development).
 // Changes require deliberate save-schema review.
 using System.Collections.Immutable;
 using ManagementGame.Domain;
 namespace ManagementGame.Infrastructure;
 
-public sealed record PersonDto(string Id, string DefinitionId, string Name, string Role, int Execution, int Adaptability, int Consistency, int Readiness)
+public sealed record SkillsDto(int Mechanics, int EarlyGame, int Teamfight, int Macro, int ChampionPool)
 {
-    public static PersonDto From(Person x) => new(x.Id, x.DefinitionId, x.Name, x.Role, x.Execution, x.Adaptability, x.Consistency, x.Readiness);
-    public Person ToDomain() => new(Id, DefinitionId, Name, Role, Execution, Adaptability, Consistency, Readiness);
+    public static SkillsDto From(Skills x) => new(x.Mechanics, x.EarlyGame, x.Teamfight, x.Macro, x.ChampionPool);
+    public Skills ToDomain() => new(Mechanics, EarlyGame, Teamfight, Macro, ChampionPool);
 }
 
-public sealed record CoachDto(string Id, string Name, int Preparation, int Analysis, int Adaptability, int Capacity)
+public sealed record MindDto(int Consistency, int Composure, int Communication, int Professionalism, int Ambition, int Loyalty)
 {
-    public static CoachDto From(Coach x) => new(x.Id, x.Name, x.Preparation, x.Analysis, x.Adaptability, x.Capacity);
-    public Coach ToDomain() => new(Id, Name, Preparation, Analysis, Adaptability, Capacity);
+    public static MindDto From(Mind x) => new(x.Consistency, x.Composure, x.Communication, x.Professionalism, x.Ambition, x.Loyalty);
+    public Mind ToDomain() => new(Consistency, Composure, Communication, Professionalism, Ambition, Loyalty);
+}
+
+public sealed record PersonDto(string Id, string DefinitionId, string Name, string Handle, string Nationality, int BornSeason, string Role, string SecondaryRole,
+    SkillsDto Skills, MindDto Mind, int Potential, int Readiness, int Form, int Morale, int Popularity)
+{
+    public static PersonDto From(Person x) => new(x.Id, x.DefinitionId, x.Name, x.Handle, x.Nationality, x.BornSeason, x.Role, x.SecondaryRole,
+        SkillsDto.From(x.Skills), MindDto.From(x.Mind), x.Potential, x.Readiness, x.Form, x.Morale, x.Popularity);
+    public Person ToDomain() => new(Id, DefinitionId, Name, Handle, Nationality, BornSeason, Role, SecondaryRole, Skills.ToDomain(), Mind.ToDomain(),
+        Potential, Readiness, Form, Morale, Popularity);
+}
+
+public sealed record CoachDto(string Id, string Name, int Preparation, int Analysis, int Adaptability, int Capacity, int Development)
+{
+    public static CoachDto From(Coach x) => new(x.Id, x.Name, x.Preparation, x.Analysis, x.Adaptability, x.Capacity, x.Development);
+    public Coach ToDomain() => new(Id, Name, Preparation, Analysis, Adaptability, Capacity, Development);
 }
 
 public sealed record EmploymentDto(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay)

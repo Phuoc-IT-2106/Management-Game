@@ -7,8 +7,23 @@ public static class Simulation
 {
     public static Fixture? NextFixture(Campaign s) => s.World.Fixtures.FirstOrDefault(f => !s.World.Results.Any(r => r.FixtureId == f.Id));
     public static int Load(Company c, Balance b, int day) => b.BaseLoad + c.People.Length * 3 + c.Sponsors.Where(x => x.EndDay >= day).Sum(x => x.Load);
-    /// <summary>Every role A–E has at least one available player.</summary>
-    public static bool LineupPossible(Company c) => Generator.Roles.All(r => c.People.Any(p => p.Role == r.ToString() && p.Readiness > 0));
+    /// <summary>Five distinct available players can cover the five roles (primary or secondary role).</summary>
+    public static bool LineupPossible(Company c)
+    {
+        var available = c.People.Where(p => p.Readiness > 0).ToArray();
+        bool Assign(int role, HashSet<string> used)
+        {
+            if (role == Roles.All.Length) return true;
+            foreach (var p in available.Where(p => !used.Contains(p.Id) && Ratings.Proficiency(p, Roles.All[role]) > 0))
+            {
+                used.Add(p.Id);
+                if (Assign(role + 1, used)) return true;
+                used.Remove(p.Id);
+            }
+            return false;
+        }
+        return Assign(0, []);
+    }
     public static int ContractEnd(int day, int seasons, Balance b) => day + seasons * b.SeasonLength - 1;
 
     public static Campaign Apply(Campaign state, Intent intent, Content content, string cause)
@@ -22,9 +37,11 @@ public static class Simulation
                 if (plan.FixtureId != next.Id) throw new RuleViolation("The selected competition is no longer current.");
                 if (!Enum.IsDefined(plan.Posture) || !Enum.IsDefined(plan.ExpectedOpponent) || plan.Execution < 0 || plan.Opponent < 0 || plan.Meta < 0
                     || (long)plan.Execution + plan.Opponent + plan.Meta != 100) throw new RuleViolation("Preparation allocations must total 100%.");
-                if (plan.Lineup.IsDefault || plan.Lineup.Length != 5 || plan.Lineup.Distinct().Count() != 5) throw new RuleViolation("Select five distinct eligible players.");
+                // The lineup lists one player per role, in role order (top, jungle, mid, bot, support).
+                if (plan.Lineup.IsDefault || plan.Lineup.Length != Roles.All.Length || plan.Lineup.Distinct().Count() != Roles.All.Length) throw new RuleViolation("Select five distinct eligible players.");
                 var people = plan.Lineup.Select(id => c.People.FirstOrDefault(p => p.Id == id) ?? throw new RuleViolation("A selected player is no longer on the roster.")).ToArray();
-                if (people.Select(p => p.Role).Distinct().Count() != 5) throw new RuleViolation("Lineup must cover roles A, B, C, D and E.");
+                for (var i = 0; i < people.Length; i++)
+                    if (Ratings.Proficiency(people[i], Roles.All[i]) == 0) throw new RuleViolation($"{people[i].Handle} cannot play {Roles.Name(Roles.All[i])}.");
                 if (people.Any(p => p.Readiness <= 0)) throw new RuleViolation("A selected player is unavailable.");
                 c = c with { Plan = plan with { CauseId = cause } };
                 break;
@@ -57,7 +74,7 @@ public static class Simulation
                 var current = c.Employment.FirstOrDefault(x => x.PersonId == command.PersonId) ?? throw new RuleViolation("No contract to renew.");
                 if (command.Seasons is < 1 or > 3) throw new RuleViolation("Contracts run for one to three seasons.");
                 if (current.EndDay - day > b.RenewalWindow) throw new RuleViolation($"Renewal talks open {b.RenewalWindow} days before the contract ends (day {current.EndDay}).");
-                var demand = RenewalDemand(c, current);
+                var demand = RenewalDemand(c, current, Seasons.Of(day, b), content);
                 c = c with { Employment = c.Employment.Replace(current, current with { Salary = demand, ReleaseCost = demand * 3, EndDay = current.EndDay + command.Seasons * b.SeasonLength }) };
                 break;
             case HireCoach command:
@@ -98,9 +115,12 @@ public static class Simulation
         return state with { Company = c, World = w };
     }
 
-    public static long RenewalDemand(Company c, Employment contract) => contract.PersonId == c.Coach.Id
-        ? Pay.Demand(contract.Salary, Pay.Coach(c.Coach), c.Reputation)
-        : Pay.Demand(contract.Salary, Pay.Player(c.People.Single(p => p.Id == contract.PersonId).Execution), c.Reputation);
+    public static long RenewalDemand(Company c, Employment contract, int season, Content content)
+    {
+        if (contract.PersonId == c.Coach.Id) return Pay.Demand(contract.Salary, Pay.Coach(c.Coach), c.Reputation);
+        var person = c.People.Single(p => p.Id == contract.PersonId);
+        return Pay.Demand(contract.Salary, Pay.Player(person, season, content), c.Reputation, person.Mind.Loyalty);
+    }
 
     private static string Describe(Intent intent, Content content) => intent switch
     {
@@ -218,8 +238,9 @@ public static class Simulation
                         (c, w) = Market.Terminations(c, w, content, day);
                         break;
                     }
-                    var outcome = Competition.Resolve(new CompetitionInput(seed, fixture, plan, c.Work,
-                        plan.Lineup.Select(id => c.People.Single(p => p.Id == id)).ToImmutableArray(), c.Coach, rival, w.Meta,
+                    var lineup = plan.Lineup.Select(id => c.People.Single(p => p.Id == id)).ToImmutableArray();
+                    var outcome = Competition.Resolve(new CompetitionInput(seed, fixture, plan, c.Work, lineup,
+                        [.. lineup.Select((p, i) => Ratings.InRole(p, Roles.All[i], content))], c.Coach, rival, w.Meta,
                         w.Results.TakeLast(b.PredictabilityWindow).Count(r => r.Posture == plan.Posture), b));
                     w = w with { Results = w.Results.Add(outcome) };
                     c = Finance.Consume(c, outcome, fixture, b);

@@ -12,11 +12,17 @@ public static class SnapshotValidation
             var array = ids.ToArray();
             Require(array.Length == array.Distinct(StringComparer.Ordinal).Count() && array.All(x => !string.IsNullOrWhiteSpace(x) && x.Length <= 256), "Duplicate/invalid " + label);
         }
-        bool Person(Person p) => p.Readiness is > 0 and <= 100 && p.Execution is >= 0 and <= 100 && p.Adaptability is >= 0 and <= 100
-            && p.Consistency is >= 0 and <= 100 && p.Role.Length == 1 && Generator.Roles.Contains(p.Role, StringComparison.Ordinal) && p.Name.Length is > 0 and <= 120;
-        bool Coach(Coach x) => x.Preparation is > 0 and <= 100 && x.Analysis is >= 0 and <= 100 && x.Adaptability is >= 0 and <= 100 && x.Capacity is > 0 and <= 1000 && x.Name.Length is > 0 and <= 120;
         var c = s.Company; var w = s.World; var e = s.Execution; var definition = content.Definition; var b = definition.Balance; var day = w.Calendar.Day;
         var season = Seasons.Of(day, b);
+        static bool Score(int value) => value is >= 1 and <= 99;
+        bool Person(Person p) => p.Name.Length is > 0 and <= 120 && p.Handle.Length is > 0 and <= 40 && p.Nationality.Length == 2
+            && Roles.Valid(p.Role) && (p.SecondaryRole.Length == 0 || Roles.Valid(p.SecondaryRole) && p.SecondaryRole != p.Role)
+            && Ratings.Age(p, season) is >= 14 and <= 45
+            && new[] { p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool }.All(Score)
+            && new[] { p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication, p.Mind.Professionalism, p.Mind.Ambition, p.Mind.Loyalty }.All(Score)
+            && Score(p.Potential) && p.Readiness is > 0 and <= 100 && p.Form is >= -10 and <= 10 && p.Morale is >= 0 and <= 100 && p.Popularity is >= 0 and <= 100;
+        bool Coach(Coach x) => x.Preparation is > 0 and <= 100 && x.Analysis is >= 0 and <= 100 && x.Adaptability is >= 0 and <= 100 && x.Capacity is > 0 and <= 1000
+            && x.Development is >= 0 and <= 100 && x.Name.Length is > 0 and <= 120;
         Require(e.ContentHash == content.Hash && e.RulesVersion == definition.RulesVersion && e.CampaignId.Length is > 0 and <= 128, "Campaign identity mismatch.");
         Require(e.Revision >= 0 && e.Revision == e.Receipts.Length, "Revision/receipt mismatch.");
         Unique(e.Receipts.Select(x => x.Id), "command receipts");
@@ -61,7 +67,7 @@ public static class SnapshotValidation
         Unique(w.Moves.Select(x => x.Id), "move IDs");
         Require(w.Moves.Zip(w.Moves.Skip(1)).All(p => p.First.Day <= p.Second.Day) && w.Moves.All(m => m.Day >= Seasons.Start(Math.Max(1, season - 1), b) && m.Day <= day
             && m.PersonId.Length > 0 && m.Name.Length is > 0 and <= 120 && m.CauseId.Length > 0 && Enum.IsDefined(m.Kind) && Enum.IsDefined(m.Reason)
-            && (m.Kind == Personnel.Player ? m.Role.Length == 1 && Generator.Roles.Contains(m.Role, StringComparison.Ordinal) : m.Role.Length == 0)
+            && (m.Kind == Personnel.Player ? Roles.Valid(m.Role) : m.Role.Length == 0)
             && (m.Reason is MoveReason.Signed or MoveReason.Appointed or MoveReason.Interim ? m.Origin is null && m.Destination == c.Id : m.Origin == c.Id && m.Destination is null)
             && (m.Reason is MoveReason.Signed or MoveReason.Released ? m.Kind == Personnel.Player : m.Reason == MoveReason.ContractEnded || m.Kind == Personnel.HeadCoach)),
             "Invalid transfer history.");

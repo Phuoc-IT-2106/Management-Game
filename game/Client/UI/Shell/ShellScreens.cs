@@ -189,35 +189,75 @@ public partial class GameShell
         return page;
     }
 
-    // ---------- Squad (S5) ----------
+    // ---------- Squad (S5; approved reference 03_squad_mockup) ----------
     private Control SquadScreen()
     {
-        var missing = "ABCDE".Select(r => r.ToString()).Where(r => !view.People.Any(p => p.Role == r)).ToArray();
-        var page = Page(out var body, "Squad", missing.Length == 0 ? $"{view.People.Length} players · every role A–E is covered" : $"{PresentationText.WarningMarker} No player for role {string.Join(", ", missing)}: matches will be forfeited");
+        var missing = RoleNames.All.Where(r => !view.People.Any(p => p.Role == r || p.SecondaryRole == r)).ToArray();
+        var page = Page(out var body, "Squad", missing.Length == 0 ? $"{view.People.Length} players · every role is covered"
+            : $"{PresentationText.WarningMarker} No player for {string.Join(", ", missing.Select(RoleNames.Name))}: matches will be forfeited");
         Columns(body, out var left, out var right, 2.2f);
         right.CustomMinimumSize = new Vector2(ui.Tokens.Size(SizeRole.InspectorWidth) * (GetViewportRect().Size.X >= 1500 ? 1f : 0.82f), 0);
         // The profile holds the screen's decisions (renew, release, sign): the premium region.
         var profile = ui.Stack(); profile.Name = "Profile"; Card(right, "Profile", "", "squad", FrameTier.Premium).AddChild(profile);
         squadSelection ??= view.People.FirstOrDefault()?.Id;
         void Show(string id) { squadSelection = id; Profile(profile, id); }
-        var players = Card(left, "Players", "Who plays, what do they cost, and when do contracts end?", "squad");
-        players.AddChild(Table("SquadTable", ["Player", "Role", "Execution", "Readiness", "Wage/day", "Contract ends"],
-            view.People.Select(p => (p.Id, new[] { p.Name, p.Role, p.Execution.ToString(), p.Readiness.ToString(), Amount(p.Salary), (p.CanRenew ? "▲ " : "") + "day " + p.ContractEnd })), Show, squadSelection, numeric: [4], fit: [5]));
+        var players = Card(left, "Players", "Who plays, how good are they, what do they cost?", "squad");
+        players.AddChild(Table("SquadTable", ["Player", "Role", "Rating", "Age", "Readiness", "Wage/day", "Contract ends"],
+            view.People.Select(p => (p.Id, new[] { p.Name, RoleNames.Name(p.Role), p.Rating.ToString(Invariant), p.Age.ToString(Invariant), p.Readiness.ToString(Invariant),
+                Amount(p.Salary), (p.CanRenew ? "▲ " : "") + "day " + p.ContractEnd })), Show, squadSelection, numeric: [2, 3, 4, 5], fit: [1, 6]));
         var market = Card(left, "Free agents", "Who could we sign, and what would it cost?", "transfer");
-        market.AddChild(Table("FreeAgents", ["Name", "Role", "Ability (est.)", "Fee", "Wage/day", "Available until"],
-            view.Candidates.Select(c => (c.Id, new[] { c.Name, c.Role, Band(c.AbilityEstimate), Amount(c.Fee), Amount(c.Salary), "day " + c.Deadline })), Show, squadSelection, numeric: [3, 4], fit: [5]));
+        // The potential estimate is a column where the screen is roomy; on a compact screen it stays in the profile.
+        if (ShellLayout.Roomy(GetViewportRect().Size))
+            market.AddChild(Table("FreeAgents", ["Player", "Role", "Age", "Rating (est.)", "Potential (est.)", "Fee", "Wage/day"],
+                view.Candidates.Select(c => (c.Id, new[] { c.Name, RoleNames.Name(c.Role), c.Age.ToString(Invariant), Band(c.RatingEstimate), Band(c.PotentialEstimate),
+                    Amount(c.Fee), Amount(c.Salary) })), Show, squadSelection, numeric: [5, 6], fit: [1, 2, 3, 4]));
+        else
+            market.AddChild(Table("FreeAgents", ["Player", "Role", "Age", "Rating (est.)", "Fee", "Wage/day"],
+                view.Candidates.Select(c => (c.Id, new[] { c.Name, RoleNames.Name(c.Role), c.Age.ToString(Invariant), Band(c.RatingEstimate),
+                    Amount(c.Fee), Amount(c.Salary) })), Show, squadSelection, numeric: [4, 5], fit: [1, 2, 3]));
         if (squadSelection is not null) Profile(profile, squadSelection);
         return page;
     }
+    private static readonly System.Globalization.CultureInfo Invariant = System.Globalization.CultureInfo.InvariantCulture;
+    /// <summary>One attribute as label, a ten-segment bar and the value; the bar is relative to the 1–99 scale.</summary>
+    private void Attribute(VBoxContainer parent, string label, int value, string name)
+    {
+        var row = new HBoxContainer { Name = name }; row.AddThemeConstantOverride("separation", 10);
+        var text = SemanticText.Create(ui, label, TypographyRole.Annotation, ColorRole.TextSecondary);
+        text.AutowrapMode = TextServer.AutowrapMode.Off; text.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        row.AddChild(text);
+        var bar = SegmentBar.Create(ui, value, 99, 10, value >= 75 ? ColorRole.StatePositive : value >= 55 ? ColorRole.TextSecondary : ColorRole.StateWarning);
+        row.AddChild(bar);
+        var number = SemanticText.Create(ui, value.ToString(Invariant), TypographyRole.Data, ColorRole.TextPrimary);
+        number.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Annotation));
+        number.CustomMinimumSize = new Vector2(28, 0); number.HorizontalAlignment = HorizontalAlignment.Right;
+        row.AddChild(number);
+        parent.AddChild(row);
+    }
+    private static string FormText(int form) => form switch { >= 4 => "Hot", >= 1 => "Good", 0 => "Steady", >= -3 => "Off", _ => "Cold" };
+    private static string MoraleText(int morale) => morale switch { >= 75 => "High", >= 50 => "Good", >= 30 => "Low", _ => "Poor" };
     private void Profile(VBoxContainer profile, string id)
     {
         foreach (var child in profile.GetChildren()) { profile.RemoveChild(child); child.QueueFree(); }
         if (view.People.FirstOrDefault(p => p.Id == id) is { } person)
         {
-            profile.AddChild(SectionHeader.Create(ui, person.Name, $"Role {person.Role} · under contract"));
-            Line(profile, $"Execution {person.Execution}", TypographyRole.Data);
-            profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known, "Observed in competition."));
-            Line(profile, $"Readiness {person.Readiness} · wage {Currency.PerDay(person.Salary)} · contract ends day {person.ContractEnd}");
+            var secondary = person.SecondaryRole.Length > 0 ? $" · also {RoleNames.Name(person.SecondaryRole)} ({person.SecondaryRating})" : "";
+            profile.AddChild(SectionHeader.Create(ui, person.Name, $"{RoleNames.Name(person.Role)}{secondary} · age {person.Age} · {person.Nationality} · {person.FullName}"));
+            var rating = SemanticText.Create(ui, person.Rating.ToString(Invariant), TypographyRole.Display, ColorRole.StatePositive); rating.Name = "ProfileRating";
+            profile.AddChild(rating);
+            profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known, "Rating in role, observed in training and competition."));
+            if (person.Skills is { } s)
+            {
+                profile.AddChild(Caps("Core attributes"));
+                var attributes = ui.Stack(); attributes.Name = "ProfileAttributes"; attributes.AddThemeConstantOverride("separation", 2); profile.AddChild(attributes);
+                foreach (var (label, value) in new[] { ("Mechanics", s.Mechanics), ("Early game", s.EarlyGame), ("Teamfight", s.Teamfight), ("Macro", s.Macro),
+                    ("Champion pool", s.ChampionPool), ("Consistency", s.Consistency), ("Composure", s.Composure), ("Communication", s.Communication) })
+                    Attribute(attributes, label, value, "Attribute_" + label.Replace(" ", ""));
+            }
+            profile.AddChild(Caps("Status"));
+            Line(profile, $"Readiness {person.Readiness} · form {FormText(person.Form)} · morale {MoraleText(person.Morale)} · popularity {person.Popularity}");
+            profile.AddChild(Caps("Contract"));
+            Line(profile, $"Wage {Currency.PerDay(person.Salary)} · contract ends day {person.ContractEnd} · market value {Currency.Format(person.MarketValue)}");
             if (person.CanRenew)
             {
                 var seasons = Seasons("RenewSeasons");
@@ -231,13 +271,16 @@ public partial class GameShell
             var release = ui.Button("Release player", () => Confirm("Release player", $"Release {person.Name}? Pay {Currency.Format(person.ExitCost)} now; wages stop. Arrears remain payable.",
                 "Release", () => Send(new ReleaseDecision(person.Id))));
             release.Name = "Release"; release.Disabled = !person.CanRelease; profile.AddChild(release);
-            if (!person.CanRelease) Line(profile, $"Only player in role {person.Role}; sign a replacement before releasing.", tone: ColorRole.TextSecondary);
+            if (!person.CanRelease) Line(profile, $"Only {RoleNames.Name(person.Role)} on the roster; sign a replacement before releasing.", tone: ColorRole.TextSecondary);
             return;
         }
         if (view.Candidates.FirstOrDefault(c => c.Id == id) is { } candidate)
         {
-            profile.AddChild(SectionHeader.Create(ui, candidate.Name, $"Role {candidate.Role} · free agent until day {candidate.Deadline}"));
-            profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Ability " + candidate.AbilityEstimate));
+            var secondary = candidate.SecondaryRole.Length > 0 ? $" · also {RoleNames.Name(candidate.SecondaryRole)}" : "";
+            profile.AddChild(SectionHeader.Create(ui, candidate.Name, $"{RoleNames.Name(candidate.Role)}{secondary} · age {candidate.Age} · {candidate.Nationality} · {candidate.FullName}"));
+            profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Rating " + candidate.RatingEstimate));
+            profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Potential " + candidate.PotentialEstimate));
+            Line(profile, $"Popularity {candidate.Popularity} · free agent until day {candidate.Deadline}", tone: ColorRole.TextSecondary);
             Line(profile, $"Signing fee {Currency.Format(candidate.Fee)} · wage {Currency.PerDay(candidate.Salary)}");
             var seasons = Seasons("SignSeasons"); profile.AddChild(seasons);
             var sign = ui.PrimaryButton("Sign player", () => Confirm("Sign player", $"Sign {candidate.Name} for {seasons.Selected + 1} season(s)? Pay {Currency.Format(candidate.Fee)} now and {Currency.PerDay(candidate.Salary)}. New signings start with reduced readiness.",
@@ -265,17 +308,22 @@ public partial class GameShell
             var posture = new OptionButton { Name = "Posture" }; foreach (var name in Enum.GetNames<Risk>()) posture.AddItem(name); posture.Selected = (int)Risk.Balanced;
             plan.AddChild(Field("Posture", posture));
             var lineup = new Dictionary<string, OptionButton>(); var roles = ui.Flow(); plan.AddChild(roles);
-            foreach (var role in "ABCDE".Select(r => r.ToString()))
+            // One choice per role in lineup order: the role's players first, then those who can cover it as a secondary role.
+            foreach (var role in RoleNames.All)
             {
                 var choice = new OptionButton { Name = "Role_" + role };
-                foreach (var p in view.People.Where(p => p.Role == role)) { choice.AddItem($"{p.Name} · {p.Execution}/{p.Readiness}"); choice.SetItemMetadata(choice.ItemCount - 1, p.Id); }
-                lineup[role] = choice; roles.AddChild(Field("Role " + role, choice));
+                foreach (var p in view.People.Where(p => p.Role == role)) { choice.AddItem($"{p.Name} · {p.Rating}/{p.Readiness}"); choice.SetItemMetadata(choice.ItemCount - 1, p.Id); }
+                foreach (var p in view.People.Where(p => p.SecondaryRole == role)) { choice.AddItem($"{p.Name} · {p.SecondaryRating}/{p.Readiness} (secondary)"); choice.SetItemMetadata(choice.ItemCount - 1, p.Id); }
+                lineup[role] = choice; roles.AddChild(Field(RoleNames.Name(role), choice));
             }
             void Apply(PlanView source)
             {
                 execution.Value = source.Execution; opponent.Value = source.Opponent; meta.Value = source.Meta; posture.Selected = (int)source.Posture;
-                foreach (var (role, choice) in lineup)
-                    for (var i = 0; i < choice.ItemCount; i++) if (source.Lineup.Contains(choice.GetItemMetadata(i).AsString())) choice.Select(i);
+                for (var r = 0; r < RoleNames.All.Length && r < source.Lineup.Length; r++)
+                {
+                    var choice = lineup[RoleNames.All[r]];
+                    for (var i = 0; i < choice.ItemCount; i++) if (choice.GetItemMetadata(i).AsString() == source.Lineup[r]) choice.Select(i);
+                }
             }
             if ((view.CommittedPlan ?? view.Recommendation) is { } draft) Apply(draft);
             Line(plan, view.RecommendationReason, tone: ColorRole.TextSecondary);
@@ -285,7 +333,7 @@ public partial class GameShell
             {
                 if (lineup.Values.Any(c => c.ItemCount == 0)) { Notify("Every role needs a player before a plan can be committed.", true); return; }
                 Send(new PreparationDecision(view.NextFixtureId, (int)execution.Value, (int)opponent.Value, (int)meta.Value, (Risk)posture.Selected,
-                    lineup.Values.Select(c => c.GetSelectedMetadata().AsString()).ToImmutableArray()));
+                    RoleNames.All.Select(r => lineup[r].GetSelectedMetadata().AsString()).ToImmutableArray()));
             });
             commit.Name = "CommitPlan"; buttons.AddChild(commit);
             Line(plan, view.CommittedPlan is null ? "No plan committed: preparation work does not accrue." : "Plan committed; you may change future work before the match.", tone: ColorRole.TextSecondary);

@@ -124,7 +124,72 @@ var rivalsBySeed = Enumerable.Range(1, 6).Select(seed => string.Join("|", New((u
 var coachesBySeed = Enumerable.Range(1, 6).Select(seed => New((ulong)seed).Observe().Coach).Distinct().Count();
 Check(rivalsBySeed > 1 && coachesBySeed > 1, "rival organizations and head coaches vary across campaigns");
 Check(New(company: "Hanoi Signal").Observe().Company == "Hanoi Signal" && New().Observe().Company == content.Definition.DefaultCompanyName, "player names the company");
-Check(a.People.All(p => content.Definition.Names.Given.Any(g => p.Name.StartsWith(g + " ", StringComparison.Ordinal))), "names come from the content pool");
+Check(a.People.All(p => content.Definition.Nationalities.Single(n => n.Id == p.Nationality) is var n
+    && n.Given.Any(g => n.Family.Any(f => p.FullName == (n.FamilyFirst ? f + " " + g : g + " " + f)))
+    && content.Definition.Handles.Prefixes.Any(x => p.Name.StartsWith(x, StringComparison.Ordinal))), "names and handles come from the content pools of each person's nationality");
+// Rules v4 player model: generation tables, role ratings, wages, lineups and what the company may observe.
+static bool Throws(Action action) { try { action(); return false; } catch (RuleViolation) { return true; } }
+var def = content.Definition;
+var sample = Enumerable.Range(0, 500).Select(i => Generator.Player(99, def, $"person:t{i:D5}", Roles.All[i % 5], 1)).ToArray();
+var ages = sample.Select(p => Ratings.Age(p, 1)).ToArray();
+double TableMean(ImmutableArray<WeightedValue> table) => table.Sum(x => (double)x.Value * x.Weight) / table.Sum(x => x.Weight);
+Check(ages.All(a => def.Generation.Ages.Any(x => x.Value == a)) && Math.Abs(ages.Average() - TableMean(def.Generation.Ages)) < 1,
+    "generated ages come from the calibrated age table, with its mean");
+Check(sample.All(p => new[] { p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool }.All(v => v is >= 1 and <= 99)
+    && p.Potential >= Ratings.Rating(p, def) && p.Potential <= 99 && p.Popularity is >= 1 and <= 99 && p.SecondaryRole != p.Role),
+    "skills stay within 1-99, potential is never below the rating, a secondary role differs from the primary");
+Check(Roles.All.All(r => sample.Where(p => p.Role == r).Select(p => p.Skills).Distinct().Count() > 50)
+    && sample.Count(p => p.SecondaryRole.Length > 0) is > 75 and < 175, "every role has varied players; about a quarter cover a secondary role");
+var young = sample.Where(p => Ratings.Age(p, 1) <= 19).ToArray(); var prime = sample.Where(p => Ratings.Age(p, 1) is >= 22 and <= 26).ToArray();
+Check(young.Average(p => p.Potential - Ratings.Rating(p, def)) > prime.Average(p => p.Potential - Ratings.Rating(p, def)) + 4
+    && young.Average(p => Ratings.Rating(p, def)) < prime.Average(p => Ratings.Rating(p, def)),
+    "young players trade current rating for headroom to grow");
+var nationalityShare = sample.GroupBy(p => p.Nationality).ToDictionary(g => g.Key, g => g.Count() / 500.0);
+Check(def.Nationalities.All(n => Math.Abs(nationalityShare.GetValueOrDefault(n.Id) - n.Weight / (double)def.Nationalities.Sum(x => x.Weight)) < .06),
+    "nationalities follow the calibrated mix");
+// Market and starting roster share one ability distribution (no unexplained gap).
+var starts = Enumerable.Range(1, 8).Select(seed => New((ulong)seed).Capture()).ToArray();
+var rosterMean = starts.SelectMany(s => s.Company.People).Average(p => Ratings.Rating(p, def));
+var marketMean = starts.SelectMany(s => s.World.Candidates).Average(x => Ratings.Rating(x.Person, def));
+Check(Math.Abs(rosterMean - marketMean) <= 3, $"market and starting roster ratings share one mean ({rosterMean:0.0} vs {marketMean:0.0})");
+// Rating: role weights times skills (basis points), scaled by proficiency; a secondary role at 80%, others not at all.
+var probe = sample.First(p => p.SecondaryRole.Length > 0);
+var probeWeights = def.RoleWeights.Single(w => w.Role == probe.Role).Weights;
+var expectedRating = (int)Numbers.Divide(Enumerable.Range(0, 5).Sum(i => (long)probeWeights[i] * Ratings.Skill(probe.Skills, i)) * 100, 1_000_000);
+var otherRole = Roles.All.First(r => r != probe.Role && r != probe.SecondaryRole);
+Check(Ratings.Rating(probe, def) == expectedRating && Ratings.InRole(probe, otherRole, def) == 0
+    && Ratings.InRole(probe, probe.SecondaryRole, def) < Ratings.InRole(probe with { Role = probe.SecondaryRole, SecondaryRole = "" }, probe.SecondaryRole, def),
+    "a rating is role-weighted skills; a secondary role plays at reduced proficiency and other roles not at all");
+Check(Pay.Player(probe with { Popularity = 90 }, 1, def) > Pay.Player(probe with { Popularity = 20 }, 1, def)
+    && Pay.Player(probe with { Skills = probe.Skills with { Mechanics = 99, Teamfight = 99 } }, 1, def) > Pay.Player(probe, 1, def),
+    "wages rise with rating and fan following");
+// Lineups list one player per role in role order; a secondary role can cover; a player cannot play an unrelated role.
+var lineupState = New(5).Capture(); var lineupView = Observations.Build(lineupState, def);
+var best = CoachPolicy.BestLineup(lineupView.People);
+Check(!best.IsDefault && best.Select((id, i) => Ratings.Proficiency(lineupState.Company.People.Single(x => x.Id == id), Roles.All[i]) > 0).All(x => x),
+    "the coach's lineup puts each player in a role they can play, in role order");
+var wrongOrder = best.Reverse().ToImmutableArray();
+var lineupFixture = Simulation.NextFixture(lineupState)!;
+Check(wrongOrder.Select((id, i) => Ratings.Proficiency(lineupState.Company.People.Single(x => x.Id == id), Roles.All[i])).Any(x => x == 0)
+    && Throws(() => Simulation.Apply(lineupState, new CommitPlan(new Plan(lineupFixture.Id, 50, 30, 20, Posture.Balanced, wrongOrder, Posture.Balanced, "x")), def, "wrong-roles")),
+    "a lineup that puts a player in a role they cannot play is rejected");
+var helper = sample.First(x => x.Role == "mid") with { Id = "person:helper", SecondaryRole = "top" };
+var noTops = lineupState.Company with { People = [.. lineupState.Company.People.Where(x => x.Role != "top" && x.SecondaryRole != "top"), helper] };
+Check(Simulation.LineupPossible(noTops) && !Simulation.LineupPossible(noTops with { People = [.. noTops.People.Where(x => x.Id != helper.Id), helper with { SecondaryRole = "" }] }),
+    "a secondary-role player can cover a role nobody plays as primary");
+// What the company observes: its own players exactly, others as bands that contain the truth; personality never.
+var observedJson = Canonical.Json(lineupView);
+Check(new[] { "Professionalism", "Ambition", "Loyalty", "\"Potential\":" }.All(key => !observedJson.Contains(key, StringComparison.Ordinal)),
+    "observations never carry personality or exact potential");
+static (int Lo, int Hi) Bounds(string band) { var parts = band.Replace(" (estimate)", "", StringComparison.Ordinal).Split('–'); return (int.Parse(parts[0]), int.Parse(parts[1])); }
+Check(lineupView.Candidates.All(c => lineupState.World.Candidates.Single(x => x.Person.Id == c.Id).Person is var truth
+        && Bounds(c.RatingEstimate) is var rb && rb.Lo <= Ratings.Rating(truth, def) && Ratings.Rating(truth, def) <= rb.Hi
+        && Bounds(c.PotentialEstimate) is var pb && pb.Lo <= truth.Potential && truth.Potential <= pb.Hi),
+    "every rating and potential estimate contains the true value");
+var sharp = Observations.Build(lineupState with { Company = lineupState.Company with { Information = 95 } }, def);
+Check(sharp.Candidates.Zip(lineupView.Candidates).All(x => Bounds(x.First.RatingEstimate) is var narrow && Bounds(x.Second.RatingEstimate) is var wide && narrow.Hi - narrow.Lo <= wide.Hi - wide.Lo)
+    && sharp.Candidates.Any(c => Bounds(c.RatingEstimate) is var narrow && narrow.Hi - narrow.Lo < 18), "better information narrows the estimates");
+
 
 // Contracts: renewal window, renewal terms, expiry and the coach market.
 var contracts = New(); var renewable = contracts.Capture().Company.Employment.Where(e => e.PersonId != contracts.Capture().Company.Coach.Id).OrderBy(e => e.EndDay).First();
@@ -147,7 +212,7 @@ for (var guard = 0; guard < 600 && career.Observe().Season <= 3; guard++)
 {
     var v = career.Observe();
     foreach (var free in v.Offers.Where(o => o.Availability == "Available").Take(1)) Submit(career, new SponsorDecision(free.Id));
-    foreach (var role in "ABCDE".Select(r => r.ToString()).Where(r => !v.People.Any(p => p.Role == r)))
+    foreach (var role in Roles.All.Where(r => !v.People.Any(p => p.Role == r)))
         if (v.Candidates.FirstOrDefault(c => c.Role == role) is { } cover) Submit(career, new SigningDecision(cover.Id));
     var response = Submit(career, new AdvanceDecision());
     if (!response.Accepted) throw new Exception("Career blocked: " + response.Message);
@@ -205,7 +270,7 @@ Check(careerState.Company.Cash == careerState.Company.LedgerBase + careerState.C
 store.Save("career", careerState); Check(Canonical.Hash(store.Load("career")) == Canonical.Hash(careerState), "late-season campaign saves and loads");
 
 // A roster that cannot field all roles forfeits rather than blocking time.
-var thin = New().Capture(); var keep = thin.Company.People.Where(p => p.Role != "A").ToImmutableArray();
+var thin = New().Capture(); var keep = thin.Company.People.Where(p => p.Role != "top" && p.SecondaryRole != "top").ToImmutableArray();
 thin = thin with { Company = thin.Company with { People = keep, Employment = thin.Company.Employment.Where(e => e.PersonId == thin.Company.Coach.Id || keep.Any(p => p.Id == e.PersonId)).ToImmutableArray() },
     World = thin.World with { Candidates = [] } };
 var forfeiting = new Session(content.Definition, thin);
@@ -229,8 +294,12 @@ foreach (var culture in new[] { "en-US", "tr-TR", "vi-VN" })
     var alternate = New(); alternate.Submit(coach); foreach (var advanceId in cycleIds.Take(usedCycles)) alternate.Submit(new Request(advanceId, alternate.Observe().Revision, new AdvanceDecision()));
     Check(Canonical.Hash(alternate.Capture()) == Canonical.Hash(repeat.Capture()), "culture-independent replay " + culture);
 }
-var permutedContent = content.Definition with { Brands = content.Definition.Brands.Reverse().ToImmutableArray(), OrganizationNames = content.Definition.OrganizationNames.Reverse().ToImmutableArray(),
-    Names = new NamePool(content.Definition.Names.Given.Reverse().ToImmutableArray(), content.Definition.Names.Family.Reverse().ToImmutableArray()) };
+var d = content.Definition;
+var permutedContent = d with { Brands = d.Brands.Reverse().ToImmutableArray(), OrganizationNames = d.OrganizationNames.Reverse().ToImmutableArray(),
+    Nationalities = [.. d.Nationalities.Reverse().Select(n => n with { Given = n.Given.Reverse().ToImmutableArray(), Family = n.Family.Reverse().ToImmutableArray() })],
+    Handles = new HandleParts(d.Handles.Prefixes.Reverse().ToImmutableArray(), d.Handles.Suffixes.Reverse().ToImmutableArray()),
+    Generation = d.Generation with { Archetypes = d.Generation.Archetypes.Reverse().ToImmutableArray(), Ages = d.Generation.Ages.Reverse().ToImmutableArray(),
+        AbilityBands = d.Generation.AbilityBands.Reverse().ToImmutableArray() } };
 Check(Canonical.Hash(CampaignFactory.Create(permutedContent, content.Hash, 123456789, "campaign:fixture")) == Canonical.Hash(New().Capture()), "shuffled content pools produce the same campaign");
 var lowInfoState = New().Capture(); var lowInfoSession = new Session(content.Definition, lowInfoState with { Company = lowInfoState.Company with { Information = 30 } });
 lowInfoSession.Submit(new Request("a", 0, new CoachDecision(Delegation.Autonomous, Risk.Conservative))); var escalationHash = Canonical.Hash(lowInfoSession.Capture());
@@ -293,7 +362,7 @@ Check(movedPortal.Transfers.Select(t => t.Kind).SequenceEqual([MoveKind.Appointm
     && movedPortal.Transfers[1] is { Significance: StorySignificance.HeadCoach } replacedStory && replacedStory.Headline == $"{moverStart.Coach} leaves {moved.Company}"
     && replacedStory.Summary == $"Head coach; replaced by {appointed.Name}." && replacedStory.From == usView && replacedStory.To == JourneySide.FreeAgent
     && movedPortal.Transfers[2] is { Significance: StorySignificance.Player, Section: ShellSections.Squad, Coach: false } secondStory && secondStory.TargetId == signed.Id
-    && secondStory.Headline == $"{signed.Name} signs with {moved.Company}" && secondStory.Summary.StartsWith($"Role {signed.Role} player", StringComparison.Ordinal)
+    && secondStory.Headline == $"{signed.Name} signs with {moved.Company}" && secondStory.Summary.StartsWith(PortalProjection.RoleNoun(signed.Role), StringComparison.Ordinal)
     && secondStory.From == JourneySide.FreeAgent && secondStory.To == usView,
     "head-coach stories lead the player story; each tells its journey and opens its person in the owning section");
 Check(movedPortal.Transfers.All(t => !t.Headline.Contains('$') && !t.Summary.Contains('$') && !t.Summary.Contains(Currency.Format(signed.Fee), StringComparison.Ordinal))
@@ -301,18 +370,18 @@ Check(movedPortal.Transfers.All(t => !t.Headline.Contains('$') && !t.Summary.Con
 // Reloading tells the same stories: transfer history is saved (schema 4), so nothing is repeated or lost.
 store.Save("moves", mover.Capture());
 var savedMoves = System.Text.Json.JsonDocument.Parse(File.ReadAllText(store.PrimaryPath("moves"))).RootElement;
-Check(savedMoves.GetProperty("Schema").GetInt32() == SnapshotStore.Schema && SnapshotStore.Schema == 4
-    && savedMoves.GetProperty("Snapshot").GetProperty("World").GetProperty("Moves").GetArrayLength() == 3, "transfer history is part of the save (schema 4)");
+Check(savedMoves.GetProperty("Schema").GetInt32() == SnapshotStore.Schema && SnapshotStore.Schema == 5
+    && savedMoves.GetProperty("Snapshot").GetProperty("World").GetProperty("Moves").GetArrayLength() == 3, "transfer history is part of the save (schema 5)");
 var reloaded = new Session(content.Definition, store.Load("moves"));
 Check(PortalProjection.Build(reloaded.Observe()).Transfers.SequenceEqual(movedPortal.Transfers) && PortalProjection.Build(mover.Observe()).Transfers.SequenceEqual(movedPortal.Transfers),
     "transfer news survives save and load unchanged, and re-observing does not regenerate it");
-File.WriteAllText(store.PrimaryPath("moves"), File.ReadAllText(store.PrimaryPath("moves")).Replace("\"Schema\":4", "\"Schema\":3", StringComparison.Ordinal));
-try { store.Load("moves"); Check(false, "a schema-3 save is rejected"); } catch (InvalidDataException) { Check(true, "a schema-3 save is rejected"); }
+File.WriteAllText(store.PrimaryPath("moves"), File.ReadAllText(store.PrimaryPath("moves")).Replace("\"Schema\":5", "\"Schema\":4", StringComparison.Ordinal));
+try { store.Load("moves"); Check(false, "a schema-4 save is rejected"); } catch (InvalidDataException) { Check(true, "a schema-4 save is rejected"); }
 // Transfer history is validated: a move in a direction its reason does not allow, or from the future, is rejected.
 var recorded = mover.Capture();
 // World.Moves is in recorded order: the signing, the replaced coach, the appointment.
 foreach (var (label, index, broken) in new (string, int, Move)[] { ("a signing from the company itself", 0, recorded.World.Moves[0] with { Origin = recorded.Company.Id }),
-    ("a move dated in the future", 0, recorded.World.Moves[0] with { Day = recorded.World.Calendar.Day + 1 }), ("a coach recorded as a player", 1, recorded.World.Moves[1] with { Role = "A" }) })
+    ("a move dated in the future", 0, recorded.World.Moves[0] with { Day = recorded.World.Calendar.Day + 1 }), ("a coach recorded as a player", 1, recorded.World.Moves[1] with { Role = "top" }) })
 {
     try { SnapshotValidation.Validate(recorded with { World = recorded.World with { Moves = recorded.World.Moves.SetItem(index, broken) } }, content); Check(false, "history validation: " + label); }
     catch (InvalidDataException) { Check(true, "history validation: " + label); }

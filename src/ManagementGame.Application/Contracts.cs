@@ -18,9 +18,24 @@ public sealed record AdvanceDecision : Decision;
 public sealed record Request(string Id, long Revision, Decision Decision);
 public sealed record Response(bool Accepted, long Revision, string Message);
 
-public sealed record PersonRow(string Id, string Name, string Role, int Execution, int Readiness, long Salary, long ExitCost, bool CanRelease,
-    int ContractEnd = 0, long RenewalSalary = 0, bool CanRenew = false);
-public sealed record CandidateRow(string Id, string Name, string Role, string AbilityEstimate, long Fee, long Salary, int Deadline);
+/// <summary>The five roles in lineup order and their display names: the Domain's rule list, read for presentation.</summary>
+public static class RoleNames
+{
+    public static ImmutableArray<string> All => ManagementGame.Domain.Roles.All;
+    public static string Name(string role) => ManagementGame.Domain.Roles.Name(role);
+}
+/// <summary>The skills and match-relevant mind of a player the company employs (known exactly to its own staff).</summary>
+public sealed record PlayerSkills(int Mechanics, int EarlyGame, int Teamfight, int Macro, int ChampionPool, int Consistency, int Composure, int Communication);
+/// <summary>A player on the company's roster. Name is the in-game handle shown in play; FullName is the legal name. Rating
+/// is the primary-role rating; SecondaryRating the rating in the secondary role (0 without one). Personality and potential
+/// are never observed, so they are not here.</summary>
+public sealed record PersonRow(string Id, string Name, string Role, int Rating, int Readiness, long Salary, long ExitCost, bool CanRelease,
+    int ContractEnd = 0, long RenewalSalary = 0, bool CanRenew = false, string FullName = "", string Nationality = "", int Age = 0,
+    string SecondaryRole = "", int SecondaryRating = 0, PlayerSkills? Skills = null, int Form = 0, int Morale = 0, int Popularity = 0, long MarketValue = 0);
+/// <summary>A free agent as the company can estimate them: rating and potential as bands whose width follows the company's
+/// information and the head coach's analysis. Age, nationality, role and fan following are public.</summary>
+public sealed record CandidateRow(string Id, string Name, string Role, string RatingEstimate, long Fee, long Salary, int Deadline,
+    string FullName = "", string Nationality = "", int Age = 0, string PotentialEstimate = "", int Popularity = 0, string SecondaryRole = "");
 public sealed record SponsorRow(string Id, string Name, long Payment, long WinBonus, int Load, int Deadline, int MinimumReputation, string Availability,
     string Origin = "", int DurationDays = 0, string BrandId = "");
 public sealed record BillRow(string Id, string Cause, int DueDay, long Remaining, bool Incoming, int? MissedDay);

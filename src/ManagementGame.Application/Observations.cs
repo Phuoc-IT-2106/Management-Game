@@ -68,14 +68,25 @@ public static class Observations
         var estimatedPosture = rival is null ? Posture.Balanced : (Posture)(((int)rival.Posture +
             (KeyedRandom.Range(s.Execution.Seed, "information", $"player:{rival.Id}:{w.Results.Length}", "tendency", 100) < c.Information ? 0 : 1)) % 3);
         bool Renewable(Employment contract) => contract.EndDay - day <= b.RenewalWindow;
-        var people = c.People.OrderBy(p => p.Role, StringComparer.Ordinal).ThenBy(p => p.Id, StringComparer.Ordinal).Select(p =>
+        var season = Seasons.Of(day, b);
+        var people = c.People.OrderBy(p => Roles.All.IndexOf(p.Role)).ThenBy(p => p.Id, StringComparer.Ordinal).Select(p =>
         {
             var contract = c.Employment.Single(x => x.PersonId == p.Id);
-            return new PersonRow(p.Id, p.Name, p.Role, p.Execution, p.Readiness, contract.Salary, contract.ReleaseCost,
-                c.People.Any(x => x.Id != p.Id && x.Role == p.Role), contract.EndDay, Simulation.RenewalDemand(c, contract), Renewable(contract));
+            return new PersonRow(p.Id, p.Handle, p.Role, Ratings.Rating(p, content), p.Readiness, contract.Salary, contract.ReleaseCost,
+                c.People.Any(x => x.Id != p.Id && x.Role == p.Role), contract.EndDay, Simulation.RenewalDemand(c, contract, season, content), Renewable(contract),
+                p.Name, p.Nationality, Ratings.Age(p, season), p.SecondaryRole, p.SecondaryRole.Length == 0 ? 0 : Ratings.InRole(p, p.SecondaryRole, content),
+                new PlayerSkills(p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool,
+                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Player(p, season, content) * 20);
         }).ToImmutableArray();
         var coachContract = c.Employment.Single(x => x.PersonId == c.Coach.Id);
-        static string Band(int value) => $"{Math.Max(0, value / 10 * 10 - 10)}–{Math.Min(100, value / 10 * 10 + 20)} (estimate)";
+        // Estimates of people the company does not employ: a band around a keyed, stable centre. The band narrows with the
+        // company's information and the head coach's analysis; the true value always lies inside it.
+        var scoutWidth = Math.Max(3, (100 - c.Information) / 5 + (100 - c.Coach.Analysis) / 10);
+        string Band(string id, string purpose, int value, int width)
+        {
+            var centre = value + KeyedRandom.Range(s.Execution.Seed, "scouting", id, purpose, width + 1) - width / 2;
+            return $"{Math.Clamp(centre - width, 1, 99)}–{Math.Clamp(centre + width, 1, 99)} (estimate)";
+        }
         var active = Market.ActiveSponsors(c, day);
         string Availability(Offer o) => o.ClaimedBy is not null ? o.ClaimedBy == c.Id ? "Signed" : "Claimed by rival"
             : o.Deadline < day ? "Expired" : c.Reputation < o.MinimumReputation ? "Reputation too low"
@@ -96,8 +107,9 @@ public static class Observations
             estimatedPosture.ToString(), c.Information >= 65 ? "Moderate confidence" : "Low confidence", w.Meta.ToString(),
             c.Plan is null ? null : new PlanView(c.Plan.FixtureId, c.Plan.Execution, c.Plan.Opponent, c.Plan.Meta, (Risk)c.Plan.Posture, c.Plan.Lineup),
             null, "", people,
-            w.Candidates.Where(x => x.Deadline >= day).Select(x => new CandidateRow(x.Person.Id, x.Person.Name, x.Person.Role,
-                Band(x.Person.Execution), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
+            w.Candidates.Where(x => x.Deadline >= day).Select(x => new CandidateRow(x.Person.Id, x.Person.Handle, x.Person.Role,
+                Band(x.Person.Id, "rating", Ratings.Rating(x.Person, content), scoutWidth), x.Fee, x.Salary, x.Deadline, x.Person.Name, x.Person.Nationality,
+                Ratings.Age(x.Person, season), Band(x.Person.Id, "potential", x.Person.Potential, scoutWidth * 3 / 2), x.Person.Popularity, x.Person.SecondaryRole)).ToImmutableArray(),
             w.Offers.Select(o => new SponsorRow(o.Id, o.Name, o.Payment, o.WinBonus, o.Load, o.Deadline, o.MinimumReputation, Availability(o), o.Origin.ToString(), o.DurationDays, o.BrandId)).ToImmutableArray(),
             c.Sponsors.Where(x => x.EndDay >= day).Select(x => $"{x.Name}: {Currency.Format(x.Payment)} weekly, delivery load {x.Load}, win bonus {Currency.Format(x.WinBonus)}, ends day {x.EndDay}").ToImmutableArray(),
             c.FinancialItems.Where(x => x.Remaining > 0).OrderBy(x => x.DueDay).ThenBy(x => x.Id, StringComparer.Ordinal)
@@ -105,9 +117,9 @@ public static class Observations
             w.Results.Select(r => new ResultRow(r.Id, r.Day, w.Rivals.Single(x => x.Id == r.RivalId).Name, r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat", r.Posture.ToString())).ToImmutableArray(),
             c.Reviews.TakeLast(24).Reverse().Select(r => $"Day {r.Day} · {Currency.Relabel(r.Text)} [cause: {r.CauseId}]").ToImmutableArray(),
             string.Join("; ", c.PendingEffects.Select(e => $"Day {e.DueDay}: reputation {e.Reputation:+#;-#;0}, audience {e.Audience:+#;-#;0}")), content.Label,
-            new StaffRow(c.Coach.Id, c.Coach.Name, coachContract.Salary, coachContract.EndDay, Simulation.RenewalDemand(c, coachContract), Renewable(coachContract)),
+            new StaffRow(c.Coach.Id, c.Coach.Name, coachContract.Salary, coachContract.EndDay, Simulation.RenewalDemand(c, coachContract, season, content), Renewable(coachContract)),
             w.CoachCandidates.Where(x => x.Deadline >= day).Select(x => new CoachCandidateRow(x.Coach.Id, x.Coach.Name,
-                Band((x.Coach.Preparation + x.Coach.Analysis + x.Coach.Adaptability) / 3), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
+                Band(x.Coach.Id, "skill", (x.Coach.Preparation + x.Coach.Analysis + x.Coach.Adaptability + x.Coach.Development) / 4, scoutWidth), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
             brands, w.Negotiations.Select(n => new NegotiationRow(n.Id, Market.Brand(content, n.BrandId).Name, n.Payment, n.DurationDays, n.ResponseDay, n.BrandId)).ToImmutableArray(),
             b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "", b.OperatingCost, b.MinimumRoster, Moves(s));
         var recommendation = CoachPolicy.Recommend(view);
@@ -123,11 +135,33 @@ public static class CoachPolicy
     public static PlanView? Recommend(Situation view)
     {
         if (view.NextFixtureId.Length == 0) return null;
-        var lineup = view.People.GroupBy(p => p.Role).OrderBy(g => g.Key, StringComparer.Ordinal)
-            .Select(g => g.OrderByDescending(p => p.Execution * p.Readiness).ThenBy(p => p.Id, StringComparer.Ordinal).First().Id).ToImmutableArray();
-        if (lineup.Length != 5) return null;
+        var lineup = BestLineup(view.People);
+        if (lineup.IsDefault) return null;
         var meta = view.Meta == "Aggressive";
         var posture = meta && view.Ceiling == Risk.Aggressive ? Risk.Aggressive : view.Ceiling == Risk.Conservative ? Risk.Conservative : Risk.Balanced;
         return new PlanView(view.NextFixtureId, meta ? 25 : 50, meta ? 25 : 30, meta ? 50 : 20, posture, lineup);
+    }
+    /// <summary>The five available players, one per role in role order, with the highest total of rating in role times
+    /// readiness (a secondary role counts at its own rating). Default when no legal lineup exists. Ties go to the earlier
+    /// candidate in roster order, so the choice is deterministic.</summary>
+    public static ImmutableArray<string> BestLineup(ImmutableArray<PersonRow> people)
+    {
+        var available = people.Where(p => p.Readiness > 0).ToArray();
+        static int Value(PersonRow p, string role) => role == p.Role ? p.Rating * p.Readiness : role == p.SecondaryRole && role.Length > 0 ? p.SecondaryRating * p.Readiness : -1;
+        var best = -1L; string[]? chosen = null; var current = new string[Roles.All.Length];
+        void Search(int role, long total, HashSet<string> used)
+        {
+            if (role == Roles.All.Length) { if (total > best) { best = total; chosen = [.. current]; } return; }
+            foreach (var p in available)
+            {
+                var value = Value(p, Roles.All[role]);
+                if (value < 0 || used.Contains(p.Id)) continue;
+                used.Add(p.Id); current[role] = p.Id;
+                Search(role + 1, total + value, used);
+                used.Remove(p.Id);
+            }
+        }
+        Search(0, 0, []);
+        return chosen is null ? default : [.. chosen];
     }
 }

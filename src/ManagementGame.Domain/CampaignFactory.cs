@@ -11,14 +11,14 @@ public static class CampaignFactory
         var name = string.IsNullOrWhiteSpace(companyName) ? content.DefaultCompanyName : companyName.Trim();
         if (name.Length > 60) throw new RuleViolation("Company name is limited to 60 characters.");
         long next = 0;
-        var roles = Generator.Roles.Select(r => r.ToString()).ToList();
-        while (roles.Count < b.RosterSize) roles.Add(Generator.Roles[KeyedRandom.Range(seed, "roster", "extra:" + roles.Count, "role", 5)].ToString());
-        var people = roles.Select(role => Generator.Player(seed, content, $"person:g{++next:D5}", role, g.Talent)).ToImmutableArray();
+        var roles = Roles.All.ToList();
+        while (roles.Count < b.RosterSize) roles.Add(Roles.All[KeyedRandom.Range(seed, "roster", "extra:" + roles.Count, "role", Roles.All.Length)]);
+        var people = roles.Select(role => Generator.Player(seed, content, $"person:g{++next:D5}", role, 1)).ToImmutableArray();
         var coach = Generator.Coach(seed, content, $"coach:g{++next:D5}");
         // Staggered starting contracts so renewals arrive over several seasons.
         var contracts = people.Select(p =>
         {
-            var salary = Pay.Player(p.Execution);
+            var salary = Pay.Player(p, 1, content);
             var seasons = 1 + KeyedRandom.Range(seed, "roster", p.Id, "contract", b.StartingContractSeasons);
             return new Employment("employment:" + p.Id, p.Id, salary, salary * 3, Seasons.End(seasons, b));
         }).ToImmutableArray();

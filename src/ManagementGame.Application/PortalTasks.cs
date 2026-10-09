@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using ManagementGame.Domain;
 using ManagementGame.Formatting;
 
 namespace ManagementGame.Application;
@@ -37,9 +38,10 @@ public static class PortalTasks
         if (v.Status == "Distress")
             tasks.Add(new("distress", ShellSections.Finance, TaskUrgency.Blocking, "Financial distress: obligations are overdue", v.Day,
                 DecisionCategory.Finance, "Overdue obligations", "Financial distress until the arrears are paid", Kind: DecisionKind.Distress));
-        foreach (var role in "ABCDE".Select(r => r.ToString()).Where(r => !v.People.Any(p => p.Role == r)))
-            tasks.Add(new("role:" + role, ShellSections.Squad, TaskUrgency.Blocking, $"No player for role {role}: matches will be forfeited", v.NextMatchDay == 0 ? null : v.NextMatchDay,
-                DecisionCategory.Squad, $"Role {role}", "No player: matches will be forfeited", "role:" + role, DecisionKind.MissingRole));
+        // A role is covered by a player whose primary or secondary role it is.
+        foreach (var role in Roles.All.Where(r => !v.People.Any(p => p.Role == r || p.SecondaryRole == r)))
+            tasks.Add(new("role:" + role, ShellSections.Squad, TaskUrgency.Blocking, $"No player for {Roles.Name(role)}: matches will be forfeited", v.NextMatchDay == 0 ? null : v.NextMatchDay,
+                DecisionCategory.Squad, Roles.Name(role), "No player: matches will be forfeited", "role:" + role, DecisionKind.MissingRole));
         // The league's registered-roster minimum: below it every match owes its prize as a fine (rules v3).
         if (v.MinimumRoster > 0 && v.People.Length < v.MinimumRoster)
             tasks.Add(new("roster", ShellSections.Squad, TaskUrgency.Blocking, $"Registered roster {v.People.Length} of {v.MinimumRoster}: each match costs its prize as a fine",
