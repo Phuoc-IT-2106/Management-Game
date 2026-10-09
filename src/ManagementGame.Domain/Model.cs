@@ -12,7 +12,9 @@ public enum OfferOrigin { Inbound, Negotiated, Counter }
 public sealed record Person(string Id, string DefinitionId, string Name, string Role, int Execution, int Adaptability, int Consistency, int Readiness);
 public sealed record Coach(string Id, string Name, int Preparation, int Analysis, int Adaptability, int Capacity);
 public sealed record Employment(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay);
-public sealed record SponsorContract(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment);
+/// <summary>A signed agreement. <paramref name="ForfeitLimit"/> is its termination clause: that many forfeits in one season
+/// let the brand end it (0: no clause).</summary>
+public sealed record SponsorContract(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit);
 public sealed record FinancialItem(string Id, string CauseId, int DueDay, long Amount, bool Incoming, long Remaining, int? MissedDay);
 public sealed record Settlement(string Id, string CauseId, int Day, long Delta);
 public sealed record Authority(ControlMode Mode, Posture RiskCeiling);
@@ -41,11 +43,23 @@ public sealed record Candidate(Person Person, long Fee, long Salary, long Releas
 public sealed record CoachCandidate(Coach Coach, long Fee, long Salary, int Deadline);
 public sealed record CompetitiveOutcome(string Id, string FixtureId, int Day, string RivalId, bool Won, Posture Posture,
     int Probability, int Base, int Preparation, int Matchup, int Adaptation, int Variance, int Importance, string PlanCause);
+public enum Personnel { Player, HeadCoach }
+/// <summary>Why a person moved: the company signed a player or appointed a head coach; an interim head coach took over
+/// when the head coach's contract ended; the company released a player; a contract ended without renewal; or a head coach
+/// was replaced by a new appointment.</summary>
+public enum MoveReason { Signed, Appointed, Interim, Released, ContractEnded, Replaced }
+/// <summary>A completed personnel move, recorded when it happens and never rewritten (transfer history). Origin and
+/// Destination are the organizations the person left and joined; null is the open market, where a person is a free
+/// agent. Name and Role are the person as they were then (Role is empty for a head coach), so the move can still be told
+/// after the person has left every current record. CauseId is the command or contract that caused it.</summary>
+public sealed record Move(string Id, int Day, string PersonId, string Name, Personnel Kind, string Role, MoveReason Reason,
+    string? Origin, string? Destination, string CauseId);
 public sealed record Calendar(int Day, Phase Phase, long Sequence);
+/// <summary>Moves is transfer history in the order it happened, bounded to the current and the previous season.</summary>
 public sealed record World(Calendar Calendar, ImmutableArray<Rival> Rivals, ImmutableArray<Fixture> Fixtures,
     ImmutableArray<CompetitiveOutcome> Results, ImmutableArray<Offer> Offers, ImmutableArray<Negotiation> Negotiations,
     ImmutableArray<BrandStatus> Brands, ImmutableArray<Candidate> Candidates, ImmutableArray<CoachCandidate> CoachCandidates,
-    Posture Meta, long NextId);
+    Posture Meta, long NextId, ImmutableArray<Move> Moves);
 public sealed record CommandReceipt(string Id, string Digest, long Revision, string Message);
 public sealed record Execution(string CampaignId, ulong Seed, long Revision, string RulesVersion, string ContentHash,
     ImmutableArray<CommandReceipt> Receipts);
@@ -58,7 +72,17 @@ public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInter
     int ReputationGain, int AudienceGain, long PrizeBase,
     int SponsorSlots, int MaxOpenOffers, int MarketInterval, int OfferWindow, int NegotiationDelay, int RejectCooldown,
     int RosterSize, int MaxRoster, int CandidateCount, int CoachCandidateCount, int TalentRefreshInterval,
-    int RenewalWindow, int StartingContractSeasons);
+    int RenewalWindow, int StartingContractSeasons,
+    // Rules v3 wave 1 (incentives): a fixed daily running cost; a registered roster minimum whose shortfall withholds each
+    // match's prize and owes ShortfallFinePercent of it as a fine; a sponsor termination clause after repeated forfeits; and
+    // a season-end pull of reputation toward the level the season's record earns (ReputationRegression percent of the gap,
+    // the target running from ReputationTargetLow at no wins to ReputationTargetHigh at all wins).
+    long OperatingCost, int MinimumRoster, int ShortfallFinePercent, int SponsorForfeitLimit, int ReputationRegression,
+    int ReputationTargetLow, int ReputationTargetHigh,
+    // How many of the company's latest results a rival reads for a repeated posture. Rules v2 counted every result since
+    // the campaign began, so the penalty grew without bound across continuous seasons; v1's four-match season never saw
+    // more than three.
+    int PredictabilityWindow);
 public sealed record AttributeRange(int Min, int Max);
 public sealed record Generation(AttributeRange Talent, AttributeRange Prospect, AttributeRange CoachSkill,
     AttributeRange CoachCapacity, AttributeRange Rival);

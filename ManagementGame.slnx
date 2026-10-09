@@ -17,7 +17,10 @@
   <Folder Name="/tests/">
     <Project Path="tests/Domain/Domain.csproj" />
     <Project Path="tests/Integration/Integration.csproj" />
+    <Project Path="tests/OperatingMap/OperatingMap.csproj" />
+    <Project Path="tests/SponsorWorkspace/SponsorWorkspace.csproj" />
     <Project Path="tests/UI/UI.csproj" />
+    <Project Path="tests/UiKit/UiKit.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/Headless/Headless.csproj" />

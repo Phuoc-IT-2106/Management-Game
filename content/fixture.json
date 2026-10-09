@@ -1,10 +1,10 @@
 {
   "Format": "management-game-development-content",
-  "Schema": 2,
+  "Schema": 3,
   "Label": "NONCANONICAL DEVELOPMENT FIXTURE — fictional 5v5 Role Arena; continuous seasons",
-  "RulesVersion": "slice-rules-v2",
+  "RulesVersion": "slice-rules-v3",
   "DefaultCompanyName": "DEV_ORG_001",
-  "Balance": {"SeasonLength":56,"FirstMatchDay":6,"MatchInterval":5,"RivalCount":4,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"BaseLoad":35,"PreparationScale":30,"MatchScale":12000,"Variance":8,"MetaDayOfSeason":21,"RivalCadence":4,"ReputationGain":8,"AudienceGain":180,"PrizeBase":14000,"SponsorSlots":2,"MaxOpenOffers":3,"MarketInterval":7,"OfferWindow":7,"NegotiationDelay":2,"RejectCooldown":21,"RosterSize":6,"MaxRoster":8,"CandidateCount":4,"CoachCandidateCount":3,"TalentRefreshInterval":28,"RenewalWindow":21,"StartingContractSeasons":2},
+  "Balance": {"SeasonLength":56,"FirstMatchDay":6,"MatchInterval":5,"RivalCount":4,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"BaseLoad":35,"PreparationScale":30,"MatchScale":12000,"Variance":8,"MetaDayOfSeason":21,"RivalCadence":4,"ReputationGain":8,"AudienceGain":180,"PrizeBase":14000,"SponsorSlots":2,"MaxOpenOffers":3,"MarketInterval":7,"OfferWindow":7,"NegotiationDelay":2,"RejectCooldown":21,"RosterSize":6,"MaxRoster":8,"CandidateCount":4,"CoachCandidateCount":3,"TalentRefreshInterval":28,"RenewalWindow":21,"StartingContractSeasons":2,"OperatingCost":2500,"MinimumRoster":6,"ShortfallFinePercent":50,"SponsorForfeitLimit":2,"ReputationRegression":25,"ReputationTargetLow":15,"ReputationTargetHigh":85,"PredictabilityWindow":3},
   "Generation": {
     "Talent": {"Min":62,"Max":76},
     "Prospect": {"Min":58,"Max":88},

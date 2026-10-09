@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using ManagementGame.Formatting;
 
 namespace ManagementGame.Domain;
 
@@ -39,7 +40,7 @@ public static class Simulation
                 c = Finance.PayNow(c, candidate.Fee, cause, day);
                 var contract = new Employment("employment:" + candidate.Person.Id + ":" + cause, candidate.Person.Id, candidate.Salary, candidate.ReleaseCost, ContractEnd(day, command.Seasons, b));
                 c = c with { People = c.People.Add(candidate.Person with { Readiness = Math.Min(candidate.Person.Readiness, 70) }), Employment = c.Employment.Add(contract) };
-                w = w with { Candidates = w.Candidates.Remove(candidate) };
+                w = Market.Moved(w with { Candidates = w.Candidates.Remove(candidate) }, day, cause, candidate.Person, MoveReason.Signed, null, c.Id);
                 break;
             case ReleasePlayer command:
                 var person = c.People.FirstOrDefault(x => x.Id == command.PersonId) ?? throw new RuleViolation("Player no longer belongs to this company.");
@@ -50,6 +51,7 @@ public static class Simulation
                 c = c with { People = c.People.Remove(person), Employment = c.Employment.Remove(employment), Plan = null,
                     Recovery = c.Recovery == RecoveryStage.Distress ? RecoveryStage.Restructuring : c.Recovery };
                 w = w with { Candidates = w.Candidates.Add(new Candidate(person, employment.ReleaseCost, employment.Salary, employment.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
+                w = Market.Moved(w, day, cause, person, MoveReason.Released, c.Id, null);
                 break;
             case RenewContract command:
                 var current = c.Employment.FirstOrDefault(x => x.PersonId == command.PersonId) ?? throw new RuleViolation("No contract to renew.");
@@ -65,6 +67,7 @@ public static class Simulation
                 c = Finance.PayNow(c, checked(hire.Fee + previous.ReleaseCost), cause, day);
                 w = w with { CoachCandidates = w.CoachCandidates.Remove(hire)
                     .Add(new CoachCandidate(c.Coach, previous.Salary * 15, previous.Salary, day + b.TalentRefreshInterval - 1)) };
+                w = Market.Moved(Market.Moved(w, day, cause, c.Coach, MoveReason.Replaced, c.Id, null), day, cause, hire.Coach, MoveReason.Appointed, null, c.Id);
                 c = c with { Coach = hire.Coach, Employment = c.Employment.Remove(previous)
                     .Add(new Employment("employment:" + hire.Coach.Id + ":" + cause, hire.Coach.Id, hire.Salary, hire.Salary * 5, ContractEnd(day, 2, b))) };
                 break;
@@ -74,12 +77,12 @@ public static class Simulation
                     throw new RuleViolation("Sponsor offer is unavailable or reputation requirement is unmet.");
                 if (Market.ActiveSponsors(c, day) >= b.SponsorSlots) throw new RuleViolation($"All {b.SponsorSlots} sponsor slots are in use.");
                 if (c.Sponsors.Any(s => s.BrandId == offer.BrandId && s.EndDay >= day)) throw new RuleViolation("This brand already sponsors the company.");
-                c = Finance.AddSponsor(c, offer, day, "agreement:" + offer.Id);
+                c = Finance.AddSponsor(c, offer, day, "agreement:" + offer.Id, b.SponsorForfeitLimit);
                 w = w with { Offers = w.Offers.Replace(offer, offer with { ClaimedBy = c.Id }) };
                 break;
             case ProposeSponsorship command:
                 var brand = Market.Brand(content, command.BrandId);
-                if (!Market.Approachable(brand, c)) throw new RuleViolation($"{brand.Name} is out of reach: it expects reputation {brand.MinimumReputation} and audience {Pay.Count(brand.MinimumAudience)}.");
+                if (!Market.Approachable(brand, c)) throw new RuleViolation($"{brand.Name} is out of reach: it expects reputation {brand.MinimumReputation} and audience {Figures.Count(brand.MinimumAudience)}.");
                 if (Market.Blocked(brand, c, w, day) is { } reason) throw new RuleViolation($"{brand.Name}: {reason}.");
                 if (Market.ActiveSponsors(c, day) >= b.SponsorSlots) throw new RuleViolation($"All {b.SponsorSlots} sponsor slots are in use.");
                 if (w.Negotiations.Length >= 3) throw new RuleViolation("Three proposals are already under review.");
@@ -107,8 +110,8 @@ public static class Simulation
         ReleasePlayer => "Released player: exit cost paid and future wages stop; existing arrears retained. Roster depth sacrificed.",
         RenewContract r => $"Renewed contract for {r.Seasons} more season(s) at the new asking wage.",
         HireCoach => "Hired a new head coach: signing fee and the previous coach's exit cost paid.",
-        AcceptSponsor => "Sponsor signed: first payment in three days, then weekly; delivery load applies now.",
-        ProposeSponsorship p => $"Proposed {Pay.Money(p.Payment)} per week for {p.DurationDays} days to {Market.Brand(content, p.BrandId).Name}; reply in {content.Balance.NegotiationDelay} days.",
+        AcceptSponsor => $"Sponsor signed: first payment in three days, then weekly; delivery load applies now. {content.Balance.SponsorForfeitLimit} forfeits in a season let the brand end it.",
+        ProposeSponsorship p => $"Proposed {Currency.Format(p.Payment)} per week for {p.DurationDays} days to {Market.Brand(content, p.BrandId).Name}; reply in {content.Balance.NegotiationDelay} days.",
         _ => "Decision committed."
     };
 
@@ -158,7 +161,7 @@ public static class Simulation
             && !c.FinancialItems.Any(x => x.Incoming && x.Remaining > 0 && x.DueDay <= day + 3) && c.Cash == 0) return s;
         switch (cursor.Phase)
         {
-            case Phase.Finance: c = Finance.Settle(Finance.Payroll(c, day), day); break;
+            case Phase.Finance: c = Finance.Settle(Finance.Payroll(c, day, b.OperatingCost), day); break;
             case Phase.Contracts:
                 c = c with { People = c.People.Select(p => p with { Readiness = Math.Min(100, p.Readiness + 1) }).ToImmutableArray() };
                 (c, w) = Market.Contracts(c, w, seed, content, day);
@@ -206,17 +209,21 @@ public static class Simulation
                         var forfeit = new CompetitiveOutcome("result:" + fixture.Id, fixture.Id, day, rival.Id, false, Posture.Balanced, 50_000, 0, 0, 0, 0, 0, fixture.Importance, "forfeit");
                         w = w with { Results = w.Results.Add(forfeit) };
                         // A forfeit is a public failure to field a team, not an unlucky loss: a fixed, visible commercial penalty.
-                        c = Finance.Consume(c, forfeit, fixture);
+                        c = Finance.Consume(c, forfeit, fixture, b);
                         c = c with { CommercialReceipts = c.CommercialReceipts.Add(forfeit.Id),
                             PendingEffects = c.PendingEffects.Add(new CommercialEffect("commercial:" + forfeit.Id, forfeit.Id, day + 1, -6 * fixture.Importance, -300 * fixture.Importance)) };
                         c = c with { Reviews = c.Reviews.Add(new ReviewEntry(forfeit.Id, day, "forfeit", $"Forfeit vs {rival.Name}: the roster could not field all five roles. Sign players to cover missing roles.")) };
+                        c = LeagueFine(c, forfeit, fixture, rival, b);
+                        // Repeated forfeits let sponsors use their termination clause.
+                        (c, w) = Market.Terminations(c, w, content, day);
                         break;
                     }
                     var outcome = Competition.Resolve(new CompetitionInput(seed, fixture, plan, c.Work,
                         plan.Lineup.Select(id => c.People.Single(p => p.Id == id)).ToImmutableArray(), c.Coach, rival, w.Meta,
-                        w.Results.Count(r => r.Posture == plan.Posture), b));
+                        w.Results.TakeLast(b.PredictabilityWindow).Count(r => r.Posture == plan.Posture), b));
                     w = w with { Results = w.Results.Add(outcome) };
-                    c = Finance.Consume(c, outcome, fixture);
+                    c = Finance.Consume(c, outcome, fixture, b);
+                    c = LeagueFine(c, outcome, fixture, rival, b);
                     c = Commercial.Consume(c, outcome, b);
                     c = c with { Plan = null, Work = new Work(c.Work.Execution / 2, 0, c.Work.Meta / 2),
                         People = c.People.Select(p => plan.Lineup.Contains(p.Id) ? p with { Readiness = Math.Max(1, p.Readiness - 8) } : p).ToImmutableArray(),
@@ -227,7 +234,7 @@ public static class Simulation
             case Phase.Consequences: c = Commercial.ApplyDue(c, day); break;
             case Phase.Recovery:
                 var overdue = c.FinancialItems.Any(x => !x.Incoming && x.Remaining > 0 && x.DueDay <= day);
-                c = c with { Recovery = overdue ? RecoveryStage.Distress : Finance.Forecast(c, day) < 0 ? RecoveryStage.Warning :
+                c = c with { Recovery = overdue ? RecoveryStage.Distress : Finance.Forecast(c, day, b.OperatingCost) < 0 ? RecoveryStage.Warning :
                     c.Recovery is RecoveryStage.Restructuring or RecoveryStage.Distress or RecoveryStage.Stabilized ? RecoveryStage.Stabilized : RecoveryStage.Stable };
                 break;
             case Phase.Review:
@@ -239,11 +246,33 @@ public static class Simulation
         return s with { Company = c, World = w with { Calendar = nextCursor } };
     }
 
-    /// <summary>Closes a season: record, rival evolution, next schedule, and bounded history.</summary>
+    /// <summary>A match played (or forfeited) below the league's registered-roster minimum: Finance withheld any prize and
+    /// owes the fine; the company is told why, what it costs and how to stop it.</summary>
+    private static Company LeagueFine(Company c, CompetitiveOutcome outcome, Fixture fixture, Rival rival, Balance b)
+    {
+        if (c.FinancialItems.FirstOrDefault(x => x.Id == "fine:" + outcome.Id) is not { } fine) return c;
+        return c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}roster:{fixture.Id}:{outcome.Day}", outcome.Day, outcome.Id,
+            $"League fine vs {rival.Name}: {c.People.Length} registered players of the required {b.MinimumRoster}. A {Currency.Format(fine.Amount)} fine is due tomorrow{(outcome.Won ? " and the win earns no prize" : "")}. Sign a player to restore the minimum.")) };
+    }
+
+    /// <summary>The reputation a season's record earns: from the low target at no wins to the high one at all wins.</summary>
+    public static int ReputationTarget(int won, int played, Balance b) => played == 0 ? b.ReputationTargetLow
+        : b.ReputationTargetLow + (int)Numbers.Divide((long)(b.ReputationTargetHigh - b.ReputationTargetLow) * won, played);
+
+    /// <summary>Closes a season: record, reputation settling toward what the record earns, rival evolution, next schedule,
+    /// and bounded history.</summary>
     private static (Company, World) Rollover(Company c, World w, ulong seed, Content content, int day)
     {
         var b = content.Balance; var season = Seasons.Of(day, b); var range = content.Generation.Rival;
         var played = w.Results.Where(r => r.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal)).ToArray();
+        var standing = "";
+        if (played.Length > 0 && b.ReputationRegression > 0)
+        {
+            var target = ReputationTarget(played.Count(r => r.Won), played.Length, b);
+            var shift = (int)Numbers.Divide((long)(target - c.Reputation) * b.ReputationRegression, 100);
+            c = c with { Reputation = Math.Clamp(c.Reputation + shift, 0, 100) };
+            standing = $" Reputation {shift:+#;-#;0}: it settles toward {target}, the level this record earns.";
+        }
         var rivals = w.Rivals.Select(r => r with
         {
             Strength = Math.Clamp(r.Strength + KeyedRandom.Range(seed, "rival", $"{r.Id}:{season}", "development", 9) - 4, range.Min - 5, range.Max + 5),
@@ -253,7 +282,9 @@ public static class Simulation
         c = Finance.Archive(c, Seasons.Start(season, b));
         c = c with { Reviews = c.Reviews.Skip(Math.Max(0, c.Reviews.Length - 150)).ToImmutableArray() };
         c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}season:{season + 1}:{day}", day, $"season:{season}",
-            $"Season {season} closed {played.Count(r => r.Won)}–{played.Count(r => !r.Won)}. Season {season + 1} begins with a new schedule; rivals have reshaped their squads.")) };
-        return (c, w with { Rivals = rivals, Fixtures = Seasons.Schedule(seed, season + 1, rivals, b), Meta = Posture.Balanced });
+            $"Season {season} closed {played.Count(r => r.Won)}–{played.Count(r => !r.Won)}.{standing} Season {season + 1} begins with a new schedule; rivals have reshaped their squads.")) };
+        // Transfer history keeps the season just closed and the next one; older moves are no longer news.
+        return (c, w with { Rivals = rivals, Fixtures = Seasons.Schedule(seed, season + 1, rivals, b), Meta = Posture.Balanced,
+            Moves = w.Moves.Where(m => m.Day >= Seasons.Start(season, b)).ToImmutableArray() });
     }
 }

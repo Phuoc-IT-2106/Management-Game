@@ -1,0 +1,5427 @@
+{
+ "run_id": "20261008T162626Z",
+ "manifest_status": "completed",
+ "stopped_reason": null,
+ "requests_spent": 19,
+ "roster_tournament_id": 20315,
+ "raw_integrity": [
+  {
+   "name": "leagues-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "leagues-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "series-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "series-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "tournaments-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "tournaments-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "teams-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "teams-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "players-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "players-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "matches_past-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "matches_past-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "players-p2-bracket-params",
+   "sha256_ok": true
+  },
+  {
+   "name": "matches_past-2026-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "matches_past-2026-p2",
+   "sha256_ok": true
+  },
+  {
+   "name": "tournaments-2026-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "tournament-rosters-2026-sample",
+   "sha256_ok": true
+  },
+  {
+   "name": "series-2026-p1",
+   "sha256_ok": true
+  },
+  {
+   "name": "players-active-p1",
+   "sha256_ok": true
+  }
+ ],
+ "requests": [
+  {
+   "name": "leagues-p1",
+   "path": "/lol/leagues",
+   "params": {
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "136",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "991",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "leagues-p2",
+   "path": "/lol/leagues",
+   "params": {
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 36,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "136",
+   "link_rels": [
+    "first",
+    "prev"
+   ],
+   "rate_limit_remaining": "990",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "series-p1",
+   "path": "/lol/series",
+   "params": {
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "867",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "989",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "series-p2",
+   "path": "/lol/series",
+   "params": {
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "867",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "988",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "tournaments-p1",
+   "path": "/lol/tournaments",
+   "params": {
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "2206",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "987",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "tournaments-p2",
+   "path": "/lol/tournaments",
+   "params": {
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "2206",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "986",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "teams-p1",
+   "path": "/lol/teams",
+   "params": {
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "1947",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "985",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "teams-p2",
+   "path": "/lol/teams",
+   "params": {
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "1947",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "984",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "players-p1",
+   "path": "/lol/players",
+   "params": {
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "9905",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "983",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "players-p2",
+   "path": "/lol/players",
+   "params": {
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "9905",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "982",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "matches_past-p1",
+   "path": "/lol/matches/past",
+   "params": {
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "47949",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "981",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "not id-ordered",
+   "error_body": null
+  },
+  {
+   "name": "matches_past-p2",
+   "path": "/lol/matches/past",
+   "params": {
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "47949",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "980",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "not id-ordered",
+   "error_body": null
+  },
+  {
+   "name": "players-p2-bracket-params",
+   "path": "/lol/players",
+   "params": {
+    "page[number]": 2,
+    "page[size]": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "9905",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "979",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "matches_past-2026-p1",
+   "path": "/lol/matches/past",
+   "params": {
+    "range[begin_at]": "2026-01-01T00:00:00Z,2026-12-31T23:59:59Z",
+    "sort": "begin_at,id",
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "3828",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "978",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "not id-ordered",
+   "error_body": null
+  },
+  {
+   "name": "matches_past-2026-p2",
+   "path": "/lol/matches/past",
+   "params": {
+    "range[begin_at]": "2026-01-01T00:00:00Z,2026-12-31T23:59:59Z",
+    "sort": "begin_at,id",
+    "page": 2,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "2",
+   "x_per_page": "100",
+   "x_total": "3828",
+   "link_rels": [
+    "first",
+    "last",
+    "next",
+    "prev"
+   ],
+   "rate_limit_remaining": "977",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "not id-ordered",
+   "error_body": null
+  },
+  {
+   "name": "tournaments-2026-p1",
+   "path": "/lol/tournaments",
+   "params": {
+    "range[begin_at]": "2026-01-01T00:00:00Z,2026-12-31T23:59:59Z",
+    "sort": "begin_at,id",
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "277",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "976",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "not id-ordered",
+   "error_body": null
+  },
+  {
+   "name": "tournament-rosters-2026-sample",
+   "path": "/tournaments/20315/rosters",
+   "params": {},
+   "status": 200,
+   "records": null,
+   "x_page": null,
+   "x_per_page": null,
+   "x_total": null,
+   "link_rels": [],
+   "rate_limit_remaining": "975",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "n/a",
+   "error_body": null
+  },
+  {
+   "name": "series-2026-p1",
+   "path": "/lol/series",
+   "params": {
+    "filter[year]": 2026,
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "105",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "974",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  },
+  {
+   "name": "players-active-p1",
+   "path": "/lol/players",
+   "params": {
+    "filter[active]": "true",
+    "page": 1,
+    "per_page": 100
+   },
+   "status": 200,
+   "records": 100,
+   "x_page": "1",
+   "x_per_page": "100",
+   "x_total": "8502",
+   "link_rels": [
+    "last",
+    "next"
+   ],
+   "rate_limit_remaining": "973",
+   "null_ids": 0,
+   "duplicate_ids_in_page": 0,
+   "ordering": "descending id",
+   "error_body": null
+  }
+ ],
+ "pagination": {
+  "leagues": {
+   "page1": 100,
+   "page2": 36,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    4141,
+    5561
+   ],
+   "page2_id_range": [
+    289,
+    4140
+   ]
+  },
+  "series": {
+   "page1": 100,
+   "page2": 100,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    10061,
+    11081
+   ],
+   "page2_id_range": [
+    8927,
+    10060
+   ]
+  },
+  "tournaments": {
+   "page1": 100,
+   "page2": 100,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    21365,
+    22154
+   ],
+   "page2_id_range": [
+    20329,
+    21364
+   ]
+  },
+  "teams": {
+   "page1": 100,
+   "page2": 100,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    138059,
+    139361
+   ],
+   "page2_id_range": [
+    136937,
+    138058
+   ]
+  },
+  "players": {
+   "page1": 100,
+   "page2": 100,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    67045,
+    68295
+   ],
+   "page2_id_range": [
+    66699,
+    67044
+   ]
+  },
+  "matches_past": {
+   "page1": 100,
+   "page2": 100,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    1662353,
+    1702829
+   ],
+   "page2_id_range": [
+    1615364,
+    1704768
+   ]
+  },
+  "matches_past-2026": {
+   "page1": 100,
+   "page2": 100,
+   "overlap_ids": 0,
+   "pages_differ": true,
+   "page1_id_range": [
+    1280747,
+    1317328
+   ],
+   "page2_id_range": [
+    1286673,
+    1329321
+   ]
+  },
+  "players-p2 vs page[number]/page[size]": {
+   "same_ids_same_order": true
+  }
+ },
+ "sync_snapshot_vs_discovery": {
+  "20261008T161016Z/leagues": {
+   "same_id_set_as_discovery_p1": true,
+   "overlap": 100
+  },
+  "20261008T161016Z/teams": {
+   "same_id_set_as_discovery_p1": true,
+   "overlap": 100
+  },
+  "20261008T161016Z/players": {
+   "same_id_set_as_discovery_p1": true,
+   "overlap": 100
+  },
+  "20261008T161546Z/leagues": {
+   "same_id_set_as_discovery_p1": true,
+   "overlap": 100
+  },
+  "20261008T161546Z/teams": {
+   "same_id_set_as_discovery_p1": true,
+   "overlap": 100
+  },
+  "20261008T161546Z/players": {
+   "same_id_set_as_discovery_p1": true,
+   "overlap": 100
+  }
+ },
+ "datasets": {
+  "leagues-p1": {
+   "records": 100,
+   "profile": {
+    "series_count": {
+     "1-4": 60,
+     "8+": 27,
+     "6-7": 8,
+     "5": 4,
+     "0": 1
+    },
+    "modified_at_year": {
+     "2023": 20,
+     "2024": 19,
+     "2025": 16,
+     "2022": 15,
+     "2026": 9,
+     "2021": 7,
+     "2020": 6,
+     "2019": 6,
+     "2018": 2
+    }
+   }
+  },
+  "leagues-p2": {
+   "records": 36,
+   "profile": {
+    "series_count": {
+     "8+": 17,
+     "1-4": 16,
+     "6-7": 3
+    },
+    "modified_at_year": {
+     "2019": 23,
+     "2020": 4,
+     "2023": 3,
+     "2024": 2,
+     "2018": 2,
+     "2022": 1,
+     "2021": 1
+    }
+   }
+  },
+  "series-p1": {
+   "records": 100,
+   "profile": {
+    "year": {
+     "2026": 94,
+     "2027": 6
+    },
+    "season": {
+     "null": 36,
+     "Summer": 20,
+     "Spring": 20,
+     "Winter": 12,
+     "Split 2": 6,
+     "Split 1": 4,
+     "Split 3": 2
+    },
+    "begin_at_year": {
+     "2026": 100
+    },
+    "distinct_league_ids": 42
+   }
+  },
+  "series-p2": {
+   "records": 100,
+   "profile": {
+    "year": {
+     "2025": 89,
+     "2026": 11
+    },
+    "season": {
+     "null": 40,
+     "Spring": 17,
+     "Summer": 16,
+     "Winter": 7,
+     "Split 1": 6,
+     "Split 2": 6,
+     "Split 3": 4,
+     "Summers": 1,
+     "3": 1,
+     "Finals": 1,
+     "Storm": 1
+    },
+    "begin_at_year": {
+     "2025": 93,
+     "2026": 7
+    },
+    "distinct_league_ids": 49
+   }
+  },
+  "tournaments-p1": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 100
+    },
+    "tier": {
+     "c": 40,
+     "d": 34,
+     "a": 13,
+     "s": 8,
+     "b": 5
+    },
+    "region": {
+     "ASIA": 31,
+     "WEU": 30,
+     "EEU": 18,
+     "NA": 9,
+     "SA": 8,
+     "ME": 3,
+     "OCE": 1
+    },
+    "type": {
+     "online": 57,
+     "offline": 31,
+     "online/offline": 12
+    },
+    "teams_count": {
+     "1-4": 39,
+     "8+": 34,
+     "6-7": 17,
+     "5": 9,
+     "0": 1
+    },
+    "expected_roster_teams": {
+     "1-4": 39,
+     "8+": 34,
+     "6-7": 17,
+     "5": 9,
+     "0": 1
+    },
+    "distinct_league_ids": 36
+   }
+  },
+  "tournaments-p2": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 100
+    },
+    "tier": {
+     "c": 39,
+     "d": 33,
+     "a": 20,
+     "b": 6,
+     "s": 2
+    },
+    "region": {
+     "WEU": 38,
+     "ASIA": 29,
+     "EEU": 13,
+     "NA": 8,
+     "SA": 7,
+     "ME": 4,
+     "OCE": 1
+    },
+    "type": {
+     "online": 76,
+     "offline": 19,
+     "online/offline": 5
+    },
+    "teams_count": {
+     "8+": 47,
+     "1-4": 33,
+     "6-7": 16,
+     "5": 4
+    },
+    "expected_roster_teams": {
+     "8+": 47,
+     "1-4": 33,
+     "6-7": 16,
+     "5": 4
+    },
+    "distinct_league_ids": 32
+   }
+  },
+  "teams-p1": {
+   "records": 100,
+   "profile": {
+    "players_list_size": {
+     "6-7": 31,
+     "1-4": 30,
+     "5": 24,
+     "0": 11,
+     "8+": 4
+    },
+    "location_present": {
+     "true": 100
+    },
+    "acronym_present": {
+     "true": 84,
+     "false": 16
+    },
+    "name_has_academy_like_word_heuristic": {
+     "false": 97,
+     "true": 3
+    },
+    "modified_at_year": {
+     "2026": 100
+    }
+   }
+  },
+  "teams-p2": {
+   "records": 100,
+   "profile": {
+    "players_list_size": {
+     "0": 31,
+     "1-4": 28,
+     "5": 18,
+     "6-7": 17,
+     "8+": 6
+    },
+    "location_present": {
+     "true": 100
+    },
+    "acronym_present": {
+     "true": 94,
+     "false": 6
+    },
+    "name_has_academy_like_word_heuristic": {
+     "false": 95,
+     "true": 5
+    },
+    "modified_at_year": {
+     "2026": 79,
+     "2025": 21
+    }
+   }
+  },
+  "players-p1": {
+   "records": 100,
+   "profile": {
+    "role": {
+     "jun": 26,
+     "mid": 21,
+     "sup": 19,
+     "adc": 18,
+     "top": 16
+    },
+    "active": {
+     "true": 99,
+     "false": 1
+    },
+    "nationality_present": {
+     "true": 91,
+     "false": 9
+    },
+    "current_team_present": {
+     "true": 84,
+     "false": 16
+    },
+    "birthday_present": {
+     "false": 100
+    },
+    "image_url_present": {
+     "false": 100
+    },
+    "modified_at_year": {
+     "2026": 100
+    }
+   }
+  },
+  "players-p2": {
+   "records": 100,
+   "profile": {
+    "role": {
+     "adc": 21,
+     "mid": 21,
+     "jun": 20,
+     "top": 20,
+     "sup": 18
+    },
+    "active": {
+     "true": 100
+    },
+    "nationality_present": {
+     "true": 99,
+     "false": 1
+    },
+    "current_team_present": {
+     "true": 86,
+     "false": 14
+    },
+    "birthday_present": {
+     "false": 100
+    },
+    "image_url_present": {
+     "false": 100
+    },
+    "modified_at_year": {
+     "2026": 100
+    }
+   }
+  },
+  "matches_past-p1": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 98,
+     "null": 2
+    },
+    "status": {
+     "finished": 98,
+     "canceled": 2
+    },
+    "opponents_count": {
+     "2": 99,
+     "0": 1
+    },
+    "results_count": {
+     "2": 99,
+     "0": 1
+    },
+    "games_count": {
+     "1": 30,
+     "3": 29,
+     "2": 28,
+     "4": 8,
+     "5": 5
+    },
+    "detailed_stats": {
+     "true": 100
+    },
+    "winner_present": {
+     "true": 99,
+     "false": 1
+    },
+    "tournament_tier": {
+     "c": 57,
+     "b": 31,
+     "d": 9,
+     "a": 3
+    },
+    "distinct_league_ids": 6,
+    "distinct_tournament_ids": 11
+   }
+  },
+  "matches_past-p2": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 97,
+     "null": 3
+    },
+    "status": {
+     "finished": 97,
+     "canceled": 3
+    },
+    "opponents_count": {
+     "2": 100
+    },
+    "results_count": {
+     "2": 100
+    },
+    "games_count": {
+     "1": 78,
+     "3": 8,
+     "5": 7,
+     "4": 5,
+     "2": 2
+    },
+    "detailed_stats": {
+     "true": 100
+    },
+    "winner_present": {
+     "true": 100
+    },
+    "tournament_tier": {
+     "c": 77,
+     "d": 14,
+     "a": 5,
+     "b": 4
+    },
+    "distinct_league_ids": 7,
+    "distinct_tournament_ids": 16
+   }
+  },
+  "players-p2-bracket-params": {
+   "records": 100,
+   "profile": {
+    "role": {
+     "adc": 21,
+     "mid": 21,
+     "jun": 20,
+     "top": 20,
+     "sup": 18
+    },
+    "active": {
+     "true": 100
+    },
+    "nationality_present": {
+     "true": 99,
+     "false": 1
+    },
+    "current_team_present": {
+     "true": 86,
+     "false": 14
+    },
+    "birthday_present": {
+     "false": 100
+    },
+    "image_url_present": {
+     "false": 100
+    },
+    "modified_at_year": {
+     "2026": 100
+    }
+   }
+  },
+  "matches_past-2026-p1": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 100
+    },
+    "status": {
+     "finished": 100
+    },
+    "opponents_count": {
+     "2": 100
+    },
+    "results_count": {
+     "2": 100
+    },
+    "games_count": {
+     "1": 54,
+     "2": 30,
+     "3": 16
+    },
+    "detailed_stats": {
+     "true": 97,
+     "false": 3
+    },
+    "winner_present": {
+     "true": 99,
+     "false": 1
+    },
+    "tournament_tier": {
+     "c": 66,
+     "a": 18,
+     "d": 12,
+     "b": 4
+    },
+    "distinct_league_ids": 11,
+    "distinct_tournament_ids": 13
+   }
+  },
+  "matches_past-2026-p2": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 100
+    },
+    "status": {
+     "finished": 100
+    },
+    "opponents_count": {
+     "2": 100
+    },
+    "results_count": {
+     "2": 100
+    },
+    "games_count": {
+     "1": 57,
+     "2": 25,
+     "3": 18
+    },
+    "detailed_stats": {
+     "true": 97,
+     "false": 3
+    },
+    "winner_present": {
+     "true": 100
+    },
+    "tournament_tier": {
+     "a": 45,
+     "d": 29,
+     "c": 24,
+     "b": 2
+    },
+    "distinct_league_ids": 15,
+    "distinct_tournament_ids": 23
+   }
+  },
+  "tournaments-2026-p1": {
+   "records": 100,
+   "profile": {
+    "begin_at_year": {
+     "2026": 100
+    },
+    "tier": {
+     "c": 46,
+     "d": 27,
+     "a": 21,
+     "b": 3,
+     "s": 3
+    },
+    "region": {
+     "WEU": 45,
+     "ASIA": 23,
+     "EEU": 13,
+     "SA": 10,
+     "NA": 5,
+     "ME": 4
+    },
+    "type": {
+     "online": 70,
+     "offline": 26,
+     "online/offline": 4
+    },
+    "teams_count": {
+     "1-4": 42,
+     "8+": 36,
+     "6-7": 17,
+     "5": 5
+    },
+    "expected_roster_teams": {
+     "1-4": 42,
+     "8+": 36,
+     "6-7": 17,
+     "5": 5
+    },
+    "distinct_league_ids": 31
+   }
+  },
+  "series-2026-p1": {
+   "records": 100,
+   "profile": {
+    "year": {
+     "2026": 100
+    },
+    "season": {
+     "null": 33,
+     "Summer": 20,
+     "Spring": 20,
+     "Winter": 13,
+     "Split 2": 6,
+     "Split 1": 6,
+     "Split 3": 2
+    },
+    "begin_at_year": {
+     "2026": 100
+    },
+    "distinct_league_ids": 42
+   }
+  },
+  "players-active-p1": {
+   "records": 100,
+   "profile": {
+    "role": {
+     "jun": 26,
+     "mid": 21,
+     "adc": 19,
+     "sup": 19,
+     "top": 15
+    },
+    "active": {
+     "true": 100
+    },
+    "nationality_present": {
+     "true": 91,
+     "false": 9
+    },
+    "current_team_present": {
+     "true": 85,
+     "false": 15
+    },
+    "birthday_present": {
+     "false": 100
+    },
+    "image_url_present": {
+     "false": 100
+    },
+    "modified_at_year": {
+     "2026": 100
+    }
+   }
+  }
+ },
+ "roster_sample": {
+  "top_level_keys": [
+   "rosters",
+   "type"
+  ],
+  "type": "Team",
+  "rosters": 4,
+  "players_per_roster": {
+   "5": 4
+  },
+  "player_active": {
+   "true": 20
+  },
+  "player_role": {
+   "sup": 4,
+   "top": 4,
+   "adc": 4,
+   "jun": 4,
+   "mid": 4
+  },
+  "player_birthday_present": {
+   "true": 20
+  },
+  "roster_field_coverage": {
+   "acronym": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "current_videogame": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "current_videogame.id": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "current_videogame.name": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "current_videogame.slug": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "dark_mode_image_url": {
+    "value": 3,
+    "empty": 0,
+    "null": 1,
+    "absent": 0,
+    "of": 4
+   },
+   "id": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "image_url": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "location": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "modified_at": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "name": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "players": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   },
+   "players[].active": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].age": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].birthday": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].first_name": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].id": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].image_url": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].last_name": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].modified_at": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].name": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].nationality": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].role": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "players[].slug": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "slug": {
+    "value": 4,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 4
+   }
+  },
+  "player_field_coverage": {
+   "active": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "age": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "birthday": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "first_name": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "id": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "image_url": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "last_name": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "modified_at": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "name": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "nationality": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "role": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   },
+   "slug": {
+    "value": 20,
+    "empty": 0,
+    "null": 0,
+    "absent": 0,
+    "of": 20
+   }
+  }
+ },
+ "field_coverage": {
+  "leagues": {
+   "records": 136,
+   "fields": {
+    "id": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "image_url": {
+     "value": 118,
+     "empty": 0,
+     "null": 18,
+     "absent": 0,
+     "of": 136
+    },
+    "modified_at": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "name": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "series": {
+     "value": 135,
+     "empty": 1,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "series[].begin_at": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].end_at": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].full_name": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].id": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].league_id": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].modified_at": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].name": {
+     "value": 160,
+     "empty": 448,
+     "null": 259,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].season": {
+     "value": 598,
+     "empty": 11,
+     "null": 258,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].slug": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].winner_id": {
+     "value": 639,
+     "empty": 0,
+     "null": 228,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].winner_type": {
+     "value": 794,
+     "empty": 0,
+     "null": 73,
+     "absent": 0,
+     "of": 867
+    },
+    "series[].year": {
+     "value": 867,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 867
+    },
+    "slug": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "url": {
+     "value": 38,
+     "empty": 0,
+     "null": 98,
+     "absent": 0,
+     "of": 136
+    },
+    "videogame": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "videogame.current_version": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "videogame.id": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "videogame.name": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    },
+    "videogame.slug": {
+     "value": 136,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 136
+    }
+   }
+  },
+  "series": {
+   "records": 200,
+   "fields": {
+    "begin_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "end_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "full_name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.image_url": {
+     "value": 173,
+     "empty": 0,
+     "null": 27,
+     "absent": 0,
+     "of": 200
+    },
+    "league.modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.url": {
+     "value": 53,
+     "empty": 0,
+     "null": 147,
+     "absent": 0,
+     "of": 200
+    },
+    "league_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "name": {
+     "value": 46,
+     "empty": 154,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "season": {
+     "value": 124,
+     "empty": 0,
+     "null": 76,
+     "absent": 0,
+     "of": 200
+    },
+    "slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournaments": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournaments[].begin_at": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].country": {
+     "value": 333,
+     "empty": 0,
+     "null": 184,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].detailed_stats": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].end_at": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].has_bracket": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].id": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].league_id": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].live_supported": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].modified_at": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].name": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].prizepool": {
+     "value": 62,
+     "empty": 0,
+     "null": 455,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].region": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].serie_id": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].slug": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].tier": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].type": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].winner_id": {
+     "value": 217,
+     "empty": 0,
+     "null": 300,
+     "absent": 0,
+     "of": 517
+    },
+    "tournaments[].winner_type": {
+     "value": 517,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 517
+    },
+    "videogame": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame_title": {
+     "value": 0,
+     "empty": 0,
+     "null": 200,
+     "absent": 0,
+     "of": 200
+    },
+    "winner_id": {
+     "value": 94,
+     "empty": 0,
+     "null": 106,
+     "absent": 0,
+     "of": 200
+    },
+    "winner_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "year": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    }
+   }
+  },
+  "tournaments": {
+   "records": 200,
+   "fields": {
+    "begin_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "country": {
+     "value": 127,
+     "empty": 0,
+     "null": 73,
+     "absent": 0,
+     "of": 200
+    },
+    "detailed_stats": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "end_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "expected_roster": {
+     "value": 199,
+     "empty": 1,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "expected_roster[].players": {
+     "value": 1298,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1298
+    },
+    "expected_roster[].team": {
+     "value": 1298,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1298
+    },
+    "has_bracket": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.image_url": {
+     "value": 168,
+     "empty": 0,
+     "null": 32,
+     "absent": 0,
+     "of": 200
+    },
+    "league.modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.url": {
+     "value": 51,
+     "empty": 0,
+     "null": 149,
+     "absent": 0,
+     "of": 200
+    },
+    "league_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "live_supported": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "matches": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "matches[].begin_at": {
+     "value": 2934,
+     "empty": 0,
+     "null": 25,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].detailed_stats": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].draw": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].end_at": {
+     "value": 2861,
+     "empty": 0,
+     "null": 98,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].forfeit": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].game_advantage": {
+     "value": 0,
+     "empty": 0,
+     "null": 2959,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].id": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].live": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].low_latency_feed": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].match_type": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].modified_at": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].name": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].number_of_games": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].original_scheduled_at": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].rescheduled": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].scheduled_at": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].slug": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].status": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].streams_list": {
+     "value": 2875,
+     "empty": 84,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].tournament_id": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].winner_id": {
+     "value": 2866,
+     "empty": 0,
+     "null": 93,
+     "absent": 0,
+     "of": 2959
+    },
+    "matches[].winner_type": {
+     "value": 2959,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 2959
+    },
+    "modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "prizepool": {
+     "value": 25,
+     "empty": 0,
+     "null": 175,
+     "absent": 0,
+     "of": 200
+    },
+    "region": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.begin_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.end_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.full_name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.league_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.name": {
+     "value": 20,
+     "empty": 180,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.season": {
+     "value": 137,
+     "empty": 0,
+     "null": 63,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.winner_id": {
+     "value": 69,
+     "empty": 0,
+     "null": 131,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.winner_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.year": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "teams": {
+     "value": 199,
+     "empty": 1,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "teams[].acronym": {
+     "value": 1276,
+     "empty": 0,
+     "null": 22,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].dark_mode_image_url": {
+     "value": 516,
+     "empty": 0,
+     "null": 782,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].id": {
+     "value": 1298,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].image_url": {
+     "value": 1292,
+     "empty": 0,
+     "null": 6,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].location": {
+     "value": 1255,
+     "empty": 41,
+     "null": 2,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].modified_at": {
+     "value": 1298,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].name": {
+     "value": 1298,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1298
+    },
+    "teams[].slug": {
+     "value": 1298,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1298
+    },
+    "tier": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame_title": {
+     "value": 0,
+     "empty": 0,
+     "null": 200,
+     "absent": 0,
+     "of": 200
+    },
+    "winner_id": {
+     "value": 93,
+     "empty": 0,
+     "null": 107,
+     "absent": 0,
+     "of": 200
+    },
+    "winner_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    }
+   }
+  },
+  "teams": {
+   "records": 200,
+   "fields": {
+    "acronym": {
+     "value": 178,
+     "empty": 0,
+     "null": 22,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "dark_mode_image_url": {
+     "value": 76,
+     "empty": 0,
+     "null": 124,
+     "absent": 0,
+     "of": 200
+    },
+    "id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "image_url": {
+     "value": 187,
+     "empty": 0,
+     "null": 13,
+     "absent": 0,
+     "of": 200
+    },
+    "location": {
+     "value": 163,
+     "empty": 37,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "players": {
+     "value": 158,
+     "empty": 42,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "players[].active": {
+     "value": 759,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].age": {
+     "value": 424,
+     "empty": 0,
+     "null": 335,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].birthday": {
+     "value": 417,
+     "empty": 0,
+     "null": 342,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].first_name": {
+     "value": 641,
+     "empty": 0,
+     "null": 118,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].id": {
+     "value": 759,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].image_url": {
+     "value": 239,
+     "empty": 0,
+     "null": 520,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].last_name": {
+     "value": 633,
+     "empty": 0,
+     "null": 126,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].modified_at": {
+     "value": 759,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].name": {
+     "value": 759,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].nationality": {
+     "value": 726,
+     "empty": 0,
+     "null": 33,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].role": {
+     "value": 759,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 759
+    },
+    "players[].slug": {
+     "value": 759,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 759
+    },
+    "slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    }
+   }
+  },
+  "players": {
+   "records": 200,
+   "fields": {
+    "active": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_team": {
+     "value": 170,
+     "empty": 0,
+     "null": 30,
+     "absent": 0,
+     "of": 200
+    },
+    "current_team.acronym": {
+     "value": 140,
+     "empty": 0,
+     "null": 30,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.dark_mode_image_url": {
+     "value": 74,
+     "empty": 0,
+     "null": 96,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.id": {
+     "value": 170,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.image_url": {
+     "value": 165,
+     "empty": 0,
+     "null": 5,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.location": {
+     "value": 131,
+     "empty": 36,
+     "null": 3,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.modified_at": {
+     "value": 170,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.name": {
+     "value": 170,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 170
+    },
+    "current_team.slug": {
+     "value": 170,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 170
+    },
+    "current_videogame": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "current_videogame.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "first_name": {
+     "value": 130,
+     "empty": 0,
+     "null": 70,
+     "absent": 0,
+     "of": 200
+    },
+    "id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "image_url": {
+     "value": 0,
+     "empty": 0,
+     "null": 200,
+     "absent": 0,
+     "of": 200
+    },
+    "last_name": {
+     "value": 126,
+     "empty": 0,
+     "null": 74,
+     "absent": 0,
+     "of": 200
+    },
+    "modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "nationality": {
+     "value": 190,
+     "empty": 0,
+     "null": 10,
+     "absent": 0,
+     "of": 200
+    },
+    "role": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    }
+   }
+  },
+  "matches_past": {
+   "records": 200,
+   "fields": {
+    "begin_at": {
+     "value": 195,
+     "empty": 0,
+     "null": 5,
+     "absent": 0,
+     "of": 200
+    },
+    "detailed_stats": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "draw": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "end_at": {
+     "value": 195,
+     "empty": 0,
+     "null": 5,
+     "absent": 0,
+     "of": 200
+    },
+    "forfeit": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "game_advantage": {
+     "value": 0,
+     "empty": 0,
+     "null": 200,
+     "absent": 0,
+     "of": 200
+    },
+    "games": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "games[].begin_at": {
+     "value": 382,
+     "empty": 0,
+     "null": 9,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].complete": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].detailed_stats": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].end_at": {
+     "value": 382,
+     "empty": 0,
+     "null": 9,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].finished": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].forfeit": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].id": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].length": {
+     "value": 382,
+     "empty": 0,
+     "null": 9,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].match_id": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].position": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].status": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].winner": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "games[].winner_type": {
+     "value": 391,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 391
+    },
+    "id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.image_url": {
+     "value": 180,
+     "empty": 0,
+     "null": 20,
+     "absent": 0,
+     "of": 200
+    },
+    "league.modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "league.url": {
+     "value": 8,
+     "empty": 0,
+     "null": 192,
+     "absent": 0,
+     "of": 200
+    },
+    "league_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "live": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "live.opens_at": {
+     "value": 8,
+     "empty": 0,
+     "null": 192,
+     "absent": 0,
+     "of": 200
+    },
+    "live.supported": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "live.url": {
+     "value": 8,
+     "empty": 0,
+     "null": 192,
+     "absent": 0,
+     "of": 200
+    },
+    "match_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "number_of_games": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "opponents": {
+     "value": 199,
+     "empty": 1,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "opponents[].opponent": {
+     "value": 398,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 398
+    },
+    "opponents[].type": {
+     "value": 398,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 398
+    },
+    "original_scheduled_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "rescheduled": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "results": {
+     "value": 199,
+     "empty": 1,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "results[].score": {
+     "value": 398,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 398
+    },
+    "results[].team_id": {
+     "value": 398,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 398
+    },
+    "scheduled_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.begin_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.end_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.full_name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.league_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.name": {
+     "value": 17,
+     "empty": 183,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.season": {
+     "value": 117,
+     "empty": 0,
+     "null": 83,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.winner_id": {
+     "value": 0,
+     "empty": 0,
+     "null": 200,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.winner_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie.year": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "serie_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "status": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "streams_list": {
+     "value": 185,
+     "empty": 15,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "streams_list[].embed_url": {
+     "value": 306,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 306
+    },
+    "streams_list[].language": {
+     "value": 306,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 306
+    },
+    "streams_list[].main": {
+     "value": 306,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 306
+    },
+    "streams_list[].official": {
+     "value": 306,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 306
+    },
+    "streams_list[].raw_url": {
+     "value": 306,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 306
+    },
+    "tournament": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.begin_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.country": {
+     "value": 85,
+     "empty": 0,
+     "null": 115,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.detailed_stats": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.end_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.has_bracket": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.league_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.live_supported": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.modified_at": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.prizepool": {
+     "value": 10,
+     "empty": 0,
+     "null": 190,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.region": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.serie_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.tier": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.winner_id": {
+     "value": 19,
+     "empty": 0,
+     "null": 181,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament.winner_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "tournament_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.name": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame.slug": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame_title": {
+     "value": 0,
+     "empty": 0,
+     "null": 200,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame_version": {
+     "value": 195,
+     "empty": 0,
+     "null": 5,
+     "absent": 0,
+     "of": 200
+    },
+    "videogame_version.current": {
+     "value": 195,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 195
+    },
+    "videogame_version.name": {
+     "value": 195,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 195
+    },
+    "winner": {
+     "value": 199,
+     "empty": 0,
+     "null": 1,
+     "absent": 0,
+     "of": 200
+    },
+    "winner.acronym": {
+     "value": 199,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.dark_mode_image_url": {
+     "value": 61,
+     "empty": 0,
+     "null": 138,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.id": {
+     "value": 199,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.image_url": {
+     "value": 199,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.location": {
+     "value": 191,
+     "empty": 8,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.modified_at": {
+     "value": 199,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.name": {
+     "value": 199,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner.slug": {
+     "value": 199,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 199
+    },
+    "winner_id": {
+     "value": 199,
+     "empty": 0,
+     "null": 1,
+     "absent": 0,
+     "of": 200
+    },
+    "winner_type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    }
+   }
+  },
+  "matches_past-2026-p1": {
+   "records": 100,
+   "fields": {
+    "begin_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "detailed_stats": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "draw": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "end_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "forfeit": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "game_advantage": {
+     "value": 0,
+     "empty": 0,
+     "null": 100,
+     "absent": 0,
+     "of": 100
+    },
+    "games": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "games[].begin_at": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].complete": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].detailed_stats": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].end_at": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].finished": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].forfeit": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].id": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].length": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].match_id": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].position": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].status": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].winner": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "games[].winner_type": {
+     "value": 162,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 162
+    },
+    "id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.image_url": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.url": {
+     "value": 17,
+     "empty": 0,
+     "null": 83,
+     "absent": 0,
+     "of": 100
+    },
+    "league_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "live": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "live.opens_at": {
+     "value": 18,
+     "empty": 0,
+     "null": 82,
+     "absent": 0,
+     "of": 100
+    },
+    "live.supported": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "live.url": {
+     "value": 18,
+     "empty": 0,
+     "null": 82,
+     "absent": 0,
+     "of": 100
+    },
+    "match_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "number_of_games": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "opponents": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "opponents[].opponent": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "opponents[].type": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "original_scheduled_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "rescheduled": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "results": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "results[].score": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "results[].team_id": {
+     "value": 200,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 200
+    },
+    "scheduled_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.begin_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.end_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.full_name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.league_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.name": {
+     "value": 19,
+     "empty": 81,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.season": {
+     "value": 78,
+     "empty": 0,
+     "null": 22,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.winner_id": {
+     "value": 45,
+     "empty": 0,
+     "null": 55,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.winner_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.year": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "status": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "streams_list": {
+     "value": 99,
+     "empty": 1,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "streams_list[].embed_url": {
+     "value": 194,
+     "empty": 0,
+     "null": 15,
+     "absent": 0,
+     "of": 209
+    },
+    "streams_list[].language": {
+     "value": 209,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 209
+    },
+    "streams_list[].main": {
+     "value": 209,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 209
+    },
+    "streams_list[].official": {
+     "value": 209,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 209
+    },
+    "streams_list[].raw_url": {
+     "value": 209,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 209
+    },
+    "tournament": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.begin_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.country": {
+     "value": 25,
+     "empty": 0,
+     "null": 75,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.detailed_stats": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.end_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.has_bracket": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.league_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.live_supported": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.prizepool": {
+     "value": 3,
+     "empty": 0,
+     "null": 97,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.region": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.serie_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.tier": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.winner_id": {
+     "value": 3,
+     "empty": 0,
+     "null": 97,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament.winner_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournament_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame_title": {
+     "value": 0,
+     "empty": 0,
+     "null": 100,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame_version": {
+     "value": 97,
+     "empty": 0,
+     "null": 3,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame_version.current": {
+     "value": 97,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 97
+    },
+    "videogame_version.name": {
+     "value": 97,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 97
+    },
+    "winner": {
+     "value": 99,
+     "empty": 0,
+     "null": 1,
+     "absent": 0,
+     "of": 100
+    },
+    "winner.acronym": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.dark_mode_image_url": {
+     "value": 42,
+     "empty": 0,
+     "null": 57,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.id": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.image_url": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.location": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.modified_at": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.name": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner.slug": {
+     "value": 99,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 99
+    },
+    "winner_id": {
+     "value": 99,
+     "empty": 0,
+     "null": 1,
+     "absent": 0,
+     "of": 100
+    },
+    "winner_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    }
+   }
+  },
+  "tournaments-2026-p1": {
+   "records": 100,
+   "fields": {
+    "begin_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "country": {
+     "value": 63,
+     "empty": 0,
+     "null": 37,
+     "absent": 0,
+     "of": 100
+    },
+    "detailed_stats": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "end_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "expected_roster": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "expected_roster[].players": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "expected_roster[].team": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "has_bracket": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.image_url": {
+     "value": 92,
+     "empty": 0,
+     "null": 8,
+     "absent": 0,
+     "of": 100
+    },
+    "league.modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.url": {
+     "value": 31,
+     "empty": 0,
+     "null": 69,
+     "absent": 0,
+     "of": 100
+    },
+    "league_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "live_supported": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "matches": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "matches[].begin_at": {
+     "value": 1387,
+     "empty": 0,
+     "null": 15,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].detailed_stats": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].draw": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].end_at": {
+     "value": 1387,
+     "empty": 0,
+     "null": 15,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].forfeit": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].game_advantage": {
+     "value": 0,
+     "empty": 0,
+     "null": 1402,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].id": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].live": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].low_latency_feed": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].match_type": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].modified_at": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].name": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].number_of_games": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].original_scheduled_at": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].rescheduled": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].scheduled_at": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].slug": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].status": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].streams_list": {
+     "value": 1371,
+     "empty": 31,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].tournament_id": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].winner_id": {
+     "value": 1380,
+     "empty": 0,
+     "null": 22,
+     "absent": 0,
+     "of": 1402
+    },
+    "matches[].winner_type": {
+     "value": 1402,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 1402
+    },
+    "modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "prizepool": {
+     "value": 7,
+     "empty": 0,
+     "null": 93,
+     "absent": 0,
+     "of": 100
+    },
+    "region": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.begin_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.end_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.full_name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.league_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.name": {
+     "value": 26,
+     "empty": 74,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.season": {
+     "value": 66,
+     "empty": 0,
+     "null": 34,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.winner_id": {
+     "value": 64,
+     "empty": 0,
+     "null": 36,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.winner_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie.year": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "serie_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "teams": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "teams[].acronym": {
+     "value": 603,
+     "empty": 0,
+     "null": 8,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].dark_mode_image_url": {
+     "value": 240,
+     "empty": 0,
+     "null": 371,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].id": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].image_url": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].location": {
+     "value": 589,
+     "empty": 22,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].modified_at": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].name": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "teams[].slug": {
+     "value": 611,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 611
+    },
+    "tier": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame_title": {
+     "value": 0,
+     "empty": 0,
+     "null": 100,
+     "absent": 0,
+     "of": 100
+    },
+    "winner_id": {
+     "value": 43,
+     "empty": 0,
+     "null": 57,
+     "absent": 0,
+     "of": 100
+    },
+    "winner_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    }
+   }
+  },
+  "series-2026-p1": {
+   "records": 100,
+   "fields": {
+    "begin_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "end_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "full_name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.image_url": {
+     "value": 80,
+     "empty": 0,
+     "null": 20,
+     "absent": 0,
+     "of": 100
+    },
+    "league.modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "league.url": {
+     "value": 27,
+     "empty": 0,
+     "null": 73,
+     "absent": 0,
+     "of": 100
+    },
+    "league_id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "name": {
+     "value": 18,
+     "empty": 82,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "season": {
+     "value": 67,
+     "empty": 0,
+     "null": 33,
+     "absent": 0,
+     "of": 100
+    },
+    "slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournaments": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "tournaments[].begin_at": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].country": {
+     "value": 171,
+     "empty": 0,
+     "null": 97,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].detailed_stats": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].end_at": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].has_bracket": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].id": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].league_id": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].live_supported": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].modified_at": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].name": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].prizepool": {
+     "value": 30,
+     "empty": 0,
+     "null": 238,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].region": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].serie_id": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].slug": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].tier": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].type": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].winner_id": {
+     "value": 123,
+     "empty": 0,
+     "null": 145,
+     "absent": 0,
+     "of": 268
+    },
+    "tournaments[].winner_type": {
+     "value": 268,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 268
+    },
+    "videogame": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "videogame_title": {
+     "value": 0,
+     "empty": 0,
+     "null": 100,
+     "absent": 0,
+     "of": 100
+    },
+    "winner_id": {
+     "value": 45,
+     "empty": 0,
+     "null": 55,
+     "absent": 0,
+     "of": 100
+    },
+    "winner_type": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "year": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    }
+   }
+  },
+  "players-active-p1": {
+   "records": 100,
+   "fields": {
+    "active": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "current_team": {
+     "value": 85,
+     "empty": 0,
+     "null": 15,
+     "absent": 0,
+     "of": 100
+    },
+    "current_team.acronym": {
+     "value": 75,
+     "empty": 0,
+     "null": 10,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.dark_mode_image_url": {
+     "value": 26,
+     "empty": 0,
+     "null": 59,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.id": {
+     "value": 85,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.image_url": {
+     "value": 80,
+     "empty": 0,
+     "null": 5,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.location": {
+     "value": 58,
+     "empty": 27,
+     "null": 0,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.modified_at": {
+     "value": 85,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.name": {
+     "value": 85,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 85
+    },
+    "current_team.slug": {
+     "value": 85,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 85
+    },
+    "current_videogame": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "current_videogame.id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "current_videogame.name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "current_videogame.slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "first_name": {
+     "value": 55,
+     "empty": 0,
+     "null": 45,
+     "absent": 0,
+     "of": 100
+    },
+    "id": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "image_url": {
+     "value": 0,
+     "empty": 0,
+     "null": 100,
+     "absent": 0,
+     "of": 100
+    },
+    "last_name": {
+     "value": 55,
+     "empty": 0,
+     "null": 45,
+     "absent": 0,
+     "of": 100
+    },
+    "modified_at": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "name": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "nationality": {
+     "value": 91,
+     "empty": 0,
+     "null": 9,
+     "absent": 0,
+     "of": 100
+    },
+    "role": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    },
+    "slug": {
+     "value": 100,
+     "empty": 0,
+     "null": 0,
+     "absent": 0,
+     "of": 100
+    }
+   }
+  }
+ }
+}

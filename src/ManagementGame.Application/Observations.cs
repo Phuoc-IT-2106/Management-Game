@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using ManagementGame.Domain;
+using ManagementGame.Formatting;
 
 namespace ManagementGame.Application;
 
@@ -8,7 +9,8 @@ public static class Observations
     private static readonly (string Prefix, string Kind)[] Kinds =
     [
         ("notice:offer:", "Offer"), ("notice:negotiation:", "Negotiation"), ("notice:contract:", "Contract"),
-        ("notice:renewal:", "Renewal"), ("notice:season:", "Season"), ("result:", "Match"), ("claim:", "Market"),
+        ("notice:renewal:", "Renewal"), ("notice:season:", "Season"), ("notice:roster:", "League"), ("notice:sponsor:", "Commercial"),
+        ("result:", "Match"), ("claim:", "Market"),
         ("lapse:", "Market"), ("meta:", "Meta"), ("commercial:", "Commercial")
     ];
     /// <summary>World-originated messages, newest first; the player's own decisions are not inbox mail.</summary>
@@ -18,16 +20,31 @@ public static class Observations
     private static ImmutableArray<InboxRow> Rows(Company c, Func<ReviewEntry, string> subject) => c.Reviews
         .Select(r => (Review: r, Kind: Kinds.FirstOrDefault(k => r.Id.StartsWith(k.Prefix, StringComparison.Ordinal)).Kind))
         .Where(x => x.Kind is not null).Reverse().Take(40)
-        .Select(x => new InboxRow(x.Review.Id, x.Review.Day, x.Kind!, x.Review.Text, x.Review.CauseId, subject(x.Review))).ToImmutableArray();
+        .Select(x => new InboxRow(x.Review.Id, x.Review.Day, x.Kind!, Currency.Relabel(x.Review.Text), x.Review.CauseId, subject(x.Review))).ToImmutableArray();
     private static string Subject(Campaign s, ReviewEntry r)
     {
         var w = s.World;
         if (w.Results.FirstOrDefault(x => x.Id == r.Id || x.Id == r.CauseId) is { } result) return result.RivalId;
         if (w.Offers.FirstOrDefault(o => o.Id == r.CauseId) is { } offer) return offer.BrandId;
         if (w.Negotiations.FirstOrDefault(n => n.Id == r.CauseId) is { } negotiation) return negotiation.BrandId;
+        if (s.Company.Sponsors.FirstOrDefault(x => x.Id == r.CauseId) is { } agreement) return agreement.BrandId;
         if (s.Company.Employment.FirstOrDefault(e => e.Id == r.CauseId) is { } contract) return contract.PersonId;
+        // A contract that has ended no longer exists: transfer history names who left with it, and before that history
+        // begins, the person it named is on a market under the same stable ID.
+        if (w.Moves.FirstOrDefault(m => m.CauseId == r.CauseId && m.Reason == MoveReason.ContractEnded) is { } ended) return ended.PersonId;
+        if (w.Candidates.FirstOrDefault(x => EmployedAs(r.CauseId, x.Person.Id)) is { } player) return player.Person.Id;
+        if (w.CoachCandidates.FirstOrDefault(x => EmployedAs(r.CauseId, x.Coach.Id)) is { } coach) return coach.Coach.Id;
         return "";
     }
+    /// <summary>Employment IDs are <c>employment:&lt;person ID&gt;</c>, optionally followed by the signing command's cause.</summary>
+    private static bool EmployedAs(string employmentId, string personId) =>
+        employmentId == "employment:" + personId || employmentId.StartsWith("employment:" + personId + ":", StringComparison.Ordinal);
+    /// <summary>Transfer history, newest first: every move as the simulation recorded it when it happened (who, from where,
+    /// to where, when and why). Nothing is reconstructed from current rosters or markets, so a later move never rewrites an
+    /// earlier one, and a person who has since left every record keeps their name. Rivals have no rosters in the current
+    /// rules, so every move involves the company and the open market.</summary>
+    public static ImmutableArray<MoveRow> Moves(Campaign s) => [.. s.World.Moves.Reverse().Select(m => new MoveRow(m.Id, (MoveKind)m.Reason, m.Day,
+        m.PersonId, m.Name, m.Kind == Personnel.HeadCoach, m.Role, m.Origin ?? "", m.Destination ?? "", m.CauseId))];
     private static string Outcome(CompetitiveOutcome r) => r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat";
     public static ImmutableArray<FixtureRow> FixtureRows(Campaign s) => s.World.Fixtures.Select(f =>
     {
@@ -73,7 +90,7 @@ public static class Observations
                 Numbers.Divide(fair * 90, 100), Numbers.Divide(fair * 110, 100), x.DurationDays.Order().ToImmutableArray());
         }).ToImmutableArray();
         var view = new Situation(s.Execution.Revision, day, Seasons.Of(day, b), Seasons.DayOf(day, b), b.SeasonLength, c.Name, c.Recovery.ToString(),
-            c.Cash, Finance.Forecast(c, day), c.Reputation, c.Audience, Simulation.Load(c, b, day), c.Coach.Capacity,
+            c.Cash, Finance.Forecast(c, day, b.OperatingCost), c.Reputation, c.Audience, Simulation.Load(c, b, day), c.Coach.Capacity,
             c.Coach.Name, (Delegation)c.Authority.Mode, (Risk)c.Authority.RiskCeiling, fixture?.Id ?? "", fixture?.Day ?? 0,
             rival?.Name ?? "No match until next season", rival is null ? "—" : $"{Math.Max(0, estimate - width)}–{Math.Min(100, estimate + width)} (estimate)",
             estimatedPosture.ToString(), c.Information >= 65 ? "Moderate confidence" : "Low confidence", w.Meta.ToString(),
@@ -81,18 +98,18 @@ public static class Observations
             null, "", people,
             w.Candidates.Where(x => x.Deadline >= day).Select(x => new CandidateRow(x.Person.Id, x.Person.Name, x.Person.Role,
                 Band(x.Person.Execution), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
-            w.Offers.Select(o => new SponsorRow(o.Id, o.Name, o.Payment, o.WinBonus, o.Load, o.Deadline, o.MinimumReputation, Availability(o), o.Origin.ToString(), o.DurationDays)).ToImmutableArray(),
-            c.Sponsors.Where(x => x.EndDay >= day).Select(x => $"{x.Name}: {x.Payment / 100m:N2} CU weekly, delivery load {x.Load}, win bonus {x.WinBonus / 100m:N2} CU, ends day {x.EndDay}").ToImmutableArray(),
+            w.Offers.Select(o => new SponsorRow(o.Id, o.Name, o.Payment, o.WinBonus, o.Load, o.Deadline, o.MinimumReputation, Availability(o), o.Origin.ToString(), o.DurationDays, o.BrandId)).ToImmutableArray(),
+            c.Sponsors.Where(x => x.EndDay >= day).Select(x => $"{x.Name}: {Currency.Format(x.Payment)} weekly, delivery load {x.Load}, win bonus {Currency.Format(x.WinBonus)}, ends day {x.EndDay}").ToImmutableArray(),
             c.FinancialItems.Where(x => x.Remaining > 0).OrderBy(x => x.DueDay).ThenBy(x => x.Id, StringComparer.Ordinal)
                 .Select(x => new BillRow(x.Id, x.CauseId, x.DueDay, x.Remaining, x.Incoming, x.MissedDay)).ToImmutableArray(),
             w.Results.Select(r => new ResultRow(r.Id, r.Day, w.Rivals.Single(x => x.Id == r.RivalId).Name, r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat", r.Posture.ToString())).ToImmutableArray(),
-            c.Reviews.TakeLast(24).Reverse().Select(r => $"Day {r.Day} · {r.Text} [cause: {r.CauseId}]").ToImmutableArray(),
+            c.Reviews.TakeLast(24).Reverse().Select(r => $"Day {r.Day} · {Currency.Relabel(r.Text)} [cause: {r.CauseId}]").ToImmutableArray(),
             string.Join("; ", c.PendingEffects.Select(e => $"Day {e.DueDay}: reputation {e.Reputation:+#;-#;0}, audience {e.Audience:+#;-#;0}")), content.Label,
             new StaffRow(c.Coach.Id, c.Coach.Name, coachContract.Salary, coachContract.EndDay, Simulation.RenewalDemand(c, coachContract), Renewable(coachContract)),
             w.CoachCandidates.Where(x => x.Deadline >= day).Select(x => new CoachCandidateRow(x.Coach.Id, x.Coach.Name,
                 Band((x.Coach.Preparation + x.Coach.Analysis + x.Coach.Adaptability) / 3), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
-            brands, w.Negotiations.Select(n => new NegotiationRow(n.Id, Market.Brand(content, n.BrandId).Name, n.Payment, n.DurationDays, n.ResponseDay)).ToImmutableArray(),
-            b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "");
+            brands, w.Negotiations.Select(n => new NegotiationRow(n.Id, Market.Brand(content, n.BrandId).Name, n.Payment, n.DurationDays, n.ResponseDay, n.BrandId)).ToImmutableArray(),
+            b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "", b.OperatingCost, b.MinimumRoster, Moves(s));
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
             ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover every role A–E."

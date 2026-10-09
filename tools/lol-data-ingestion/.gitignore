@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+data/
+logs/
+# Defensive: secrets, databases and logs written outside data/ or logs/
+.env.*
+!.env.example
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite
+*.db
+*.log

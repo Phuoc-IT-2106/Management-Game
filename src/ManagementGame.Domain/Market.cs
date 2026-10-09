@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using ManagementGame.Formatting;
 
 namespace ManagementGame.Domain;
 
@@ -69,7 +70,7 @@ public static class Market
                 FairPayment(brand, c.Reputation, c.Audience), brand.WinBonus, brand.Load, brand.MinimumReputation, null);
             w = w with { Offers = w.Offers.Add(offer) };
             c = Notice(c, "offer:" + offer.Id, day, offer.Id,
-                $"{brand.Name} ({brand.Sector}) offers {Pay.Money(offer.Payment)} per week for {duration} days, +{brand.Load} delivery load. Answer by day {offer.Deadline}.");
+                $"{brand.Name} ({brand.Sector}) offers {Currency.Format(offer.Payment)} per week for {duration} days, +{brand.Load} delivery load. Answer by day {offer.Deadline}.");
         }
         return (c, w);
     }
@@ -92,7 +93,7 @@ public static class Market
             if (response == "reject")
             {
                 w = Cooldown(w, brand.Id, day + b.RejectCooldown);
-                c = Notice(c, "negotiation:" + n.Id, day, n.Id, $"{brand.Name} declined your proposal of {Pay.Money(n.Payment)} per week. They will not reconsider before day {day + b.RejectCooldown}.");
+                c = Notice(c, "negotiation:" + n.Id, day, n.Id, $"{brand.Name} declined your proposal of {Currency.Format(n.Payment)} per week. They will not reconsider before day {day + b.RejectCooldown}.");
                 continue;
             }
             var payment = response == "accept" ? n.Payment : ratio > 130 ? Numbers.Divide(fair * 95, 100) : fair;
@@ -100,8 +101,8 @@ public static class Market
                 day + b.OfferWindow - 1, n.DurationDays, Round(payment), brand.WinBonus, brand.Load, 0, null);
             w = w with { Offers = w.Offers.Add(offer) };
             c = Notice(c, "negotiation:" + n.Id, day, n.Id, response == "accept"
-                ? $"{brand.Name} accepted your terms: {Pay.Money(offer.Payment)} per week for {offer.DurationDays} days. Sign by day {offer.Deadline}."
-                : $"{brand.Name} countered with {Pay.Money(offer.Payment)} per week for {offer.DurationDays} days. Sign by day {offer.Deadline} or let it lapse.");
+                ? $"{brand.Name} accepted your terms: {Currency.Format(offer.Payment)} per week for {offer.DurationDays} days. Sign by day {offer.Deadline}."
+                : $"{brand.Name} countered with {Currency.Format(offer.Payment)} per week for {offer.DurationDays} days. Sign by day {offer.Deadline} or let it lapse.");
         }
         return (c, w);
     }
@@ -134,6 +135,25 @@ public static class Market
         return (c, w with { Offers = keep, Brands = w.Brands.Where(x => x.AvailableFromDay > day).ToImmutableArray() });
     }
 
+    /// <summary>The termination clause: an agreement that allows <c>ForfeitLimit</c> forfeits in one season ends once that
+    /// many have happened this season since it began. Its unpaid future instalments are cancelled and the brand cools off.</summary>
+    public static (Company, World) Terminations(Company c, World w, Content content, int day)
+    {
+        var b = content.Balance; var season = Seasons.Of(day, b);
+        var forfeits = w.Results.Where(r => r.PlanCause == "forfeit" && r.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal)).ToArray();
+        foreach (var contract in c.Sponsors.Where(s => s.EndDay > day && s.ForfeitLimit > 0).OrderBy(s => s.Id, StringComparer.Ordinal).ToArray())
+        {
+            var count = forfeits.Count(r => r.Day >= contract.StartDay);
+            if (count < contract.ForfeitLimit) continue;
+            var cancelled = c.FinancialItems.Where(x => x.CauseId == contract.Id && x.Incoming && x.DueDay > day && x.Remaining == x.Amount).ToArray();
+            c = c with { Sponsors = c.Sponsors.Replace(contract, contract with { EndDay = day }), FinancialItems = c.FinancialItems.RemoveRange(cancelled) };
+            w = Cooldown(w, contract.BrandId, day + b.RejectCooldown);
+            c = Notice(c, "sponsor:" + contract.Id, day, contract.Id,
+                $"{contract.Name} ended the agreement after {count} forfeits this season, as its contract allows. Its {cancelled.Length} remaining weekly payment(s) are cancelled.");
+        }
+        return (c, w);
+    }
+
     /// <summary>Keeps the free-agent and coach markets stocked, always covering any role the roster lacks.</summary>
     public static World Refresh(Company c, World w, ulong seed, Content content, int day)
     {
@@ -159,6 +179,14 @@ public static class Market
         return w with { Candidates = [.. players], CoachCandidates = [.. coaches], NextId = next };
     }
 
+    /// <summary>Records a completed move in transfer history: who moved, from where to where (null: the open market), on which
+    /// day and because of which command or contract. Written once, when the move happens; nothing rewrites it.</summary>
+    public static World Moved(World w, int day, string cause, Person person, MoveReason reason, string? from, string? to) =>
+        Moved(w, new Move($"move:{cause}:{person.Id}", day, person.Id, person.Name, Personnel.Player, person.Role, reason, from, to, cause));
+    public static World Moved(World w, int day, string cause, Coach coach, MoveReason reason, string? from, string? to) =>
+        Moved(w, new Move($"move:{cause}:{coach.Id}", day, coach.Id, coach.Name, Personnel.HeadCoach, "", reason, from, to, cause));
+    private static World Moved(World w, Move move) => w with { Moves = w.Moves.Add(move) };
+
     /// <summary>Contracts end on their date: players become free agents, a departing coach is covered by an interim.</summary>
     public static (Company, World) Contracts(Company c, World w, ulong seed, Content content, int day)
     {
@@ -174,6 +202,7 @@ public static class Market
                 c = c with { Coach = interim, Employment = c.Employment.Remove(contract)
                     .Add(new Employment("employment:" + interim.Id, interim.Id, salary, salary * 5, day + b.SeasonLength - 1)) };
                 w = w with { NextId = next, CoachCandidates = w.CoachCandidates.Add(new CoachCandidate(departed, contract.Salary * 15, contract.Salary, day + b.TalentRefreshInterval - 1)) };
+                w = Moved(Moved(w, day, contract.Id, departed, MoveReason.ContractEnded, c.Id, null), day, contract.Id, interim, MoveReason.Interim, null, c.Id);
                 c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"Head coach {departed.Name} left at contract end. Interim coach {interim.Name} is covering; hire a permanent coach from the market.");
                 continue;
             }
@@ -181,6 +210,7 @@ public static class Market
             c = c with { People = c.People.Remove(person), Employment = c.Employment.Remove(contract),
                 Plan = c.Plan is { } plan && plan.Lineup.Contains(person.Id) ? null : c.Plan };
             w = w with { Candidates = w.Candidates.Add(new Candidate(person, contract.Salary * 5, contract.Salary, contract.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
+            w = Moved(w, day, contract.Id, person, MoveReason.ContractEnded, c.Id, null);
             c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"{person.Name} (role {person.Role}) left as a free agent when the contract ended.");
         }
         foreach (var contract in c.Employment.Where(e => e.EndDay - day == b.RenewalWindow))

@@ -2,8 +2,8 @@ using Godot;
 using ManagementGame.Application;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Globalization;
 using System.Text.Json;
+using ManagementGame.Formatting;
 
 public partial class Main : Control
 {
@@ -19,7 +19,7 @@ public partial class Main : Control
     private readonly LineEdit search = new() { PlaceholderText = "Search roster by name or ID", CustomMinimumSize = new Vector2(240, 0) };
     private readonly OptionButton roleFilter = new(), sort = new(), posture = new(), authority = new(), ceiling = new(), candidates = new(), offers = new(),
         contractSeasons = new(), coachCandidates = new(), brands = new(), proposalDuration = new();
-    private readonly SpinBox proposalPayment = new() { MinValue = 5, MaxValue = 3000, Step = 5, Value = 300, Suffix = "CU/week", CustomMinimumSize = new Vector2(170, 0) };
+    private readonly SpinBox proposalPayment = new() { MinValue = 5, MaxValue = 3000, Step = 5, Value = 300, TooltipText = "Weekly payment in " + Currency.Code, CustomMinimumSize = new Vector2(170, 0) };
     private readonly LineEdit companyInput = new() { PlaceholderText = "Company name", CustomMinimumSize = new Vector2(200, 0) };
     private readonly SpinBox execution = new() { MinValue = 0, MaxValue = 100, Value = 50 }, opponentWork = new() { MinValue = 0, MaxValue = 100, Value = 30 }, meta = new() { MinValue = 0, MaxValue = 100, Value = 20 };
     private readonly Dictionary<string, OptionButton> lineup = [];
@@ -34,7 +34,7 @@ public partial class Main : Control
     private ImmutableArray<PersonRow> stressRows;
     private long lastFrame, memoryBefore;
     private readonly LineEdit seedInput = new() { Text = "20261004", CustomMinimumSize = new Vector2(130, 0) };
-    private static string Money(long value) => (value / 100m).ToString("N2", CultureInfo.InvariantCulture) + " CU";
+    private static string Money(long value) => Currency.Format(value);
     private static string? Arg(string key) => OS.GetCmdlineUserArgs().FirstOrDefault(x => x.StartsWith(key + "=", StringComparison.Ordinal))?[(key.Length + 1)..];
 
     public override void _Ready()
@@ -72,7 +72,7 @@ public partial class Main : Control
         toolbar.AddChild(Button("Recover backup", () => Ask("Load the newest valid backup? Some progress may be lost. Future saves use a separate recovered slot, preserving the original.", () =>
         { var result = session.Load(activeSlot, true); if (result.Accepted) activeSlot = "recovered"; Report(result); requestId = Composition.LastUiCommand(session); })));
         advance = Button("Advance to next checkpoint →", () => Send(new AdvanceDecision())); toolbar.AddChild(advance);
-        var fixture = new Label { Text = "DEVELOPMENT FIXTURE · Fictional 5v5 Role Arena · Noncanonical content & balance · CU = fixture currency", AutowrapMode = TextServer.AutowrapMode.WordSmart };
+        var fixture = new Label { Text = "DEVELOPMENT FIXTURE · Fictional 5v5 Role Arena · Noncanonical content & balance · USD amounts are development values", AutowrapMode = TextServer.AutowrapMode.WordSmart };
         fixture.AddThemeColorOverride("font_color", new Color("d4b781")); shell.AddChild(fixture);
         message.AutowrapMode = TextServer.AutowrapMode.WordSmart; message.CustomMinimumSize = new Vector2(0, 42); shell.AddChild(message);
         tabs.SizeFlagsVertical = SizeFlags.ExpandFill; shell.AddChild(tabs);

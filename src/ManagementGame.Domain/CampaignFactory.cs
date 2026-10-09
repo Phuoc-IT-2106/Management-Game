@@ -34,10 +34,10 @@ public static class CampaignFactory
             var lowest = starters.Where(x => x.MinimumReputation <= starters[0].MinimumReputation + 20).ToArray();
             var brand = lowest[KeyedRandom.Range(seed, "market", "starter", "brand", lowest.Length)];
             var starter = new Offer($"offer:{brand.Id}:starter", brand.Id, brand.Name, OfferOrigin.Inbound, 1, b.SeasonLength, brand.BasePayment, brand.WinBonus, brand.Load, 0, company.Id);
-            company = Finance.AddSponsor(company, starter, 1, "agreement:" + starter.Id);
+            company = Finance.AddSponsor(company, starter, 1, "agreement:" + starter.Id, b.SponsorForfeitLimit);
         }
         var rivals = Generator.Rivals(seed, content);
-        var world = new World(new Calendar(1, Phase.Finance, 0), rivals, Seasons.Schedule(seed, 1, rivals, b), [], [], [], [], [], [], Posture.Balanced, next);
+        var world = new World(new Calendar(1, Phase.Finance, 0), rivals, Seasons.Schedule(seed, 1, rivals, b), [], [], [], [], [], [], Posture.Balanced, next, []);
         world = Market.Refresh(company, world, seed, content, 1);
         (company, world) = Market.Approach(company, world, seed, content, 1, guaranteed: 2);
         return new Campaign(company, world, new Execution(campaignId, seed, 0, content.RulesVersion, contentHash, []));

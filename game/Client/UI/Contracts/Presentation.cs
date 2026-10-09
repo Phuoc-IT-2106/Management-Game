@@ -16,7 +16,10 @@ public sealed record EntityView(string Id, string Name, EntityKind Kind, string 
     InformationState Information = InformationState.Known, DomainStatus Status = DomainStatus.Neutral,
     Availability Availability = Availability.Ready, string Reason = "");
 public sealed record UiIntent(string Kind, string TargetId, long Revision);
-public sealed record ResourceView(string Label, decimal? Value, string Unit, InformationState Information, string Context);
+/// <summary>A quantity with its information state. <paramref name="Display"/> is the amount as the owning layer formats it
+/// (money comes pre-formatted from the game's currency formatter, which this kit does not reference); without it the kit
+/// shows the value with two decimals and the unit.</summary>
+public sealed record ResourceView(string Label, decimal? Value, string Unit, InformationState Information, string Context, string? Display = null);
 public sealed record MatterView(EntityView Entity, MatterClass Class, string Why, int? DueDay, string Consequence);
 public sealed record ComparisonLine(string Dimension, string Left, string Right);
 public sealed record ComparisonData(string LeftTitle, string RightTitle, ImmutableArray<ComparisonLine> Lines, Availability Availability = Availability.Ready);
@@ -72,7 +75,8 @@ public static class PresentationText
     };
     public static string ResourceAmount(ResourceView value) => value.Information == InformationState.Unknown || value.Value is null
         ? $"{value.Label}: Unknown"
-        : $"{value.Label}: {value.Value.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit}";
+        : $"{value.Label}: {Amount(value)}";
+    private static string Amount(ResourceView value) => value.Display ?? $"{value.Value!.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit}";
     public static string ResourceEvidence(ResourceView value) => $"{InformationMarker(value.Information)} {Information(value.Information)} · {value.Context}";
     /// <summary>Compact ascending day list with consecutive runs, e.g. "1–3, 6".</summary>
     public static string DayRanges(IEnumerable<int> days)
@@ -114,7 +118,7 @@ public static class PresentationText
     }
     public static string Resource(ResourceView value) => value.Information == InformationState.Unknown || value.Value is null
         ? $"{value.Label}: Unknown · {value.Context}"
-        : $"{value.Label}: {value.Value.Value.ToString("N2", CultureInfo.InvariantCulture)} {value.Unit} · {Information(value.Information)} · {value.Context}";
+        : $"{value.Label}: {Amount(value)} · {Information(value.Information)} · {value.Context}";
     public static string Time(int? day, string label) => day is null ? $"{label}: date unknown" : $"{label}: day {day.Value.ToString(CultureInfo.InvariantCulture)}";
     public static string AvailabilityText(Availability state, string reason) => state == Availability.Ready ? reason : $"{state}: {(string.IsNullOrWhiteSpace(reason) ? "No current data" : reason)}";
     public static string Icon(string key) => Enum.TryParse<EntityKind>(key, true, out var kind) && Enum.IsDefined(kind) ? kind switch

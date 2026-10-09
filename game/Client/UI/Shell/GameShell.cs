@@ -1,5 +1,6 @@
 using Godot;
 using ManagementGame.Application;
+using ManagementGame.Formatting;
 using ManagementGame.OperatingMap;
 using ManagementGame.SponsorWorkspace;
 using ManagementGame.UiKit;
@@ -23,21 +24,20 @@ public partial class GameShell : Control
     private bool navCollapsed, portalDecisionsExpanded;
     private IdentityAssets assets = null!;
     private readonly HashSet<string> seenInbox = [];
-    private VBoxContainer frame = null!, navList = null!;
+    private VBoxContainer frame = null!, railIdentity = null!;
+    /// <summary>The rail's navigation region: the eight items spread evenly, the notice dock under them.</summary>
+    private SpreadColumn navList = null!;
     private Control content = null!, overlay = null!;
     private HBoxContainer topBar = null!;
     private Label message = null!;
-    private Button continueButton = null!;
+    private Button continueButton = null!, navToggle = null!;
     private PanelContainer nav = null!;
     private readonly Dictionary<string, Button> navButtons = [];
     private readonly Dictionary<string, Label> navLabels = [], navCounts = [];
     private PanelContainer toast = null!;
+    /// <summary>The content area, where the notice floats when the rail is collapsed.</summary>
+    private Control contentArea = null!;
 
-    private static string IconFor(string section) => section switch
-    {
-        ShellSections.Inbox => "inbox", ShellSections.Squad => "squad", ShellSections.Competition => "competition", ShellSections.Commercial => "commercial",
-        ShellSections.Finance => "finance", ShellSections.Staff => "staff", ShellSections.Company => "company", _ => "portal"
-    };
     private static readonly (string Id, string Glyph, string Label)[] Sections =
     [
         (ShellSections.Portal, "⌂", "Portal"), (ShellSections.Inbox, "✉", "Inbox"), (ShellSections.Squad, "♟", "Squad"),
@@ -45,7 +45,6 @@ public partial class GameShell : Control
         (ShellSections.Staff, "◎", "Staff"), (ShellSections.Company, "▣", "Company")
     ];
     private static string? Arg(string key) => OS.GetCmdlineUserArgs().FirstOrDefault(x => x.StartsWith(key + "=", StringComparison.Ordinal))?[(key.Length + 1)..];
-    private static string Money(long minor) => SponsorPresentation.Money(minor);
     private string SavePath => System.IO.Path.Combine(saveDirectory, "campaign.save.json");
 
     public override async void _Ready()
@@ -62,6 +61,12 @@ public partial class GameShell : Control
             GetWindow().ContentScaleAspect = Window.ContentScaleAspectEnum.Ignore;
         }
         if (Arg("--shell-output") is not null) UiTokens.PreferReducedMotion = true;
+        // Development diagnostics stay out of player space: debug builds carry them in the log and the window title.
+        if (OS.IsDebugBuild())
+        {
+            GD.Print("DEVELOPMENT BUILD: " + PresentationText.DevelopmentWatermark);
+            GetWindow().Title = ProjectSettings.GetSetting("application/config/name").AsString() + " — " + PresentationText.DevelopmentWatermark;
+        }
         overlay = new Control { MouseFilter = MouseFilterEnum.Stop, Visible = false };
         if (OS.GetCmdlineUserArgs().Contains("--shell-new")) StartCampaign("", 20261004);
         else ShowStart();
@@ -79,11 +84,15 @@ public partial class GameShell : Control
         margin.AddChild(column);
         column.AddChild(SemanticText.Create(ui, "Strategic Company Simulator", TypographyRole.WorkspaceTitle));
         column.AddChild(SemanticText.Create(ui, "Build an esports organization season after season: people, sponsors, rivals and money.", TypographyRole.Body, ColorRole.TextSecondary));
+        // The one decision here (found a company) sits in a premium region (UI polish standard §4).
+        var roomy = ShellLayout.Roomy(GetViewportRect().Size);
+        column.AddChild(PanelFrame.Major(ui, "NewCampaignRegion", SectionHeader.Region(ui, "company", "New campaign", roomy, "", null, ColorRole.ActionPrimary, FrameTier.Premium),
+            ShellLayout.RegionPadding(true), out var form, 10, FrameTier.Premium));
         var name = new LineEdit { PlaceholderText = "Company name (e.g. Hanoi Signal)", Name = "CompanyName" };
         var seed = new LineEdit { Text = "20261004", Name = "Seed" };
-        column.AddChild(Field("Company name", name)); column.AddChild(Field("World seed", seed));
-        var feedback = SemanticText.Create(ui, "", TypographyRole.Label, ColorRole.TextSecondary); column.AddChild(feedback);
-        var actions = ui.Flow(); column.AddChild(actions);
+        form.AddChild(Field("Company name", name)); form.AddChild(Field("World seed", seed));
+        var feedback = SemanticText.Create(ui, "", TypographyRole.Label, ColorRole.TextSecondary); form.AddChild(feedback);
+        var actions = ui.Flow(); form.AddChild(actions);
         var start = ui.PrimaryButton("New campaign", () =>
         {
             // The company is the player's own: a campaign starts with the name they choose, never a content placeholder.
@@ -94,8 +103,8 @@ public partial class GameShell : Control
         });
         start.Name = "NewCampaign"; actions.AddChild(start);
         var load = ui.Button("Continue saved campaign", LoadSaved); load.Name = "LoadSaved"; load.Disabled = !System.IO.File.Exists(SavePath); actions.AddChild(load);
-        actions.AddChild(ui.Button("Internal console", () => GetTree().ChangeSceneToFile("res://Main.tscn")));
-        column.AddChild(ui.Watermark());
+        // The internal console is development tooling: reachable in debug builds, absent from a player's release build.
+        if (OS.IsDebugBuild()) actions.AddChild(ui.Button("Internal console", () => GetTree().ChangeSceneToFile("res://Main.tscn")));
         start.GrabFocus();
     }
     private Control Field(string label, Control input)
@@ -136,90 +145,153 @@ public partial class GameShell : Control
         // S1 top bar: one compact row spanning the window (approved Portal reference).
         topBar = new HBoxContainer { Name = "TopBar" }; topBar.AddThemeConstantOverride("separation", ShellLayout.BarGap);
         var bar = new PanelContainer { CustomMinimumSize = new Vector2(0, ShellLayout.TopBarHeight) };
-        bar.AddThemeStyleboxOverride("panel", Edge(ColorRole.SurfaceInset, bottom: true, horizontal: ShellLayout.ContentPadding, vertical: 6));
+        bar.AddThemeStyleboxOverride("panel", Surfaces.Bar(ui.Tokens, ShellLayout.ContentPadding, 6));
         bar.AddChild(topBar); frame.AddChild(bar);
         var body = new HBoxContainer { SizeFlagsVertical = SizeFlags.ExpandFill }; body.AddThemeConstantOverride("separation", 0); frame.AddChild(body);
-        navList = ui.Stack(); navList.AddThemeConstantOverride("separation", 4);
+        // The rail: identity, the navigation region (items spread evenly over the notice dock), Collapse. Containers place
+        // everything; no item has a fixed coordinate.
+        navList = new SpreadColumn { Name = "NavItems", SizeFlagsVertical = SizeFlags.ExpandFill, MinGap = ShellLayout.NavMinGap };
+        railIdentity = new VBoxContainer { Name = "RailIdentity", MouseFilter = MouseFilterEnum.Ignore }; railIdentity.AddThemeConstantOverride("separation", 6);
+        // The company's identity sits on the rail's header plate (the section-header material, cut at every corner): its
+        // lower inset line is the transition into navigation. Its inset matches the items', so the columns line up.
+        var identityPlate = new PanelContainer { Name = "RailIdentityPlate", MouseFilter = MouseFilterEnum.Ignore };
+        var plateStyle = Surfaces.Header(ui.Tokens, ShellLayout.NavInset, 6, Surfaces.CardCut); plateStyle.ContentMarginBottom += 3;
+        identityPlate.AddThemeStyleboxOverride("panel", plateStyle); identityPlate.AddChild(railIdentity);
+        navToggle = new Button { Name = "NavToggle", ThemeTypeVariation = "Nav", FocusMode = FocusModeEnum.All };
+        navToggle.AddThemeColorOverride("font_color", UiTheme.ToGodot(ui.Tokens.Color(ColorRole.TextSecondary)));
+        navToggle.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Annotation));
+        navToggle.Pressed += () => { navCollapsed = !navCollapsed; BuildNav(); BuildRailIdentity(portal); UpdateNav(); };
+        var rail = new VBoxContainer(); rail.AddThemeConstantOverride("separation", ShellLayout.RailGap);
+        rail.AddChild(identityPlate); rail.AddChild(navList); rail.AddChild(navToggle);
         nav = new PanelContainer { Name = "Rail", SizeFlagsHorizontal = SizeFlags.Fill };
-        nav.AddThemeStyleboxOverride("panel", Edge(ColorRole.SurfaceInset, right: true, horizontal: 8, vertical: 12));
-        nav.AddChild(navList); body.AddChild(nav);
+        nav.AddThemeStyleboxOverride("panel", Surfaces.Bar(ui.Tokens, ShellLayout.RailInset, ShellLayout.RailInsetVertical));
+        nav.AddChild(rail); body.AddChild(nav);
         var area = new Control { SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, ClipContents = true }; body.AddChild(area);
+        contentArea = area;
+        // Level 0: the room behind the panels. A faint cool light from the upper centre over blue-black graphite and a
+        // darker floor, so raised panels have something to sit above. Procedural, no art, no facts.
+        var room = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SurfaceBase));
+        var backdrop = Backdrop.Create(room, room.Lerp(UiTheme.ToGodot(ui.Tokens.Color(ColorRole.FrameStroke)), .08f), new Color(0, 0, 0, .35f),
+            new Backdrop.Glow(new(.55f, -.15f), .9f, UiTheme.ToGodot(ui.Tokens.Color(ColorRole.FrameHighlight)) with { A = .10f }));
+        backdrop.Name = "RoomBackdrop"; area.AddChild(backdrop); backdrop.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         content = new Control { Name = "Content" }; area.AddChild(content); content.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        // Stop reasons appear as a toast outside the layout. The development marker lives in the rail footer (BuildNav).
+        // Player feedback (warnings, rejections, save and load) appears as a toast outside the layout. Continue's own
+        // narration is not shown (Send): what changed reaches the player as decisions, news and the inbox.
         message = SemanticText.Create(ui, "", TypographyRole.Annotation, ColorRole.TextSecondary);
-        toast = new PanelContainer { Name = "Toast", Visible = false, MouseFilter = MouseFilterEnum.Ignore, CustomMinimumSize = new Vector2(360, 0) };
-        var toastBox = UiTheme.Box(ui.Tokens, ColorRole.SurfaceOverlay); toastBox.BorderColor = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.Divider));
-        toast.AddThemeStyleboxOverride("panel", toastBox); toast.AddChild(message);
-        // The toast sits over the top of the content (the Portal header band) so it never hides a decision or a value.
-        area.AddChild(toast); toast.SetAnchorsAndOffsetsPreset(LayoutPreset.CenterTop, LayoutPresetMode.KeepSize, ShellLayout.ContentPadding + 4);
-        toast.GrowHorizontal = GrowDirection.Both; toast.GrowVertical = GrowDirection.End;
+        message.MaxLinesVisible = 3; message.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
+        toast = new PanelContainer { Name = "Toast", Visible = false, MouseFilter = MouseFilterEnum.Pass };
+        toast.AddThemeStyleboxOverride("panel", SurfaceStyle.Create(Surfaces.Tag(UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SurfaceOverlay)), UiTheme.ToGodot(ui.Tokens.Color(ColorRole.Divider)), 0, 0).Spec
+            with { Cuts = Cuts.Diagonal(Surfaces.ControlCut) }, ui.Tokens.Space(SpaceRole.SpaceGroup), ui.Tokens.Space(SpaceRole.SpaceRelated)));
+        toast.AddChild(message);
         BuildNav();
     }
-    /// <summary>Flat shell surface with one divider edge; regions are separated by surfaces and lines, not boxes.</summary>
-    private StyleBoxFlat Edge(ColorRole surface, bool top = false, bool bottom = false, bool right = false, int horizontal = 0, int vertical = 0) => new()
-    {
-        BgColor = UiTheme.ToGodot(ui.Tokens.Color(surface)), BorderColor = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.Divider)),
-        BorderWidthTop = top ? 1 : 0, BorderWidthBottom = bottom ? 1 : 0, BorderWidthRight = right ? 1 : 0,
-        ContentMarginLeft = horizontal, ContentMarginRight = horizontal, ContentMarginTop = vertical, ContentMarginBottom = vertical
-    };
     private void BuildNav()
     {
+        toast.GetParent()?.RemoveChild(toast);
         ClearChildren(navList); navButtons.Clear(); navLabels.Clear(); navCounts.Clear();
-        nav.CustomMinimumSize = new Vector2(navCollapsed ? ShellLayout.RailCollapsedWidth : ShellLayout.RailWidth, 0);
         var roomy = ShellLayout.Roomy(GetViewportRect().Size);
+        nav.CustomMinimumSize = new Vector2(navCollapsed ? ShellLayout.RailCollapsedWidth(roomy) : ShellLayout.RailWidth(roomy), 0);
+        navList.MaxGap = ShellLayout.NavMaxGap(roomy);
+        var slotSize = new Vector2(ShellLayout.NavArt(roomy), ShellLayout.NavArt(roomy));
         for (var i = 0; i < Sections.Length; i++)
         {
             var (id, _, label) = Sections[i];
-            var button = new CardButton(12, 0) { ThemeTypeVariation = "Nav", Name = "Nav_" + id, TooltipText = $"{label} (Alt+{i + 1})",
-                MinimumHeight = ShellLayout.NavItemHeight(roomy) };
+            // One component per section: art slot, label, optional unread badge. Every state keeps the same height and inset.
+            var button = new CardButton(navCollapsed ? ShellLayout.NavInsetCollapsed : ShellLayout.NavInset, 0) { ThemeTypeVariation = "Nav", Name = "Nav_" + id,
+                TooltipText = $"{label} (Alt+{i + 1})", MinimumHeight = ShellLayout.NavItemHeight(roomy) };
             var row = CardButton.Passive(new HBoxContainer { SizeFlagsVertical = SizeFlags.ExpandFill, Alignment = navCollapsed ? BoxContainer.AlignmentMode.Center : BoxContainer.AlignmentMode.Begin });
-            row.AddThemeConstantOverride("separation", 12);
-            row.AddChild(UiIcon.Create(ui, IconFor(id), 22));
+            row.AddThemeConstantOverride("separation", ShellLayout.NavGap(roomy));
+            // The section's approved module art, drawn by its visible content at one perceived size. It sits straight on
+            // the item's own surface (flat, the hover plate or the brass selection): no housing or backdrop behind it, so
+            // its transparent canvas always reads as the rail. A missing asset shows the concept's own vector icon in the
+            // same fixed slot, which keeps every label on one column.
+            var slot = new CenterContainer { Name = "NavIcon", CustomMinimumSize = slotSize, MouseFilter = MouseFilterEnum.Ignore, SizeFlagsVertical = SizeFlags.ShrinkCenter };
+            slot.AddChild(SemanticAssets.ForSection(id) is { } concept
+                ? SemanticArt.Create(concept, slotSize, fitContent: true, optical: ShellLayout.NavOptical(roomy))
+                : UiIcon.Create(ui, id, (int)(slotSize.X * .6f)));
+            row.AddChild(slot);
             var name = SemanticText.Create(ui, label, TypographyRole.Label); name.AutowrapMode = TextServer.AutowrapMode.Off; name.Visible = !navCollapsed;
-            name.SizeFlagsVertical = SizeFlags.ShrinkCenter; row.AddChild(name);
-            name.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            // Unread count as a small pill so it reads as a count, not as part of the label.
+            name.SizeFlagsVertical = SizeFlags.ShrinkCenter; name.SizeFlagsHorizontal = SizeFlags.ExpandFill; row.AddChild(name);
+            // Unread count as a small pill at the item's right, so it reads as a count, not as part of the label.
             var count = SemanticText.Create(ui, "", TypographyRole.Strong, ColorRole.TextPrimary); count.AutowrapMode = TextServer.AutowrapMode.Off;
-            count.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Caption)); count.HorizontalAlignment = HorizontalAlignment.Center;
-            var pill = new StyleBoxFlat { BgColor = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SelectedSurface)) }; pill.SetCornerRadiusAll(UiTokens.CornerRadius * 2);
-            pill.ContentMarginLeft = pill.ContentMarginRight = 7; count.AddThemeStyleboxOverride("normal", pill);
-            count.SizeFlagsVertical = SizeFlags.ShrinkCenter; count.Visible = false; row.AddChild(count);
+            count.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Caption));
+            count.HorizontalAlignment = HorizontalAlignment.Center; count.VerticalAlignment = VerticalAlignment.Center;
+            count.AddThemeStyleboxOverride("normal", Surfaces.Tag(UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SelectedSurface)), Colors.Transparent, 6, 0));
+            count.CustomMinimumSize = new Vector2(24, 20); count.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
+            count.SizeFlagsVertical = SizeFlags.ShrinkCenter; count.Visible = false; count.Name = "NavCount"; row.AddChild(count);
             button.Body.AddChild(row); button.Body.SizeFlagsVertical = SizeFlags.ExpandFill;
             button.Pressed += () => Navigate(id);
             navButtons[id] = button; navLabels[id] = name; navCounts[id] = count; navList.AddChild(button);
         }
-        navList.AddChild(new Control { SizeFlagsVertical = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore });
-        if (DevelopmentMarker() is { } marker) navList.AddChild(marker);
-        var toggle = new Button { Name = "NavToggle", Text = navCollapsed ? "»" : "« Collapse", ThemeTypeVariation = "Nav", FocusMode = FocusModeEnum.All,
-            Alignment = navCollapsed ? HorizontalAlignment.Center : HorizontalAlignment.Left, CustomMinimumSize = new Vector2(0, 36),
-            TooltipText = navCollapsed ? "Expand navigation" : "Collapse navigation" };
-        toggle.AddThemeColorOverride("font_color", UiTheme.ToGodot(ui.Tokens.Color(ColorRole.TextSecondary)));
-        toggle.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Annotation));
-        toggle.Pressed += () => { navCollapsed = !navCollapsed; BuildNav(); UpdateNav(); };
-        navList.AddChild(toggle);
+        // Player notices (warnings, rejections, save and load) dock at the bottom of the rail's free space, above Collapse,
+        // where they never cover content; anchored there, a notice never makes the rail taller. The dock keeps room for two
+        // lines and takes whatever height the items' gaps leave. A collapsed rail has no room: the notice floats at the
+        // bottom right of the content instead.
+        var free = new Control { Name = "RailFree", MouseFilter = MouseFilterEnum.Ignore, ClipContents = true,
+            CustomMinimumSize = new Vector2(0, navCollapsed ? 0 : ShellLayout.NoticeDock) };
+        navList.AddChild(free); navList.Tail = free;
+        if (!navCollapsed)
+        {
+            toast.CustomMinimumSize = Vector2.Zero; free.AddChild(toast);
+            toast.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomWide, LayoutPresetMode.Minsize);
+            toast.GrowVertical = GrowDirection.Begin;
+        }
+        else
+        {
+            toast.CustomMinimumSize = new Vector2(360, 0); contentArea.AddChild(toast);
+            toast.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomRight, LayoutPresetMode.KeepSize, ShellLayout.ContentPadding + 4);
+            toast.GrowHorizontal = GrowDirection.Begin; toast.GrowVertical = GrowDirection.Begin;
+        }
+        navToggle.Text = navCollapsed ? "»" : "« Collapse";
+        navToggle.Alignment = navCollapsed ? HorizontalAlignment.Center : HorizontalAlignment.Left;
+        navToggle.TooltipText = navCollapsed ? "Expand navigation" : "Collapse navigation";
+        navToggle.CustomMinimumSize = new Vector2(0, ShellLayout.NavToggleHeight(roomy));
     }
-    /// <summary>The single development marker (thesis P5), in the rail footer where it never overlaps gameplay content.
-    /// Debug builds only: a release export (OS.IsDebugBuild() false) shows no marker at all.</summary>
-    private Control? DevelopmentMarker()
+    /// <summary>The company's identity heads the rail (reference layout): its generated arms by stable ID, the largest
+    /// identity mark in the shell, and the player's own name, uppercase, wrapping to two lines rather than being cut. No
+    /// generic descriptor repeats what every campaign is. A roomy rail stacks the arms above the name; a compact rail sets
+    /// the arms in the art column and the name on the label column, so the identity stays short and aligned with the
+    /// items. A collapsed rail keeps the arms only.</summary>
+    private void BuildRailIdentity(PortalView model)
     {
-        if (!OS.IsDebugBuild()) return null;
-        var box = new PanelContainer { Name = "DevelopmentMarker", TooltipText = PresentationText.DevelopmentWatermark, MouseFilter = MouseFilterEnum.Pass };
-        var frame = new StyleBoxFlat { DrawCenter = false, BorderColor = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.Divider)) };
-        frame.SetBorderWidthAll(1); frame.SetCornerRadiusAll(UiTokens.CornerRadius); frame.SetContentMarginAll(6);
-        box.AddThemeStyleboxOverride("panel", frame);
-        var text = SemanticText.Create(ui, navCollapsed ? "DEV" : "Development build\nNoncanonical fixture", TypographyRole.Caption, ColorRole.TextMuted);
-        text.AutowrapMode = TextServer.AutowrapMode.Off; text.HorizontalAlignment = navCollapsed ? HorizontalAlignment.Center : HorizontalAlignment.Left;
-        box.AddChild(text);
-        return box;
+        ClearChildren(railIdentity);
+        var roomy = ShellLayout.Roomy(GetViewportRect().Size);
+        var size = navCollapsed ? ShellLayout.CrestCollapsed : ShellLayout.CrestRail(roomy);
+        var crest = assets.Create(model.Company.CrestAssetId, new Vector2(size * 100f / 120, size)); crest.Name = "RailCrest";
+        crest.SizeFlagsHorizontal = SizeFlags.ShrinkCenter; crest.TooltipText = model.Company.Name;
+        var company = SemanticText.Create(ui, model.Company.Name.ToUpperInvariant(), TypographyRole.Strong); company.Name = "CompanyName";
+        // A trimmed name stays whole in its tooltip (the label takes hover for it, nothing else).
+        company.TooltipText = model.Company.Name; company.MouseFilter = MouseFilterEnum.Pass; company.Visible = !navCollapsed;
+        company.MaxLinesVisible = 2; company.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
+        if (model.Company.Name.Length > 16) company.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Annotation));
+        if (roomy || navCollapsed)
+        {
+            company.HorizontalAlignment = HorizontalAlignment.Center;
+            railIdentity.AddChild(crest); railIdentity.AddChild(company);
+            return;
+        }
+        var row = new HBoxContainer { Name = "RailIdentityRow", MouseFilter = MouseFilterEnum.Ignore };
+        row.AddThemeConstantOverride("separation", ShellLayout.NavGap(roomy));
+        var column = new CenterContainer { CustomMinimumSize = new Vector2(ShellLayout.NavArt(roomy), 0), MouseFilter = MouseFilterEnum.Ignore };
+        column.AddChild(crest); row.AddChild(column);
+        company.SizeFlagsVertical = SizeFlags.ShrinkCenter; row.AddChild(company);
+        railIdentity.AddChild(row);
     }
     private void UpdateNav()
     {
         var unread = view.Inbox.Count(x => !seenInbox.Contains(x.Id));
-        foreach (var (id, _, _) in Sections)
+        for (var i = 0; i < Sections.Length; i++)
         {
-            navCounts[id].Text = id == ShellSections.Inbox && unread > 0 ? unread.ToString(System.Globalization.CultureInfo.InvariantCulture) : "";
-            navCounts[id].Visible = !navCollapsed && navCounts[id].Text.Length > 0;
+            var (id, _, label) = Sections[i];
+            var count = id == ShellSections.Inbox ? unread : 0;
+            navCounts[id].Text = count > 0 ? count.ToString(System.Globalization.CultureInfo.InvariantCulture) : "";
+            navCounts[id].Visible = !navCollapsed && count > 0;
+            // The tooltip carries the unread count too, so it stays reachable on a collapsed rail, where the badge is hidden.
+            navButtons[id].TooltipText = count > 0 ? $"{label}: {count} unread (Alt+{i + 1})" : $"{label} (Alt+{i + 1})";
             navButtons[id].ThemeTypeVariation = id == section ? "NavSelected" : "Nav";
+            // The current section's label steps up to the semibold face; others stay quieter in secondary text.
+            navLabels[id].ThemeTypeVariation = id == section ? nameof(TypographyRole.Strong) : nameof(TypographyRole.Label);
+            ui.Tone(navLabels[id], id == section ? ColorRole.TextPrimary : ColorRole.TextSecondary);
             // The current section's icon takes the selection gold; the label stays high-contrast primary.
             if (Descendants(navButtons[id]).OfType<UiIcon>().FirstOrDefault() is { } icon)
                 icon.SetColor(UiTheme.ToGodot(ui.Tokens.Color(id == section ? ColorRole.ActionPrimary : ColorRole.TextSecondary)));
@@ -230,57 +302,53 @@ public partial class GameShell : Control
         ClearChildren(topBar);
         var roomy = ShellLayout.Roomy(GetViewportRect().Size);
         assets = new IdentityAssets(ui.Tokens, model.Company.CrestAssetId);
-        var identity = new HBoxContainer { Name = "Identity", SizeFlagsVertical = SizeFlags.ShrinkCenter }; identity.AddThemeConstantOverride("separation", 10);
-        identity.AddChild(assets.Create(model.Company.CrestAssetId, new Vector2(ShellLayout.CrestTopBar * 100f / 120, ShellLayout.CrestTopBar)));
-        var names = new VBoxContainer { SizeFlagsVertical = SizeFlags.ShrinkCenter }; names.AddThemeConstantOverride("separation", 0);
-        // The player's own name, in the reference's uppercase identity style; long names wrap to two lines instead of being cut.
-        var companyName = model.Company.Name;
-        var company = SemanticText.Create(ui, companyName.ToUpperInvariant(), TypographyRole.Strong); company.Name = "CompanyName"; company.TooltipText = companyName;
-        if (companyName.Length > 18) { company.CustomMinimumSize = new Vector2(roomy ? 260 : 190, 0); company.MaxLinesVisible = 2; company.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis; company.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Annotation)); }
-        else { company.AutowrapMode = TextServer.AutowrapMode.Off; company.SizeFlagsHorizontal = SizeFlags.ShrinkBegin; }
-        names.AddChild(company);
-        if (companyName.Length <= 18 || roomy) names.AddChild(Fixed(SemanticText.Create(ui, "ESPORTS ORGANIZATION", TypographyRole.Caption, ColorRole.TextMuted)));
-        identity.AddChild(names); topBar.AddChild(identity);
-        topBar.AddChild(Divider());
-        var phase = model.Time.Phase switch { SeasonPhase.FirstHalf => "First half", SeasonPhase.SecondHalf => "Second half", _ => "Season complete" };
-        var weeks = (model.Time.SeasonLength + PortalProjection.WeekLength - 1) / PortalProjection.WeekLength;
-        topBar.AddChild(Fact(null, $"SEASON {model.Time.Season}", $"Week {(model.Time.DayOfSeason - 1) / PortalProjection.WeekLength + 1} of {weeks}", ColorRole.TextPrimary));
-        topBar.AddChild(Divider());
-        topBar.AddChild(Fact("calendar", $"DAY {model.Time.DayOfSeason} / {model.Time.SeasonLength}", phase, ColorRole.TextSecondary, TypographyRole.Caption, valueFirst: true));
-        topBar.AddChild(Divider());
-        // Cash is a known value, not a state: neutral primary text. The financial condition carries the semantic colour.
-        var cash = Fact("cash", "CASH", PortalScreen.Cu(model.Finance.Cash), ColorRole.TextPrimary); cash.Name = "TopBarCash";
-        topBar.AddChild(cash);
-        topBar.AddChild(Divider());
+        BuildRailIdentity(model);
+        var time = model.Time;
+        var phase = time.Phase switch { SeasonPhase.FirstHalf => "First half", SeasonPhase.SecondHalf => "Second half", _ => "Season complete" };
+        var weeks = (time.SeasonLength + PortalProjection.WeekLength - 1) / PortalProjection.WeekLength;
+        // Two regions. A: the game state as one row of metrics (UI polish standard §6, top bar): each a caps label over a
+        // prominent value with subordinate context after it. Metrics keep their content width and share the free width as
+        // equal gaps, so the row spans the bar without dividers and without a large gap before the actions. B: the global
+        // actions grouped at the right, Continue last and strongest.
+        var info = new HBoxContainer { Name = "TopBarInfo", SizeFlagsHorizontal = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore };
+        info.AddThemeConstantOverride("separation", 0);
+        topBar.AddChild(info);
+        void Add(Control metric)
+        {
+            if (info.GetChildCount() > 0)
+                info.AddChild(new Control { Name = "MetricGap" + info.GetChildCount(), SizeFlagsHorizontal = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore,
+                    CustomMinimumSize = new Vector2(ShellLayout.MetricMinGap, 0) });
+            info.AddChild(metric);
+        }
+        var week = (time.DayOfSeason - 1) / PortalProjection.WeekLength + 1;
+        Add(Metric("TopBarSeason", "Season " + Figures.Count(time.Season), Value("Week " + Figures.Count(week), "TopBarWeek"), Context("of " + Figures.Count(weeks))));
+        // The day leads; the season length and the half are its context.
+        Add(Metric("TopBarDay", "Day", Value(Figures.Count(time.DayOfSeason), "TopBarDayValue"), Context("/ " + Figures.Count(time.SeasonLength)),
+            Break(), Context(phase, "TopBarPhase")));
+        // The next fixture where the bar has room (the Portal always shows it); a long name is bounded, never wrapped, and
+        // whole in the tooltip.
+        if (roomy && model.NextMatch is { } next)
+        {
+            var opponent = Value(next.Opponent.Name, "TopBarOpponent", TypographyRole.StatusValue);
+            var natural = Face(TypographyRole.StatusValue).GetStringSize(next.Opponent.Name, HorizontalAlignment.Left, -1, ui.Tokens.FontSize(TypographyRole.StatusValue)).X;
+            opponent.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
+            opponent.CustomMinimumSize = new Vector2(MathF.Ceiling(Math.Min(natural, ShellLayout.MetricTextMax)), 0);
+            var match = Metric("TopBarNextMatch", "Next match", opponent, Context(PortalScreen.Until(next.Day, time.Day), "TopBarMatchWhen"));
+            match.TooltipText = $"vs {next.Opponent.Name}, day {next.DayOfSeason}";
+            Add(match);
+        }
+        // Cash is a known value, not a state: neutral primary text, whole dollars (millions compact); the exact amount is in
+        // the tooltip. The financial condition carries the semantic colour.
+        var cash = Metric("TopBarCash", "Cash", Value(Currency.Compact(model.Finance.Cash), "TopBarCashValue"));
+        cash.TooltipText = $"Cash {Currency.Format(model.Finance.Cash)}, known and settled";
+        Add(cash);
         var (condition, tone) = PortalScreen.Condition(model.Finance.Condition);
-        var state = Fact("chart", roomy ? "FINANCIAL CONDITION" : "FINANCES", condition, tone); state.Name = "TopBarCondition";
-        topBar.AddChild(state);
-        topBar.AddChild(Divider());
-        var blocking = model.Decisions.Count(d => d.Urgency == TaskUrgency.Blocking);
-        var attention = new CardButton(6, 2) { Name = "Attention", ThemeTypeVariation = "Entity", SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
-            SizeFlagsVertical = SizeFlags.ShrinkCenter, TooltipText = PortalScreen.PendingText(model.Decisions.Length) };
-        var pending = new HBoxContainer(); pending.AddThemeConstantOverride("separation", 8);
-        pending.AddChild(UiIcon.Create(ui, "decisions", 22, ColorRole.TextSecondary));
-        var words = new VBoxContainer(); words.AddThemeConstantOverride("separation", 2);
-        words.AddChild(Fixed(SemanticText.Create(ui, roomy ? "PENDING DECISIONS" : "DECISIONS", TypographyRole.Caption, ColorRole.TextSecondary)));
-        // Badge tone follows urgency: critical only when something blocks, amber while matters are due, neutral when clear.
-        var badge = new PanelContainer { SizeFlagsHorizontal = SizeFlags.ShrinkBegin, Name = "TopBarDecisions" };
-        var badgeTone = blocking > 0 ? ColorRole.StateCritical : model.Decisions.IsEmpty ? ColorRole.SelectedSurface : ColorRole.StateWarning;
-        var badgeBox = new StyleBoxFlat { BgColor = UiTheme.ToGodot(model.Decisions.IsEmpty ? ui.Tokens.Color(badgeTone) : ui.Tokens.Color(badgeTone).Mix(ui.Tokens.Color(ColorRole.SurfaceBase), .55)) };
-        badgeBox.SetCornerRadiusAll(UiTokens.CornerRadius); badgeBox.ContentMarginLeft = badgeBox.ContentMarginRight = 7; badgeBox.ContentMarginTop = badgeBox.ContentMarginBottom = 0;
-        if (!model.Decisions.IsEmpty) { badgeBox.BorderColor = UiTheme.ToGodot(ui.Tokens.Color(badgeTone)); badgeBox.SetBorderWidthAll(1); }
-        badge.AddThemeStyleboxOverride("panel", badgeBox);
-        var count = model.Decisions.Length.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        var countLabel = Fixed(SemanticText.Create(ui, blocking > 0 ? $"{PresentationText.WarningMarker} {count}" : count, TypographyRole.Strong)); countLabel.Name = "TopBarDecisionCount";
-        badge.AddChild(countLabel);
-        words.AddChild(badge); pending.AddChild(words);
-        attention.Body.AddChild(CardButton.Passive(pending));
-        foreach (var child in Descendants(pending).OfType<Control>()) child.MouseFilter = MouseFilterEnum.Ignore;
-        attention.Pressed += () => Navigate(ShellSections.Portal);
-        topBar.AddChild(attention);
-        topBar.AddChild(new Control { SizeFlagsHorizontal = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore });
-        topBar.AddChild(BarButton("Save", "save", () => Notify(session!.Save("campaign").Message, false)));
-        topBar.AddChild(BarButton("Load", "load", () => { var r = session!.Load("campaign"); requestId = Composition.LastUiCommand(session); Refresh(); Notify(r.Message, !r.Accepted); }));
+        Add(Metric("TopBarCondition", roomy ? "Financial condition" : "Finances", Value(condition, "TopBarConditionValue", TypographyRole.StatusValue, tone)));
+        Add(PendingMetric(model, roomy));
+        var actions = new HBoxContainer { Name = "TopBarActions", MouseFilter = MouseFilterEnum.Ignore }; actions.AddThemeConstantOverride("separation", ShellLayout.BarGap);
+        topBar.AddChild(actions);
+        actions.AddChild(BarButton("Save", "save", () => Notify(session!.Save("campaign").Message, false)));
+        actions.AddChild(BarButton("Load", "load", () => { var r = session!.Load("campaign"); requestId = Composition.LastUiCommand(session); Refresh(); Notify(r.Message, !r.Accepted); }));
         var blocker = model.Decisions.FirstOrDefault(d => d.Urgency == TaskUrgency.Blocking && d.Section == ShellSections.Competition);
         continueButton = new CardButton(16, 4) { Name = "Continue", ThemeTypeVariation = "PrimaryAction", TooltipText = "Ctrl+Enter",
             SizeFlagsHorizontal = SizeFlags.ShrinkBegin, SizeFlagsVertical = SizeFlags.ShrinkCenter, MinimumWidth = roomy ? 192 : 148, MinimumHeight = 44 };
@@ -291,40 +359,85 @@ public partial class GameShell : Control
         go.AddChild(UiIcon.Create(ui, "arrow", 20, ColorRole.TextOnAction));
         ((CardButton)continueButton).Body.AddChild(go); ((CardButton)continueButton).Body.SizeFlagsVertical = SizeFlags.ExpandFill;
         continueButton.Pressed += Continue;
-        topBar.AddChild(continueButton);
+        actions.AddChild(continueButton);
     }
-    /// <summary>Top-bar fact: optional icon, uppercase caption, value in its semantic tone (reference layout).</summary>
-    private HBoxContainer Fact(string? icon, string caption, string value, ColorRole tone, TypographyRole valueRole = TypographyRole.Strong, bool valueFirst = false)
+    /// <summary>A top-bar metric: a caps label over one line of a prominent value and its subordinate context. Every item on
+    /// the line sits on the value face's baseline (<see cref="Seat"/>), and every line is one value line tall, so labels,
+    /// values and context form three straight rows across the bar whatever each metric holds.</summary>
+    private VBoxContainer Metric(string name, string label, params Control[] line)
     {
-        var row = new HBoxContainer { SizeFlagsVertical = SizeFlags.ShrinkCenter }; row.AddThemeConstantOverride("separation", 10);
-        if (icon is not null) row.AddChild(UiIcon.Create(ui, icon, 22, ColorRole.TextMuted));
-        var fact = new VBoxContainer { SizeFlagsVertical = SizeFlags.ShrinkCenter }; fact.AddThemeConstantOverride("separation", 1);
-        var head = Fixed(SemanticText.Create(ui, caption, valueFirst ? TypographyRole.Strong : TypographyRole.Caption, valueFirst ? ColorRole.TextPrimary : ColorRole.TextSecondary));
-        var tail = Fixed(SemanticText.Create(ui, value, valueFirst ? valueRole : TypographyRole.Strong, tone));
-        fact.AddChild(head); fact.AddChild(tail);
-        row.AddChild(fact);
-        return row;
+        var metric = new VBoxContainer { Name = name, SizeFlagsHorizontal = SizeFlags.ShrinkBegin, SizeFlagsVertical = SizeFlags.ShrinkCenter };
+        metric.AddThemeConstantOverride("separation", ShellLayout.MetricLabelGap);
+        var caption = SemanticText.Create(ui, label.ToUpperInvariant(), TypographyRole.MetricLabel, ColorRole.TextMuted);
+        caption.Name = name + "Label"; caption.AutowrapMode = TextServer.AutowrapMode.Off; caption.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        metric.AddChild(caption);
+        var row = new HBoxContainer { Name = name + "Line", MouseFilter = MouseFilterEnum.Ignore,
+            CustomMinimumSize = new Vector2(0, MathF.Ceiling(Face(TypographyRole.MetricValue).GetHeight(ui.Tokens.FontSize(TypographyRole.MetricValue)))) };
+        row.AddThemeConstantOverride("separation", ShellLayout.MetricContextGap);
+        foreach (var item in line) row.AddChild(item is Label text ? Seat(text) : item);
+        metric.AddChild(row);
+        return metric;
     }
-    private ColorRect Divider() => new()
+    /// <summary>The metric's value: semibold tabular figures (<see cref="TypographyRole.MetricValue"/>), or a word value
+    /// such as a status (<see cref="TypographyRole.StatusValue"/>). Tone is semantic only where the value is a state.</summary>
+    private Label Value(string text, string name, TypographyRole role = TypographyRole.MetricValue, ColorRole tone = ColorRole.TextPrimary)
     {
-        Color = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.Divider)), CustomMinimumSize = new Vector2(1, 36),
-        SizeFlagsVertical = SizeFlags.ShrinkCenter, MouseFilter = MouseFilterEnum.Ignore
-    };
+        var label = SemanticText.Create(ui, text, role, tone); label.Name = name.Length > 0 ? name : role.ToString();
+        label.AutowrapMode = TextServer.AutowrapMode.Off; label.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        return label;
+    }
+    /// <summary>Subordinate context after a value: smaller, regular, muted.</summary>
+    private Label Context(string text, string name = "", ColorRole tone = ColorRole.TextMuted) => Value(text, name, TypographyRole.MetricContext, tone);
+    /// <summary>A wider break between two pieces of context on one metric line.</summary>
+    private static Control Break() => new() { Name = "Break", MouseFilter = MouseFilterEnum.Ignore, CustomMinimumSize = new Vector2(ShellLayout.MetricContextGap, 0) };
+    private Font Face(TypographyRole role) => ui.Theme.GetFont("font", role.ToString());
+    /// <summary>Baseline seating: bottom-aligned on the metric line, raised by the difference between the value face's
+    /// descent and its own, so a 14 px context and a 16 px status share the 20 px value's baseline.</summary>
+    private MarginContainer Seat(Label label)
+    {
+        var role = Enum.Parse<TypographyRole>(label.ThemeTypeVariation);
+        var seat = new MarginContainer { Name = "Seat_" + label.Name, MouseFilter = MouseFilterEnum.Ignore, SizeFlagsVertical = SizeFlags.ShrinkEnd };
+        var lift = Face(TypographyRole.MetricValue).GetDescent(ui.Tokens.FontSize(TypographyRole.MetricValue)) - Face(role).GetDescent(ui.Tokens.FontSize(role));
+        seat.AddThemeConstantOverride("margin_bottom", (int)MathF.Round(lift));
+        seat.AddChild(label);
+        return seat;
+    }
+    /// <summary>Pending decisions as a metric like the others: the count (the Portal's own total of key decisions, so the
+    /// two never disagree) and what it means now. Amber only when a decision blocks Continue; zero reads as all clear. The
+    /// metric opens the Portal's key decisions.</summary>
+    private CardButton PendingMetric(PortalView model, bool roomy)
+    {
+        var total = model.Decisions.Length;
+        var blocking = model.Decisions.Count(d => d.Urgency == TaskUrgency.Blocking);
+        var due = model.Decisions.Where(d => d.DueDay is not null).Select(d => d.DueDay!.Value).DefaultIfEmpty(int.MaxValue).Min();
+        var (state, tone) = total == 0 ? ("all clear", ColorRole.TextMuted)
+            : blocking > 0 ? ($"{PresentationText.WarningMarker} {Figures.Count(blocking)} blocking", ColorRole.StateWarning)
+            : due == int.MaxValue ? ("open", ColorRole.TextMuted)
+            : due <= model.Time.Day ? ("due today", ColorRole.TextMuted)
+            : ("next due " + PortalScreen.Until(due, model.Time.Day), ColorRole.TextMuted);
+        var metric = Metric("TopBarDecisions", roomy ? "Pending decisions" : "Decisions",
+            Value(Figures.Capped(total), "TopBarDecisionCount", tone: total == 0 ? ColorRole.TextSecondary : ColorRole.TextPrimary),
+            Context(state, "TopBarDecisionState", tone));
+        var button = new CardButton(6, 2) { Name = "Attention", ThemeTypeVariation = "Entity", SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
+            SizeFlagsVertical = SizeFlags.ShrinkCenter,
+            TooltipText = PortalScreen.PendingText(total) + (blocking > 0 ? $"; {Figures.Count(blocking)} must be settled before Continue" : "") };
+        button.Body.AddChild(CardButton.Passive(metric));
+        foreach (var child in Descendants(metric).OfType<Control>().Prepend(metric)) child.MouseFilter = MouseFilterEnum.Ignore;
+        button.Pressed += () => Navigate(ShellSections.Portal);
+        return button;
+    }
+    /// <summary>A secondary global action: graphite plate, icon and a semibold label on the bar's action baseline.</summary>
     private CardButton BarButton(string text, string icon, Action action)
     {
         var button = new CardButton(12, 4) { Name = text, ThemeTypeVariation = "", SizeFlagsHorizontal = SizeFlags.ShrinkBegin, SizeFlagsVertical = SizeFlags.ShrinkCenter, MinimumHeight = 40 };
         var row = CardButton.Passive(new HBoxContainer { Alignment = BoxContainer.AlignmentMode.Center, SizeFlagsVertical = SizeFlags.ExpandFill });
         row.AddThemeConstantOverride("separation", 8);
         row.AddChild(UiIcon.Create(ui, icon, 18));
-        var label = SemanticText.Create(ui, text, TypographyRole.Label); label.AutowrapMode = TextServer.AutowrapMode.Off; label.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+        var label = SemanticText.Create(ui, text, TypographyRole.Strong); label.AutowrapMode = TextServer.AutowrapMode.Off; label.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         row.AddChild(label);
         button.Body.AddChild(row); button.Body.SizeFlagsVertical = SizeFlags.ExpandFill;
         button.Pressed += action;
         return button;
-    }
-    private static Label Fixed(Label label)
-    {
-        label.AutowrapMode = TextServer.AutowrapMode.Off; label.SizeFlagsHorizontal = SizeFlags.ShrinkBegin; return label;
     }
     /// <summary>Semantic state tone only; the shared component style is unchanged.</summary>
     private void Tone(Button button, ColorRole role)
@@ -341,12 +454,15 @@ public partial class GameShell : Control
     private Response Send(Decision decision)
     {
         var response = session!.Submit(new Request("ui:" + ++requestId, view.Revision, decision));
-        Refresh(); Notify(response.Message, !response.Accepted);
+        Refresh();
+        // Advancing time is acknowledged by what changed (decisions, news, the inbox count), not by narration.
+        if (!response.Accepted || decision is not AdvanceDecision) Notify(response.Message, !response.Accepted);
         return response;
     }
     private void Notify(string text, bool warning)
     {
         message.Text = (warning ? PresentationText.WarningMarker : PresentationText.NeutralMarker) + " " + text; message.Visible = text.Length > 0;
+        toast.TooltipText = text;
         toast.Visible = message.Visible;
         ui.Tone(message, warning ? ColorRole.StateWarning : ColorRole.TextPrimary);
         UiMotion.Highlight(ui, toast);
@@ -387,7 +503,7 @@ public partial class GameShell : Control
     private void OpenTarget(string target, string id)
     {
         if (view.Inbox.Any(r => r.Id == id)) seenInbox.Add(id);
-        if (target == ShellSections.Squad && view.People.Any(p => p.Id == id)) squadSelection = id;
+        if (target == ShellSections.Squad && (view.People.Any(p => p.Id == id) || view.Candidates.Any(c => c.Id == id))) squadSelection = id;
         if (target == ShellSections.Staff && view.CoachCandidates.Any(c => c.Id == id)) coachSelection = id;
         Navigate(target);
         if (target == ShellSections.Commercial && view.Offers.Any(o => o.Id == id && o.Availability == "Available")) OpenOffer(id);
@@ -412,26 +528,29 @@ public partial class GameShell : Control
         UiMotion.Reveal(ui, screen);
     }
 
-    /// <summary>Material commitments are confirmed in an overlay that keeps the shell visible behind it.</summary>
+    /// <summary>Material commitments are confirmed in an overlay that keeps the shell visible behind it: a premium region
+    /// whose header plate names the commitment (UI polish standard §4).</summary>
     private void Confirm(string title, string body, string action, Action commit)
     {
-        ShowOverlay(out var panel);
-        var stack = ui.Stack(); panel.AddChild(stack);
-        stack.AddChild(SectionHeader.Create(ui, title));
+        var stack = ShowOverlay(title);
         stack.AddChild(SemanticText.Create(ui, body));
         var buttons = ui.Flow(); stack.AddChild(buttons);
         var cancel = ui.Button("Cancel · Esc", CloseOverlay); cancel.Name = "ConfirmCancel"; buttons.AddChild(cancel);
         var confirm = ui.PrimaryButton(action, () => { CloseOverlay(); commit(); }); confirm.Name = "ConfirmAccept"; buttons.AddChild(confirm);
         cancel.GrabFocus();
     }
-    private void ShowOverlay(out PanelContainer panel)
+    private VBoxContainer ShowOverlay(string title)
     {
         ClearChildren(overlay); overlay.Visible = true;
         overlay.AddChild(new ColorRect { Color = new Color(0, 0, 0, 0.55f), MouseFilter = MouseFilterEnum.Stop });
         ((ColorRect)overlay.GetChild(0)).SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         var center = new CenterContainer(); overlay.AddChild(center); center.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        panel = new PanelContainer { ThemeTypeVariation = ColorRole.SurfaceOverlay.ToString() };
+        var roomy = ShellLayout.Roomy(GetViewportRect().Size);
+        var panel = PanelFrame.Major(ui, "ConfirmPanel", SectionHeader.Region(ui, "alert", title, roomy, "", null, ColorRole.ActionPrimary, FrameTier.Premium),
+            ShellLayout.RegionPadding(true), out var body, 12, FrameTier.Premium);
+        panel.SizeFlagsHorizontal = SizeFlags.ShrinkCenter; panel.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         panel.CustomMinimumSize = new Vector2(ui.Tokens.Size(SizeRole.ReadingMeasure) * 0.75f, 0); center.AddChild(panel);
+        return body;
     }
     private void CloseOverlay() { if (overlay is null) return; ClearChildren(overlay); overlay.Visible = false; }
 
@@ -442,7 +561,7 @@ public partial class GameShell : Control
         ClearChildren(overlay); overlay.Visible = true;
         var backdrop = new ColorRect { Color = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SurfaceBase)) };
         overlay.AddChild(backdrop); backdrop.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        var workspace = new SponsorWorkspaceView { Name = "OfferWorkspace" };
+        var workspace = new SponsorWorkspaceView { Name = "OfferWorkspace", ShowWatermark = false };
         var origin = new MapReturn(view.Company, MapFixtures.Business, "matter:" + offerId, true, "shell:commercial", 0);
         workspace.Configure(new SponsorPresenter(sponsors, sponsors.ObserveSponsors(), offerId, origin), () =>
         {

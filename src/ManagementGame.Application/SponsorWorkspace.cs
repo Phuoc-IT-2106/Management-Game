@@ -60,11 +60,11 @@ public static class SponsorProjection
             return new SponsorTerms(o.Id, o.Name, o.Deadline, signed?.EndDay ?? day + o.DurationDays - 1, o.Payment, o.WinBonus,
                 o.Load, o.MinimumReputation, preview is not null, reason, payments,
                 preview is null ? null : Simulation.Load(preview.Company, content.Balance, day),
-                preview is null ? null : Finance.Forecast(preview.Company, day),
+                preview is null ? null : Finance.Forecast(preview.Company, day, content.Balance.OperatingCost),
                 preview is null ? ImmutableArray<int>.Empty : LoadByDay(preview.Company));
         }).ToImmutableArray();
         return new(state.Execution.CampaignId, c.Id, c.Name, state.Execution.Revision, day,
-            Simulation.NextFixture(state)?.Day, c.Cash, Finance.Forecast(c, day),
+            Simulation.NextFixture(state)?.Day, c.Cash, Finance.Forecast(c, day, content.Balance.OperatingCost),
             Simulation.Load(c, content.Balance, day), c.Coach.Capacity, c.Reputation, offers, agreements,
             last, LoadByDay(c), w.Fixtures.Where(f => f.Day >= day && f.Day <= last).Select(f => f.Day).Order().ToImmutableArray(), content.Balance.SponsorSlots);
     }

@@ -1,0 +1,44 @@
+{
+  "format": "organization-definition-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "origin_path": "generated_synthetic",
+  "definition": {
+    "definition_id": "orgdef:trial:stone",
+    "definition_version": 1,
+    "display_name": "Synthetic Stone Organization",
+    "short_name": "STN",
+    "region_id": "region:trial",
+    "discipline_id": "discipline:lol-candidate",
+    "fidelity": "compressed",
+    "compressed_reference_id": "legacy-tier70-trial",
+    "initial_profile": {
+      "strength": 72,
+      "analysis": 45,
+      "adaptability": 60,
+      "posture": "aggressive",
+      "budget_points": 5,
+      "need": 1,
+      "profile_basis": "generated_scenario",
+      "unknown_reason": null
+    },
+    "provenance": {
+      "basis": "generated_scenario",
+      "source_ref": null,
+      "as_of": "2026-10-08T00:00:00Z",
+      "use_status": "example_only",
+      "license_ref": null,
+      "external_identities": [],
+      "confidence_status": "not_applicable_generated"
+    }
+  },
+  "source_facts": null,
+  "initialization": {
+    "organization_id": "org:trial:stone"
+  },
+  "evidence": {
+    "kind": "synthetic_hand_authored_not_seed_output",
+    "note": "Hand-authored synthetic scenario. Not seed output, production content, save data, or factual real-world ratings."
+  }
+}

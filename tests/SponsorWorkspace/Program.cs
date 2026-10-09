@@ -21,7 +21,7 @@ Check(snapshot.Offers.All(o => o.CanAccept) && offer.ScheduledPayments.Select(p 
 Check(Canonical.Hash(session.Capture()) == before, "projection preview cannot mutate state or consume RNG");
 var accepted = Simulation.Apply(session.Capture(), new AcceptSponsor(offer.OfferId), content.Definition, "test:preview").Company;
 Check(offer.LoadIfAccepted == Simulation.Load(accepted, content.Definition.Balance, snapshot.Day) && offer.LoadIfAccepted == snapshot.Load + offer.Load &&
-    offer.ForecastIfAccepted == Finance.Forecast(accepted, snapshot.Day), "if-accepted load and forecast match authoritative transition");
+    offer.ForecastIfAccepted == Finance.Forecast(accepted, snapshot.Day, content.Definition.Balance.OperatingCost), "if-accepted load and forecast match authoritative transition");
 var days = Enumerable.Range(snapshot.Day, snapshot.LastDay - snapshot.Day + 1).ToArray();
 Check(snapshot.LastDay == snapshot.Day + 27 && snapshot.SponsorSlots == content.Definition.Balance.SponsorSlots && snapshot.LoadByDay.SequenceEqual(days.Select(d => Simulation.Load(session.Capture().Company, content.Definition.Balance, d))) &&
     offer.LoadByDayIfAccepted.SequenceEqual(days.Select(d => Simulation.Load(accepted, content.Definition.Balance, d))), "daily load series use the authoritative load rule");
@@ -34,8 +34,8 @@ Check(JsonSerializer.Serialize(SponsorProjection.Build(hidden, content.Definitio
 Check(!JsonSerializer.Serialize(snapshot).Contains("Probability") && !JsonSerializer.Serialize(snapshot).Contains("Variance"), "no hidden resolver fields");
 Check(SponsorPresentation.Document(snapshot, offer).Sections.Any(s => s.Value.Contains("day 25")), "document renders Application dates");
 Check(SponsorPresentation.Forecast(snapshot).Information == InformationState.Estimated, "forecast explicitly estimated");
-Check(PresentationText.Resource(new("Future bonuses", 999, "CU", InformationState.Unknown, "future wins unknown")).Contains("Unknown") &&
-    !PresentationText.Resource(new("Future bonuses", 999, "CU", InformationState.Unknown, "future wins unknown")).Contains("999"), "unknown never zero or hidden numeric backing");
+Check(PresentationText.Resource(new("Future bonuses", 999, "USD", InformationState.Unknown, "future wins unknown")).Contains("Unknown") &&
+    !PresentationText.Resource(new("Future bonuses", 999, "USD", InformationState.Unknown, "future wins unknown")).Contains("999"), "unknown never zero or hidden numeric backing");
 var probe = new Probe(session); var presenter = Presenter(probe);
 Check(presenter.Handle(new("review", offer.OfferId, snapshot.Revision)), "review local draft");
 Check(Canonical.Hash(session.Capture()) == before && probe.Calls == 0, "review submits nothing");
@@ -93,8 +93,8 @@ var updatedMap = SponsorPresentation.Company(presenter.Snapshot, "live");
 Check(updatedMap.Situations.Any(m => m.Category == "Receipt" && m.DueDay == snapshot.Day + 3), "bounded Affairs receipt from actual scheduled item");
 var saveRoot = Path.GetFullPath("artifacts/sponsor-workspace/save-tests-" + Guid.NewGuid().ToString("N"));
 var store = new SnapshotStore(saveRoot, content); store.Save("signed", session.Capture()); var loaded = store.Load("signed");
-Check(Canonical.Hash(loaded) == committed && JsonSerializer.Serialize(New(loaded).ObserveSponsors()) == JsonSerializer.Serialize(presenter.Snapshot), "schema 2 save/load signed terms and schedule");
-Check(JsonDocument.Parse(File.ReadAllText(store.PrimaryPath("signed"))).RootElement.GetProperty("Schema").GetInt32() == 2, "continuous-season save schema");
+Check(Canonical.Hash(loaded) == committed && JsonSerializer.Serialize(New(loaded).ObserveSponsors()) == JsonSerializer.Serialize(presenter.Snapshot), "schema 4 save/load signed terms and schedule");
+Check(JsonDocument.Parse(File.ReadAllText(store.PrimaryPath("signed"))).RootElement.GetProperty("Schema").GetInt32() == 4, "rules v3 save schema 4 (transfer history)");
 var a = New(); var b = New(); var request = new Request("same", 0, new SponsorDecision(offer.OfferId));
 for(var i=0;i<10;i++) b.ObserveSponsors(); a.Submit(request); b.Submit(request);
 Check(Canonical.Hash(a.Capture()) == Canonical.Hash(b.Capture()), "same decisions deterministic despite extra queries");

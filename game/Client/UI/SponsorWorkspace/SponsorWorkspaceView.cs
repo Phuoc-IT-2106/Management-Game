@@ -13,6 +13,7 @@ public partial class SponsorWorkspaceView : Control
     private Control? layout;
     private VBoxContainer shell = null!, reading = null!, terms = null!, support = null!, evidence = null!;
     private HBoxContainer columns = null!;
+    private PanelContainer termsRegion = null!, evidenceRegion = null!;
     private Control filler = null!;
     private bool fitQueued;
     private HBoxContainer actions = null!;
@@ -27,7 +28,14 @@ public partial class SponsorWorkspaceView : Control
     public Dictionary<string, List<double>> Timings { get; } = [];
     /// <summary>Unused height inside the reading region; positive means dead space between content and actions.</summary>
     public float ReadingSlack => columns.Size.Y - ReadingContentHeight;
-    private float ReadingContentHeight => Math.Max(reading.GetCombinedMinimumSize().Y, evidence.GetCombinedMinimumSize().Y);
+    /// <summary>The taller reading column, including its region frame and header plate (UI polish standard): the content of
+    /// each scroll plus the chrome its region adds around it.</summary>
+    private float ReadingContentHeight => Math.Max(reading.GetCombinedMinimumSize().Y + Chrome(termsRegion, TermsScroll),
+        evidence.GetCombinedMinimumSize().Y + Chrome(evidenceRegion, EvidenceScroll));
+    private static float Chrome(Control region, Control scroll) => region.GetCombinedMinimumSize().Y - scroll.GetCombinedMinimumSize().Y;
+    /// <summary>The development watermark, for the standalone verification host only; the player-facing shell hides it
+    /// (development diagnostics stay out of player space).</summary>
+    public bool ShowWatermark { get; set; } = true;
     public void Configure(SponsorPresenter presenter, Action back) { Presenter = presenter; returned = back; }
     public override void _Ready() => Render();
     public override void _ExitTree() => returned = null;
@@ -47,16 +55,23 @@ public partial class SponsorWorkspaceView : Control
             heading.TooltipText = s.CompanyName; shell.AddChild(heading);
             shell.AddChild(SemanticText.Create(ui, "Business & Finance  /  Sponsorship  /  Commitment review", TypographyRole.Label));
             time = SemanticText.Create(ui, "", TypographyRole.Annotation, ColorRole.TextSecondary); shell.AddChild(time);
+            // Page header closes with the engraved rule and its brass lead (UI polish standard §5).
+            shell.AddChild(EngravedRule.Create(ui, accentLength: 56));
             // Reading region sizes to its content up to the available height, so the decision
             // follows the evidence directly; spare height collects below the actions instead.
             columns = new HBoxContainer { SizeFlagsVertical = SizeFlags.Fill }; shell.AddChild(columns);
-            TermsScroll = ReadingScroll(); EvidenceScroll = ReadingScroll(); columns.AddChild(TermsScroll); columns.AddChild(EvidenceScroll);
+            columns.AddThemeConstantOverride("separation", ui.Tokens.Space(SpaceRole.SpaceGroup));
+            TermsScroll = ReadingScroll(); EvidenceScroll = ReadingScroll();
+            // Each column is a region: the offer under review is the premium decision; the company trade-off is standard.
+            termsRegion = Region("TermsRegion", "contract", "Offer terms", "", FrameTier.Premium, TermsScroll);
+            evidenceRegion = Region("EvidenceRegion", "chart", "Company trade-off", "Is the scheduled income worth the ongoing delivery obligation?", FrameTier.Standard, EvidenceScroll);
+            columns.AddChild(termsRegion); columns.AddChild(evidenceRegion);
             reading = ui.Stack(); terms = ui.Stack(); support = ui.Stack(); evidence = ui.Stack();
             reading.AddChild(terms); reading.AddChild(support); TermsScroll.AddChild(reading); EvidenceScroll.AddChild(evidence);
             feedback = ValidationMessage.Create(ui, "", false); shell.AddChild(feedback);
             actions = new HBoxContainer(); shell.AddChild(actions);
             filler = new Control { SizeFlagsVertical = SizeFlags.ExpandFill, MouseFilter = MouseFilterEnum.Ignore }; shell.AddChild(filler);
-            shell.AddChild(ui.Watermark());
+            if (ShowWatermark) shell.AddChild(ui.Watermark());
             foreach (var region in new Control[] { reading, evidence, feedback, actions }) region.MinimumSizeChanged += QueueFit;
             Resized += QueueFit;
         }
@@ -71,7 +86,8 @@ public partial class SponsorWorkspaceView : Control
             Clear(terms); document = null; termsKey = nextTermsKey;
             if (o is not null)
             {
-                document = DocumentView.Create(ui, SponsorPresentation.Document(s, o)); terms.AddChild(document);
+                // The terms document is a nested plate inside the premium region, not a second frame.
+                document = DocumentView.Create(ui, SponsorPresentation.Document(s, o)); document.ThemeTypeVariation = nameof(ColorRole.SurfaceInset); terms.AddChild(document);
                 terms.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known, $"Limit: {s.SponsorSlots} active sponsors, including existing agreements. No termination action is supported."));
                 if (o.Availability != "Signed") terms.AddChild(ComparisonView.Create(ui, new("Accept", "Leave available",
                     [new("Income and obligation", SponsorPresentation.Money(o.Payment) + " each scheduled receipt; +" + o.Load + " ongoing load.",
@@ -88,8 +104,7 @@ public partial class SponsorWorkspaceView : Control
         if (evidenceKey != nextEvidenceKey)
         {
             Clear(evidence); Clear(support); evidenceKey = nextEvidenceKey;
-            evidence.AddChild(SectionHeader.Create(ui, "Company trade-off", "Is the scheduled income worth the ongoing delivery obligation?"));
-            evidence.AddChild(ResourceValue.Create(ui, new("Cash now", s.Cash / 100m, "CU", InformationState.Known, "Signing itself pays nothing now.")));
+            evidence.AddChild(ResourceValue.Create(ui, SponsorPresentation.Amount("Cash now", s.Cash, InformationState.Known, "Signing itself pays nothing now.")));
             evidence.AddChild(SemanticText.Create(ui, $"Load now: {s.Load} / capacity {s.Capacity}", TypographyRole.Data,
                 s.Load > s.Capacity ? ColorRole.StateWarning : ColorRole.TextPrimary));
             if (s.Load > s.Capacity)
@@ -166,6 +181,14 @@ public partial class SponsorWorkspaceView : Control
         var available = Size.Y - 2 * ui.Tokens.Space(SpaceRole.SpaceWorkspace) - others - shell.GetThemeConstant("separation") * (visible.Length - 1);
         var height = Math.Max(0, Math.Min(ReadingContentHeight, available));
         if (Math.Abs(columns.CustomMinimumSize.Y - height) > UiTokens.LayoutTolerance) columns.CustomMinimumSize = new Vector2(0, height);
+    }
+    /// <summary>A reading column framed as a region with its header plate; the scroll fills the region body.</summary>
+    private PanelContainer Region(string name, string icon, string title, string question, FrameTier tier, ScrollContainer scroll)
+    {
+        var header = SectionHeader.Region(ui, icon, title, false, question, null, ColorRole.ActionPrimary, tier); header.TooltipText = question;
+        var region = PanelFrame.Major(ui, name, header, 7, out var body, 6, tier);
+        body.AddChild(scroll);
+        return region;
     }
     private static void Clear(Node region)
     {

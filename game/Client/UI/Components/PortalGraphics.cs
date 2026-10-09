@@ -42,42 +42,9 @@ public partial class SegmentBar : Control
     }
 }
 
-/// <summary>One stretch of a week timeline: a line through the column and a node; adjacent columns join into one line.</summary>
-public partial class TimelineNode : Control
-{
-    private bool current; private Color line, node;
-    public static TimelineNode Create(UiContext ui, bool current) => new()
-    {
-        current = current, CustomMinimumSize = new Vector2(0, 12), MouseFilter = MouseFilterEnum.Ignore, SizeFlagsHorizontal = SizeFlags.ExpandFill,
-        line = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.SelectedSurface)), node = UiTheme.ToGodot(ui.Tokens.Color(current ? ColorRole.StatePositive : ColorRole.TextMuted))
-    };
-    public override void _Draw()
-    {
-        var y = Size.Y / 2;
-        DrawLine(new Vector2(0, y), new Vector2(Size.X, y), line, 2);
-        DrawCircle(new Vector2(Size.X / 2, y), current ? 5 : 4, node);
-    }
-}
-
-/// <summary>Event marker: filled for a material commitment, hollow for a routine one. Shape carries the meaning.</summary>
-public partial class EventMarker : Control
-{
-    private bool material; private Color color;
-    public static EventMarker Create(UiContext ui, bool material, ColorRole tone) => new()
-    {
-        material = material, color = UiTheme.ToGodot(ui.Tokens.Color(tone)), CustomMinimumSize = new Vector2(10, 10),
-        MouseFilter = MouseFilterEnum.Ignore, SizeFlagsVertical = SizeFlags.ShrinkBegin
-    };
-    public override void _Draw()
-    {
-        var c = Size / 2; var r = Math.Min(Size.X, Size.Y) / 2 - 1;
-        if (material) DrawCircle(c, r, color); else DrawArc(c, r - .5f, 0, Mathf.Tau, 20, color, 1.5f, true);
-    }
-}
-
-/// <summary>Procedural atmosphere for a staged region (Portal hero, match stage): a horizontal wash, soft light pools and
+/// <summary>Procedural atmosphere for a staged region (the match stage): a horizontal wash, soft light pools and
 /// a floor shade. It carries no facts, names or values; identity colours come from the asset catalog by stable ID.
-/// It stands in for approved environment art until such art exists (see IdentityAssets.Environment).</summary>
+/// It is not art and stands in for no particular place.</summary>
 public partial class Backdrop : Control
 {
     public readonly record struct Glow(Vector2 At, float Radius, Color Color);
@@ -107,5 +74,24 @@ public partial class Backdrop : Control
         }
         var clear = new Color(shade, 0);
         DrawPolygon([new(0, Size.Y * .55f), new(Size.X, Size.Y * .55f), Size, new(0, Size.Y)], [clear, clear, shade, shade]);
+    }
+}
+
+/// <summary>The direction of a move between its two sides (origin → destination): a steel hairline ending in an open
+/// arrowhead, drawn to the width it is given. It always points from the first side to the second and carries no colour
+/// meaning; the sides' names say what moved where.</summary>
+public partial class JourneyArrow : Control
+{
+    private Color tone;
+    public static JourneyArrow Create(UiContext ui, int length, int height) => new()
+    {
+        tone = UiTheme.ToGodot(ui.Tokens.Color(ColorRole.TextMuted)), CustomMinimumSize = new Vector2(length, height),
+        MouseFilter = MouseFilterEnum.Ignore, SizeFlagsHorizontal = SizeFlags.ShrinkCenter, SizeFlagsVertical = SizeFlags.ShrinkCenter
+    };
+    public override void _Draw()
+    {
+        var y = Mathf.Floor(Size.Y / 2) + .5f; var tip = Size.X - 1.5f; var head = Math.Min(5f, Size.Y / 2 - 1);
+        DrawLine(new Vector2(1, y), new Vector2(tip, y), tone, 1.5f, true);
+        DrawPolyline([new Vector2(tip - head, y - head), new Vector2(tip, y), new Vector2(tip - head, y + head)], tone, 1.5f, true);
     }
 }

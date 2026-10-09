@@ -16,6 +16,12 @@ Status: DEVELOPMENT / NONCANONICAL, 2026-10-07. Director review pending.
   12/14/16/20/24/32/48, gold only for Continue/Commit, no CSS caps outside buttons, no
   truncation, must-see elements inside 720px, no " · " chaining).
 
+- `mockups/generated-reference-set/11_portal_world_transfer_graphite_mockup.png` — **latest approved Portal reference**
+  (2026-10-07, user-supplied): key decisions, world news beside transfer news, next match / season record / money,
+  graphite-steel-brass family. Composition only; its names and values are not data. The
+  `portal-world-transfer-v2/` folder holds a WebP copy with the user's direction notes. Implemented in the
+  [genre shell](../genre-shell/README.md).
+
 Open the HTML files in a browser. Match results in the mockup are illustrative and use
 the `Competition.Resolve` formula. No game code, content or save schema changed.
 Next step (not started): port tokens/type scale to `UiTokens`, remove rail glyphs in

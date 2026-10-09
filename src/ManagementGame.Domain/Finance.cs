@@ -4,19 +4,25 @@ namespace ManagementGame.Domain;
 
 public static class Finance
 {
-    public static Company AddSponsor(Company c, Offer offer, int day, string contractId)
+    public const string OperationsCause = "operations";
+
+    public static Company AddSponsor(Company c, Offer offer, int day, string contractId, int forfeitLimit)
     {
-        var contract = new SponsorContract(contractId, offer.BrandId, offer.Name, day, day + offer.DurationDays - 1, offer.Load, offer.WinBonus, offer.Payment);
+        var contract = new SponsorContract(contractId, offer.BrandId, offer.Name, day, day + offer.DurationDays - 1, offer.Load, offer.WinBonus, offer.Payment, forfeitLimit);
         var items = c.FinancialItems;
         for (var due = day + 3; due <= contract.EndDay; due += 7)
             items = items.Add(new FinancialItem($"{contract.Id}:day:{due}", contract.Id, due, offer.Payment, true, offer.Payment, null));
         return c with { Sponsors = c.Sponsors.Add(contract), FinancialItems = items };
     }
 
-    /// <summary>Wages fall due one day at a time for every contract still running; nothing is scheduled beyond today.</summary>
-    public static Company Payroll(Company c, int day)
+    /// <summary>Wages fall due one day at a time for every contract still running, and the fixed running cost (office,
+    /// league registration) every day whatever the headcount; nothing is scheduled beyond today.</summary>
+    public static Company Payroll(Company c, int day, long operatingCost)
     {
         var items = c.FinancialItems;
+        var operations = $"{OperationsCause}:day:{day}";
+        if (operatingCost > 0 && !items.Any(x => x.Id == operations))
+            items = items.Add(new FinancialItem(operations, OperationsCause, day, operatingCost, false, operatingCost, null));
         foreach (var contract in c.Employment.Where(e => e.EndDay >= day).OrderBy(e => e.Id, StringComparer.Ordinal))
         {
             var id = $"{contract.Id}:day:{day}";
@@ -44,26 +50,41 @@ public static class Finance
         return c with { Cash = cash, FinancialItems = items, Settlements = ledger };
     }
 
-    public static Company Consume(Company c, CompetitiveOutcome outcome, Fixture fixture)
+    /// <summary>Registered players below the league minimum on a match day (0 when the roster meets it).</summary>
+    public static int Shortfall(Company c, int minimumRoster) => Math.Max(0, minimumRoster - c.People.Length);
+
+    /// <summary>The league fine for a match played below the registered-roster minimum: a share of the match's prize.</summary>
+    public static long ShortfallFine(Fixture fixture, Balance b) => Numbers.Divide(fixture.Prize * b.ShortfallFinePercent, 100);
+
+    /// <summary>A match's money: the prize for a win and each sponsor's win bonus, due tomorrow. A roster below the league
+    /// minimum earns no prize and owes the league its fine, win or lose.</summary>
+    public static Company Consume(Company c, CompetitiveOutcome outcome, Fixture fixture, Balance b)
     {
         if (c.FinanceReceipts.Contains(outcome.Id)) return c;
         var items = c.FinancialItems;
-        if (outcome.Won && fixture.Prize > 0)
+        var shortfall = Shortfall(c, b.MinimumRoster) > 0;
+        if (outcome.Won && fixture.Prize > 0 && !shortfall)
             items = items.Add(new FinancialItem("prize:" + outcome.Id, outcome.Id, outcome.Day + 1, fixture.Prize, true, fixture.Prize, null));
+        if (shortfall && ShortfallFine(fixture, b) is > 0 and var fine)
+            items = items.Add(new FinancialItem("fine:" + outcome.Id, outcome.Id, outcome.Day + 1, fine, false, fine, null));
         foreach (var sponsor in c.Sponsors.Where(s => s.EndDay >= outcome.Day && outcome.Won && s.WinBonus > 0))
             items = items.Add(new FinancialItem($"bonus:{sponsor.Id}:{outcome.Id}", outcome.Id, outcome.Day + 1,
                 sponsor.WinBonus, true, sponsor.WinBonus, null));
         return c with { FinancialItems = items, FinanceReceipts = c.FinanceReceipts.Add(outcome.Id) };
     }
 
-    /// <summary>Cash plus scheduled items, plus wages the running contracts will incur inside the window.</summary>
-    public static long Forecast(Company c, int day, int horizon = 7)
+    /// <summary>Cash plus scheduled items, minus the wages running contracts and the fixed running cost will incur inside
+    /// the window.</summary>
+    public static long Forecast(Company c, int day, long operatingCost, int horizon = 7)
     {
         var scheduled = c.FinancialItems.Where(x => x.DueDay <= day + horizon).Sum(x => x.Incoming ? x.Remaining : -x.Remaining);
         long payroll = 0;
         for (var d = day; d <= day + horizon; d++)
+        {
             foreach (var contract in c.Employment.Where(e => e.EndDay >= d))
                 if (!c.FinancialItems.Any(x => x.Id == $"{contract.Id}:day:{d}")) payroll += contract.Salary;
+            if (!c.FinancialItems.Any(x => x.Id == $"{OperationsCause}:day:{d}")) payroll += operatingCost;
+        }
         return checked(c.Cash + scheduled - payroll);
     }
 

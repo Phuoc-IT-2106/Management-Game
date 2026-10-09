@@ -1,5 +1,8 @@
 # Rules v2 — continuous campaign, negotiated sponsorship, generated world
 
+> **Extended by [rules v3 wave 1](RULES_V3_INCENTIVES.md)** (2026-10-08): `slice-rules-v3`, content and save schema 3.
+> The balance findings below are measured there; wave 1 addresses the first two.
+
 Status: **ACTIVE — explicit user instruction**, 2026-10-06 (Asia/Saigon). Replaces the
 28-day bounded fixture rules (`slice-rules-v1`) with `slice-rules-v2`, content schema 2
 and save schema 2. All numbers remain NONCANONICAL DEVELOPMENT FIXTURE values.

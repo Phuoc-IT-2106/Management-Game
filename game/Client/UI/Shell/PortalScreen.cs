@@ -3,19 +3,21 @@ using System.Globalization;
 using Godot;
 using ManagementGame.Application;
 using ManagementGame.UiKit;
+using ManagementGame.Formatting;
 
 namespace ManagementGame.Shell;
 
-/// <summary>Portal (genre shell S4) composed after the approved reference (generated-reference-set/01_portal_mockup).
-/// Built only from <see cref="PortalView"/>: it never reads Domain state, never invents content, and routes by section
-/// plus stable target ID, never by display text. Regions live in the PortalScreen.*.cs partial files.</summary>
+/// <summary>Portal (genre shell S4) composed after the approved reference
+/// (generated-reference-set/11_portal_world_transfer_graphite_mockup): key decisions, then world news beside transfer
+/// news, then next match, season record and money. Built only from <see cref="PortalView"/>: it never reads Domain
+/// state, never invents content, and routes by section plus stable target ID, never by display text. Regions live in
+/// the PortalScreen.*.cs partial files.</summary>
 public static partial class PortalScreen
 {
+    /// <summary>Navigation and Portal-local view state.</summary>
     public sealed record Routes(Action<string, string> Open, Func<string, bool> Unread, Action ToggleDecisions, bool DecisionsExpanded);
 
     private static readonly CultureInfo Invariant = CultureInfo.InvariantCulture;
-    public static string Cu(long minor) => (minor < 0 ? "−" : "") + Math.Abs(minor / 100m).ToString("N0", Invariant) + " CU";
-    public static string Signed(long minor) => (minor < 0 ? "−" : "+") + Math.Abs(minor / 100m).ToString("N0", Invariant) + " CU";
     public static string Until(int day, int today) => (day - today) switch { < 0 => $"{today - day} days ago", 0 => "today", 1 => "tomorrow", var n => $"in {n} days" };
     /// <summary>The one wording for the pending-decision total, shared by the top bar and the Portal.</summary>
     public static string PendingText(int count) => count == 1 ? "1 pending decision" : $"{count} pending decisions";
@@ -29,14 +31,17 @@ public static partial class PortalScreen
         foreach (var edge in new[] { "left", "right", "top", "bottom" }) margin.AddThemeConstantOverride("margin_" + edge, ShellLayout.ContentPadding);
         scroll.AddChild(margin);
         var page = Stack(ShellLayout.SectionGap); page.SizeFlagsVertical = Control.SizeFlags.ExpandFill; margin.AddChild(page);
-        page.AddChild(Hero(ui, assets, m, roomy));
-        page.AddChild(Decisions(ui, m, roomy, routes));
-        var lower = new HBoxContainer { Name = "Portal_Lower", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, SizeFlagsVertical = Control.SizeFlags.ExpandFill };
-        lower.AddThemeConstantOverride("separation", ShellLayout.SectionGap);
-        page.AddChild(lower);
-        lower.AddChild(Column(ShellLayout.NewsShare, News(ui, assets, m, roomy, routes)));
-        lower.AddChild(Column(ShellLayout.MatchShare, Share(Match(ui, assets, m, roomy, routes), ShellLayout.MatchUpperShare), Share(Record(ui, assets, m, roomy), 1 - ShellLayout.MatchUpperShare)));
-        lower.AddChild(Column(ShellLayout.OperationsShare, Share(Horizon(ui, m, roomy, routes), ShellLayout.OperationsUpperShare), Share(Money(ui, m, roomy, routes), 1 - ShellLayout.OperationsUpperShare)));
+        page.AddChild(Decisions(ui, assets, m, roomy, routes));
+        var middle = Row(ShellLayout.SectionGap); middle.Name = "Portal_Middle"; middle.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+        middle.AddChild(Share(News(ui, assets, m, roomy, routes), ShellLayout.WorldNewsShare));
+        middle.AddChild(Share(Transfers(ui, assets, m, roomy, routes), ShellLayout.TransferShare));
+        page.AddChild(middle);
+        var bottom = Row(ShellLayout.SectionGap); bottom.Name = "Portal_Bottom";
+        bottom.CustomMinimumSize = new(0, ShellLayout.BottomBandHeight(roomy)); bottom.SizeFlagsVertical = Control.SizeFlags.Fill;
+        bottom.AddChild(Share(Match(ui, assets, m, roomy, routes), ShellLayout.MatchShare));
+        bottom.AddChild(Share(Record(ui, m, roomy), ShellLayout.RecordShare));
+        bottom.AddChild(Share(Money(ui, m, roomy, routes), ShellLayout.MoneyShare));
+        page.AddChild(bottom);
         return scroll;
     }
 
@@ -69,50 +74,29 @@ public static partial class PortalScreen
     /// <summary>Category labels follow the reference: an uppercase semibold caption in a semantic or secondary tone.</summary>
     private static Label Caps(UiContext ui, string text, ColorRole tone = ColorRole.TextSecondary) =>
         Text(ui, text.ToUpper(Invariant), TypographyRole.Strong, tone, wrap: false, size: TypographyRole.Caption);
-    private static VBoxContainer Column(float share, params Control[] children)
-    {
-        var column = Stack(ShellLayout.SectionGap); column.SizeFlagsStretchRatio = share; column.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
-        foreach (var child in children) column.AddChild(child);
-        return column;
-    }
     private static Control Share(Control c, float share) { c.SizeFlagsStretchRatio = share; return c; }
-    private static StyleBoxFlat Fill(Color color, int margin, Color? border = null)
-    {
-        var box = new StyleBoxFlat { BgColor = color };
-        box.SetCornerRadiusAll(UiTokens.CornerRadius); box.SetContentMarginAll(margin);
-        if (border is { } edge) { box.BorderColor = edge; box.SetBorderWidthAll(1); }
-        return box;
-    }
     private static Color Tone(UiContext ui, ColorRole role) => UiTheme.ToGodot(ui.Tokens.Color(role));
-    private static ColorRect Rule(UiContext ui, bool vertical = false) => new()
+    private static Control Rule(UiContext ui, bool vertical = false) => EngravedRule.Create(ui, vertical);
+    /// <summary>A small status chip (a utility tag): the words carry the meaning, the tone supports it (never colour alone).</summary>
+    private static PanelContainer Chip(UiContext ui, string text, ColorRole tone, bool filled = true)
     {
-        Color = Tone(ui, ColorRole.Divider), CustomMinimumSize = vertical ? new(1, 0) : new(0, 1), MouseFilter = Control.MouseFilterEnum.Ignore,
-        SizeFlagsVertical = vertical ? Control.SizeFlags.Fill : Control.SizeFlags.ShrinkBegin
-    };
-    /// <summary>One region per gameplay question on the raised workspace tier: icon, title, optional context and one route
-    /// above a divider. Rows inside use the inset tier or no surface at all, so regions are never nested cards.</summary>
-    private static PanelContainer Region(UiContext ui, string name, string icon, string title, bool roomy, out VBoxContainer body, string context = "",
-        Control? action = null, ColorRole iconTone = ColorRole.TextPrimary)
-    {
-        var stack = Stack(roomy ? 10 : 5);
-        var head = Row(10);
-        head.AddChild(UiIcon.Create(ui, icon, ShellLayout.RegionIcon(roomy), iconTone));
-        head.AddChild(Text(ui, title, TypographyRole.SectionTitle, wrap: false));
-        head.AddChild(Spacer());
-        if (context.Length > 0) { var note = Text(ui, context, TypographyRole.Caption, ColorRole.TextMuted, wrap: false); note.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter; head.AddChild(note); }
-        if (action is not null) head.AddChild(action);
-        stack.AddChild(head);
-        stack.AddChild(Rule(ui));
-        body = Stack(roomy ? 10 : 8); body.SizeFlagsVertical = Control.SizeFlags.ExpandFill; stack.AddChild(body);
-        var panel = new PanelContainer { Name = name, SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, SizeFlagsVertical = Control.SizeFlags.ExpandFill };
-        panel.AddThemeStyleboxOverride("panel", Fill(Tone(ui, ColorRole.SurfaceRaised), ShellLayout.RegionPadding(roomy), Tone(ui, ColorRole.Divider)));
-        panel.AddChild(stack);
-        return panel;
+        var chip = new PanelContainer { SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin, SizeFlagsVertical = Control.SizeFlags.ShrinkCenter, MouseFilter = Control.MouseFilterEnum.Ignore };
+        var color = Tone(ui, tone);
+        chip.AddThemeStyleboxOverride("panel", Surfaces.Tag(filled ? Tone(ui, ColorRole.SurfaceInset).Lerp(color, .18f) : Colors.Transparent,
+            color.Lerp(Tone(ui, ColorRole.SurfaceRaised), .35f), 7, 1));
+        chip.AddChild(Text(ui, text, TypographyRole.Strong, tone, wrap: false, size: TypographyRole.Caption));
+        return chip;
     }
-    /// <summary>Text route with a trailing arrow ("View all →"), keyboard focusable.</summary>
-    private static CardButton Link(UiContext ui, string name, string text, Action act, ColorRole tone = ColorRole.TextSecondary)
+    /// <summary>One region per gameplay question: a level-1 major frame (PanelFrame.Major) whose header band is the shared
+    /// SectionHeader.Region; content sits on level-2 plates inside, so regions are never flat boxes of text.</summary>
+    private static PanelContainer Region(UiContext ui, string name, string icon, string title, bool roomy, out VBoxContainer body, string context = "",
+        Control? action = null, ColorRole iconTone = ColorRole.ActionPrimary) =>
+        PanelFrame.Major(ui, name, SectionHeader.Region(ui, icon, title, roomy, context, action, iconTone, ShellLayout.RegionTier(name)), ShellLayout.RegionPadding(roomy),
+            out body, roomy ? 10 : 6, ShellLayout.RegionTier(name));
+    /// <summary>Route with a trailing arrow ("View all →"): a small graphite-and-steel secondary button, keyboard focusable.</summary>
+    private static CardButton Link(UiContext ui, string name, string text, Action act, ColorRole tone = ColorRole.TextPrimary)
     {
-        var link = new CardButton(6, 2) { Name = name, ThemeTypeVariation = "Entity", SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd, SizeFlagsVertical = Control.SizeFlags.ShrinkCenter };
+        var link = new CardButton(9, 2) { Name = name, ThemeTypeVariation = "", SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd, SizeFlagsVertical = Control.SizeFlags.ShrinkCenter }.Compact();
         var row = CardButton.Passive(Row(6));
         row.AddChild(Text(ui, text, TypographyRole.Annotation, tone, wrap: false));
         row.AddChild(UiIcon.Create(ui, "arrow", 14, tone));
@@ -120,64 +104,26 @@ public static partial class PortalScreen
         link.Pressed += act;
         return link;
     }
-    /// <summary>Intentional empty state: what is absent and when it will appear. Never filler content.</summary>
-    private static Control Empty(UiContext ui, string icon, string message, string detail = "")
+    /// <summary>Intentional empty state on a level-2 plate: a status indicator in a recessed well (its tone says whether the
+    /// absence is good news), the primary message, then the supporting line. Compact; never filler content or art.</summary>
+    private static Control Empty(UiContext ui, string icon, string message, string detail = "", ColorRole status = ColorRole.TextMuted)
     {
-        var row = Row(12); row.Name = "EmptyState"; row.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
-        row.AddChild(UiIcon.Create(ui, icon, 24, ColorRole.TextMuted));
-        var words = Stack(2); words.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
-        words.AddChild(Text(ui, message, TypographyRole.Label, ColorRole.TextSecondary));
+        var plate = PanelFrame.Card(ui, 12, 8); plate.Name = "EmptyState"; plate.SizeFlagsVertical = Control.SizeFlags.ShrinkBegin;
+        var row = Row(12); plate.AddChild(row);
+        var badge = PanelFrame.Well(ui); badge.CustomMinimumSize = new(34, 34); badge.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        var glyph = new CenterContainer { MouseFilter = Control.MouseFilterEnum.Ignore }; glyph.AddChild(UiIcon.Create(ui, icon, 18, status)); badge.AddChild(glyph);
+        row.AddChild(badge);
+        var words = Stack(1); words.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        words.AddChild(Text(ui, message, TypographyRole.Strong, ColorRole.TextPrimary));
         if (detail.Length > 0) words.AddChild(Text(ui, detail, TypographyRole.Annotation, ColorRole.TextMuted));
         row.AddChild(words);
-        return row;
-    }
-
-    // ---------- hero ----------
-    /// <summary>The Portal title over the company's atmosphere. The environment slot resolves through the asset catalog;
-    /// until approved art exists it is a procedural wash and light pool in the company's own colour, so it never carries
-    /// a fixed name, logo or value. The crest is the company's generated arms, by stable ID.</summary>
-    private static Control Hero(UiContext ui, IdentityAssets assets, PortalView m, bool roomy)
-    {
-        var panel = new PanelContainer { Name = "Portal_Header", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-            CustomMinimumSize = new(0, ShellLayout.HeaderHeight(roomy)), ClipContents = true };
-        var surface = Tone(ui, ColorRole.SurfaceRaised);
-        panel.AddThemeStyleboxOverride("panel", Fill(surface, 0, Tone(ui, ColorRole.Divider)));
-        var club = UiTheme.ToGodot(assets.TeamColor(m.Company.CrestAssetId));
-        var environment = IdentityAssets.Environment("portal");
-        var backdrop = Backdrop.Create(surface, surface.Lerp(club, .5f), Tone(ui, ColorRole.SurfaceBase).Lerp(surface, .3f) with { A = .55f },
-            new Backdrop.Glow(new(.93f, .5f), 1.15f, club.Lightened(.35f) with { A = .45f }),
-            new Backdrop.Glow(new(.7f, 1.05f), 1f, club with { A = .25f }));
-        backdrop.Name = "PortalEnvironment"; backdrop.SetMeta("asset_id", environment); backdrop.SetMeta("asset_resolution", IdentityAssets.Resolve(environment));
-        panel.AddChild(backdrop);
-        // The company's own arms, oversized and faint, as the room's emblem: identity by stable ID, never a fixed logo.
-        var layer = new Control { MouseFilter = Control.MouseFilterEnum.Ignore };
-        var echoHeight = ShellLayout.HeaderHeight(roomy) * 2.4f;
-        var echo = assets.Create(m.Company.CrestAssetId, new(echoHeight * 100f / 120, echoHeight)); echo.Name = "PortalEmblem";
-        echo.Modulate = new Color(1, 1, 1, .07f);
-        layer.AddChild(echo);
-        echo.AnchorLeft = echo.AnchorRight = .76f; echo.AnchorTop = echo.AnchorBottom = .5f;
-        echo.OffsetLeft = -echoHeight * 50f / 120; echo.OffsetRight = echoHeight * 50f / 120; echo.OffsetTop = -echoHeight / 2; echo.OffsetBottom = echoHeight / 2;
-        panel.AddChild(layer);
-        var margin = new MarginContainer { MouseFilter = Control.MouseFilterEnum.Ignore };
-        foreach (var (edge, value) in new[] { ("left", 24), ("right", 40), ("top", 6), ("bottom", 6) }) margin.AddThemeConstantOverride("margin_" + edge, value);
-        var row = Row(24); margin.AddChild(row);
-        var title = Stack(0); title.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
-        title.AddChild(Text(ui, "Portal", TypographyRole.Display, wrap: false));
-        title.AddChild(Text(ui, "Your central hub for managing the organization. An overview of what matters most right now.", TypographyRole.Label,
-            ColorRole.TextSecondary, size: roomy ? TypographyRole.Label : TypographyRole.Annotation));
-        row.AddChild(title);
-        var size = ShellLayout.CrestHeader(roomy);
-        var crest = assets.Create(m.Company.CrestAssetId, new(size * 100f / 120, size)); crest.Name = "PortalCrest";
-        crest.TooltipText = m.Company.Name;
-        row.AddChild(crest);
-        panel.AddChild(margin);
-        return panel;
+        return plate;
     }
 
     // ---------- key decisions ----------
     /// <summary>The total always matches the top bar; when only the most urgent cards fit, the header says so and offers
     /// the rest in place.</summary>
-    private static Control Decisions(UiContext ui, PortalView m, bool roomy, Routes routes)
+    private static Control Decisions(UiContext ui, IdentityAssets assets, PortalView m, bool roomy, Routes routes)
     {
         var slots = ShellLayout.DecisionCards(roomy);
         var blocking = m.Decisions.Any(d => d.Urgency == TaskUrgency.Blocking);
@@ -199,27 +145,39 @@ public static partial class PortalScreen
         panel.SizeFlagsVertical = Control.SizeFlags.ShrinkBegin;
         if (m.Decisions.IsEmpty)
         {
-            body.AddChild(Empty(ui, "decisions", "Nothing currently requires executive attention.", "Continue when ready; new matters will appear here."));
+            body.AddChild(Empty(ui, "decisions", "Nothing currently requires executive attention.", "Continue when ready; new matters will appear here.", ColorRole.StatePositive));
             return panel;
         }
         var shown = routes.DecisionsExpanded ? m.Decisions : m.Decisions.Take(slots).ToImmutableArray();
         var columns = routes.DecisionsExpanded ? slots : Math.Clamp(shown.Length, 2, slots);
         var grid = new GridContainer { Columns = columns, SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
         grid.AddThemeConstantOverride("h_separation", ShellLayout.SectionGap); grid.AddThemeConstantOverride("v_separation", ShellLayout.SectionGap);
-        for (var i = 0; i < shown.Length; i++) grid.AddChild(DecisionCard(ui, shown[i], i, m.Time.Day, routes.Open, roomy));
+        for (var i = 0; i < shown.Length; i++) grid.AddChild(DecisionCard(ui, assets, shown[i], i, m.Time.Day, routes.Open, roomy));
         for (var i = shown.Length; i < columns; i++) grid.AddChild(Spacer());
         body.AddChild(grid);
         return panel;
     }
-    private static string CategoryName(DecisionCategory category) => category switch
+    private static string CategoryName(DecisionKind kind) => kind switch
     {
-        DecisionCategory.Competition => "Match preparation", DecisionCategory.Squad => "Squad", DecisionCategory.Contract => "Contract",
-        DecisionCategory.Staff => "Staff", DecisionCategory.Commercial => "Commercial", _ => "Finance"
+        DecisionKind.Distress => "Finance", DecisionKind.MissingRole or DecisionKind.RosterShortfall => "Roster move", DecisionKind.MatchPreparation => "Match preparation",
+        DecisionKind.SponsorOffer => "Sponsor offer", DecisionKind.PlayerRenewal => "Player contract", DecisionKind.CoachRenewal => "Staff contract",
+        DecisionKind.ProposalPending => "Sponsor proposal", _ => "Commercial"
     };
-    private static string CategoryIcon(DecisionCategory category) => category switch
+    /// <summary>The verb on the card says what opening it lets the player do; the commitment itself is confirmed at the destination.</summary>
+    private static string Verb(DecisionKind kind) => kind switch
     {
-        DecisionCategory.Competition => "competition", DecisionCategory.Squad => "squad", DecisionCategory.Contract => "contract",
-        DecisionCategory.Staff => "staff", DecisionCategory.Commercial => "commercial", _ => "finance"
+        DecisionKind.Distress => "Review finances", DecisionKind.MissingRole or DecisionKind.RosterShortfall => "Sign a player", DecisionKind.MatchPreparation => "Prepare",
+        DecisionKind.SponsorOffer => "Review offer", DecisionKind.PlayerRenewal => "Renew or release", DecisionKind.CoachRenewal => "Renew or replace",
+        DecisionKind.ProposalPending => "View proposal", _ => "Approach a brand"
+    };
+    /// <summary>Approved semantic art when the decision is one of its concepts; otherwise the subject's generated mark
+    /// (a brand), otherwise the vector icon of its category. Never a stand-in from another concept.</summary>
+    public static SemanticConcept? DecisionArt(DecisionKind kind) => kind switch
+    {
+        DecisionKind.MatchPreparation => SemanticConcept.MatchPreparationDecision,
+        DecisionKind.PlayerRenewal or DecisionKind.CoachRenewal => SemanticConcept.ContractDecision,
+        DecisionKind.MissingRole or DecisionKind.RosterShortfall => SemanticConcept.RosterMoveDecision,
+        _ => null
     };
     /// <summary>When the matter is due, in one consistent place and wording; the tone follows urgency, the words carry it.</summary>
     private static (string Text, ColorRole Tone) Due(PortalDecision d, int today)
@@ -230,36 +188,66 @@ public static partial class PortalScreen
         var tone = d.Urgency == TaskUrgency.Blocking || days <= 0 ? ColorRole.StateCritical : days == 1 ? ColorRole.StateWarning : ColorRole.TextSecondary;
         return (text, tone);
     }
-    private static Control DecisionCard(UiContext ui, PortalDecision d, int index, int today, Action<string, string> open, bool roomy)
+    /// <summary>Whether the card shows the decision's consequence line. Sponsor offers never do: their commercial terms
+    /// belong to the offer review, not to a Portal summary. Compact cards carry the category, subject, due date and action
+    /// only; the consequence stays in the card's tooltip and at the destination.</summary>
+    public static bool ShowsReason(DecisionKind kind, bool roomy) => roomy && kind != DecisionKind.SponsorOffer;
+
+    /// <summary>A decision card in three functional areas: the context row (what kind of matter, when it is due) across
+    /// the top; then the identity (approved art, the subject's mark or the category icon) on the left, the decision in the
+    /// centre, and the action at the bottom right, beside the decision so the Portal keeps its height. The decision column
+    /// takes the remaining width, so a long name wraps instead of meeting the action.</summary>
+    private static Control DecisionCard(UiContext ui, IdentityAssets assets, PortalDecision d, int index, int today, Action<string, string> open, bool roomy)
     {
-        var card = new CardButton(12, roomy ? 10 : 7) { Name = "Task_" + index, ThemeTypeVariation = "Card" };
-        card.SetMeta("section", d.Section); card.SetMeta("target_id", d.TargetId); card.SetMeta("decision_id", d.Id);
-        var row = CardButton.Passive(Row(12));
-        // Icon tile; the first (most urgent) decision's tile carries the gold edge, as in the reference.
-        var size = ShellLayout.DecisionIcon(roomy);
-        var tile = new PanelContainer { CustomMinimumSize = new(size, size), SizeFlagsVertical = Control.SizeFlags.ShrinkCenter, MouseFilter = Control.MouseFilterEnum.Ignore };
-        tile.AddThemeStyleboxOverride("panel", Fill(Tone(ui, ColorRole.SelectedSurface), 0, index == 0 ? Tone(ui, ColorRole.ActionPrimary) : null));
-        tile.AddChild(UiIcon.Create(ui, CategoryIcon(d.Category), roomy ? 26 : 24, index == 0 ? ColorRole.ActionPrimary : ColorRole.TextPrimary));
-        row.AddChild(tile);
-        var text = CardButton.Passive(Stack(2)); text.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
-        // Metadata row: category on the left, when it is due on the right; subject leads below, the consequence follows.
+        var card = new CardButton(roomy ? 14 : 10, roomy ? 10 : 9) { Name = "Task_" + index, ThemeTypeVariation = "Card" };
+        card.SetMeta("section", d.Section); card.SetMeta("target_id", d.TargetId); card.SetMeta("decision_id", d.Id); card.SetMeta("kind", d.Kind.ToString());
+        card.Body.AddThemeConstantOverride("separation", roomy ? 6 : 5);
+        // Context row: category on the left, when it is due on the right.
         var head = CardButton.Passive(Row(8));
         var blocking = d.Urgency == TaskUrgency.Blocking;
-        head.AddChild(Clamp(Caps(ui, (blocking ? PresentationText.WarningMarker + " " : "") + CategoryName(d.Category), blocking ? ColorRole.StateWarning : ColorRole.TextSecondary), 1));
+        head.AddChild(Clamp(Caps(ui, (blocking ? PresentationText.WarningMarker + " " : "") + CategoryName(d.Kind), blocking ? ColorRole.StateWarning : ColorRole.TextSecondary), 1));
         var (due, dueTone) = Due(d, today);
         if (due.Length > 0)
         {
             var when = Text(ui, due, TypographyRole.Strong, dueTone, wrap: false, size: TypographyRole.Caption); when.Name = "Due";
             head.AddChild(when);
         }
-        text.AddChild(head);
-        // Names wrap; an extreme name is bounded to two lines with the full text in the tooltip and the destination.
-        text.AddChild(Clamp(Text(ui, d.Subject, TypographyRole.Strong), roomy ? 2 : 1));
-        if (d.Why.Length > 0) text.AddChild(Clamp(Text(ui, d.Why, TypographyRole.Annotation, ColorRole.TextSecondary), roomy ? 2 : 1));
-        card.TooltipText = d.Why.Length > 0 ? $"{d.Subject}: {d.Why}" : d.Subject;
+        card.Body.AddChild(head);
+        // Identity on the left; the most urgent decision's frame carries the warm edge.
+        // The content row takes the card's spare height (cards in a grid row share the tallest height), so the action
+        // always lands at the bottom right.
+        var row = CardButton.Passive(Row(roomy ? 14 : 10)); row.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+        var size = ShellLayout.DecisionArt(roomy);
+        var tile = PanelFrame.Well(ui, accent: index == 0); tile.Name = "DecisionArt";
+        tile.CustomMinimumSize = new(size, size); tile.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        Control art = DecisionArt(d.Kind) is { } concept ? SemanticArt.Create(concept, new(size - 6, size - 6))
+            : d.SubjectAssetId.Length > 0 ? assets.Create(d.SubjectAssetId, new(size * .7f, size * .7f))
+            : UiIcon.Create(ui, d.Kind == DecisionKind.Distress ? "finance" : "commercial", size / 2, ColorRole.TextSecondary);
+        art.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter; art.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        tile.AddChild(art);
+        row.AddChild(tile);
+        // The decision: the subject leads (names wrap; an extreme name is bounded, the full text in the tooltip and at the
+        // destination), then the consequence where the kind shows one.
+        var text = CardButton.Passive(Stack(roomy ? 3 : 1)); text.Name = "DecisionText"; text.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+        var subject = Clamp(Text(ui, d.Subject, TypographyRole.Strong, size: roomy ? TypographyRole.SectionTitle : TypographyRole.Label), 2); subject.Name = "Subject";
+        text.AddChild(subject);
+        var reason = ShowsReason(d.Kind, roomy) && d.Why.Length > 0;
+        if (reason) text.AddChild(Clamp(Text(ui, d.Why, TypographyRole.Annotation, ColorRole.TextSecondary, size: TypographyRole.Annotation), 1));
         row.AddChild(text);
-        row.AddChild(UiIcon.Create(ui, "chevron", 18, ColorRole.TextSecondary));
+        // The card is the one focusable action; its verb reads like a button without being a second target. Brass action
+        // material (the primary-button family, smaller); a blocking matter uses the critical-tinted secondary.
+        var verb = new PanelContainer { Name = "Verb", SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd, SizeFlagsVertical = Control.SizeFlags.ShrinkEnd, MouseFilter = Control.MouseFilterEnum.Ignore };
+        verb.AddThemeStyleboxOverride("panel", blocking ? Surfaces.Secondary(ui.Tokens, SurfaceState.Normal, roomy ? 10 : 8, roomy ? 3 : 2, ColorRole.StateCritical)
+            : Surfaces.Primary(ui.Tokens, SurfaceState.Normal, roomy ? 10 : 8, roomy ? 3 : 2, local: true));
+        var tone = blocking ? ColorRole.TextPrimary : ColorRole.TextOnAction;
+        var verbRow = Row(roomy ? 6 : 4); verbRow.MouseFilter = Control.MouseFilterEnum.Ignore;
+        verbRow.AddChild(Text(ui, Verb(d.Kind), TypographyRole.Strong, tone, wrap: false, size: TypographyRole.Annotation));
+        verbRow.AddChild(UiIcon.Create(ui, "arrow", 14, tone));
+        verb.AddChild(verbRow);
+        row.AddChild(verb);
         card.Body.AddChild(row);
+        card.Body.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+        card.TooltipText = d.Why.Length > 0 && d.Kind != DecisionKind.SponsorOffer ? $"{d.Subject}: {d.Why}" : d.Subject;
         card.Pressed += () => open(d.Section, d.TargetId);
         return card;
     }

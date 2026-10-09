@@ -22,7 +22,12 @@ public partial class CardButton : Button
         // Wrapped labels report a height for the current width; resizing re-measures them.
         inner.MinimumSizeChanged += Fit;
         Resized += Fit;
+        // A press sinks the content with the pressed material (Surfaces.PressShift), so it reads as physical depth.
+        ButtonDown += () => Sink(Surfaces.PressShift);
+        ButtonUp += () => Sink(0);
+        MouseExited += () => Sink(0);
     }
+    private void Sink(int pixels) { inner.OffsetTop = pixels; inner.OffsetBottom = pixels; }
     private void Fit()
     {
         var wanted = inner.GetCombinedMinimumSize();
@@ -32,6 +37,13 @@ public partial class CardButton : Button
     /// <summary>Lower bounds; content larger than these still grows the card.</summary>
     public float MinimumWidth { get; set; }
     public float MinimumHeight { get; set; }
+    /// <summary>A compact control (filter, header route) keeps at least the minimum click target, its content centred.</summary>
+    public CardButton Compact()
+    {
+        MinimumHeight = Math.Max(MinimumHeight, UiTokens.MinimumTarget); MinimumWidth = Math.Max(MinimumWidth, UiTokens.MinimumTarget);
+        Body.Alignment = BoxContainer.AlignmentMode.Center;
+        return this;
+    }
     /// <summary>Containers placed inside a card must not swallow clicks meant for the card.</summary>
     public static T Passive<T>(T control) where T : Control { control.MouseFilter = MouseFilterEnum.Ignore; return control; }
 }

@@ -59,7 +59,7 @@ public partial class SponsorVerification : Control
         Check(View.Presenter.Origin.ListMode, "pointer + Enter enters from live hierarchy");
         View.ReviewButton.GrabFocus(); await Key(Godot.Key.Tab, true); await Key(Godot.Key.Tab);
         Check(View.ReviewButton.HasFocus(), "native Tab and Shift+Tab traverse actions");
-        Check(View.ReviewButton.GetThemeStylebox("focus") is StyleBoxFlat focus && focus.BorderWidthLeft >= UiTokens.FocusWidth, "visible canonical focus");
+        Check(UiTheme.VisibleFocus(View.ReviewButton.GetThemeStylebox("focus")), "visible canonical focus");
         await Key(Godot.Key.Space); await Settle(); Check(View.Presenter.Phase == SponsorPhase.Confirm, "Space opens material confirmation");
         await Key(Godot.Key.Escape); await Settle(); Check(View.Presenter.Phase == SponsorPhase.Review, "Escape confirmation restores review");
         View.EvidenceScroll.GrabFocus(); await Key(Godot.Key.End);

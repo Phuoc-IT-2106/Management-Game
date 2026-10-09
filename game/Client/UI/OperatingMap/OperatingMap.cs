@@ -94,9 +94,9 @@ public partial class OperatingMap : Control
         mark.AutowrapMode = TextServer.AutowrapMode.Off;
         mark.AddThemeColorOverride("font_color", UiTheme.ToGodot(brand.TextOnOrganizationAccent));
         var swatch = ui.Panel(mark, ColorRole.SurfaceInset); swatch.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
-        var brandStyle = UiTheme.Box(ui.Tokens, ColorRole.SurfaceInset);
-        brandStyle.BgColor = UiTheme.ToGodot(brand.AccentOrganization); brandStyle.BorderColor = UiTheme.ToGodot(brand.AccentOrganizationSecondary);
-        swatch.AddThemeStyleboxOverride("panel", brandStyle); identityRow.AddChild(swatch);
+        // The monogram swatch is a utility tag in the organization's colours (one angle family; no rounded boxes).
+        swatch.AddThemeStyleboxOverride("panel", Surfaces.Tag(UiTheme.ToGodot(brand.AccentOrganization), UiTheme.ToGodot(brand.AccentOrganizationSecondary),
+            ui.Tokens.Space(SpaceRole.SpaceGroup), ui.Tokens.Space(SpaceRole.SpaceRelated))); identityRow.AddChild(swatch);
         identity = SemanticText.Create(ui, CompanyShortName, TypographyRole.CompanyIdentity); identityRow.AddChild(identity);
         identityRow.AddChild(ui.Button("Company overview", () => { if (navigation.Return is not null) Back(); Select(Data.Organization.Id); }));
         var bar = ui.Flow(); shell.AddChild(bar);
@@ -107,12 +107,15 @@ public partial class OperatingMap : Control
         path = SemanticText.Create(ui, "", TypographyRole.Label); shell.AddChild(path);
         notice = ValidationMessage.Create(ui, "", false); notice.Visible = false; shell.AddChild(notice);
         var body = new HBoxContainer { SizeFlagsVertical = SizeFlags.ExpandFill }; shell.AddChild(body);
-        mapScroll = ReadingScroll(); body.AddChild(mapScroll);
+        body.AddThemeConstantOverride("separation", ui.Tokens.Space(SpaceRole.SpaceGroup));
+        // The structure and the selected context are the view's two regions (UI polish standard): standard frames whose
+        // header plates name them; each scroll fills its region body.
+        mapScroll = ReadingScroll(); body.AddChild(Region("StructureRegion", "company", "Company structure", mapScroll, true));
         var mapHost = ui.Stack(); mapScroll.AddChild(mapHost);
         map = ui.Stack(); list = ui.Stack(); mapHost.AddChild(map); mapHost.AddChild(list);
         BuildMap(); BuildList();
         inspectorScroll = ReadingScroll(); inspectorScroll.CustomMinimumSize = new(ui.Tokens.Size(SizeRole.InspectorWidth), 0);
-        inspectorScroll.SizeFlagsHorizontal = SizeFlags.Fill; body.AddChild(inspectorScroll);
+        inspectorScroll.SizeFlagsHorizontal = SizeFlags.Fill; body.AddChild(Region("ContextRegion", "plan", "Context", inspectorScroll, false));
         inspector = ui.Stack(); inspectorScroll.AddChild(inspector);
         var next = Data.Situations.OrderBy(x => x.DueDay ?? int.MaxValue).FirstOrDefault(x => x.DueDay is not null);
         affairsToggle = ui.Button(next is null ? "Affairs · no dated matters" : $"Affairs · next: {next.Name} · day {next.DueDay}", () => affairs.Visible = !affairs.Visible);
@@ -124,6 +127,13 @@ public partial class OperatingMap : Control
     }
     private string CompanyShortName => !string.IsNullOrWhiteSpace(Data.Organization.ShortName) ? Data.Organization.ShortName :
         !string.IsNullOrWhiteSpace(Data.Organization.DisplayName) ? Data.Organization.DisplayName : "Player company";
+    private PanelContainer Region(string name, string icon, string title, ScrollContainer scroll, bool expand)
+    {
+        var region = PanelFrame.Major(ui, name, SectionHeader.Region(ui, icon, title, false), 7, out var regionBody, 6);
+        region.SizeFlagsHorizontal = expand ? SizeFlags.ExpandFill : SizeFlags.Fill;
+        regionBody.AddChild(scroll);
+        return region;
+    }
     private ScrollContainer ReadingScroll()
     {
         var scroll = new ScrollContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill,

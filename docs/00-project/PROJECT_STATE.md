@@ -280,6 +280,28 @@ and brands generated per seed from content pools. Content and save schema move t
 2; v1 saves are rejected by design (no migration promised, DV-08). All values stay
 noncanonical. A Director DEC entry should confirm this scope expansion.
 
+### Rules v3 wave 1 — incentives and measurement — 2026-10-08
+
+By explicit user instruction, wave 1 of the anti-boredom Rules v3 proposal is
+[implemented](../10-vertical-slice/RULES_V3_INCENTIVES.md):
+- a fixed daily running cost;
+- a registered-roster minimum whose shortfall costs part of each match's prize;
+- a sponsor termination clause after two forfeits in a season;
+- a season-end pull of reputation toward the level the record earns;
+- a fix for the rules v2 predictability penalty, which grew without bound across seasons.
+
+A Headless measurement (four owner policies × 8 seeds × 5 seasons, `build/Measure-Rules.ps1`) passes gate 1: losing is
+no longer profitable (8/8 seeds, v2 3/8), and reputation follows results (r 0.807, v2 0.522). Content and save schema
+move to 3; v2 saves are rejected. Waves 2–4 are not started. A Director DEC entry should confirm this scope expansion.
+
+### Transfer News v2 — recorded transfer history — 2026-10-09
+
+By explicit user instruction, the Portal's Transfer News now shows each move's journey, origin → destination, from a
+typed transfer history recorded when moves happen (`World.Moves`: signings, appointments, interim coaches, releases,
+contract ends, replaced coaches). Earlier, moves were inferred from current records, so later changes rewrote them.
+Save schema moves to 4 and schema-3 saves are rejected. Rules, content and balance are unchanged. Articles share one
+layout, with bare identity art. Details: [TRANSFER_NEWS.md](../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
+
 ## Current Priority
 
 Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.

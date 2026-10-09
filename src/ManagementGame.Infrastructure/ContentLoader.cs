@@ -58,7 +58,7 @@ public static class ContentLoader
     public static void Validate(Content c)
     {
         void Require(bool valid, string field) { if (!valid) throw new InvalidDataException("content/fixture.json: " + field); }
-        Require(c.Format == "management-game-development-content" && c.Schema == 2 && c.RulesVersion == "slice-rules-v2", "unsupported schema/rules");
+        Require(c.Format == "management-game-development-content" && c.Schema == 3 && c.RulesVersion == "slice-rules-v3", "unsupported schema/rules");
         Require(c.Label.Contains("NONCANONICAL", StringComparison.Ordinal), "fixture label required");
         Require(c.DefaultCompanyName.Trim().Length is > 0 and <= 60, "default company name");
         var b = c.Balance;
@@ -73,6 +73,12 @@ public static class ContentLoader
         Require(b.RosterSize is >= 5 and <= 12 && b.MaxRoster >= b.RosterSize && b.MaxRoster <= 16 && b.CandidateCount is >= 1 and <= 12
             && b.CoachCandidateCount is >= 1 and <= 8 && b.TalentRefreshInterval is >= 7 and <= 112, "talent market bounds");
         Require(b.RenewalWindow is >= 7 && b.RenewalWindow < b.SeasonLength && b.StartingContractSeasons is >= 1 and <= 3, "contract bounds");
+        // Rules v3 wave 1: the running cost, the registered-roster minimum (a new company meets it), the sponsor termination
+        // clause and the season-end reputation pull.
+        Require(b.OperatingCost is >= 0 and <= 1_000_000 && b.MinimumRoster is >= 5 && b.MinimumRoster <= b.RosterSize && b.ShortfallFinePercent is >= 0 and <= 300
+            && b.SponsorForfeitLimit is >= 0 and <= 16
+            && b.ReputationRegression is >= 0 and <= 100 && b.ReputationTargetLow is >= 0 && b.ReputationTargetLow <= b.ReputationTargetHigh && b.ReputationTargetHigh <= 100
+            && b.PredictabilityWindow is >= 0 and <= 16, "rules v3 incentive bounds");
         bool Range(AttributeRange r, int min, int max) => r.Min >= min && r.Max <= max && r.Min <= r.Max;
         var g = c.Generation;
         Require(Range(g.Talent, 1, 100) && Range(g.Prospect, 1, 100) && Range(g.CoachSkill, 1, 100) && Range(g.CoachCapacity, 20, 1000) && Range(g.Rival, 6, 95), "generation ranges");

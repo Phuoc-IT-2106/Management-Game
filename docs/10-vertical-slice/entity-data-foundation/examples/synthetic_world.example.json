@@ -1,0 +1,557 @@
+{
+  "format": "entity-world-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "basis": "synthetic_hand_authored_not_seed_output",
+  "day": 1,
+  "reference_catalog": {
+    "organization_definitions": [
+      "orgdef:trial:home",
+      "orgdef:trial:stone",
+      "orgdef:trial:tide",
+      "orgdef:trial:ember",
+      "orgdef:example:meridian"
+    ],
+    "team_definitions": [
+      "teamdef:trial:home",
+      "teamdef:trial:stone",
+      "teamdef:trial:tide",
+      "teamdef:trial:ember",
+      "teamdef:example:meridian"
+    ],
+    "player_definitions": [
+      "playerdef:trial:01",
+      "playerdef:trial:02",
+      "playerdef:trial:03",
+      "playerdef:trial:04",
+      "playerdef:trial:05",
+      "playerdef:trial:06",
+      "playerdef:trial:07",
+      "playerdef:trial:08",
+      "playerdef:trial:09",
+      "playerdef:trial:10",
+      "playerdef:trial:11",
+      "playerdef:trial:12"
+    ],
+    "coach_definitions": [
+      "coachdef:trial:prep",
+      "coachdef:trial:adapt",
+      "coachdef:trial:capacity",
+      "coachdef:trial:budget-prep",
+      "coachdef:example:unknown"
+    ],
+    "competition_ids": [
+      "competition:trial:circuit"
+    ]
+  },
+  "organizations": [
+    {
+      "id": "org:trial:home",
+      "definition_id": "orgdef:trial:home",
+      "fidelity": "player_full",
+      "cash_minor": 260000,
+      "operating_cost_minor": 2500,
+      "compressed_profile": null
+    },
+    {
+      "id": "org:trial:stone",
+      "definition_id": "orgdef:trial:stone",
+      "fidelity": "compressed",
+      "cash_minor": null,
+      "operating_cost_minor": null,
+      "compressed_profile": {
+        "strength": 72,
+        "analysis": 45,
+        "adaptability": 60,
+        "posture": "aggressive",
+        "budget_points": 5,
+        "need": 1
+      }
+    },
+    {
+      "id": "org:trial:tide",
+      "definition_id": "orgdef:trial:tide",
+      "fidelity": "compressed",
+      "cash_minor": null,
+      "operating_cost_minor": null,
+      "compressed_profile": {
+        "strength": 70,
+        "analysis": 75,
+        "adaptability": 60,
+        "posture": "conservative",
+        "budget_points": 10,
+        "need": 1
+      }
+    },
+    {
+      "id": "org:trial:ember",
+      "definition_id": "orgdef:trial:ember",
+      "fidelity": "compressed",
+      "cash_minor": null,
+      "operating_cost_minor": null,
+      "compressed_profile": {
+        "strength": 71,
+        "analysis": 60,
+        "adaptability": 60,
+        "posture": "balanced",
+        "budget_points": 10,
+        "need": 1
+      }
+    }
+  ],
+  "teams": [
+    {
+      "id": "team:trial:home",
+      "definition_id": "teamdef:trial:home",
+      "organization_id": "org:trial:home",
+      "representation": "explicit"
+    },
+    {
+      "id": "team:trial:stone",
+      "definition_id": "teamdef:trial:stone",
+      "organization_id": "org:trial:stone",
+      "representation": "compressed"
+    },
+    {
+      "id": "team:trial:tide",
+      "definition_id": "teamdef:trial:tide",
+      "organization_id": "org:trial:tide",
+      "representation": "compressed"
+    },
+    {
+      "id": "team:trial:ember",
+      "definition_id": "teamdef:trial:ember",
+      "organization_id": "org:trial:ember",
+      "representation": "compressed"
+    }
+  ],
+  "players": [
+    {
+      "id": "person:trial:p01",
+      "definition_id": "playerdef:trial:01",
+      "owner_organization_id": "org:trial:home",
+      "role": "top",
+      "execution": 70,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p02",
+      "definition_id": "playerdef:trial:02",
+      "owner_organization_id": "org:trial:home",
+      "role": "jungle",
+      "execution": 68,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 80
+    },
+    {
+      "id": "person:trial:p03",
+      "definition_id": "playerdef:trial:03",
+      "owner_organization_id": "org:trial:home",
+      "role": "mid",
+      "execution": 72,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 100
+    },
+    {
+      "id": "person:trial:p04",
+      "definition_id": "playerdef:trial:04",
+      "owner_organization_id": "org:trial:home",
+      "role": "bot",
+      "execution": 66,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 70
+    },
+    {
+      "id": "person:trial:p05",
+      "definition_id": "playerdef:trial:05",
+      "owner_organization_id": "org:trial:home",
+      "role": "support",
+      "execution": 74,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p06",
+      "definition_id": "playerdef:trial:06",
+      "owner_organization_id": "org:trial:home",
+      "role": "top",
+      "execution": 62,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 95
+    },
+    {
+      "id": "person:trial:p07",
+      "definition_id": "playerdef:trial:07",
+      "owner_organization_id": null,
+      "role": "jungle",
+      "execution": 60,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p08",
+      "definition_id": "playerdef:trial:08",
+      "owner_organization_id": null,
+      "role": "mid",
+      "execution": 64,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p09",
+      "definition_id": "playerdef:trial:09",
+      "owner_organization_id": null,
+      "role": "bot",
+      "execution": 65,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p10",
+      "definition_id": "playerdef:trial:10",
+      "owner_organization_id": null,
+      "role": "support",
+      "execution": 62,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p11",
+      "definition_id": "playerdef:trial:11",
+      "owner_organization_id": null,
+      "role": "top",
+      "execution": 58,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    },
+    {
+      "id": "person:trial:p12",
+      "definition_id": "playerdef:trial:12",
+      "owner_organization_id": null,
+      "role": "support",
+      "execution": 61,
+      "adaptability": 60,
+      "consistency": 60,
+      "readiness": 90
+    }
+  ],
+  "coaches": [
+    {
+      "id": "person:trial:coach-prep",
+      "definition_id": "coachdef:trial:prep",
+      "owner_organization_id": "org:trial:home",
+      "preparation": 80,
+      "analysis": 60,
+      "adaptability": 50,
+      "capacity": 65
+    },
+    {
+      "id": "person:trial:coach-adapt",
+      "definition_id": "coachdef:trial:adapt",
+      "owner_organization_id": null,
+      "preparation": 55,
+      "analysis": 60,
+      "adaptability": 85,
+      "capacity": 75
+    },
+    {
+      "id": "person:trial:coach-capacity",
+      "definition_id": "coachdef:trial:capacity",
+      "owner_organization_id": null,
+      "preparation": 60,
+      "analysis": 60,
+      "adaptability": 55,
+      "capacity": 110
+    },
+    {
+      "id": "person:trial:coach-budget-prep",
+      "definition_id": "coachdef:trial:budget-prep",
+      "owner_organization_id": null,
+      "preparation": 75,
+      "analysis": 60,
+      "adaptability": 45,
+      "capacity": 55
+    }
+  ],
+  "employments": [
+    {
+      "id": "employment:trial:p01",
+      "person_id": "person:trial:p01",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 980,
+      "release_cost_minor": 2940,
+      "start_day": 1,
+      "end_day": 56
+    },
+    {
+      "id": "employment:trial:p02",
+      "person_id": "person:trial:p02",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 924,
+      "release_cost_minor": 2772,
+      "start_day": 1,
+      "end_day": 56
+    },
+    {
+      "id": "employment:trial:p03",
+      "person_id": "person:trial:p03",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 1036,
+      "release_cost_minor": 3108,
+      "start_day": 1,
+      "end_day": 56
+    },
+    {
+      "id": "employment:trial:p04",
+      "person_id": "person:trial:p04",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 871,
+      "release_cost_minor": 2613,
+      "start_day": 1,
+      "end_day": 56
+    },
+    {
+      "id": "employment:trial:p05",
+      "person_id": "person:trial:p05",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 1095,
+      "release_cost_minor": 3285,
+      "start_day": 1,
+      "end_day": 56
+    },
+    {
+      "id": "employment:trial:p06",
+      "person_id": "person:trial:p06",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 768,
+      "release_cost_minor": 2304,
+      "start_day": 1,
+      "end_day": 56
+    },
+    {
+      "id": "employment:trial:coach-prep",
+      "person_id": "person:trial:coach-prep",
+      "employer_organization_id": "org:trial:home",
+      "salary_minor_per_day": 1080,
+      "release_cost_minor": 5400,
+      "start_day": 1,
+      "end_day": 112
+    }
+  ],
+  "memberships": [
+    {
+      "id": "membership:trial:p01",
+      "person_id": "person:trial:p01",
+      "team_id": "team:trial:home",
+      "start_day": 1,
+      "end_day": null
+    },
+    {
+      "id": "membership:trial:p02",
+      "person_id": "person:trial:p02",
+      "team_id": "team:trial:home",
+      "start_day": 1,
+      "end_day": null
+    },
+    {
+      "id": "membership:trial:p03",
+      "person_id": "person:trial:p03",
+      "team_id": "team:trial:home",
+      "start_day": 1,
+      "end_day": null
+    },
+    {
+      "id": "membership:trial:p04",
+      "person_id": "person:trial:p04",
+      "team_id": "team:trial:home",
+      "start_day": 1,
+      "end_day": null
+    },
+    {
+      "id": "membership:trial:p05",
+      "person_id": "person:trial:p05",
+      "team_id": "team:trial:home",
+      "start_day": 1,
+      "end_day": null
+    },
+    {
+      "id": "membership:trial:p06",
+      "person_id": "person:trial:p06",
+      "team_id": "team:trial:home",
+      "start_day": 1,
+      "end_day": null
+    }
+  ],
+  "staff_assignments": [
+    {
+      "id": "staff:trial:home",
+      "person_id": "person:trial:coach-prep",
+      "team_id": "team:trial:home",
+      "staff_role": "head_coach",
+      "start_day": 1,
+      "end_day": null
+    }
+  ],
+  "registrations": [
+    {
+      "id": "registration:trial:home",
+      "competition_id": "competition:trial:circuit",
+      "team_id": "team:trial:home",
+      "season_id": "season:trial:1",
+      "status": "registered"
+    },
+    {
+      "id": "registration:trial:stone",
+      "competition_id": "competition:trial:circuit",
+      "team_id": "team:trial:stone",
+      "season_id": "season:trial:1",
+      "status": "registered"
+    },
+    {
+      "id": "registration:trial:tide",
+      "competition_id": "competition:trial:circuit",
+      "team_id": "team:trial:tide",
+      "season_id": "season:trial:1",
+      "status": "registered"
+    },
+    {
+      "id": "registration:trial:ember",
+      "competition_id": "competition:trial:circuit",
+      "team_id": "team:trial:ember",
+      "season_id": "season:trial:1",
+      "status": "registered"
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "fixture:trial:stone",
+      "competition_id": "competition:trial:circuit",
+      "home_team_id": "team:trial:home",
+      "away_team_id": "team:trial:stone",
+      "day": 6
+    },
+    {
+      "id": "fixture:trial:tide",
+      "competition_id": "competition:trial:circuit",
+      "home_team_id": "team:trial:home",
+      "away_team_id": "team:trial:tide",
+      "day": 11
+    },
+    {
+      "id": "fixture:trial:ember",
+      "competition_id": "competition:trial:circuit",
+      "home_team_id": "team:trial:home",
+      "away_team_id": "team:trial:ember",
+      "day": 16
+    }
+  ],
+  "player_market": [
+    {
+      "person_id": "person:trial:p07",
+      "fee_minor": 14400,
+      "salary_minor_per_day": 720,
+      "release_cost_minor": 2160,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:p08",
+      "fee_minor": 16380,
+      "salary_minor_per_day": 819,
+      "release_cost_minor": 2457,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:p09",
+      "fee_minor": 16900,
+      "salary_minor_per_day": 845,
+      "release_cost_minor": 2535,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:p10",
+      "fee_minor": 15360,
+      "salary_minor_per_day": 768,
+      "release_cost_minor": 2304,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:p11",
+      "fee_minor": 13440,
+      "salary_minor_per_day": 672,
+      "release_cost_minor": 2016,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:p12",
+      "fee_minor": 14880,
+      "salary_minor_per_day": 744,
+      "release_cost_minor": 2232,
+      "deadline_day": 28
+    }
+  ],
+  "coach_market": [
+    {
+      "person_id": "person:trial:coach-adapt",
+      "fee_minor": 17250,
+      "salary_minor_per_day": 1150,
+      "release_cost_minor": 5750,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:coach-capacity",
+      "fee_minor": 16425,
+      "salary_minor_per_day": 1095,
+      "release_cost_minor": 5475,
+      "deadline_day": 28
+    },
+    {
+      "person_id": "person:trial:coach-budget-prep",
+      "fee_minor": 15150,
+      "salary_minor_per_day": 1010,
+      "release_cost_minor": 5050,
+      "deadline_day": 28
+    }
+  ],
+  "company_plan": {
+    "organization_id": "org:trial:home",
+    "team_id": "team:trial:home",
+    "lineup_person_ids": [
+      "person:trial:p01",
+      "person:trial:p02",
+      "person:trial:p03",
+      "person:trial:p04",
+      "person:trial:p05"
+    ],
+    "reserve_person_ids": [
+      "person:trial:p06"
+    ],
+    "allocation_execution": 50,
+    "allocation_opponent": 30,
+    "allocation_meta": 20,
+    "posture": "balanced"
+  },
+  "talent_capacity": {
+    "total_player_slots": 30,
+    "explicit_player_slots": 12,
+    "reserved_compressed_player_slots": 18,
+    "total_coach_slots": 7,
+    "explicit_coach_slots": 4,
+    "reserved_compressed_coach_slots": 3,
+    "compressed_reference_id": "legacy-tier70-trial",
+    "strength_min": 69,
+    "strength_max": 73
+  }
+}

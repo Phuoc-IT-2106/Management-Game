@@ -1,0 +1,43 @@
+{
+  "format": "coach-definition-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "origin_path": "public_source_synthetic",
+  "definition": {
+    "definition_id": "coachdef:example:unknown",
+    "definition_version": 1,
+    "display_name": "Example Coach (unverified shell)",
+    "nationality_codes": null,
+    "staff_role": "head_coach",
+    "birth_year": null,
+    "experience_years": null,
+    "simulation_profile": {
+      "preparation": null,
+      "analysis": null,
+      "adaptability": null,
+      "capacity": null,
+      "profile_basis": "unknown",
+      "unknown_reason": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+    },
+    "provenance": {
+      "basis": "synthetic_public_path",
+      "source_ref": "urn:example:unverified-public-path",
+      "as_of": "2026-10-08T00:00:00Z",
+      "use_status": "example_only",
+      "license_ref": null,
+      "external_identities": [],
+      "confidence_status": "unknown"
+    }
+  },
+  "source_facts": {
+    "career_memberships": [],
+    "coverage": "unknown",
+    "unknown_reason": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+  },
+  "initialization": null,
+  "evidence": {
+    "kind": "synthetic_public_path_unknown",
+    "note": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+  }
+}

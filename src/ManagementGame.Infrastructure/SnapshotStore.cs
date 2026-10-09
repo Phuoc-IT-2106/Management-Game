@@ -10,6 +10,9 @@ public sealed record SaveEnvelope(string Format, int Schema, string Rules, strin
 
 public sealed class SnapshotStore(string directory, LoadedContent content) : ISnapshotStore
 {
+    /// <summary>Save schema 4 (2026-10-09) adds transfer history (World.Moves); schema-3 saves are rejected, as this build
+    /// supports only its exact identity.</summary>
+    public const int Schema = 4;
     public string PrimaryPath(string slot)
     {
         if (slot.Length is < 1 or > 32 || slot.Any(c => !char.IsAsciiLetterOrDigit(c) && c != '-')) throw new ArgumentException("Invalid save slot.");
@@ -22,7 +25,7 @@ public sealed class SnapshotStore(string directory, LoadedContent content) : ISn
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         using var slotLock = new FileStream(path + ".lock", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
         if (File.Exists(path)) _ = Read(path); // Do not rotate corrupted evidence over a good backup.
-        var envelope = new SaveEnvelope("management-game-save", 2, campaign.Execution.RulesVersion, KeyedRandom.Version,
+        var envelope = new SaveEnvelope("management-game-save", Schema, campaign.Execution.RulesVersion, KeyedRandom.Version,
             Canonical.Version, content.Hash, Canonical.Hash(campaign), CampaignDto.From(campaign), "");
         envelope = envelope with { Checksum = Canonical.Digest(Canonical.Json(envelope)) };
         var bytes = Encoding.UTF8.GetBytes(Canonical.Json(envelope));
@@ -67,7 +70,7 @@ public sealed class SnapshotStore(string directory, LoadedContent content) : ISn
         if (!info.Exists) throw new FileNotFoundException("Save does not exist.", path);
         if (info.Length > 8_000_000) throw new InvalidDataException("Save exceeds fixture byte limit.");
         var envelope = StrictJson.Read<SaveEnvelope>(File.ReadAllBytes(path));
-        if (envelope.Format != "management-game-save" || envelope.Schema != 2 || envelope.Rules != content.Definition.RulesVersion
+        if (envelope.Format != "management-game-save" || envelope.Schema != Schema || envelope.Rules != content.Definition.RulesVersion
             || envelope.Rng != KeyedRandom.Version || envelope.CanonicalVersion != Canonical.Version || envelope.ContentHash != content.Hash)
             throw new InvalidDataException("Unsupported save schema/rules/content identity. This development build supports only its exact identity.");
         if (envelope.Checksum != Canonical.Digest(Canonical.Json(envelope with { Checksum = "" }))) throw new InvalidDataException("Save checksum mismatch.");

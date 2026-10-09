@@ -16,6 +16,11 @@ These files are runtime derivatives of the user-supplied source images. They wer
 | `icon_decision_contract_v1.webp` | Contract / renewal / formal-agreement decision art |
 | `icon_decision_match_preparation_v1.webp` | Match-preparation / tactical-planning decision art |
 | `icon_decision_roster_move_v1.webp` | Roster move / signing / release / transfer semantic art |
+| `icon_module_inbox_v1.webp` | Inbox / messages module semantic art (rail item for Inbox) |
+| `icon_module_competition_v1.webp` | Competition module semantic art; a module symbol, not an award won (rail item for Competition) |
+| `icon_module_commercial_v1.webp` | Commercial / sponsorship module semantic art; not a brand logo (rail item for Commercial) |
+| `icon_module_finance_v1.webp` | Finance module semantic art; not a value or chart of data (rail item for Finance) |
+| `icon_module_calendar_v1.webp` | Calendar / schedule and time semantic art; no Calendar section exists yet (catalogued, not used) |
 
 ## Hard usage rules
 

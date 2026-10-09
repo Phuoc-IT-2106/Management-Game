@@ -1,0 +1,40 @@
+{
+  "format": "team-definition-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "origin_path": "generated_synthetic",
+  "definition": {
+    "definition_id": "teamdef:trial:home",
+    "definition_version": 1,
+    "display_name": "Synthetic Harbor Team",
+    "short_name": "HBR",
+    "discipline_id": "discipline:lol-candidate",
+    "region_id": "region:trial",
+    "organization_definition_id": "orgdef:trial:home",
+    "competition_definition_ids": [
+      "competition:trial:circuit"
+    ],
+    "representation": "explicit",
+    "role_policy_id": "roles:lol-candidate-v01",
+    "provenance": {
+      "basis": "generated_scenario",
+      "source_ref": null,
+      "as_of": "2026-10-08T00:00:00Z",
+      "use_status": "example_only",
+      "license_ref": null,
+      "external_identities": [],
+      "confidence_status": "not_applicable_generated"
+    }
+  },
+  "source_facts": null,
+  "initialization": {
+    "team_id": "team:trial:home",
+    "organization_id": "org:trial:home",
+    "registration_id": "registration:trial:home"
+  },
+  "evidence": {
+    "kind": "synthetic_hand_authored_not_seed_output",
+    "note": "Hand-authored synthetic scenario. Not seed output, production content, save data, or factual real-world ratings."
+  }
+}

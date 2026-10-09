@@ -1,0 +1,17 @@
+HEADLESS_TWO_CYCLE_PASS hash=fcf6fc3e9b50b2d876f5f0cbde3e6a7ed2a1aca6f464d62be12b03333fedc2ef
+MEASURE rules=slice-rules-v2 seeds=8 seasons=5
+POLICY coach          winRate= 23.8% forfeits=  0 cashS5=  11,074 CU (8 reached) repS5= 51.9 roster= 6.0 insolvent=0 p(win)= 23.1% base= 51.8 prep= 18.5 rival= 65.9
+POLICY sponsor-greedy winRate= 24.1% forfeits=  0 cashS5=   9,274 CU (8 reached) repS5= 53.1 roster= 5.3 insolvent=0 p(win)= 22.8% base= 50.8 prep= 18.5 rival= 65.7
+POLICY thrift         winRate= 20.9% forfeits=  0 cashS5=  16,095 CU (8 reached) repS5= 55.4 roster= 0.0 insolvent=0 p(win)= 19.5% base= 42.9 prep= 15.1 rival= 66.2
+POLICY balanced       winRate= 46.6% forfeits=  0 cashS5=  15,398 CU (8 reached) repS5= 48.5 roster= 6.0 insolvent=0 p(win)= 44.2% base= 51.8 prep= 17.7 rival= 65.6
+MEASURE_GATE1 FAIL Losing is not profitable: 3 (balanced >= thrift on >= 6/8 seeds) 3/8 seeds (20261004: 17039 CU vs 15233 CU; 1: 16721 CU vs 15061 CU; 2: 15918 CU vs 16976 CU; 3: 19135 CU vs 15701 CU; 4: 10820 CU vs 17126 CU; 5: 15542 CU vs 17438 CU; 6: 13769 CU vs 15333 CU; 7: 14240 CU vs 15883 CU)
+MEASURE_GATE1 FAIL Reputation follows results: 0.522 (>= 0.6) 160 seasons
+MEASURE_REFERENCE FAIL Player value: 22.8 (+5 to +15 percentage points) percentage points, mean over seeds
+MEASURE_GATE3 FAIL Decision density: 1.82 (mean >= 2; no off-season week at 0) per 7 days, mean over seasons; off-season weeks are not separated yet
+MEASURE_GATE2 FAIL Empty stretches: 13 (<= 10 days) worst season; mean 12.9
+MEASURE_REFERENCE FAIL Financial pressure: 0 (20-60%) percent of 160 seasons played; 0 of 32 runs insolvent
+MEASURE_GATE2 N/A  Multi-year progress: - (improves >= 1 place, not at the ceiling before season 4) not measurable: no league table until wave 2
+MEASURE_REFERENCE N/A  Outcome diversity: - (>= 1 place) not measurable: no league table until wave 2
+MEASURE_GATE3 N/A  No solved preparation: - (<= 5 percentage points) not measurable: weekly focus pairs arrive in wave 3
+MEASURE_REFERENCE N/A  No solved negotiation: - (fixed ask wins on <= 50% of brands) not measured: multi-term negotiation arrives in wave 4
+MEASURE_REPORT C:\Management Game\artifacts\rules-v3\measure-v2-baseline.json

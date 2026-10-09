@@ -20,10 +20,9 @@ public static class NavigationContext
         shortLabel.AddThemeColorOverride("font_color", UiTheme.ToGodot(brand.TextOnOrganizationAccent));
         var swatch = ui.Panel(shortLabel, ColorRole.SurfaceInset);
         swatch.CustomMinimumSize = new Vector2(ui.Tokens.ActionMinimumWidth, 0);
-        var style = UiTheme.Box(ui.Tokens, ColorRole.SurfaceInset);
-        style.BgColor = UiTheme.ToGodot(brand.AccentOrganization);
-        style.BorderColor = UiTheme.ToGodot(brand.AccentOrganizationSecondary);
-        swatch.AddThemeStyleboxOverride("panel", style); identity.AddChild(swatch);
+        // The brand swatch is a utility tag in the organization's colours (one angle family; no rounded boxes).
+        swatch.AddThemeStyleboxOverride("panel", Surfaces.Tag(UiTheme.ToGodot(brand.AccentOrganization), UiTheme.ToGodot(brand.AccentOrganizationSecondary),
+            ui.Tokens.Space(SpaceRole.SpaceGroup), ui.Tokens.Space(SpaceRole.SpaceRelated))); identity.AddChild(swatch);
         // Missing emblem falls back to the text swatch alone; fixture status is not a warning state.
         if (organization.IsDevelopmentFixture) stack.AddChild(SemanticText.Create(ui, PresentationText.FixtureNotice, TypographyRole.Annotation, ColorRole.TextMuted));
         var route = ui.Flow(); stack.AddChild(route);
@@ -34,9 +33,11 @@ public static class NavigationContext
         }
         if (path.Count == 0) stack.AddChild(SemanticText.Create(ui, "Company context", TypographyRole.Label));
         var panel = ui.Panel(stack, ColorRole.SurfaceInset);
-        var organizationStyle = UiTheme.Box(ui.Tokens, ColorRole.SurfaceInset);
-        organizationStyle.BgColor = UiTheme.ToGodot(brand.OrganizationSurface);
-        panel.AddThemeStyleboxOverride("panel", organizationStyle); return panel;
+        // A nested plate washed in the organization's surface colour.
+        var surface = UiTheme.ToGodot(brand.OrganizationSurface);
+        var plate = (SurfaceStyle)ui.Theme.GetStylebox("panel", nameof(ColorRole.SurfaceInset));
+        panel.AddThemeStyleboxOverride("panel", SurfaceStyle.Create(plate.Spec with { Top = surface.Lerp(UiTheme.ToGodot(ui.Tokens.Color(ColorRole.FrameHighlight)), .05f), Bottom = surface.Darkened(.1f) },
+            (int)plate.ContentMarginLeft, (int)plate.ContentMarginTop)); return panel;
     }
 }
 

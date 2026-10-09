@@ -22,7 +22,7 @@ public sealed record PersonRow(string Id, string Name, string Role, int Executio
     int ContractEnd = 0, long RenewalSalary = 0, bool CanRenew = false);
 public sealed record CandidateRow(string Id, string Name, string Role, string AbilityEstimate, long Fee, long Salary, int Deadline);
 public sealed record SponsorRow(string Id, string Name, long Payment, long WinBonus, int Load, int Deadline, int MinimumReputation, string Availability,
-    string Origin = "", int DurationDays = 0);
+    string Origin = "", int DurationDays = 0, string BrandId = "");
 public sealed record BillRow(string Id, string Cause, int DueDay, long Remaining, bool Incoming, int? MissedDay);
 public sealed record ResultRow(string Id, int Day, string Opponent, string Result, string Posture);
 public sealed record PlanView(string FixtureId, int Execution, int Opponent, int Meta, Risk Posture, ImmutableArray<string> Lineup);
@@ -31,13 +31,22 @@ public sealed record CoachCandidateRow(string Id, string Name, string SkillEstim
 /// <summary>A brand the company may approach; the guide is a market estimate, not the brand's private valuation.</summary>
 public sealed record BrandRow(string Id, string Name, string Sector, int MinimumReputation, int MinimumAudience, string Availability,
     long GuideLow, long GuideHigh, ImmutableArray<int> DurationDays);
-public sealed record NegotiationRow(string Id, string Brand, long Payment, int DurationDays, int ResponseDay);
+public sealed record NegotiationRow(string Id, string Brand, long Payment, int DurationDays, int ResponseDay, string BrandId = "");
 /// <summary>A message the world sent the company; Kind is a stable category, CauseId the affected record and
 /// SubjectId the stable ID of the organization, brand or person it concerns (empty when none is known).</summary>
 public sealed record InboxRow(string Id, int Day, string Kind, string Text, string CauseId, string SubjectId = "");
 public sealed record FixtureRow(string Id, int Day, string Opponent, int Importance, string Result, string RivalId = "");
 /// <summary>Current-season head-to-head record against one rival organization.</summary>
 public sealed record RivalRow(string Id, string Name, int Wins, int Losses, int Remaining);
+/// <summary>How a completed personnel move came about (the domain's <c>MoveReason</c>, in the same order): an
+/// organization signed a player or appointed a head coach, an interim head coach took over, a player was released, a
+/// contract ended without renewal, or a head coach was replaced by a new appointment.</summary>
+public enum MoveKind { Signing, Appointment, Interim, Release, ContractEnd, Replacement }
+/// <summary>A completed personnel move exactly as the simulation recorded it when it happened (transfer history). From
+/// and To are the stable IDs of the organizations the person left and joined; empty is the open market, where the person
+/// is a free agent. Name and Role are the person as they were then; Role is empty for a head coach. CauseId is the command
+/// or contract behind it, shared by moves that happened together (a replaced coach and the appointment that replaced them).</summary>
+public sealed record MoveRow(string Id, MoveKind Kind, int Day, string PersonId, string Name, bool Coach, string Role, string From, string To, string CauseId);
 public sealed record Situation(long Revision, int Day, int Season, int DayOfSeason, int SeasonLength, string Company, string Status,
     long Cash, long Forecast, int Reputation, int Audience, int Load, int Capacity,
     string Coach, Delegation Delegation, Risk Ceiling, string NextFixtureId, int NextMatchDay, string Opponent,
@@ -48,7 +57,7 @@ public sealed record Situation(long Revision, int Day, int Season, int DayOfSeas
     string PendingConsequences, string FixtureLabel, StaffRow CoachContract, ImmutableArray<CoachCandidateRow> CoachCandidates,
     ImmutableArray<BrandRow> Brands, ImmutableArray<NegotiationRow> Negotiations, int SponsorSlots, int ActiveSponsors,
     ImmutableArray<InboxRow> Inbox, ImmutableArray<FixtureRow> Fixtures, ImmutableArray<RivalRow> Rivals,
-    string CompanyId = "", string OpponentId = "");
+    string CompanyId = "", string OpponentId = "", long OperatingCost = 0, int MinimumRoster = 0, ImmutableArray<MoveRow> Moves = default);
 
 public interface IGameSession
 {

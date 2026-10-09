@@ -5,7 +5,8 @@ using System.Collections.Immutable;
 using System.Text.Json;
 using System.Diagnostics;
 
-var content = ContentLoader.Load("content/fixture.json");
+// --content=<path> measures a content variant (its .sha256 manifest beside it); the default is the development fixture.
+var content = ContentLoader.Load(args.FirstOrDefault(a => a.StartsWith("--content=", StringComparison.Ordinal))?[10..] ?? "content/fixture.json");
 var session = new Session(content.Definition, CampaignFactory.Create(content.Definition, content.Hash, 20261004, "campaign:development"));
 var hashes = new List<string> { Canonical.Hash(session.Capture()) };
 long id = 0;
@@ -46,9 +47,29 @@ if (args.FirstOrDefault(a => a.StartsWith("--seasons=", StringComparison.Ordinal
         if (now.Season != lastSeason)
         {
             var record = now.Results.Where(r => r.Day > (lastSeason - 1) * now.SeasonLength && r.Day <= lastSeason * now.SeasonLength).ToArray();
-            Console.WriteLine($"SEASON {lastSeason}: {record.Count(r => r.Result == "Victory")}-{record.Count(r => r.Result != "Victory")} cash={now.Cash / 100m:N0} rep={now.Reputation} aud={now.Audience} sponsors={now.ActiveSponsors} roster={now.People.Length} coach={now.Coach} status={now.Status} items={session.Capture().Company.FinancialItems.Length} reviews={session.Capture().Company.Reviews.Length}");
+            Console.WriteLine($"SEASON {lastSeason}: {record.Count(r => r.Result == "Victory")}-{record.Count(r => r.Result != "Victory")} cash={ManagementGame.Formatting.Currency.Whole(now.Cash)} rep={now.Reputation} aud={now.Audience} sponsors={now.ActiveSponsors} roster={now.People.Length} coach={now.Coach} status={now.Status} items={session.Capture().Company.FinancialItems.Length} reviews={session.Capture().Company.Reviews.Length}");
             lastSeason = now.Season;
         }
+    }
+}
+if (args.Contains("--measure"))
+{
+    // Rules v3 measurement: four owner policies, several seeds, several seasons; see Measurement.cs.
+    string? Option(string key) => args.FirstOrDefault(a => a.StartsWith(key + "=", StringComparison.Ordinal))?[(key.Length + 1)..];
+    var seedCount = int.Parse(Option("--measure-seeds") ?? "8", System.Globalization.CultureInfo.InvariantCulture);
+    var seasonCount = int.Parse(Option("--measure-seasons") ?? "5", System.Globalization.CultureInfo.InvariantCulture);
+    ulong[] seeds = [.. new ulong[] { 20261004 }.Concat(Enumerable.Range(1, Math.Max(0, seedCount - 1)).Select(i => (ulong)i))];
+    var report = Measurement.Measure(content, seeds, seasonCount);
+    Measurement.Print(report);
+    if (Option("--measure-output") is { } measureOutput) { Measurement.Write(report, measureOutput); Console.WriteLine("MEASURE_REPORT " + measureOutput); }
+    // --measure-gate=N: the run fails unless every metric of roadmap gates 1..N passes (a wave is done only past its gate).
+    if (Option("--measure-gate") is { } gateOption)
+    {
+        var through = int.Parse(gateOption, System.Globalization.CultureInfo.InvariantCulture);
+        var open = report.Gates.Where(g => g.OpensGate >= 1 && g.OpensGate <= through && g.Pass != true).ToArray();
+        foreach (var gate in open) Console.WriteLine($"MEASURE_GATE_OPEN gate {gate.OpensGate}: {gate.Metric}");
+        if (open.Length > 0) Environment.Exit(1);
+        Console.WriteLine($"MEASURE_GATES_PASS 1..{through}");
     }
 }
 var output = args.FirstOrDefault(a => a.StartsWith("--output=", StringComparison.Ordinal))?[9..];

@@ -6,12 +6,21 @@ Current presentation constraints: [Stage 5 visual / UX governance](../01-governa
 received 2026-10-06. All 50 rules and the 14-part gate apply to Stage 5 screen work;
 this does not accept existing candidates or close Phase 5.
 
-Baseline: latest main `1aa3d6e` fetched and checked on 2026-10-04 (Asia/Saigon).
+Phase 5 start baseline: latest main `1aa3d6e` fetched and checked on 2026-10-04 (Asia/Saigon).
 Authority: DEC-001–022 and the user's Phase 5 instruction. The user explicitly
 approved a labeled fictional 5v5 development fixture in this task.
 
-- Completed: canonical-source review and bounded scope/spec.
-- Active: production skeleton, then one complete management path.
+- Completed:
+  - canonical-source review and bounded scope/spec;
+  - production skeleton and one complete management path;
+  - [rules v2 continuous campaign](RULES_V2_CONTINUOUS_CAMPAIGN.md);
+  - [rules v3 wave 1: incentives and measurement](RULES_V3_INCENTIVES.md) (2026-10-08), gate 1 passed;
+  - the player-facing [genre shell](genre-shell/README.md), with every screen finished to the
+    [UI polish standard](ui-ux-foundation/UI_POLISH_STANDARD.md) (2026-10-08).
+- Active:
+  - Director/human review of the screens;
+  - a DEC entry confirming rules v2 and rules v3 wave 1;
+  - rules v3 waves 2–4 and the remaining balance findings.
 - Blockers: no implementation blocker currently; see OPEN_QUESTIONS.md.
 - Deferred: final content/balance, all expanded systems, DV-01–DV-10 obligations.
 - Exit: launch, meaningful decisions, ordered daily simulation, competition/business
@@ -32,3 +41,24 @@ canonical. The existing functional client remains an internal engineering path.
 [Stage 2](ui-kit/README.md) implements the bounded provisional theme, minimal UI
 Kit and internal UI Lab. This does not close Phase 5 or approve future modules,
 final art direction, identity/save migration or the Company Operating Map build.
+
+## Player data specification — proposed
+
+[Player Data Foundation v1](player-data/README.md) defines candidate player data,
+attributes, rating formulas, NPC generation and validation (v0.1, 2026-10-08).
+It is specification only, PROPOSED — NOT APPROVED; LoL remains a working design
+candidate. It does not change current gameplay, content, saves or accepted decisions.
+
+## Team, coach and rival organization data specification — proposed
+
+[Entity Data Foundation v0.1](entity-data-foundation/README.md) defines separate
+Team, Coach and compressed Rival Organization contracts, numerical profiles,
+generation constraints and synthetic relational examples (2026-10-08).
+It remains PROPOSED — NOT APPROVED and preserves Company/World ownership,
+Player Data v0.2 and current rules/content/save v3 boundaries.
+
+## Gameplay data review — proposal
+
+[Gameplay data review](GAMEPLAY_DATA_REVIEW.md) (2026-10-09) audits what the current player, coach, team and rival numbers
+actually do, and proposes a decision-led attribute set. It also covers formulas, and a data strategy where real API data
+calibrates a generated NPC world. PROPOSAL only; the role model and data use need Director decisions.

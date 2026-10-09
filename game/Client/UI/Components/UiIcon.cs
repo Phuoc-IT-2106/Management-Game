@@ -9,7 +9,7 @@ public partial class UiIcon : Control
     public static readonly string[] Keys =
     [
         "portal", "inbox", "squad", "competition", "commercial", "finance", "staff", "company", "calendar", "cash", "chart",
-        "decisions", "save", "load", "alert", "contract", "arrow", "chevron", "record", "stakes", "plan", "news"
+        "decisions", "save", "load", "alert", "contract", "arrow", "chevron", "record", "stakes", "plan", "news", "world", "transfer"
     ];
     private string key = "";
     private Color color;
@@ -60,6 +60,10 @@ public partial class UiIcon : Control
             case "arrow": L((5, 12), (19, 12)); L((14, 7), (19, 12), (14, 17)); break;
             case "chevron": L((9, 5.5f), (15.5f, 12), (9, 18.5f)); break;
             case "record": foreach (var (x, top) in new[] { (6f, 13f), (12f, 8f), (18f, 4f) }) DrawLine(P(x, 20.5f), P(x, top), color, w * 1.6f, true); break;
+            case "world":
+                Ring(12, 12, 8.5f); L((3.5f, 12), (20.5f, 12)); L((5, 7.5f), (19, 7.5f)); L((5, 16.5f), (19, 16.5f));
+                DrawPolyline(Enumerable.Range(0, 25).Select(i => P(12 + 3.8f * Mathf.Sin(Mathf.Tau * i / 24), 12 - 8.5f * Mathf.Cos(Mathf.Tau * i / 24))).ToArray(), color, w, true); break;
+            case "transfer": L((4, 8.5f), (19, 8.5f)); L((15, 4.5f), (19, 8.5f), (15, 12.5f)); L((20, 15.5f), (5, 15.5f)); L((9, 11.5f), (5, 15.5f), (9, 19.5f)); break;
             default: Ring(12, 12, 8); break;
         }
     }

@@ -11,10 +11,16 @@ public enum ColorRole
     InformationKnown, InformationEstimated, InformationUnknown,
     AccentOrganization, AccentOrganizationSecondary, OrganizationSurface,
     Border, HoverSurface, SelectedSurface, BrandTextLight, BrandTextDark,
-    ActionPrimary, ActionPrimaryHover, TextOnAction, Divider
+    ActionPrimary, ActionPrimaryHover, TextOnAction, Divider,
+    // Material strokes (graphite / steel / brass surface system): the dark outer frame, the cool steel inner stroke, the
+    // top-edge highlight, the deep shade of a gradient's lower edge and a muted brass for structural accents.
+    FrameOuter, FrameStroke, FrameHighlight, SurfaceShade, AccentMuted, HeaderSurface
 }
 // Sizes follow one 7-step scale: 12, 14, 16, 20, 24, 32, 48 (no one-off sizes). Caption and Display extend the scale ends.
-public enum TypographyRole { CompanyIdentity, WorkspaceTitle, SectionTitle, Body, Data, Label, Annotation, Caption, Display, Strong }
+// The metric roles type a status-bar fact: a small caps label, a prominent value (StatusValue when the value is a word),
+// and subordinate context after the value.
+public enum TypographyRole { CompanyIdentity, WorkspaceTitle, SectionTitle, Body, Data, Label, Annotation, Caption, Display, Strong,
+    MetricLabel, MetricValue, StatusValue, MetricContext }
 public enum SpaceRole { SpaceInline, SpaceRelated, SpaceGroup, SpaceSection, SpaceWorkspace }
 public enum SizeRole { ControlCompact, ControlDefault, ControlComfortable, InspectorWidth, ReadingMeasure }
 public enum MotionRole { Acknowledge, ContextTransition, ChangeHighlight }
@@ -46,46 +52,85 @@ public readonly record struct Rgb(byte R, byte G, byte B)
 /// <summary>Single replaceable aesthetic source. Values are development choices, not final art direction.</summary>
 public sealed class UiTokens
 {
-    public const string Version = "operations-room-v3";
+    public const string Version = "graphite-brass-v4";
     public const string Notice = "PROVISIONAL DEVELOPMENT THEME";
     public const double TextContrast = 4.5;
     public const double GraphicContrast = 3.0;
-    public const int BorderWidth = 1, FocusWidth = 2, SelectionWidth = 4, CornerRadius = 4;
+    /// <summary>Flat boxes (selection bars, square focus rings, plain surfaces) are square: framed elements take 45° cuts
+    /// (polish standard §3), so a radius would be a second corner language.</summary>
+    public const int BorderWidth = 1, FocusWidth = 2, SelectionWidth = 4, CornerRadius = 0;
+    /// <summary>Smallest click target for compact controls (filters, header routes): 24 × 24 px (WCAG 2.2 target size).</summary>
+    public const int MinimumTarget = 24;
+    /// <summary>Frame geometry (structural chrome). Chamfer legs in pixels, all cut at 45°: Control for buttons, filters and
+    /// rows; Small for nested plates, icon housings and the rail selection; Medium for standard regions; Large for premium
+    /// regions. Edge thicknesses: a hairline, a control rim and a region's structural wall.</summary>
+    public const int ChamferControl = 4, ChamferSmall = 6, ChamferMedium = 11, ChamferLarge = 16;
+    public const int EdgeHairline = 1, EdgeRim = 2, EdgeWall = 3;
+    /// <summary>A region's outer chamfer by importance: premium regions carry the larger cut.</summary>
+    public static int RegionChamfer(FrameTier tier) => tier == FrameTier.Premium ? ChamferLarge : ChamferMedium;
+    /// <summary>Brass corner inserts on a region's chamfer facets: premium two (top-left, bottom-right), standard one
+    /// (top-left), utility none. Brass marks structural junctions; graphite and steel carry the frame.</summary>
+    public static int BrassInserts(FrameTier tier) => tier switch { FrameTier.Premium => 2, FrameTier.Standard => 1, _ => 0 };
     public const int IconWidth = 44, MinimumColumnWidth = 330, ActionWidth = 160;
     public const int MaxSpecimenRows = 12, MaxDocumentSections = 12, MaxNavigationDepth = 6, MaxTrackDays = 62;
     public const int CaptureSettleFrames = 12, LayoutTolerance = 2;
+    /// <summary>One bundled family for every role (Inter 4.1, SIL OFL 1.1, Assets/Fonts/Inter): a screen face with a tall
+    /// x-height and tabular figures. Three weights carry the whole hierarchy; nothing picks a weight of its own.</summary>
+    public const string FontFamily = "Inter";
+    public const int WeightRegular = 400, WeightMedium = 500, WeightSemibold = 600;
+    public static readonly ImmutableArray<int> FontWeights = [WeightRegular, WeightMedium, WeightSemibold];
+    public static string FontPath(int weight) => "res://Assets/Fonts/Inter/Inter-" + weight switch
+    {
+        WeightRegular => "Regular", WeightMedium => "Medium", WeightSemibold => "SemiBold",
+        _ => throw new ArgumentOutOfRangeException(nameof(weight), "Only the three system weights are bundled.")
+    } + ".ttf";
+    /// <summary>System faces behind the bundled family: glyphs it lacks (◐, ⌂ …) and a missing import fall back to these.</summary>
     public static readonly string[] UiFontNames = ["Segoe UI", "Noto Sans", "Arial"];
-    // Display and numeric faces share a condensed signage family with tabular figures; never a code face.
-    public static readonly string[] DisplayFontNames = ["Bahnschrift", "Segoe UI Semibold", "Segoe UI", "Noto Sans", "Arial"];
-    public static readonly string[] NumericFontNames = ["Bahnschrift", "Segoe UI", "Noto Sans", "Arial"];
-    public const int DisplayWeight = 600;
+    public static readonly string[] SymbolFontNames = ["Segoe UI Symbol", "Segoe UI", "Noto Sans Symbols 2", "Noto Sans Symbols", "Noto Sans"];
+    public const int DisplayWeight = WeightSemibold;
+    /// <summary>Weight by role: regular for reading text and context, medium for labels and data figures, semibold for
+    /// values, titles, emphasis and actions.</summary>
+    public static int Weight(TypographyRole role) => role switch
+    {
+        TypographyRole.Body or TypographyRole.Label or TypographyRole.Annotation or TypographyRole.Caption or TypographyRole.MetricContext => WeightRegular,
+        TypographyRole.Data or TypographyRole.MetricLabel => WeightMedium,
+        _ => WeightSemibold
+    };
+    /// <summary>Roles that show changing figures use tabular numerals, so values that update do not shift sideways.</summary>
+    public static bool Tabular(TypographyRole role) => role is not (TypographyRole.Body or TypographyRole.Label or TypographyRole.Annotation or TypographyRole.Caption);
+    /// <summary>Metric labels are caps with one pixel of tracking; all other roles keep their natural spacing.</summary>
+    public static int Tracking(TypographyRole role) => role == TypographyRole.MetricLabel ? 1 : 0;
     /// <summary>Process-wide player preference; tokens built without an explicit choice follow it.</summary>
     public static bool PreferReducedMotion { get; set; }
     public static readonly ImmutableDictionary<ColorRole, Rgb> Colors = new Dictionary<ColorRole, string>
     {
-        // Deep navy operations room (approved Portal reference): low-contrast surface tiers, near-white text. Secondary and
-        // muted text are two distinct steps so primary / secondary / tertiary read apart (both stay above 4.5:1 everywhere).
-        [ColorRole.SurfaceBase] = "0C121B", [ColorRole.SurfaceRaised] = "121A25",
-        [ColorRole.SurfaceInset] = "0F1620", [ColorRole.SurfaceOverlay] = "1A2431",
-        [ColorRole.TextPrimary] = "EEF1F5", [ColorRole.TextSecondary] = "B4BFCC",
-        [ColorRole.TextMuted] = "8E9BAC", [ColorRole.TextOnAccent] = "101419",
+        // Graphite / steel / brass (approved Portal reference 11_portal_world_transfer_graphite_mockup): charcoal surface tiers
+        // with a cool steel cast, off-white text, muted brass reserved for the primary action and selection, teal and blue
+        // as semantic accents. Secondary and muted text are two distinct steps, both above 4.5:1 on every surface.
+        [ColorRole.SurfaceBase] = "0C0E11", [ColorRole.SurfaceRaised] = "1C2025",
+        [ColorRole.SurfaceInset] = "121417", [ColorRole.SurfaceOverlay] = "252A31",
+        [ColorRole.TextPrimary] = "EEF0F2", [ColorRole.TextSecondary] = "B6BCC4",
+        [ColorRole.TextMuted] = "9CA3AD", [ColorRole.TextOnAccent] = "101419",
         [ColorRole.StatePositive] = "4FD1B5", [ColorRole.StateWarning] = "F2C46D",
         [ColorRole.StateCritical] = "F07A72", [ColorRole.StateNeutral] = "C5CCD5",
         [ColorRole.SystemError] = "FFB0D1", [ColorRole.FocusRing] = "C2D9FF",
         [ColorRole.InformationKnown] = "C5CCD5", [ColorRole.InformationEstimated] = "E2CC9A",
         [ColorRole.InformationUnknown] = "BFC4D0", [ColorRole.AccentOrganization] = "BAC4CF",
-        [ColorRole.AccentOrganizationSecondary] = "AAB6C4", [ColorRole.OrganizationSurface] = "0F1620",
-        [ColorRole.Border] = "6B809A", [ColorRole.HoverSurface] = "1C2734",
-        [ColorRole.SelectedSurface] = "24303F", [ColorRole.BrandTextLight] = "FFFFFF", [ColorRole.BrandTextDark] = "000000",
-        [ColorRole.ActionPrimary] = "E0AE4A", [ColorRole.ActionPrimaryHover] = "EDBF63",
-        [ColorRole.TextOnAction] = "1A1405", [ColorRole.Divider] = "223042"
+        [ColorRole.AccentOrganizationSecondary] = "AAB6C4", [ColorRole.OrganizationSurface] = "121417",
+        [ColorRole.Border] = "7A838F", [ColorRole.HoverSurface] = "2E343B",
+        [ColorRole.SelectedSurface] = "2B3037", [ColorRole.BrandTextLight] = "FFFFFF", [ColorRole.BrandTextDark] = "000000",
+        [ColorRole.ActionPrimary] = "C9A45A", [ColorRole.ActionPrimaryHover] = "D8B56E",
+        [ColorRole.TextOnAction] = "1A1405", [ColorRole.Divider] = "2C3138",
+        [ColorRole.FrameOuter] = "030405", [ColorRole.FrameStroke] = "3E4550", [ColorRole.FrameHighlight] = "76808C",
+        [ColorRole.SurfaceShade] = "15181C", [ColorRole.AccentMuted] = "8C7444", [ColorRole.HeaderSurface] = "282D34"
     }.ToImmutableDictionary(k => k.Key, v => Rgb.Hex(v.Value));
 
     private static readonly ImmutableDictionary<TypographyRole, int> Fonts = new Dictionary<TypographyRole, int>
     {
         [TypographyRole.CompanyIdentity] = 24, [TypographyRole.WorkspaceTitle] = 32,
         [TypographyRole.SectionTitle] = 20, [TypographyRole.Body] = 16, [TypographyRole.Data] = 20,
-        [TypographyRole.Label] = 16, [TypographyRole.Annotation] = 14, [TypographyRole.Caption] = 12, [TypographyRole.Display] = 48, [TypographyRole.Strong] = 16
+        [TypographyRole.Label] = 16, [TypographyRole.Annotation] = 14, [TypographyRole.Caption] = 12, [TypographyRole.Display] = 48, [TypographyRole.Strong] = 16,
+        [TypographyRole.MetricLabel] = 12, [TypographyRole.MetricValue] = 20, [TypographyRole.StatusValue] = 16, [TypographyRole.MetricContext] = 14
     }.ToImmutableDictionary();
     public UiDensity Density { get; }
     public double TextScale { get; }

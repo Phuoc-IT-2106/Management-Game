@@ -90,7 +90,4 @@ public static class Pay
     public static long Coach(Coach coach) => (coach.Preparation + coach.Analysis + coach.Adaptability) * 5L + coach.Capacity * 2L;
     /// <summary>A renewing person asks for at least their current pay, scaled by the company's standing.</summary>
     public static long Demand(long current, long market, int reputation) => Math.Max(current, Numbers.Divide(market * (100 + reputation / 5), 100));
-    // Text stored in campaign state must not depend on the host culture.
-    public static string Money(long minor) => (minor / 100m).ToString("N2", System.Globalization.CultureInfo.InvariantCulture) + " CU";
-    public static string Count(long value) => value.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
 }

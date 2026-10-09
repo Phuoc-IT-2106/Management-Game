@@ -56,6 +56,15 @@ public static class SnapshotValidation
                     ? w.Fixtures.Any(f => f.Id == result.FixtureId && f.Day == result.Day && f.RivalId == result.RivalId)
                     : result.Day < Seasons.Start(season, b)), "Invalid result/cursor relationship.");
         }
+        // Transfer history: each move once, in the order it happened, within the current and the previous season, in the
+        // direction its reason allows. In these rules the company and the open market (null) are the only parties.
+        Unique(w.Moves.Select(x => x.Id), "move IDs");
+        Require(w.Moves.Zip(w.Moves.Skip(1)).All(p => p.First.Day <= p.Second.Day) && w.Moves.All(m => m.Day >= Seasons.Start(Math.Max(1, season - 1), b) && m.Day <= day
+            && m.PersonId.Length > 0 && m.Name.Length is > 0 and <= 120 && m.CauseId.Length > 0 && Enum.IsDefined(m.Kind) && Enum.IsDefined(m.Reason)
+            && (m.Kind == Personnel.Player ? m.Role.Length == 1 && Generator.Roles.Contains(m.Role, StringComparison.Ordinal) : m.Role.Length == 0)
+            && (m.Reason is MoveReason.Signed or MoveReason.Appointed or MoveReason.Interim ? m.Origin is null && m.Destination == c.Id : m.Origin == c.Id && m.Destination is null)
+            && (m.Reason is MoveReason.Signed or MoveReason.Released ? m.Kind == Personnel.Player : m.Reason == MoveReason.ContractEnded || m.Kind == Personnel.HeadCoach)),
+            "Invalid transfer history.");
         Require(c.FinanceReceipts.Order().SequenceEqual(w.Results.Select(r => r.Id).Order()) && c.CommercialReceipts.Order().SequenceEqual(w.Results.Select(r => r.Id).Order()), "Immediate outcome consumers incomplete/duplicated.");
         Unique(c.PendingEffects.Select(x => x.Id), "pending effects");
         Require(c.PendingEffects.All(x => w.Results.Any(r => r.Id == x.CauseId && x.DueDay == r.Day + 1)), "Dangling delayed consequence.");
@@ -63,7 +72,10 @@ public static class SnapshotValidation
         Unique(w.Offers.Select(x => x.Id), "offer IDs"); Unique(c.Sponsors.Select(x => x.Id), "sponsor IDs");
         Require(w.Offers.All(o => brands.Contains(o.BrandId) && Enum.IsDefined(o.Origin) && o.Payment > 0 && o.DurationDays > 0 && o.WinBonus >= 0 && o.Load >= 0
             && (o.ClaimedBy is null || o.ClaimedBy == c.Id || w.Rivals.Any(r => r.Id == o.ClaimedBy))), "Invalid offer.");
-        Require(c.Sponsors.All(x => brands.Contains(x.BrandId) && x.EndDay >= x.StartDay && x.Load >= 0 && x.WinBonus >= 0 && x.Payment > 0), "Invalid sponsor contract.");
+        Require(c.Sponsors.All(x => brands.Contains(x.BrandId) && x.EndDay >= x.StartDay && x.Load >= 0 && x.WinBonus >= 0 && x.Payment > 0 && x.ForfeitLimit >= 0), "Invalid sponsor contract.");
+        // A league fine or a running-cost item only ever comes from a recorded result or a past day.
+        Require(c.FinancialItems.Where(x => x.Id.StartsWith("fine:", StringComparison.Ordinal)).All(x => !x.Incoming && w.Results.Any(r => r.Id == x.CauseId))
+            && c.FinancialItems.Where(x => x.CauseId == Finance.OperationsCause).All(x => !x.Incoming && x.DueDay <= day), "Invalid league fine or running cost.");
         Unique(w.Negotiations.Select(x => x.Id), "negotiation IDs");
         Require(w.Negotiations.All(n => brands.Contains(n.BrandId) && n.Payment > 0 && n.ResponseDay >= n.SubmittedDay && n.SubmittedDay <= day), "Invalid negotiation.");
         Unique(w.Brands.Select(x => x.BrandId), "brand status");

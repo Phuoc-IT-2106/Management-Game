@@ -1,5 +1,6 @@
 # -Company is harness input standing in for the name a player types on the start screen.
-param([string]$Output = 'artifacts/shell/candidates', [int]$Results = 0, [switch]$Cases, [switch]$NoBuild, [string]$Company = 'Hanoi Signal')
+# -Transfers plays the campaign on to the first contract-end departures, then signs and appoints, for live transfer-news captures.
+param([string]$Output = 'artifacts/shell/candidates', [int]$Results = 0, [switch]$Cases, [switch]$Transfers, [switch]$NoBuild, [string]$Company = 'Hanoi Signal')
 . "$PSScriptRoot/Environment.ps1"
 if (!$NoBuild) {
     & $Dotnet build "$RepoRoot/game/Client/Client.csproj" -c Debug -m:1 -p:RestoreLockedMode=true
@@ -13,6 +14,7 @@ foreach ($size in '1280x720','1920x1080') {
     $captureArgs = @('--path',('"'+"$RepoRoot/game/Client"+'"'),'--resolution',$size,'--position','0,0','--audio-driver','Dummy','res://UI/Shell/GameShell.tscn','--',
         "--shell-viewport=$size",('"--shell-output='+$captureRoot+'"'),('"--saves='+$saves+'"'),('"--content='+"$RepoRoot/content/fixture.json"+'"'),"--shell-results=$Results",('"--shell-company='+$Company+'"'))
     if ($Cases) { $captureArgs += '--shell-cases' }
+    if ($Transfers) { $captureArgs += '--shell-transfers' }
     $stdout = Join-Path $captureRoot "$size.stdout.log"; $stderr = Join-Path $captureRoot "$size.stderr.log"
     $process = Start-Process -FilePath $Godot -ArgumentList $captureArgs -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
     $null = $process.Handle

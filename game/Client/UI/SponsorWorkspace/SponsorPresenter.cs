@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using ManagementGame.Application;
 using ManagementGame.UiKit;
 using ManagementGame.OperatingMap;
-using System.Globalization;
+using ManagementGame.Formatting;
 
 namespace ManagementGame.SponsorWorkspace;
 
@@ -60,7 +60,10 @@ public sealed class SponsorPresenter(ISponsorSession session, SponsorSnapshot sn
 
 public static class SponsorPresentation
 {
-    public static string Money(long minor) => (minor / 100m).ToString("N2", CultureInfo.InvariantCulture) + " CU";
+    public static string Money(long minor) => Currency.Format(minor);
+    /// <summary>A money amount for the kit's resource value, formatted by the game's one currency formatter.</summary>
+    public static ResourceView Amount(string label, long minor, InformationState information, string context) =>
+        new(label, minor / (decimal)Currency.MinorPerUnit, Currency.Code, information, context, Currency.Format(minor));
     public static string Dates(SponsorTerms offer) => offer.ScheduledPayments.IsEmpty
         ? "No actionable payment schedule; offer unavailable."
         : string.Join(", ", offer.ScheduledPayments.Select(x => "day " + x.DueDay));
@@ -82,10 +85,10 @@ public static class SponsorPresentation
             "Load now", s.LoadByDay, "If accepted", proposing ? o!.LoadByDayIfAccepted : [], rows.ToImmutable(),
             "Projected from today's roster and agreements; signing or releasing players changes daily load.");
     }
-    public static ResourceView ForecastIfAccepted(long forecast) => new("Forecast if accepted", forecast / 100m,
-        "CU", InformationState.Estimated, "Same 7-day window, adding this offer's receipts due in it. Excludes unearned wins.");
-    public static ResourceView Forecast(SponsorSnapshot s) => new("Committed cash forecast", s.CommittedForecast / 100m,
-        "CU", InformationState.Estimated, "Next 7 days; signed items only. Excludes unearned wins and unsigned offers.");
+    public static ResourceView ForecastIfAccepted(long forecast) => Amount("Forecast if accepted", forecast,
+        InformationState.Estimated, "Same 7-day window, adding this offer's receipts due in it. Excludes unearned wins.");
+    public static ResourceView Forecast(SponsorSnapshot s) => Amount("Committed cash forecast", s.CommittedForecast,
+        InformationState.Estimated, "Next 7 days; signed items only. Excludes unearned wins and unsigned offers.");
 
     public static MapSnapshot Company(SponsorSnapshot s, string sessionKey)
     {

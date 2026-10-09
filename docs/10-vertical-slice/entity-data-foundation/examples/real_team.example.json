@@ -1,0 +1,42 @@
+{
+  "format": "team-definition-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "origin_path": "public_source_synthetic",
+  "definition": {
+    "definition_id": "teamdef:example:meridian",
+    "definition_version": 1,
+    "display_name": "Example Meridian Team",
+    "short_name": "EXM",
+    "discipline_id": "discipline:lol-candidate",
+    "region_id": "region:trial",
+    "organization_definition_id": "orgdef:example:meridian",
+    "competition_definition_ids": [
+      "competition:trial:circuit"
+    ],
+    "representation": "compressed",
+    "role_policy_id": "roles:lol-candidate-v01",
+    "provenance": {
+      "basis": "synthetic_public_path",
+      "source_ref": "urn:example:unverified-public-path",
+      "as_of": "2026-10-08T00:00:00Z",
+      "use_status": "example_only",
+      "license_ref": null,
+      "external_identities": [],
+      "confidence_status": "unknown"
+    }
+  },
+  "source_facts": {
+    "reported_roster": [],
+    "reported_staff": [],
+    "history": [],
+    "coverage": "unknown",
+    "unknown_reason": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+  },
+  "initialization": null,
+  "evidence": {
+    "kind": "synthetic_public_path_unknown",
+    "note": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+  }
+}

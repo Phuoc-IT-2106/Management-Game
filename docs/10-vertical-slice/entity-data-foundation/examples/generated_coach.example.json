@@ -1,0 +1,44 @@
+{
+  "format": "coach-definition-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "origin_path": "generated_synthetic",
+  "definition": {
+    "definition_id": "coachdef:trial:prep",
+    "definition_version": 1,
+    "display_name": "Synthetic Preparation Coach",
+    "nationality_codes": null,
+    "staff_role": "head_coach",
+    "birth_year": 1992,
+    "experience_years": 8.0,
+    "simulation_profile": {
+      "preparation": 80,
+      "analysis": 60,
+      "adaptability": 50,
+      "capacity": 65,
+      "profile_basis": "generated_scenario",
+      "unknown_reason": null
+    },
+    "provenance": {
+      "basis": "generated_scenario",
+      "source_ref": null,
+      "as_of": "2026-10-08T00:00:00Z",
+      "use_status": "example_only",
+      "license_ref": null,
+      "external_identities": [],
+      "confidence_status": "not_applicable_generated"
+    }
+  },
+  "source_facts": null,
+  "initialization": {
+    "person_id": "person:trial:coach-prep",
+    "owner_organization_id": "org:trial:home",
+    "employment_id": "employment:trial:coach-prep",
+    "staff_assignment_id": "staff:trial:home"
+  },
+  "evidence": {
+    "kind": "synthetic_hand_authored_not_seed_output",
+    "note": "Hand-authored synthetic scenario. Not seed output, production content, save data, or factual real-world ratings."
+  }
+}

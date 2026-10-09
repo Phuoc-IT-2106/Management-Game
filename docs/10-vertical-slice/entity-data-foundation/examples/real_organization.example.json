@@ -1,0 +1,49 @@
+{
+  "format": "organization-definition-example-v01",
+  "schema_version": 1,
+  "status": "PROPOSED — NOT APPROVED",
+  "example_only": true,
+  "origin_path": "public_source_synthetic",
+  "definition": {
+    "definition_id": "orgdef:example:meridian",
+    "definition_version": 1,
+    "display_name": "Example Meridian Organization",
+    "short_name": "EXM",
+    "region_id": "region:trial",
+    "discipline_id": "discipline:lol-candidate",
+    "fidelity": "compressed",
+    "compressed_reference_id": "legacy-tier70-trial",
+    "initial_profile": {
+      "strength": null,
+      "analysis": null,
+      "adaptability": null,
+      "posture": null,
+      "budget_points": null,
+      "need": null,
+      "profile_basis": "unknown",
+      "unknown_reason": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+    },
+    "provenance": {
+      "basis": "synthetic_public_path",
+      "source_ref": "urn:example:unverified-public-path",
+      "as_of": "2026-10-08T00:00:00Z",
+      "use_status": "example_only",
+      "license_ref": null,
+      "external_identities": [],
+      "confidence_status": "unknown"
+    }
+  },
+  "source_facts": {
+    "public_financial_facts": [],
+    "reported_team_definition_ids": [
+      "teamdef:example:meridian"
+    ],
+    "coverage": "unknown",
+    "unknown_reason": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+  },
+  "initialization": null,
+  "evidence": {
+    "kind": "synthetic_public_path_unknown",
+    "note": "Synthetic public-source path only; no verified provider records or capability/financial evidence were imported."
+  }
+}

@@ -265,7 +265,7 @@ public partial class UiLab : Control
             CaptureTrigger = "explicit lab-output; settled process frames and frame_post_draw", LayoutSettleFrames = UiTokens.CaptureSettleFrames,
             ScrollFraction = Arg("--lab-scroll") ?? "0", ScrollPixels = scroll.ScrollVertical,
             Engine = Engine.GetVersionInfo()["string"].AsString(), Runtime = System.Environment.Version.ToString(), OS = OS.GetName(),
-            Renderer = RenderingServer.GetCurrentRenderingMethod(), FontStrategy = string.Join(", ", UiTokens.UiFontNames),
+            Renderer = RenderingServer.GetCurrentRenderingMethod(), FontStrategy = UiTokens.FontFamily + " (bundled) → " + string.Join(", ", UiTokens.UiFontNames),
             ResolvedUiFont = ui.Theme.DefaultFont.GetFontName(), PhysicalInputVerified = false, DpiGatePassed = false,
             Checks = checks, ControlCount = Descendants(this).OfType<Control>().Count(),
             Image = System.IO.Path.GetFileName(file), ImageSha256 = Convert.ToHexString(SHA256.HashData(System.IO.File.ReadAllBytes(file))).ToLowerInvariant()

@@ -4,6 +4,9 @@ Status: **ACCEPTED PRESENTATION ARCHITECTURE** under DEC-023.
 Date: 2026-10-04 (Asia/Saigon). Owner: Product UX Architect / UI Architecture Lead.
 Accepted: 2026-10-05 (Asia/Saigon). Approval owner: Project Director.
 
+Every player-facing screen is finished to the [UI polish standard](UI_POLISH_STANDARD.md) (2026-10-08): one material,
+45° frame geometry, three importance tiers, shared controls and the verification it lists.
+
 Current Stage 5 visual work also follows the user's 2026-10-06
 [strict visual / UX governance](../../01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md):
 all 50 rules and the 14-part gate apply. Use the
@@ -57,7 +60,7 @@ locked features or implementation requirements.
 | Product structure | [Direction](COMPANY_UX_DIRECTION.md), [information architecture](INFORMATION_ARCHITECTURE.md), [module matrix](MODULE_LANDSCAPE.md) |
 | Interaction | [Principles](UX_PRINCIPLES.md), [interaction model](INTERACTION_MODEL.md), [information priority](INFORMATION_PRIORITY.md), [taxonomy](SCREEN_TAXONOMY.md) |
 | System design | [Design system](DESIGN_SYSTEM_FOUNDATION.md), [branding](PLAYER_BRANDING_RULES.md), [visual grammar](VISUAL_GRAMMAR.md), [components](COMPONENT_ARCHITECTURE.md) |
-| Delivery discipline | [Blueprint template](SCREEN_BLUEPRINT_TEMPLATE.md), [AI rules](AI_UI_IMPLEMENTATION_RULES.md), [art policy](ART_PRODUCTION_POLICY.md), [verification](UI_VERIFICATION_STRATEGY.md) |
+| Delivery discipline | [Blueprint template](SCREEN_BLUEPRINT_TEMPLATE.md), [AI rules](AI_UI_IMPLEMENTATION_RULES.md), [art policy](ART_PRODUCTION_POLICY.md), [verification](UI_VERIFICATION_STRATEGY.md), [UI polish standard](UI_POLISH_STANDARD.md) |
 | Migration and review | [Current disposition](CURRENT_UI_DISPOSITION.md), [migration plan](PHASE5_UX_MIGRATION_PLAN.md), [questions](OPEN_QUESTIONS.md) |
 
 Stage 1 created specifications only. The [Stage 2 UI Kit](../ui-kit/README.md)

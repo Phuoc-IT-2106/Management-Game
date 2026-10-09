@@ -1,4 +1,5 @@
-// Explicit schema-2 DTOs (continuous seasons). Changes require deliberate save-schema review.
+// Explicit schema-4 DTOs (continuous seasons; rules v3 sponsor termination clause; schema 4 adds transfer history, World.Moves).
+// Changes require deliberate save-schema review.
 using System.Collections.Immutable;
 using ManagementGame.Domain;
 namespace ManagementGame.Infrastructure;
@@ -21,10 +22,10 @@ public sealed record EmploymentDto(string Id, string PersonId, long Salary, long
     public Employment ToDomain() => new(Id, PersonId, Salary, ReleaseCost, EndDay);
 }
 
-public sealed record SponsorContractDto(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment)
+public sealed record SponsorContractDto(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit)
 {
-    public static SponsorContractDto From(SponsorContract x) => new(x.Id, x.BrandId, x.Name, x.StartDay, x.EndDay, x.Load, x.WinBonus, x.Payment);
-    public SponsorContract ToDomain() => new(Id, BrandId, Name, StartDay, EndDay, Load, WinBonus, Payment);
+    public static SponsorContractDto From(SponsorContract x) => new(x.Id, x.BrandId, x.Name, x.StartDay, x.EndDay, x.Load, x.WinBonus, x.Payment, x.ForfeitLimit);
+    public SponsorContract ToDomain() => new(Id, BrandId, Name, StartDay, EndDay, Load, WinBonus, Payment, ForfeitLimit);
 }
 
 public sealed record FinancialItemDto(string Id, string CauseId, int DueDay, long Amount, bool Incoming, long Remaining, int? MissedDay)
@@ -129,10 +130,16 @@ public sealed record CalendarDto(int Day, Phase Phase, long Sequence)
     public Calendar ToDomain() => new(Day, Phase, Sequence);
 }
 
-public sealed record WorldDto(CalendarDto Calendar, ImmutableArray<RivalDto> Rivals, ImmutableArray<FixtureDto> Fixtures, ImmutableArray<CompetitiveOutcomeDto> Results, ImmutableArray<OfferDto> Offers, ImmutableArray<NegotiationDto> Negotiations, ImmutableArray<BrandStatusDto> Brands, ImmutableArray<CandidateDto> Candidates, ImmutableArray<CoachCandidateDto> CoachCandidates, Posture Meta, long NextId)
+public sealed record MoveDto(string Id, int Day, string PersonId, string Name, Personnel Kind, string Role, MoveReason Reason, string? Origin, string? Destination, string CauseId)
 {
-    public static WorldDto From(World x) => new(CalendarDto.From(x.Calendar), x.Rivals.Select(RivalDto.From).ToImmutableArray(), x.Fixtures.Select(FixtureDto.From).ToImmutableArray(), x.Results.Select(CompetitiveOutcomeDto.From).ToImmutableArray(), x.Offers.Select(OfferDto.From).ToImmutableArray(), x.Negotiations.Select(NegotiationDto.From).ToImmutableArray(), x.Brands.Select(BrandStatusDto.From).ToImmutableArray(), x.Candidates.Select(CandidateDto.From).ToImmutableArray(), x.CoachCandidates.Select(CoachCandidateDto.From).ToImmutableArray(), x.Meta, x.NextId);
-    public World ToDomain() => new(Calendar.ToDomain(), Rivals.Select(v => v.ToDomain()).ToImmutableArray(), Fixtures.Select(v => v.ToDomain()).ToImmutableArray(), Results.Select(v => v.ToDomain()).ToImmutableArray(), Offers.Select(v => v.ToDomain()).ToImmutableArray(), Negotiations.Select(v => v.ToDomain()).ToImmutableArray(), Brands.Select(v => v.ToDomain()).ToImmutableArray(), Candidates.Select(v => v.ToDomain()).ToImmutableArray(), CoachCandidates.Select(v => v.ToDomain()).ToImmutableArray(), Meta, NextId);
+    public static MoveDto From(Move x) => new(x.Id, x.Day, x.PersonId, x.Name, x.Kind, x.Role, x.Reason, x.Origin, x.Destination, x.CauseId);
+    public Move ToDomain() => new(Id, Day, PersonId, Name, Kind, Role, Reason, Origin, Destination, CauseId);
+}
+
+public sealed record WorldDto(CalendarDto Calendar, ImmutableArray<RivalDto> Rivals, ImmutableArray<FixtureDto> Fixtures, ImmutableArray<CompetitiveOutcomeDto> Results, ImmutableArray<OfferDto> Offers, ImmutableArray<NegotiationDto> Negotiations, ImmutableArray<BrandStatusDto> Brands, ImmutableArray<CandidateDto> Candidates, ImmutableArray<CoachCandidateDto> CoachCandidates, Posture Meta, long NextId, ImmutableArray<MoveDto> Moves)
+{
+    public static WorldDto From(World x) => new(CalendarDto.From(x.Calendar), x.Rivals.Select(RivalDto.From).ToImmutableArray(), x.Fixtures.Select(FixtureDto.From).ToImmutableArray(), x.Results.Select(CompetitiveOutcomeDto.From).ToImmutableArray(), x.Offers.Select(OfferDto.From).ToImmutableArray(), x.Negotiations.Select(NegotiationDto.From).ToImmutableArray(), x.Brands.Select(BrandStatusDto.From).ToImmutableArray(), x.Candidates.Select(CandidateDto.From).ToImmutableArray(), x.CoachCandidates.Select(CoachCandidateDto.From).ToImmutableArray(), x.Meta, x.NextId, x.Moves.Select(MoveDto.From).ToImmutableArray());
+    public World ToDomain() => new(Calendar.ToDomain(), Rivals.Select(v => v.ToDomain()).ToImmutableArray(), Fixtures.Select(v => v.ToDomain()).ToImmutableArray(), Results.Select(v => v.ToDomain()).ToImmutableArray(), Offers.Select(v => v.ToDomain()).ToImmutableArray(), Negotiations.Select(v => v.ToDomain()).ToImmutableArray(), Brands.Select(v => v.ToDomain()).ToImmutableArray(), Candidates.Select(v => v.ToDomain()).ToImmutableArray(), CoachCandidates.Select(v => v.ToDomain()).ToImmutableArray(), Meta, NextId, Moves.Select(v => v.ToDomain()).ToImmutableArray());
 }
 
 public sealed record CommandReceiptDto(string Id, string Digest, long Revision, string Message)

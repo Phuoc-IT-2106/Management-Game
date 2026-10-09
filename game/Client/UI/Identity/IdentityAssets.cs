@@ -4,13 +4,14 @@ namespace ManagementGame.UiKit;
 
 /// <summary>Generated letterless arms (genre shell S8): a shield silhouette, a division and one geometric charge.</summary>
 public sealed record CrestArms(string AssetId, Rgb Primary, Rgb Secondary, int Shape, int Division, int Charge);
-/// <summary>Generated letterless symbol (S8) for a brand (round badge with a geometric glyph) or a person (symbolic bust).</summary>
-public sealed record SymbolMark(string AssetId, Rgb Primary, Rgb Secondary, int Glyph, bool Person);
+/// <summary>Generated letterless symbol (S8) for a brand: a round badge with a geometric glyph.</summary>
+public sealed record SymbolMark(string AssetId, Rgb Primary, Rgb Secondary, int Glyph);
 
 /// <summary>Asset catalog: resolves presentation asset IDs (built from stable entity IDs, never display names) to marks.
-/// Crest IDs resolve to generated arms, brand logo and portrait IDs to generated letterless symbols. No bitmap art is
-/// registered, so news and environment IDs resolve to neutral, deterministic fallbacks. Nothing here is random and
-/// nothing is fetched.</summary>
+/// Crest IDs resolve to generated arms and brand logo IDs to generated letterless symbols. No person-specific portrait
+/// exists, so portrait IDs resolve to the approved generic art (<see cref="SemanticAssets.ForPortrait"/>): the generic
+/// player for players, the staff-domain art for coaches. News and environment IDs resolve to neutral, deterministic
+/// fallbacks. Nothing here is random, generated as imagery, or fetched.</summary>
 public sealed class IdentityAssets
 {
     public const string DefaultCrest = "fallback:crest", DefaultLogo = "fallback:logo", DefaultPortrait = "fallback:portrait", DefaultNews = "fallback:news",
@@ -31,8 +32,6 @@ public sealed class IdentityAssets
         Tokens = tokens; playerCrest = playerCrestAssetId;
         playerFamily = IsKind(playerCrestAssetId, "crest") ? Palettes[Index(playerCrestAssetId)].Family : "";
     }
-    /// <summary>Scene atmosphere ID (e.g. the Portal hero). Resolves to the procedural fallback until approved art exists.</summary>
-    public static string Environment(string scene) => "environment:" + scene;
     private static bool IsKind(string assetId, string kind) =>
         assetId.Length > kind.Length + 1 && assetId.StartsWith(kind, StringComparison.Ordinal) && assetId[kind.Length] == ':';
     private static uint Hash(string text)
@@ -52,7 +51,8 @@ public sealed class IdentityAssets
 
     /// <summary>The fallback an unregistered asset ID resolves to, or the ID itself when it is generated or registered.</summary>
     public static string Resolve(string assetId) =>
-        IsKind(assetId, "crest") || IsKind(assetId, "logo") || IsKind(assetId, "portrait") ? assetId
+        SemanticAssets.ForPortrait(assetId) is { } generic ? "semantic:" + generic
+        : IsKind(assetId, "crest") || IsKind(assetId, "logo") ? assetId
         : assetId.StartsWith("crest:", StringComparison.Ordinal) ? DefaultCrest
         : assetId.StartsWith("logo:", StringComparison.Ordinal) ? DefaultLogo
         : assetId.StartsWith("portrait:", StringComparison.Ordinal) ? DefaultPortrait
@@ -69,13 +69,13 @@ public sealed class IdentityAssets
         var (primary, secondary, _) = Palettes[index];
         return new CrestArms(assetId, Rgb.Hex(primary), Rgb.Hex(secondary), (int)(h >> 4) % 3, (int)(h >> 8) % 6, (int)(h >> 12) % 5);
     }
+    /// <summary>Brand logo symbol. Portraits never get a generated symbol: they use approved generic art.</summary>
     public SymbolMark? Symbol(string assetId)
     {
-        var person = IsKind(assetId, "portrait");
-        if (!person && !IsKind(assetId, "logo")) return null;
+        if (!IsKind(assetId, "logo")) return null;
         var h = Mixed(assetId);
         var (primary, secondary, _) = Palettes[h % (uint)Palettes.Length];
-        return new SymbolMark(assetId, Rgb.Hex(primary), Rgb.Hex(secondary), (int)((h >> 8) % 5), person);
+        return new SymbolMark(assetId, Rgb.Hex(primary), Rgb.Hex(secondary), (int)((h >> 8) % 5));
     }
     /// <summary>Identity colour for tinted regions; neutral when the asset has no generated identity.</summary>
     public Rgb TeamColor(string assetId) => Arms(assetId)?.Primary ?? Symbol(assetId)?.Primary ?? Tokens.Color(ColorRole.SurfaceInset);
@@ -87,7 +87,9 @@ public sealed class IdentityAssets
 }
 
 /// <summary>Draws one catalog asset. A plate gives thumbnails a ground washed diagonally in the subject's own colour (or
-/// neutral); the mark sits centred on it.</summary>
+/// neutral); the mark sits centred on it. Without a plate, a portrait is the approved generic art alone, drawn by its
+/// visible content so its transparent margin does not shrink it, and a portrait without known art is its vector glyph
+/// alone: nothing draws a box behind a person.</summary>
 public partial class AssetMark : Control
 {
     private IdentityAssets catalog = null!;
@@ -95,6 +97,8 @@ public partial class AssetMark : Control
     private bool plate;
     public string AssetId => assetId;
     public string Resolution { get; private set; } = "";
+    /// <summary>Whether the mark draws a ground (plate) behind the asset.</summary>
+    public bool Plate => plate;
 
     public void Bind(IdentityAssets assets, string id, Vector2 size, bool withPlate)
     {
@@ -103,11 +107,23 @@ public partial class AssetMark : Control
         SizeFlagsHorizontal = SizeFlags.ShrinkBegin; SizeFlagsVertical = SizeFlags.ShrinkCenter;
         SetMeta("asset_id", id); SetMeta("asset_resolution", Resolution);
         foreach (var child in GetChildren()) { RemoveChild(child); child.QueueFree(); }
+        if (SemanticAssets.ForPortrait(id) is { } generic)
+        {
+            // Approved generic art; the person's name always accompanies it, it never claims to be them. On a plate it sits
+            // inside the plate's margin; bare, its visible content fills the box at one perceived size.
+            var art = plate ? SemanticArt.Create(generic, size * .86f) : SemanticArt.Create(generic, size, fitContent: true, optical: Math.Min(size.X, size.Y) * .92f);
+            art.Name = "PortraitArt";
+            AddChild(art); art.SetAnchorsAndOffsetsPreset(LayoutPreset.Center, LayoutPresetMode.KeepSize);
+            art.GrowHorizontal = GrowDirection.Both; art.GrowVertical = GrowDirection.Both;
+            QueueRedraw();
+            return;
+        }
         // A neutral fallback plate names its kind with the shared icon family, never with invented imagery.
         if (catalog.Arms(id) is null && catalog.Symbol(id) is null && !id.StartsWith("crest:", StringComparison.Ordinal))
         {
             var glyph = UiIcon.Create(FallbackIcon(id), (int)Math.Min(32, size.Y * .5f), UiTheme.ToGodot(catalog.Tokens.Color(ColorRole.TextMuted)));
             AddChild(glyph); glyph.SetAnchorsAndOffsetsPreset(LayoutPreset.Center, LayoutPresetMode.KeepSize);
+            glyph.GrowHorizontal = GrowDirection.Both; glyph.GrowVertical = GrowDirection.Both;
         }
         QueueRedraw();
     }
@@ -121,23 +137,27 @@ public partial class AssetMark : Control
         };
     }
     private Color Tone(ColorRole role) => UiTheme.ToGodot(catalog.Tokens.Color(role));
+    /// <summary>Thumbnail ground washed diagonally in the subject's colour, or neutral steel when it has none.</summary>
+    private void DrawPlate(Rgb? tint)
+    {
+        var ground = Tone(ColorRole.SurfaceInset);
+        var far = tint is { } t ? ground.Lerp(UiTheme.ToGodot(t), .5f) : Tone(ColorRole.SelectedSurface);
+        // The plate takes the control cut (one angle family); its colour runs diagonally from the ground to the subject's.
+        var outline = FrameGeometry.Outline(0, 0, Size.X, Size.Y, Cuts.Diagonal(Surfaces.ControlCut)).Select(p => new Vector2(p.X, p.Y)).ToArray();
+        DrawPolygon(outline, [.. outline.Select(p => ground.Lerp(far, Math.Clamp((p.X / Math.Max(1, Size.X) + p.Y / Math.Max(1, Size.Y)) / 2, 0, 1) * .65f + .35f))]);
+        DrawStyleBox(SurfaceStyle.Create(new(Colors.Transparent, Colors.Transparent, Tone(ColorRole.FrameHighlight) with { A = .45f }, Tone(ColorRole.FrameStroke).Darkened(.3f),
+            Cuts.Diagonal(Surfaces.ControlCut)), 0, 0), new Rect2(Vector2.Zero, Size));
+    }
 
     public override void _Draw()
     {
         if (catalog is null) return;
         var arms = catalog.Arms(assetId);
         var symbol = catalog.Symbol(assetId);
+        if (SemanticAssets.ForPortrait(assetId) is not null) { if (plate) DrawPlate(null); return; }
         var neutral = arms is null && symbol is null;
-        if (plate || neutral && !assetId.StartsWith("crest:", StringComparison.Ordinal))
-        {
-            var ground = Tone(ColorRole.SurfaceInset);
-            var tint = arms?.Primary ?? symbol?.Primary;
-            var far = tint is { } t ? ground.Lerp(UiTheme.ToGodot(t), .5f) : Tone(ColorRole.SelectedSurface);
-            DrawPolygon([Vector2.Zero, new(Size.X, 0), Size, new(0, Size.Y)], [ground.Lerp(far, .35f), ground.Lerp(far, .7f), far, ground.Lerp(far, .55f)]);
-            var edge = new StyleBoxFlat { DrawCenter = false, BorderColor = Tone(ColorRole.Divider) };
-            edge.SetBorderWidthAll(1); edge.SetCornerRadiusAll(UiTokens.CornerRadius);
-            DrawStyleBox(edge, new Rect2(Vector2.Zero, Size));
-        }
+        var bare = !plate && assetId.StartsWith("portrait:", StringComparison.Ordinal);
+        if (plate || neutral && !bare && !assetId.StartsWith("crest:", StringComparison.Ordinal)) DrawPlate(arms?.Primary ?? symbol?.Primary);
         if (symbol is not null) { DrawSymbol(symbol, plate ? .74f : 1f); return; }
         if (neutral && !assetId.StartsWith("crest:", StringComparison.Ordinal)) return;
         var height = plate ? Size.Y * .8f : Size.Y;
@@ -162,7 +182,7 @@ public partial class AssetMark : Control
         DrawPolyline([.. shield, shield[0]], secondary, Math.Max(1, 2.5f * scale));
     }
 
-    /// <summary>Brand: a round badge with one geometric glyph. Person: a symbolic bust. Both letterless and generated.</summary>
+    /// <summary>Brand: a round badge with one geometric glyph, letterless and generated.</summary>
     private void DrawSymbol(SymbolMark mark, float share)
     {
         var r = Math.Min(Size.X, Size.Y) * share / 2; var c = Size / 2;
@@ -170,14 +190,6 @@ public partial class AssetMark : Control
         var w = Math.Max(1.5f, r * .1f);
         DrawCircle(c, r, primary);
         DrawArc(c, r - w / 2, 0, Mathf.Tau, 48, secondary, w, true);
-        if (mark.Person)
-        {
-            DrawCircle(c + new Vector2(0, -r * .22f), r * .3f, secondary);
-            var body = Enumerable.Range(0, 17).Select(i => c + new Vector2(-r * .62f + r * 1.24f * i / 16, r * .78f - r * .62f * Mathf.Sin(Mathf.Pi * i / 16))).ToArray();
-            var disc = Enumerable.Range(0, 32).Select(i => c + new Vector2(Mathf.Cos(Mathf.Tau * i / 32), Mathf.Sin(Mathf.Tau * i / 32)) * (r - w)).ToArray();
-            foreach (var part in Geometry2D.IntersectPolygons(body, disc)) DrawColoredPolygon(part, secondary);
-            return;
-        }
         Vector2 P(float x, float y) => c + new Vector2(x, y) * r;
         switch (mark.Glyph)
         {
