@@ -2,7 +2,7 @@
 
 Status: **PROPOSED — NOT APPROVED**  
 Ngày: 2026-10-08 · Offline specification; không sửa Competition  
-Liên quan: [catalog](PLAYER_ATTRIBUTE_CATALOG_V02.md), [protocol](MEASUREMENT_CALIBRATION_PROTOCOL_V02.md), [NPC](NPC_GENERATION_V02.md), [v0.1](PLAYER_RATING_FORMULAS_V1.md).
+Liên quan: [catalog](PLAYER_ATTRIBUTE_CATALOG_V02.md), [protocol](MEASUREMENT_CALIBRATION_PROTOCOL_V02.md), [NPC](NPC_GENERATION_V02.md), [v0.1](../../90-archive/10-vertical-slice/player-data/PLAYER_RATING_FORMULAS_V1.md).
 
 ## 1. Ba tầng không được đánh đồng
 

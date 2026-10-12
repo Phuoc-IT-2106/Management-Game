@@ -21,17 +21,19 @@ Không còn tuyên bố bốn Core attributes. Laning/Combat chỉ có future co
 
 ## v0.1 và independent review — lịch sử giữ nguyên
 
+Từ 2026-10-12 các file v0.1 nằm nguyên văn trong [docs/90-archive/10-vertical-slice/player-data](../../90-archive/10-vertical-slice/player-data/).
+
 | Tài liệu | Vai trò lịch sử |
 |---|---|
-| [README_V01](README_V01.md) | Bản byte-identical của index trước sửa v0.2; claims về versions giữ nguyên như evidence |
-| [PLAYER_DATA_CONTRACT_V1](PLAYER_DATA_CONTRACT_V1.md) | Identity/provenance/ownership được tái dùng; RatingValue cũ không phải v0.2 |
-| [PLAYER_ATTRIBUTE_CATALOG_V1](PLAYER_ATTRIBUTE_CATALOG_V1.md) | Four-core proposal cũ |
-| [PLAYER_RATING_FORMULAS_V1](PLAYER_RATING_FORMULAS_V1.md) | Công thức trước repair |
-| [NPC_GENERATION_V1](NPC_GENERATION_V1.md) | Phân phối trước repair |
-| [VALIDATION_CALIBRATION_V1](VALIDATION_CALIBRATION_V1.md) | Kế hoạch và historical document-check results |
-| [Real-path example v0.1](examples/real_player.example.json) | Synthetic public-data path, không rating người thật |
-| [NPC example v0.1](examples/npc_player.example.json) | Hand-worked, không seeded generator output |
-| [PLAYER_DATA_REVIEW_V1](PLAYER_DATA_REVIEW_V1.md) | Independent review NEEDS REVISION; findings không bị sửa để hợp v0.2 |
+| [README_V01](../../90-archive/10-vertical-slice/player-data/README_V01.md) | Bản byte-identical của index trước sửa v0.2; claims về versions giữ nguyên như evidence |
+| [PLAYER_DATA_CONTRACT_V1](../../90-archive/10-vertical-slice/player-data/PLAYER_DATA_CONTRACT_V1.md) | Identity/provenance/ownership được tái dùng; RatingValue cũ không phải v0.2 |
+| [PLAYER_ATTRIBUTE_CATALOG_V1](../../90-archive/10-vertical-slice/player-data/PLAYER_ATTRIBUTE_CATALOG_V1.md) | Four-core proposal cũ |
+| [PLAYER_RATING_FORMULAS_V1](../../90-archive/10-vertical-slice/player-data/PLAYER_RATING_FORMULAS_V1.md) | Công thức trước repair |
+| [NPC_GENERATION_V1](../../90-archive/10-vertical-slice/player-data/NPC_GENERATION_V1.md) | Phân phối trước repair |
+| [VALIDATION_CALIBRATION_V1](../../90-archive/10-vertical-slice/player-data/VALIDATION_CALIBRATION_V1.md) | Kế hoạch và historical document-check results |
+| [Real-path example v0.1](../../90-archive/10-vertical-slice/player-data/examples/real_player.example.json) | Synthetic public-data path, không rating người thật |
+| [NPC example v0.1](../../90-archive/10-vertical-slice/player-data/examples/npc_player.example.json) | Hand-worked, không seeded generator output |
+| [PLAYER_DATA_REVIEW_V1](../../90-archive/10-vertical-slice/player-data/PLAYER_DATA_REVIEW_V1.md) | Independent review NEEDS REVISION; findings không bị sửa để hợp v0.2 |
 
 v0.2 chỉ supersede các proposal measurement/consumer/NPC tương ứng; không sửa accepted decisions hoặc architecture. Cross-links từ historical documents về README này vẫn hợp lệ nhưng không biến historical arithmetic thành current result. Tài liệu lịch sử dùng version scope tại thời điểm viết.
 

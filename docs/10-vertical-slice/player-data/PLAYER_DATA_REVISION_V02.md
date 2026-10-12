@@ -25,7 +25,7 @@ Owner: Simulation Systems / Data Model Design
 
 **FACT:** initial branch `stage5-sponsor-instruments`, HEAD `14b9f48134264d8c04f3dfb268b93ee295b825f8`; rules=`slice-rules-v3`; content/save schema3 được xác nhận lại từ fixture/loader/store. Worktree có nhiều thay đổi chưa commit của công việc khác. [Runtime](RUNTIME_COMPATIBILITY_V02.md) liên kết source được đọc; initial inventory giữ951file hashes cùng git status trong `artifacts/player-data-v02-checks/initial-snapshot.json`. Không dùng HEAD một mình để mô tả dirty source.
 
-Năm spec Markdown v0.1, hai JSON cũ và [independent review](PLAYER_DATA_REVIEW_V1.md) được giữ nguyên. README là ngoại lệ do yêu cầu cập nhật index: lưu bản byte-identical ở [README_V01](README_V01.md) trước thay index; cùng thư mục nên các relative links lịch sử còn hợp lệ. Index mới giữ anchor `required-director-decisions` để link từ review không gãy. Các kiểm tra historical của v0.1/review vẫn là kết quả ở thời điểm cũ, không rerun rồi sửa báo cáo cũ để ép inventory mới PASS.
+Năm spec Markdown v0.1, hai JSON cũ và [independent review](../../90-archive/10-vertical-slice/player-data/PLAYER_DATA_REVIEW_V1.md) được giữ nguyên. README là ngoại lệ do yêu cầu cập nhật index: lưu bản byte-identical ở [README_V01](../../90-archive/10-vertical-slice/player-data/README_V01.md) trước thay index; cùng thư mục nên các relative links lịch sử còn hợp lệ. Index mới giữ anchor `required-director-decisions` để link từ review không gãy. Các kiểm tra historical của v0.1/review vẫn là kết quả ở thời điểm cũ, không rerun rồi sửa báo cáo cũ để ép inventory mới PASS.
 
 **DECISION — inherited:** [DEC-010/012/014/017/018/019/022/023](../../01-governance/DECISION_LOG.md) giữ ownership, outcomes, actor-safe decisions và architecture; không approve các proposal này. **ASSUMPTION:** examples/toy PMFs hoàn toàn synthetic. **OPEN QUESTION:** Director có chấp nhận phạm vi measurement/consumer hẹp hay yêu cầu thiết kế pressure/utility/resource trước? Không edit accepted decisions hoặc tự chọn production LoL.
 
@@ -83,7 +83,7 @@ Không chạy production C# tests/build, API, data calibration, NPC generator, s
 
 ## Director requests — giữ đúng ý nghĩa PD-D01–D05
 
-Các wording gốc được giữ nguyên trong [index](README.md#required-director-decisions) và [README lịch sử](README_V01.md#required-director-decisions).
+Các wording gốc được giữ nguyên trong [index](README.md#required-director-decisions) và [README lịch sử](../../90-archive/10-vertical-slice/player-data/README_V01.md#required-director-decisions).
 
 | Request | Recommendation / trade-off | Chặn bước nào? |
 |---|---|---|

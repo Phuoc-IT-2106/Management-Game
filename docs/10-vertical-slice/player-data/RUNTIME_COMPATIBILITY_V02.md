@@ -2,7 +2,7 @@
 
 Status: **PROPOSED — NOT APPROVED**  
 Ngày: 2026-10-08 · Integration decision contract, không implementation  
-Liên quan: [revision](PLAYER_DATA_REVISION_V02.md), [catalog](PLAYER_ATTRIBUTE_CATALOG_V02.md), [NPC lifecycle](NPC_GENERATION_V02.md), [v0.1 identity contract](PLAYER_DATA_CONTRACT_V1.md).
+Liên quan: [revision](PLAYER_DATA_REVISION_V02.md), [catalog](PLAYER_ATTRIBUTE_CATALOG_V02.md), [NPC lifecycle](NPC_GENERATION_V02.md), [v0.1 identity contract](../../90-archive/10-vertical-slice/player-data/PLAYER_DATA_CONTRACT_V1.md).
 
 ## 1. Current source of truth
 
@@ -38,7 +38,7 @@ Technical `Execution` record là campaign identity/receipts; `Plan.Execution` l�
 
 ## 4. Boundary contract cho artifact v0.2
 
-Identity, provenance, profile/observation ownership và deduplication của [contract v0.1](PLAYER_DATA_CONTRACT_V1.md) được tái dùng như proposal; **RatingValue semantics và example envelopes v0.1 không phải v0.2**. Không dùng method `performance_proxy_v01` với công thức mới. v0.2 measurement record proposal có các field tách biệt:
+Identity, provenance, profile/observation ownership và deduplication của [contract v0.1](../../90-archive/10-vertical-slice/player-data/PLAYER_DATA_CONTRACT_V1.md) được tái dùng như proposal; **RatingValue semantics và example envelopes v0.1 không phải v0.2**. Không dùng method `performance_proxy_v01` với công thức mới. v0.2 measurement record proposal có các field tách biệt:
 
 | Field | Type / rule |
 |---|---|

@@ -23,7 +23,7 @@ All 26 Markdown files from the three ZIP archives were copied byte-for-byte. Aft
 | Same | `PHASE0_TO_P1_PLAN.md` | `docs/02-discovery/PHASE0_TO_P1_PLAN.md` | Historical process plan. |
 | Same | `PRELIMINARY_DESIGN_PILLARS.md` | `docs/02-discovery/PRELIMINARY_DESIGN_PILLARS.md` | Historical proposal. |
 | Same | `PRODUCT_DIRECTION.md` | `docs/02-discovery/PRODUCT_DIRECTION.md` | Provisional Discovery direction. |
-| Same | `PRODUCT_SPECIALIST_HANDOFF.md` | `docs/05-handoffs/PRODUCT_SPECIALIST_HANDOFF.md` | Draft historical handoff. |
+| Same | `PRODUCT_SPECIALIST_HANDOFF.md` | `docs/90-archive/05-handoffs/PRODUCT_SPECIALIST_HANDOFF.md` | Draft historical handoff. |
 | Same | `RISK_REGISTER.md` | `docs/01-governance/RISK_REGISTER.md` | Active inherited risks; phase label stale. |
 | Same | `SOURCE_INDEX_DISCOVERY.md` | `docs/02-discovery/SOURCE_INDEX_DISCOVERY.md` | Historical Discovery index. |
 | Same | `STRATEGIC_DECISIONS_PENDING.md` | `docs/02-discovery/STRATEGIC_DECISIONS_PENDING.md` | Historical pending decisions. |
@@ -33,7 +33,7 @@ All 26 Markdown files from the three ZIP archives were copied byte-for-byte. Aft
 | Same | `CORE_DECISIONS.md` | `docs/03-product-foundation/CORE_DECISIONS.md` | Phase 1 specialist proposal. |
 | Same | `CORE_LOOP.md` | `docs/03-product-foundation/CORE_LOOP.md` | Phase 1 specialist proposal. |
 | Same | `GAME_VISION_REVISIONS_PROPOSED.md` | `docs/03-product-foundation/GAME_VISION_REVISIONS_PROPOSED.md` | Proposed vision revisions. |
-| Same | `PROJECT_DIRECTOR_HANDOFF_PHASE1.md` | `docs/05-handoffs/PROJECT_DIRECTOR_HANDOFF_PHASE1.md` | Phase 1 handoff, not approval record. |
+| Same | `PROJECT_DIRECTOR_HANDOFF_PHASE1.md` | `docs/90-archive/05-handoffs/PROJECT_DIRECTOR_HANDOFF_PHASE1.md` | Phase 1 handoff, not approval record. |
 | Separate user file | `DISCOVERY_WORKSHEET_COMPLETED.md` | `docs/02-discovery/DISCOVERY_WORKSHEET_COMPLETED.md` | Completed user answers; Director consolidation required. |
 
 The root `README.md` is newly written for this repository. See `DOCUMENT_AUTHORITY.md` for how approval and conflicts are handled.
@@ -50,7 +50,7 @@ All 13 Markdown files in `PHASE2_CORE_LOOP_SIMULATION_PACKAGE.zip` were copied b
 | `DELEGATION_MODEL.md` | `docs/06-core-loop-simulation/DELEGATION_MODEL.md` | Proposed delegation behavior. |
 | `FAILURE_RECOVERY_MODEL.md` | `docs/06-core-loop-simulation/FAILURE_RECOVERY_MODEL.md` | Proposed recovery progression. |
 | `PHASE2_OPEN_QUESTIONS.md` | `docs/06-core-loop-simulation/PHASE2_OPEN_QUESTIONS.md` | Phase 2 unresolved questions. |
-| `PROJECT_DIRECTOR_HANDOFF_PHASE2.md` | `docs/05-handoffs/PROJECT_DIRECTOR_HANDOFF_PHASE2.md` | Phase 2 handoff, not approval record. |
+| `PROJECT_DIRECTOR_HANDOFF_PHASE2.md` | `docs/90-archive/05-handoffs/PROJECT_DIRECTOR_HANDOFF_PHASE2.md` | Phase 2 handoff, not approval record. |
 | `RESOURCE_MODEL.md` | `docs/06-core-loop-simulation/RESOURCE_MODEL.md` | Proposed resource model. |
 | `RIVAL_SIMULATION.md` | `docs/06-core-loop-simulation/RIVAL_SIMULATION.md` | Proposed rival behavior. |
 | `SIMULATION_CYCLE.md` | `docs/06-core-loop-simulation/SIMULATION_CYCLE.md` | Proposed simulation-cycle contract. |

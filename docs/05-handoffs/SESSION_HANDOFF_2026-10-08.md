@@ -1,11 +1,12 @@
 # Session handoff — 2026-10-08 (paused)
 
-Status: **PAUSED by the user.** Nothing is committed. Resume from this file.
+Status: **PAUSED by the user.** Everything below was committed in `9b27842` (2026-10-09). Rules v4 continued from there
+and partly supersedes [What remains](#what-remains): its phase table in
+[RULES_V4_PLAYER_WORLD.md](../10-vertical-slice/RULES_V4_PLAYER_WORLD.md) is the current progress record.
 
-**Repository state.**
+**Repository state when paused.**
 - Branch `stage5-sponsor-instruments`, HEAD `14b9f48`.
-- The working tree also carries earlier sessions' uncommitted work (Portal redesign, polish passes, semantic assets).
-  Review the whole diff before committing; the user has not asked for a commit.
+- The working tree also carried earlier sessions' uncommitted work (Portal redesign, polish passes, semantic assets).
 
 This session did three pieces of work:
 - **A.** Sidebar (left rail) redesign. Done and verified.
@@ -87,7 +88,7 @@ Evidence: [portal-evidence/topbar](../10-vertical-slice/genre-shell/portal-evide
 ## D. Portal Transfer News redesign — done (later session, same day)
 
 Full record: [TRANSFER_NEWS.md](../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
-Evidence: [portal-evidence/transfer-news](../10-vertical-slice/genre-shell/portal-evidence/transfer-news/).
+Evidence: `portal-evidence/transfer-news` (removed 2026-10-12, superseded; in git history at `3917e5c`).
 Also uncommitted.
 
 - The Portal's Transfer News is now an editorial feed of completed personnel moves. It is no longer a market list. The

@@ -10,7 +10,7 @@ Sources:
   art.
 
 Evidence: [portal-evidence/transfer-news-v2](portal-evidence/transfer-news-v2/) (v1:
-[portal-evidence/transfer-news](portal-evidence/transfer-news/)).
+`portal-evidence/transfer-news` (removed 2026-10-12, superseded; in git history at `3917e5c`)).
 
 ## 1. Responsibilities
 

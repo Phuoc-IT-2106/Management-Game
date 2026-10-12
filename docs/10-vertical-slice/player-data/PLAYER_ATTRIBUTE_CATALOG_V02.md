@@ -2,7 +2,7 @@
 
 Status: **PROPOSED — NOT APPROVED**  
 Ngày: 2026-10-08 · Chế độ: SPEC ONLY  
-Nguồn: [revision](PLAYER_DATA_REVISION_V02.md), [review lịch sử](PLAYER_DATA_REVIEW_V1.md), [công thức](PLAYER_RATING_FORMULAS_V02.md), [runtime](RUNTIME_COMPATIBILITY_V02.md).
+Nguồn: [revision](PLAYER_DATA_REVISION_V02.md), [review lịch sử](../../90-archive/10-vertical-slice/player-data/PLAYER_DATA_REVIEW_V1.md), [công thức](PLAYER_RATING_FORMULAS_V02.md), [runtime](RUNTIME_COMPATIBILITY_V02.md).
 
 ## Phạm vi được đề xuất
 

@@ -109,8 +109,9 @@ below 12 px, typed horizon events, news art by asset ID, routes, keyboard focus 
 (long names, no / one / many decisions, no match, empty / many news, warning, distress, missing
 crests and news art). Integration 215, Domain 4, UI 3, UiKit 140, OperatingMap 48,
 SponsorWorkspace 48; native UI kit 24, operating map 101, sponsor 31; Headless two-cycle pass;
-Debug solution build with zero warnings. Evidence: [portal-evidence](portal-evidence/)
-(`build/Capture-Shell.ps1 -Results 1 -Cases`; `baseline/` holds the pre-refinement captures).
+Debug solution build with zero warnings. Evidence: the first-pass captures in `portal-evidence/` and the
+pre-refinement `baseline/` (`build/Capture-Shell.ps1 -Results 1 -Cases`; removed 2026-10-12, superseded; in git history
+at `3917e5c`).
 
 ## Portal — world news and transfer news (graphite) — 2026-10-07
 
@@ -235,7 +236,7 @@ FrameOuter, FrameStroke, FrameHighlight, SurfaceShade and AccentMuted.
 - Suites: Integration 225, UiKit 174 (material token order, brass label contrast), Domain 4, UI 3, OperatingMap 48,
   SponsorWorkspace 48, Headless two-cycle (hash unchanged).
 - Native: UI kit 24, operating map 101, sponsor 31.
-- Evidence: [portal-evidence/polish](portal-evidence/polish/) — `before-*` (pre-polish), the polished Portal, the
+- Evidence: `portal-evidence/polish` (removed 2026-10-12, superseded; in git history at `3917e5c`) — `before-*` (pre-polish), the polished Portal, the
   `surface-states-*` board (a DEVELOPMENT verification board, never shown in play) and stress cases.
 
 **Gaps that need artwork rather than code.**
@@ -302,7 +303,7 @@ with a steel bevel. Disabled is a flat plate. Focus is the outer ring.
 - Suites: UiKit 189 (tier order and steps, lit-rim contrast, header-band text contrast), Integration 225, Domain 4,
   UI 3, OperatingMap 48, SponsorWorkspace 48, Headless two-cycle (hash unchanged).
 - Native: UI kit 24, operating map 101, sponsor 31.
-- Evidence: [portal-evidence/polish-v2](portal-evidence/polish-v2/), with `before-*` = the first polish pass.
+- Evidence: `portal-evidence/polish-v2` (removed 2026-10-12, superseded; in git history at `3917e5c`), with `before-*` = the first polish pass.
 
 The lower rail ambience (`ui_sidebar_ambience_v1.png`) and the reference's photographic imagery remain artwork gaps.
 
@@ -409,7 +410,7 @@ frame could clip it. The frame now grows with its story; its vertical margins ar
   - Headless two-cycle: hash `fcf6fc3e…`, unchanged.
 - Native: UI kit 24, operating map 101, sponsor 31. The sponsor focus check now accepts the cut focus ring through
   `UiTheme.VisibleFocus`; `SelectedEntity` keeps its square ring.
-- Evidence: [portal-evidence/polish-v3](portal-evidence/polish-v3/).
+- Evidence: `portal-evidence/polish-v3` (removed 2026-10-12, superseded; in git history at `3917e5c`).
   - `before-*`: v2.
   - `detail-before-after-1280x720.png`: a 2× comparison of corners, junctions, rail, Continue and headers at true pixels.
   - The surface-states board adds a DEVELOPMENT frame-tier strip.
@@ -562,7 +563,7 @@ did not.
 - `Verify.ps1 -Configuration Debug`: Domain 4, Integration 225, UI 3, UiKit 215, OperatingMap 48, SponsorWorkspace 48, and
   the headless two-cycle run (hash unchanged).
 - Native: UI kit 24, operating map 101, sponsor 31.
-- Evidence: [portal-evidence/redesign](portal-evidence/redesign/). `before-*` is the state before this pass.
+- Evidence: `portal-evidence/redesign` (removed 2026-10-12, superseded; in git history at `3917e5c`). `before-*` is the state before this pass.
 
 **Remaining.**
 - At 1280×720 an extreme organization name still wraps to two lines and ends in an ellipsis; the full name is in the
@@ -830,7 +831,7 @@ player-facing figures are written.
 
 Status: **IMPLEMENTED, candidate; layout and data source superseded by v2 below (2026-10-09)**. Full spec, findings and
 verification: [TRANSFER_NEWS.md](TRANSFER_NEWS.md).
-Evidence: [portal-evidence/transfer-news](portal-evidence/transfer-news/).
+Evidence: `portal-evidence/transfer-news` (removed 2026-10-12, superseded; in git history at `3917e5c`).
 
 - The Portal's Transfer News is now a short editorial feed of **completed personnel moves**. It covers signings,
   head-coach appointments, contract-end departures, returns and same-day roundups. It is no longer a list of free
