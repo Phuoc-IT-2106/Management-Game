@@ -58,6 +58,24 @@ public partial class GameShell
         label.AddThemeFontSizeOverride("font_size", ui.Tokens.FontSize(TypographyRole.Caption));
         return label;
     }
+    /// <summary>Filters or views as segments on a recessed track; the active one is a lifted plate with the brass edge (polish
+    /// standard §6). Each option may carry a muted count; pressing one calls <paramref name="choose"/>.</summary>
+    private PanelContainer Segments(string trackName, string prefix, IEnumerable<(string Name, string Count)> options, string active, Action<string> choose)
+    {
+        var track = PanelFrame.Well(ui, 2); track.Name = trackName; track.SizeFlagsHorizontal = SizeFlags.ExpandFill; track.MouseFilter = MouseFilterEnum.Pass;
+        var row = new HFlowContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill }; row.AddThemeConstantOverride("h_separation", 2); track.AddChild(row);
+        foreach (var (name, count) in options)
+        {
+            var on = name == active;
+            var segment = new CardButton(10, 2) { ThemeTypeVariation = on ? "SegmentSelected" : "Segment", Name = prefix + name.Split(' ')[0], SizeFlagsHorizontal = SizeFlags.ShrinkBegin }.Compact();
+            var label = CardButton.Passive(new HBoxContainer()); label.AddThemeConstantOverride("separation", 5);
+            label.AddChild(Caps(name, on ? ColorRole.TextPrimary : ColorRole.TextSecondary));
+            if (count.Length > 0) label.AddChild(Caps(count, ColorRole.TextMuted));
+            segment.Body.AddChild(label);
+            segment.Pressed += () => choose(name); row.AddChild(segment);
+        }
+        return track;
+    }
     private Label Line(VBoxContainer parent, string text, TypographyRole role = TypographyRole.Label, ColorRole tone = ColorRole.TextPrimary)
     { var label = SemanticText.Create(ui, text, role, tone); parent.AddChild(label); return label; }
     /// <summary>A dense table (S5). <paramref name="primary"/> is the column that names the row and gets the most width
@@ -151,20 +169,9 @@ public partial class GameShell
         var messages = Card(body, "Messages", "What happened, and who does it affect?", "inbox");
         var groups = new (string Name, string[] Kinds)[] { ("All", []), ("Offers & deals", ["Offer", "Negotiation", "Market", "Commercial"]),
             ("Contracts", ["Contract", "Renewal"]), ("Matches & season", ["Match", "Season", "Meta", "League"]) };
-        // Filters are segments on a recessed track; the active one carries the brass edge (polish standard §6).
-        var track = PanelFrame.Well(ui, 2); track.Name = "InboxFilterTrack"; track.SizeFlagsHorizontal = SizeFlags.ExpandFill; track.MouseFilter = MouseFilterEnum.Pass;
-        var filters = new HFlowContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill }; filters.AddThemeConstantOverride("h_separation", 2); track.AddChild(filters);
-        foreach (var (name, groupKinds) in groups)
-        {
-            var active = name == inboxFilter;
-            var filter = new CardButton(10, 2) { ThemeTypeVariation = active ? "SegmentSelected" : "Segment", Name = "Filter_" + name.Split(' ')[0], SizeFlagsHorizontal = SizeFlags.ShrinkBegin }.Compact();
-            var label = CardButton.Passive(new HBoxContainer()); label.AddThemeConstantOverride("separation", 5);
-            label.AddChild(Caps(name, active ? ColorRole.TextPrimary : ColorRole.TextSecondary));
-            label.AddChild(Caps(view.Inbox.Count(r => groupKinds.Length == 0 || groupKinds.Contains(r.Kind)).ToString(System.Globalization.CultureInfo.InvariantCulture), ColorRole.TextMuted));
-            filter.Body.AddChild(label);
-            filter.Pressed += () => { inboxFilter = name; ShowSection(); }; filters.AddChild(filter);
-        }
-        messages.AddChild(track);
+        messages.AddChild(Segments("InboxFilterTrack", "Filter_", groups.Select(g => (g.Name,
+            view.Inbox.Count(r => g.Kinds.Length == 0 || g.Kinds.Contains(r.Kind)).ToString(System.Globalization.CultureInfo.InvariantCulture))), inboxFilter,
+            name => { inboxFilter = name; ShowSection(); }));
         var kinds = groups.Single(g => g.Name == inboxFilter).Kinds;
         var rows = view.Inbox.Where(r => kinds.Length == 0 || kinds.Contains(r.Kind)).ToArray();
         for (var i = 0; i < rows.Length; i++)
@@ -289,10 +296,22 @@ public partial class GameShell
         }
     }
 
-    // ---------- Competition ----------
+    // ---------- Competition (approved references 04_competition and 05_league) ----------
+    private string competitionView = "Match";
+    /// <summary>The company's place in the league table, once a match is played ("" before).</summary>
+    private string LeaguePlace() => view.Standings.IsDefaultOrEmpty || view.Standings.All(s => s.Played == 0) ? ""
+        : $"{Figures.Ordinal(view.Standings.Single(s => s.Company).Place)} of {Figures.Count(view.Standings.Length)}";
     private Control CompetitionScreen()
     {
-        var page = Page(out var body, "Competition", $"Public meta: {view.Meta.ToLowerInvariant()} · coach control: {view.Delegation.ToString().ToLowerInvariant()}");
+        var place = LeaguePlace();
+        var page = Page(out var body, "Competition", $"Season {view.Season}{(place.Length > 0 ? " · " + place : "")} · public meta: {view.Meta.ToLowerInvariant()} · coach control: {view.Delegation.ToString().ToLowerInvariant()}");
+        // Two views of one section (no extra rail item): the match workspace and the league around it.
+        body.AddChild(Segments("CompetitionViewTrack", "View_", new[] { ("Match", ""), ("League", "") }, competitionView, name => { competitionView = name; ShowSection(); }));
+        if (competitionView == "League") LeagueView(body); else MatchView(body);
+        return page;
+    }
+    private void MatchView(VBoxContainer body)
+    {
         Columns(body, out var left, out var right);
         var match = Card(left, "Next match", "Who do we face, and what do we know?", "competition", FrameTier.Premium);
         if (view.NextFixtureId.Length == 0) Line(match, "No match until next season. Use the time for contracts and sponsors.", tone: ColorRole.TextSecondary);
@@ -345,12 +364,71 @@ public partial class GameShell
         authority.AddChild(ui.Button("Apply authority", () => Send(new CoachDecision((Delegation)mode.Selected, (Risk)ceiling.Selected))));
 
         var fixtures = Card(right, "Season fixtures", "What is left this season, and what did we win?", "calendar");
-        fixtures.AddChild(Table("Fixtures", ["Day", "Opponent", "Stakes", "Result"],
-            view.Fixtures.Select(f => (f.Id, new[] { f.Day.ToString(), f.Opponent, f.Importance == 2 ? "Double" : "Regular", f.Result.Length == 0 ? "—" : $"{ResultMarker(f.Result)} {f.Result}" })), null, primary: 1, fit: [0]));
+        fixtures.AddChild(Table("Fixtures", ["Day", "Opponent", "Stage", "Result"],
+            view.Fixtures.Select(f => (f.Id, new[] { f.Day.ToString(Invariant), f.Opponent, Stage(f.Stage, f.Importance),
+                f.Result.Length == 0 ? "—" : $"{ResultMarker(f.Result)} {f.Result} {f.Score}".TrimEnd() })), null, primary: 1, fit: [0, 2, 3]));
         var rivals = Card(right, "Head-to-head", "Which rivals have our number?", "record");
         foreach (var rival in view.Rivals) Line(rivals, $"{rival.Name}  {rival.Wins}–{rival.Losses}{(rival.Remaining > 0 ? $"  ({rival.Remaining} left)" : "")}");
-        return page;
     }
+    /// <summary>A fixture's stage as the public names it; the second half of the regular season carries double stakes.</summary>
+    private static string Stage(string stage, int importance) => stage switch
+    { "semifinal" => "Semifinal", "final" => "Final", _ => importance >= 2 ? "Double" : "Regular" };
+
+    /// <summary>The league around the company (reference 05_league): the derived table, this week's and next week's matches,
+    /// the playoffs once they exist, and the league's format.</summary>
+    private void LeagueView(VBoxContainer body)
+    {
+        var info = view.League;
+        // The standings need less width than the match names beside them.
+        Columns(body, out var left, out var right, 0.85f);
+        var table = Card(left, "League standings", "Where do we stand, and who is above the playoff line?", "record", FrameTier.Premium);
+        var standings = view.Standings.IsDefault ? [] : view.Standings;
+        var company = standings.FirstOrDefault(s => s.Company);
+        table.AddChild(Table("Standings", ["#", "Team", "W", "L", "Map diff", "Pts"],
+            standings.Select(s => (s.TeamId, new[] { s.Place.ToString(Invariant), s.Name, s.Won.ToString(Invariant), s.Lost.ToString(Invariant),
+                (s.GamesWon - s.GamesLost).ToString("+#;−#;0", Invariant), s.Points.ToString(Invariant) })), null, company?.TeamId, primary: 1, numeric: [2, 3, 4, 5], fit: [0]));
+        if (info is not null)
+            Line(table, $"Top {info.PlayoffTeams} reach the playoffs. Level teams are separated by map difference, then head-to-head, then maps won.", TypographyRole.Annotation, ColorRole.TextSecondary);
+
+        var matches = view.LeagueMatches.IsDefault ? [] : view.LeagueMatches;
+        var playoffs = matches.Where(m => m.Stage != "regular").ToArray();
+        if (playoffs.Length > 0)
+        {
+            var bracket = Card(right, "Playoffs", "Who is still in, and who plays whom?", "competition");
+            bracket.AddChild(Table("Playoffs", ["Day", "Stage", "Match", "Score"],
+                playoffs.Select(m => (m.Id, new[] { m.Day.ToString(Invariant), Stage(m.Stage, 3), MatchName(m), m.Score.Length == 0 ? "—" : m.Score })),
+                null, matches.FirstOrDefault(m => m.Company && m.Stage != "regular")?.Id, primary: 2, fit: [0, 3]));
+        }
+        var week = Card(right, "Matches", "Who plays whom this week and next?", "calendar");
+        var seasonStart = view.Day - view.DayOfSeason + 1;
+        var thisWeek = (view.DayOfSeason - 1) / 7;
+        foreach (var (title, index) in new[] { ("This week", thisWeek), ("Next week", thisWeek + 1) })
+        {
+            var first = seasonStart + index * 7; var last = Math.Min(first + 6, seasonStart + view.SeasonLength - 1);
+            var rows = matches.Where(m => m.Day >= first && m.Day <= last && m.Stage == "regular").ToArray();
+            week.AddChild(Caps(first > last ? title : $"{title} · days {first}–{last}"));
+            if (rows.Length == 0) { Line(week, first > last ? "The season is over." : "No league matches.", TypographyRole.Annotation, ColorRole.TextSecondary); continue; }
+            week.AddChild(Table(index == thisWeek ? "MatchesThisWeek" : "MatchesNextWeek", ["Day", "Match", "Score"],
+                rows.Select(m => (m.Id, new[] { m.Day.ToString(Invariant), MatchName(m), m.Score.Length == 0 ? "—" : m.Score })),
+                null, rows.FirstOrDefault(m => m.Company)?.Id, primary: 1, fit: [0, 2]));
+        }
+
+        if (info is null) return;
+        var facts = Card(body, "League information", "How does the season work?", "plan");
+        var flow = ui.Flow(); facts.AddChild(flow);
+        void Fact(string label, string value)
+        {
+            var cell = ui.Stack(); cell.AddThemeConstantOverride("separation", 2); cell.CustomMinimumSize = new Vector2(ui.Tokens.ActionMinimumWidth * 1.6f, 0);
+            cell.AddChild(Caps(label)); Line(cell, value); flow.AddChild(cell);
+        }
+        Fact("Regular season", $"{Figures.Count(info.Teams)} teams, double round robin, best of {Figures.Count(info.RegularGames)}");
+        Fact("Matches per team", Figures.Count(info.MatchesPerTeam));
+        Fact("Playoffs", $"Top {Figures.Count(info.PlayoffTeams)}, single elimination, best of {Figures.Count(info.PlayoffGames)}");
+        Fact("Key days", $"Regular season ends day {Figures.Count(info.LastRegularDay)} · semifinals day {Figures.Count(info.SemifinalDay)} · final day {Figures.Count(info.FinalDay)}");
+        var prizes = info.PlacePrizes.Select((amount, i) => (amount, place: i + 1)).Where(p => p.amount > 0).ToArray();
+        if (prizes.Length > 0) Fact("Place prizes", string.Join(" · ", prizes.Select(p => $"{Figures.Ordinal(p.place)} {Currency.Format(p.amount)}")));
+    }
+    private string MatchName(LeagueMatchRow m) => $"{m.Home} vs {m.Away}";
     private SpinBox Spin(string name, int value) => new() { Name = name, MinValue = 0, MaxValue = 100, Step = 5, Value = value, CustomMinimumSize = new Vector2(ui.Tokens.ActionMinimumWidth * 0.8f, 0) };
 
     // ---------- Commercial ----------

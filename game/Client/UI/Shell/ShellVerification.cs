@@ -67,6 +67,14 @@ public partial class GameShell
             SectionChromeCheck(id);
             RailCheck(id);
         }
+        // The league view of Competition (reference 05_league): every team in the derived table, the company's row selected,
+        // under the same chrome rules as every section.
+        Navigate(ShellSections.Competition); await Settle(); await Press("View_League");
+        var standings = Find<Tree>("Standings");
+        Check(standings.GetRoot().GetChildCount() == view.Standings.Length && standings.GetSelected()?.GetMetadata(0).AsString() == view.CompanyId,
+            "the league view lists every team, with the company's row selected");
+        LayoutCheck("competition-league"); SectionChromeCheck("competition-league");
+        await Press("View_Match");
         Navigate(ShellSections.Portal); await Settle();
         var tasks = PortalTasks.Build(view);
         var prepare = tasks.Select((t, i) => (t, i)).First(x => x.t.Section == ShellSections.Competition);
@@ -175,6 +183,7 @@ public partial class GameShell
         if (session is null) { await Shot("start"); StartCampaign(Arg("--shell-company") ?? "", 20261004); }
         if (Arg("--shell-results") is { } results && int.TryParse(results, out var played)) PlayForward(played);
         foreach (var (id, _, _) in Sections) { Navigate(id); await Shot(id); }
+        Navigate(ShellSections.Competition); await Press("View_League"); await Shot("competition-league"); await Press("View_Match");
         if (view.Offers.FirstOrDefault(o => o.Availability == "Available") is { } offer) { Navigate(ShellSections.Commercial); OpenOffer(offer.Id); await Shot("offer"); CloseOverlay(); }
         // A material commitment's confirmation (hiring a coach opens it without committing anything).
         if (!view.CoachCandidates.IsEmpty) { Navigate(ShellSections.Staff); await Press("HireCoach"); await Shot("confirm"); CloseOverlay(); }

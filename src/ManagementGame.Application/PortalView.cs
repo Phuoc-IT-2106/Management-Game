@@ -76,7 +76,10 @@ public sealed record PortalTeam(string Id, string Name, string CrestAssetId);
 public sealed record PortalMatch(string FixtureId, PortalTeam Us, PortalTeam Opponent, int Day, int DayOfSeason, int MatchNumber, int SeasonMatches,
     int Importance, string StrengthEstimate, string Tendency, string Confidence, PlanState Plan, int HeadToHeadWon, int HeadToHeadLost);
 public sealed record SeasonResult(string FixtureId, int Day, string Opponent, string Outcome);
-public sealed record PortalSeason(int Season, int Won, int Lost, int ToPlay, ImmutableArray<SeasonResult> Recent, ImmutableArray<RivalRow> HeadToHead);
+/// <summary>The season so far: series won and lost, matches to play, recent results, head-to-head, and the company's place
+/// in the league table (0 before any match) of <paramref name="Teams"/> teams.</summary>
+public sealed record PortalSeason(int Season, int Won, int Lost, int ToPlay, ImmutableArray<SeasonResult> Recent, ImmutableArray<RivalRow> HeadToHead,
+    int Place = 0, int Teams = 0, int PlayoffTeams = 0);
 /// <summary>News is world news (results, market, league and commercial notices); Transfers is transfer news (completed
 /// personnel moves). The two never share a story; the player market itself lives in Squad and Staff.</summary>
 public sealed record PortalView(PortalCompany Company, PortalTime Time, PortalFinance Finance, ImmutableArray<PortalDecision> Decisions,
@@ -103,9 +106,11 @@ public static class PortalProjection
         return new PortalView(company, new PortalTime(v.Season, v.Day, v.DayOfSeason, v.SeasonLength, phase), Money(v),
             [.. PortalTasks.Build(v).Select(t => new PortalDecision(t.Id, t.Category, t.Subject.Length > 0 ? t.Subject : t.Text, t.Why, t.Urgency, t.DueDay, t.Section, t.TargetId,
                 t.Kind, t.SubjectId.Length > 0 ? AssetIds.ForSubject(t.SubjectId, "") : ""))],
-            [.. v.Inbox.Where(row => !Personnel(row.Kind)).Take(NewsLimit).Select(row => News(v, row))], [.. TransferStories(v).Take(TransferStoryLimit)], Match(v, company),
+            WorldNews(v), [.. TransferStories(v).Take(TransferStoryLimit)], Match(v, company),
             new PortalSeason(v.Season, played.Count(f => f.Result == "Victory"), played.Count(f => f.Result != "Victory"), v.Fixtures.Length - played.Length,
-                [.. played.OrderByDescending(f => f.Day).Take(RecentResults).Select(f => new SeasonResult(f.Id, f.Day, f.Opponent, f.Result))], v.Rivals));
+                [.. played.OrderByDescending(f => f.Day).Take(RecentResults).Select(f => new SeasonResult(f.Id, f.Day, f.Opponent, f.Result))], v.Rivals,
+                v.Standings.IsDefaultOrEmpty || v.Standings.All(s => s.Played == 0) ? 0 : v.Standings.Single(s => s.Company).Place,
+                v.Standings.IsDefaultOrEmpty ? 0 : v.Standings.Length, v.PlayoffTeams));
     }
 
     /// <summary>Transfer news: recorded move → eligibility → editorial selection → story.
@@ -220,6 +225,15 @@ public static class PortalProjection
         for (var d = v.Day + 1; d <= last; d++) projected += wages.Where(w => w.ContractEnd >= d).Sum(w => w.Salary) + v.OperatingCost;
         var arrears = v.Bills.Where(x => !x.Incoming && x.MissedDay is not null).Sum(x => x.Remaining);
         return new PortalFinance(v.Cash, v.Status, v.Forecast, 7, receipts, bills + projected, MoneyAheadDays, arrears);
+    }
+
+    /// <summary>World news, newest first: the inbox's world messages and the league stories read from results (a new leader,
+    /// an upset). On one day, inbox messages come first.</summary>
+    public static ImmutableArray<PortalNews> WorldNews(Situation v)
+    {
+        var league = v.LeagueNews.IsDefaultOrEmpty ? [] : v.LeagueNews.Select(n =>
+            new PortalNews(n.Id, "Season", n.Headline, n.Detail, n.Day, n.SubjectId, AssetIds.ForSubject(n.SubjectId, "Season"), ShellSections.Competition));
+        return [.. v.Inbox.Where(row => !Personnel(row.Kind)).Select(row => News(v, row)).Concat(league).OrderByDescending(n => n.Day).Take(NewsLimit)];
     }
 
     /// <summary>A sponsorship offer still on the table reads as a headline built from its typed record; every other

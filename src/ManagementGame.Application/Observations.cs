@@ -10,6 +10,7 @@ public static class Observations
     [
         ("notice:offer:", "Offer"), ("notice:negotiation:", "Negotiation"), ("notice:contract:", "Contract"),
         ("notice:renewal:", "Renewal"), ("notice:season:", "Season"), ("notice:roster:", "League"), ("notice:sponsor:", "Commercial"),
+        ("notice:league:", "Season"), ("notice:restructuring:", "Finance"),
         ("result:", "Match"), ("claim:", "Market"),
         ("lapse:", "Market"), ("meta:", "Meta"), ("commercial:", "Commercial")
     ];
@@ -49,8 +50,65 @@ public static class Observations
     public static ImmutableArray<FixtureRow> FixtureRows(Campaign s) => s.World.Fixtures.Select(f =>
     {
         var result = s.World.Results.FirstOrDefault(r => r.FixtureId == f.Id);
-        return new FixtureRow(f.Id, f.Day, s.World.Rivals.Single(r => r.Id == f.RivalId).Name, f.Importance, result is null ? "" : Outcome(result), f.RivalId);
+        return new FixtureRow(f.Id, f.Day, s.World.Rivals.Single(r => r.Id == f.RivalId).Name, f.Importance, result is null ? "" : Outcome(result), f.RivalId,
+            f.Stage, f.Games, result is null ? "" : $"{result.GamesWon}–{result.GamesLost}");
     }).ToImmutableArray();
+    /// <summary>The league table of the current season (derived from results; ties broken by game difference, games won and
+    /// a seeded draw).</summary>
+    public static ImmutableArray<StandingRow> StandingRows(Campaign s, Content content)
+    {
+        var c = s.Company; var b = content.Balance; var season = Seasons.Of(s.World.Calendar.Day, b);
+        string Name(string id) => id == c.Id ? c.Name : s.World.Rivals.Single(r => r.Id == id).Name;
+        return [.. Seasons.Table(s.World, c.Id, season, s.Execution.Seed).Select((t, i) =>
+            new StandingRow(i + 1, t.TeamId, Name(t.TeamId), t.Played, t.Won, t.Lost, t.GamesWon, t.GamesLost, t.Points, t.TeamId == c.Id))];
+    }
+    /// <summary>A rival-against-rival win is an upset when the winner sat at least this many places below the loser.</summary>
+    public const int UpsetGap = 3;
+    /// <summary>League stories of the current regular season, newest first, read from results only: after each round day, a
+    /// new leader at the top of the table, and each upset between two rivals. Tables use the domain's own ordering, so a
+    /// story never contradicts the standings.</summary>
+    public static ImmutableArray<LeagueNewsRow> LeagueNews(Campaign s, Content content)
+    {
+        var c = s.Company; var w = s.World; var b = content.Balance; var season = Seasons.Of(w.Calendar.Day, b); var seed = s.Execution.Seed;
+        string Name(string id) => id == c.Id ? c.Name : w.Rivals.Single(r => r.Id == id).Name;
+        bool Regular(string fixtureId) => Seasons.StageOf(fixtureId) == Seasons.Regular;
+        var own = w.Results.Where(r => r.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal) && Regular(r.FixtureId)).ToArray();
+        var league = w.LeagueResults.Where(r => Regular(r.FixtureId)).ToArray();
+        var days = own.Select(r => r.Day).Concat(league.Select(r => r.Day)).Distinct().Order().ToArray();
+        ImmutableArray<Seasons.Standing> TableBefore(int day) =>
+            Seasons.Table(w with { Results = [.. own.Where(r => r.Day < day)], LeagueResults = [.. league.Where(r => r.Day < day)] }, c.Id, season, seed);
+        static int Place(ImmutableArray<Seasons.Standing> table, string id) => table.Select((x, i) => (x, i)).First(p => p.x.TeamId == id).i + 1;
+        var news = new List<LeagueNewsRow>();
+        foreach (var day in days)
+        {
+            var before = TableBefore(day); var after = TableBefore(day + 1);
+            if (before[0].Played > 0 && after[0].TeamId != before[0].TeamId)
+                news.Add(new LeagueNewsRow($"league:s{season}:leader:{day}", day, "Leader", $"{Name(after[0].TeamId)} go top of the league",
+                    $"After day {day} they lead on {after[0].Points} points; {Name(before[0].TeamId)} drop to {Figures.Ordinal(Place(after, before[0].TeamId))}.", after[0].TeamId));
+            foreach (var r in league.Where(r => r.Day == day).OrderBy(r => r.FixtureId, StringComparer.Ordinal))
+            {
+                var (winner, loser, won, lost) = r.HomeGames > r.AwayGames ? (r.HomeId, r.AwayId, r.HomeGames, r.AwayGames) : (r.AwayId, r.HomeId, r.AwayGames, r.HomeGames);
+                var (above, below) = (Place(before, loser), Place(before, winner));
+                if (before.Min(x => x.Played) > 0 && below - above >= UpsetGap)
+                    news.Add(new LeagueNewsRow($"league:s{season}:upset:{r.FixtureId}", day, "Upset", $"{Name(winner)} upset {Name(loser)} {won}–{lost}",
+                        $"{Name(winner)} were {Figures.Ordinal(below)} and {Name(loser)} {Figures.Ordinal(above)} before the match.", winner));
+            }
+        }
+        return [.. news.OrderByDescending(n => n.Day).ThenBy(n => n.Id, StringComparer.Ordinal)];
+    }
+    /// <summary>Every match of the current season in day order, the company's and the rest of the league's.</summary>
+    public static ImmutableArray<LeagueMatchRow> LeagueMatchRows(Campaign s)
+    {
+        var c = s.Company; var w = s.World;
+        string Name(string id) => id == c.Id ? c.Name : w.Rivals.Single(r => r.Id == id).Name;
+        var own = w.Fixtures.Select(f => w.Results.FirstOrDefault(r => r.FixtureId == f.Id) is { } r
+            ? new LeagueMatchRow(f.Id, f.Day, f.Stage, f.Games, c.Id, c.Name, f.RivalId, Name(f.RivalId), $"{r.GamesWon}–{r.GamesLost}", r.Won ? c.Id : f.RivalId, true)
+            : new LeagueMatchRow(f.Id, f.Day, f.Stage, f.Games, c.Id, c.Name, f.RivalId, Name(f.RivalId), "", "", true));
+        var others = w.LeagueFixtures.Select(f => w.LeagueResults.FirstOrDefault(r => r.FixtureId == f.Id) is { } r
+            ? new LeagueMatchRow(f.Id, f.Day, f.Stage, f.Games, f.HomeId, Name(f.HomeId), f.AwayId, Name(f.AwayId), $"{r.HomeGames}–{r.AwayGames}", r.HomeGames > r.AwayGames ? f.HomeId : f.AwayId, false)
+            : new LeagueMatchRow(f.Id, f.Day, f.Stage, f.Games, f.HomeId, Name(f.HomeId), f.AwayId, Name(f.AwayId), "", "", false));
+        return [.. own.Concat(others).OrderBy(m => m.Day).ThenByDescending(m => m.Company).ThenBy(m => m.Id, StringComparer.Ordinal)];
+    }
     public static ImmutableArray<RivalRow> RivalRows(Campaign s) => s.World.Rivals.OrderBy(r => r.Name, StringComparer.Ordinal).Select(r =>
     {
         var played = s.World.Results.Where(x => x.RivalId == r.Id && s.World.Fixtures.Any(f => f.Id == x.FixtureId)).ToArray();
@@ -76,7 +134,7 @@ public static class Observations
                 c.People.Any(x => x.Id != p.Id && x.Role == p.Role), contract.EndDay, Simulation.RenewalDemand(c, contract, season, content), Renewable(contract),
                 p.Name, p.Nationality, Ratings.Age(p, season), p.SecondaryRole, p.SecondaryRole.Length == 0 ? 0 : Ratings.InRole(p, p.SecondaryRole, content),
                 new PlayerSkills(p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool,
-                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Player(p, season, content) * 20);
+                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Player(p, season, content) * 20, contract.Familiarity);
         }).ToImmutableArray();
         var coachContract = c.Employment.Single(x => x.PersonId == c.Coach.Id);
         // Estimates of people the company does not employ: a band around a keyed, stable centre. The band narrows with the
@@ -121,7 +179,10 @@ public static class Observations
             w.CoachCandidates.Where(x => x.Deadline >= day).Select(x => new CoachCandidateRow(x.Coach.Id, x.Coach.Name,
                 Band(x.Coach.Id, "skill", (x.Coach.Preparation + x.Coach.Analysis + x.Coach.Adaptability + x.Coach.Development) / 4, scoutWidth), x.Fee, x.Salary, x.Deadline)).ToImmutableArray(),
             brands, w.Negotiations.Select(n => new NegotiationRow(n.Id, Market.Brand(content, n.BrandId).Name, n.Payment, n.DurationDays, n.ResponseDay, n.BrandId)).ToImmutableArray(),
-            b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "", b.OperatingCost, b.MinimumRoster, Moves(s));
+            b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "", b.OperatingCost, b.MinimumRoster, Moves(s),
+            StandingRows(s, content), LeagueMatchRows(s), b.PlayoffTeams, w.Finishes.LastOrDefault() is { } last ? last.Order.IndexOf(c.Id) + 1 : 0,
+            LeagueNews(s, content), new LeagueInfo(b.RivalCount + 1, Seasons.Rounds(b), b.RegularGames, b.PlayoffTeams, b.PlayoffGames,
+                Seasons.RoundDay(season, 0, b), Seasons.LastRegularDay(season, b), Seasons.SemifinalDay(season, b), Seasons.FinalDay(season, b), b.PlacePrizes));
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
             ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover every role A–E."

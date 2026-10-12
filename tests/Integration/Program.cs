@@ -214,6 +214,9 @@ for (var guard = 0; guard < 600 && career.Observe().Season <= 3; guard++)
     foreach (var free in v.Offers.Where(o => o.Availability == "Available").Take(1)) Submit(career, new SponsorDecision(free.Id));
     foreach (var role in Roles.All.Where(r => !v.People.Any(p => p.Role == r)))
         if (v.Candidates.FirstOrDefault(c => c.Role == role) is { } cover) Submit(career, new SigningDecision(cover.Id));
+    // The owner never renews but keeps the registered roster at the league minimum (rules v3), as any owner must.
+    for (var depth = career.Observe(); depth.People.Length < b.MinimumRoster && depth.Candidates.FirstOrDefault(c => c.Fee <= depth.Cash) is { } extra; depth = career.Observe())
+        if (!Submit(career, new SigningDecision(extra.Id)).Accepted) break;
     var response = Submit(career, new AdvanceDecision());
     if (!response.Accepted) throw new Exception("Career blocked: " + response.Message);
     departures += career.Capture().Company.Reviews.Count(r => r.Id.StartsWith("notice:contract:", StringComparison.Ordinal) && r.Day == career.Observe().Day);
@@ -592,7 +595,7 @@ SnapshotValidation.Validate(clause.Capture(), content);
 Check(Simulation.ReputationTarget(0, 8, b) == b.ReputationTargetLow && Simulation.ReputationTarget(8, 8, b) == b.ReputationTargetHigh
     && Enumerable.Range(0, 8).All(wins => Simulation.ReputationTarget(wins, 8, b) <= Simulation.ReputationTarget(wins + 1, 8, b)), "the reputation target rises with the season's wins");
 var closing = New().Capture(); var seasonEnd = Seasons.End(1, b);
-var seasonRecord = closing.World.Fixtures.Select((f, i) => new CompetitiveOutcome("result:" + f.Id, f.Id, f.Day, f.RivalId, i < 2, Posture.Balanced, 500_000, 0, 0, 0, 0, 0, f.Importance, "test")).ToImmutableArray();
+var seasonRecord = closing.World.Fixtures.Select((f, i) => new CompetitiveOutcome("result:" + f.Id, f.Id, f.Day, f.RivalId, i < 2, Posture.Balanced, 500_000, 0, 0, 0, 0, 0, f.Importance, "test", 0, 0, 0, 0, i < 2 ? 2 : 0, i < 2 ? 0 : 2)).ToImmutableArray();
 closing = closing with { World = closing.World with { Results = seasonRecord, Calendar = new Calendar(seasonEnd, Phase.Review, (seasonEnd - 1L) * 11 + (int)Phase.Review - 1) },
     Company = closing.Company with { Reputation = 60, FinanceReceipts = [.. seasonRecord.Select(r => r.Id)], CommercialReceipts = [.. seasonRecord.Select(r => r.Id)] } };
 var rolled = Simulation.Step(closing, content.Definition);
@@ -605,7 +608,7 @@ int AdaptationAfter(int prior)
 {
     var s0 = New().Capture();
     var old = Enumerable.Range(0, prior).Select(i => new CompetitiveOutcome($"result:old:{i}", $"fixture:s0:{i:D2}", 0, s0.World.Rivals[0].Id, false, Posture.Balanced,
-        500_000, 0, 0, 0, 0, 0, 1, "test")).ToImmutableArray();
+        500_000, 0, 0, 0, 0, 0, 1, "test", 0, 0, 0, 0, 0, 2)).ToImmutableArray();
     var repeated = new Session(content.Definition, s0 with { World = s0.World with { Results = old } });
     Submit(repeated, new CoachDecision(Delegation.Autonomous, Risk.Balanced)); AdvanceUntilResults(repeated, prior + 1);
     return repeated.Capture().World.Results[^1].Adaptation;
@@ -616,6 +619,162 @@ try { ContentLoader.Validate(content.Definition with { Balance = b with { Minimu
 catch (InvalidDataException) { Check(true, "a new company must meet the roster minimum"); }
 try { ContentLoader.Validate(content.Definition with { Balance = b with { OperatingCost = -1 } }); Check(false, "negative running cost"); }
 catch (InvalidDataException) { Check(true, "the running cost cannot be negative"); }
+
+// Rules v4 phase 3: logistic games, best-of series, the eight-team league, its playoffs and forced restructuring.
+Check(Enumerable.Range(0, Logistic.MaxLogit + 1).All(z => Math.Abs(Logistic.Probability(z) - 1_000_000 / (1 + Math.Exp(-z / 100.0))) <= 1)
+    && Enumerable.Range(1, Logistic.MaxLogit).All(z => Logistic.Probability(-z) == 1_000_000 - Logistic.Probability(z)) && Logistic.Probability(0) == 500_000
+    && Logistic.Probability(Logistic.MaxLogit + 50) == Logistic.Probability(Logistic.MaxLogit),
+    "the integer logistic table matches the logistic function within one millionth, is symmetric and clamps beyond its range");
+Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
+        && Enumerable.Range(1, 99).All(k => Math.Abs(Logistic.Series(k * 10_000, n) + Logistic.Series(1_000_000 - k * 10_000, n) - 1_000_000) <= 1)
+        && Enumerable.Range(1, 98).All(k => Logistic.Series(k * 10_000, n) < Logistic.Series((k + 1) * 10_000, n)))
+    && Logistic.Series(600_000, 1) == 600_000 && Logistic.Series(600_000, 3) == 648_000 && Logistic.Series(600_000, 5) == 682_560,
+    "a best-of series is exact integer arithmetic: even at even odds, symmetric, monotonic, and it amplifies the favourite");
+{
+    var even = Enumerable.Range(0, 4000).Select(i => Competition.Play(99, "test", "series:" + i, 0, 1, 3, b.LogitScale)).ToArray();
+    var favourite = Enumerable.Range(0, 2000).Select(i => Competition.Play(99, "test", "favourite:" + i, 14, 1, 3, b.LogitScale)).ToArray();
+    var bestOfFive = Enumerable.Range(0, 2000).Select(i => Competition.Play(99, "test", "five:" + i, 0, 1, 5, b.LogitScale)).ToArray();
+    Check(even.All(x => Math.Max(x.Won, x.Lost) == 2 && Math.Min(x.Won, x.Lost) < 2) && bestOfFive.All(x => Math.Max(x.Won, x.Lost) == 3 && Math.Min(x.Won, x.Lost) < 3)
+        && Math.Abs(even.Count(x => x.Won > x.Lost) / 4000.0 - 0.5) < 0.03 && Math.Abs(even.Count(x => x.Won + x.Lost == 2) / 4000.0 - 0.5) < 0.03
+        && favourite.Count(x => x.Won > x.Lost) / 2000.0 > 0.85,
+        "series stop at the majority: even sides split wins and sweeps about half the time; a 14-point favourite wins most best-of-threes");
+}
+// The regular season: a seeded double round robin of the company and its rivals.
+{
+    var openingSeason = New(11).Capture(); var lw = openingSeason.World; var companyId = openingSeason.Company.Id;
+    var teams = lw.Rivals.Select(r => r.Id).Append(companyId).ToArray();
+    var games = lw.Fixtures.Select(f => (f.Day, Home: companyId, Away: f.RivalId)).Concat(lw.LeagueFixtures.Select(f => (f.Day, Home: f.HomeId, Away: f.AwayId))).ToArray();
+    var pairs = teams.SelectMany(x => teams.Where(y => string.CompareOrdinal(x, y) < 0).Select(y => (x, y))).ToArray();
+    Check(Seasons.Rounds(b) == 2 * b.RivalCount && games.Length == teams.Length * (teams.Length - 1)
+        && pairs.All(p => games.Count(g => g.Home == p.x && g.Away == p.y || g.Home == p.y && g.Away == p.x) == 2)
+        && games.GroupBy(g => g.Day).Count() == Seasons.Rounds(b)
+        && games.GroupBy(g => g.Day).All(g => g.SelectMany(m => new[] { m.Home, m.Away }).Distinct().Count() == teams.Length)
+        && lw.Fixtures.Select((f, k) => f.Day == Seasons.RoundDay(1, k, b) && f.Importance == (k >= b.RivalCount ? 2 : 1) && f.Games == b.RegularGames && f.Stage == Seasons.Regular).All(x => x)
+        && lw.LeagueFixtures.All(f => f.Games == b.RegularGames && f.Stage == Seasons.Regular),
+        "the regular season is a double round robin: every pair meets twice, every team plays once each round, the company every round");
+    var again = Seasons.Schedule(openingSeason.Execution.Seed, 1, companyId, lw.Rivals, b);
+    var secondSeason = Seasons.Schedule(openingSeason.Execution.Seed, 2, companyId, lw.Rivals, b);
+    Check(again.Company.SequenceEqual(lw.Fixtures) && again.League.SequenceEqual(lw.LeagueFixtures)
+        && !secondSeason.Company.Select(f => f.RivalId).SequenceEqual(lw.Fixtures.Select(f => f.RivalId)),
+        "the schedule is a pure function of seed and season, and a new season draws a new order");
+    Check(Seasons.SemifinalDay(1, b) - Seasons.LastRegularDay(1, b) == b.PlayoffInterval && Seasons.FinalDay(1, b) < Seasons.End(1, b),
+        "the playoffs follow the regular season and the final is played before the season ends");
+
+    // Table order: points, game difference, head-to-head among the teams still level, games won.
+    var r = lw.Rivals.Select(x => x.Id).ToArray();
+    ImmutableArray<Seasons.Standing> TableOf(params (string Winner, string Loser, int Won, int Lost)[] series) => Seasons.Table(lw with
+    {
+        Results = [], LeagueResults = [.. series.Select((x, i) => new LeagueResult($"result:league:s1:t{i}", $"league:s1:t{i}", 10, x.Winner, x.Loser, x.Won, x.Lost))]
+    }, companyId, 1, openingSeason.Execution.Seed);
+    int At(ImmutableArray<Seasons.Standing> table, string id) => table.Select((x, i) => (x, i)).First(p => p.x.TeamId == id).i;
+    var byDifference = TableOf((r[0], r[1], 2, 0), (r[2], r[3], 2, 1));
+    var byHeadToHead = TableOf((r[0], r[1], 2, 1), (r[1], r[2], 2, 0));
+    var reversed = TableOf((r[1], r[0], 2, 1), (r[0], r[2], 2, 0));
+    var byGames = TableOf((r[0], r[1], 2, 1), (r[2], r[0], 2, 1), (r[3], r[4], 2, 0), (r[5], r[3], 2, 0));
+    var swapped = TableOf((r[3], r[1], 2, 1), (r[2], r[3], 2, 1), (r[0], r[4], 2, 0), (r[5], r[0], 2, 0));
+    Check(At(byDifference, r[0]) < At(byDifference, r[2]) && byDifference[0].Points == 1 && At(byDifference, r[2]) < At(byDifference, companyId),
+        "the table ranks by points (one per series won), then game difference");
+    Check(At(byHeadToHead, r[0]) < At(byHeadToHead, r[1]) && At(reversed, r[1]) < At(reversed, r[0]),
+        "teams level on points and game difference are separated by their head-to-head series");
+    Check(At(byGames, r[0]) < At(byGames, r[3]) && At(swapped, r[3]) < At(swapped, r[0]), "then by games won");
+}
+// A season played through: playoffs from the table, a save in the middle of them, the champion, the final order and prizes.
+{
+    var league = New(21); Submit(league, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+    var leagueStore = new SnapshotStore(Path.GetFullPath("artifacts/save-tests-" + Guid.NewGuid().ToString("N")), content);
+    void Play(Func<Situation, bool> until)
+    {
+        for (var guard = 0; guard < 400 && !until(league.Observe()); guard++)
+        {
+            var v = league.Observe();
+            foreach (var role in Roles.All.Where(role => !v.People.Any(p => p.Role == role)))
+                if (v.Candidates.FirstOrDefault(c => c.Role == role && c.Fee <= v.Cash) is { } cover) Submit(league, new SigningDecision(cover.Id));
+            foreach (var p in v.People.Where(p => p.CanRenew)) Submit(league, new RenewalDecision(p.Id, 1));
+            if (v.CoachContract.CanRenew) Submit(league, new RenewalDecision(v.CoachContract.Id, 1));
+            if (!Submit(league, new AdvanceDecision()).Accepted) throw new Exception("League season blocked on day " + v.Day);
+        }
+    }
+    Play(v => v.Day > Seasons.LastRegularDay(1, b));
+    var midway = league.Capture(); var seed = midway.Execution.Seed; var cid = midway.Company.Id;
+    var table = Seasons.Table(midway.World, cid, 1, seed).Select(s => s.TeamId).ToArray();
+    var semis = midway.World.Fixtures.Where(f => f.Stage == Seasons.Semifinal).Select(f => (cid, f.RivalId))
+        .Concat(midway.World.LeagueFixtures.Where(f => f.Stage == Seasons.Semifinal).Select(f => (f.HomeId, f.AwayId))).ToArray();
+    var expected = new[] { (table[0], table[3]), (table[1], table[2]) };
+    Check(semis.Length == 2 && expected.All(e => semis.Any(s => s.Item1 == e.Item1 && s.Item2 == e.Item2 || s.Item1 == e.Item2 && s.Item2 == e.Item1))
+        && midway.World.Fixtures.Concat<object>(midway.World.LeagueFixtures).Count() == 2 * b.RivalCount + b.RivalCount * (b.RivalCount - 1) + 2
+        && midway.World.Fixtures.Where(f => f.Stage == Seasons.Semifinal).All(f => f.Games == b.PlayoffGames && f.Importance == 3),
+        "after the regular season the top four play semifinals, first against fourth and second against third, as best-of-fives");
+    var standings = league.Observe().Standings;
+    Check(standings.Select(s => s.TeamId).SequenceEqual(table) && standings.Select(s => s.Place).SequenceEqual(Enumerable.Range(1, table.Length))
+        && standings.All(s => s.Played == 2 * b.RivalCount && s.Points == s.Won && s.Won + s.Lost == s.Played) && standings.Count(s => s.Company) == 1,
+        "the observed standings are the derived table: every team played its fourteen series");
+    Check(league.Observe().Inbox.Any(row => row.Id.StartsWith("notice:league:regular:", StringComparison.Ordinal) && row.Kind == "Season"
+        && ShellSections.ForInbox(row.Kind) == ShellSections.Competition), "the end of the regular season is a season notice that opens Competition");
+    var leagueNews = league.Observe().LeagueNews;
+    Check(leagueNews.Where(n => n.Kind == "Leader").FirstOrDefault() is not { } leader || leader.SubjectId == standings[0].TeamId,
+        "the latest leader story names the team that leads the table");
+    Check(leagueNews.All(n => n.Kind is "Leader" or "Upset") && leagueNews.Select(n => n.Day).SequenceEqual(leagueNews.Select(n => n.Day).OrderDescending())
+        && PortalProjection.WorldNews(league.Observe()).Length <= PortalProjection.NewsLimit
+        && PortalProjection.WorldNews(league.Observe()).Select(n => n.Day).SequenceEqual(PortalProjection.WorldNews(league.Observe()).Select(n => n.Day).OrderDescending()),
+        "league stories are read from results, newest first, and join the Portal's world news by day");
+    leagueStore.Save("playoffs", midway);
+    var resumed = new Session(content.Definition, leagueStore.Load("playoffs"), leagueStore);
+    Check(Canonical.Hash(resumed.Capture()) == Canonical.Hash(midway), "a save in the middle of the playoffs loads unchanged");
+    Play(v => v.Day > Seasons.FinalDay(1, b));
+    var crowned = league.Capture();
+    var order = Seasons.FinalOrder(crowned.World, cid, 1, seed, b);
+    Check(order is { } o && o.Length == b.RivalCount + 1 && o.Distinct().Count() == o.Length
+        && crowned.Company.Reviews.Any(row => row.Id.StartsWith("notice:league:champion:", StringComparison.Ordinal))
+        && o.Take(b.PlayoffTeams).Order(StringComparer.Ordinal).SequenceEqual(table.Take(b.PlayoffTeams).Order(StringComparer.Ordinal))
+        && o.Skip(b.PlayoffTeams).SequenceEqual(table.Skip(b.PlayoffTeams)),
+        "the final order puts the champion and runner-up first, then the other semifinalists, then the table");
+    Play(v => v.Season > 1);
+    var nextSeason = league.Capture();
+    var place = order!.Value.IndexOf(cid) + 1;
+    Check(nextSeason.World.Finishes.Single().Season == 1 && nextSeason.World.Finishes.Single().Order.SequenceEqual(order.Value) && nextSeason.World.LeagueResults.All(x => x.Day > Seasons.End(1, b))
+        && (b.PlacePrizes[place - 1] == 0 || nextSeason.Company.FinancialItems.Any(x => x.Id == "place:s1" && x.Amount == b.PlacePrizes[place - 1])
+            || nextSeason.Company.Settlements.Any(x => x.CauseId == "place:s1" && x.Delta == b.PlacePrizes[place - 1])),
+        "the season closes with its final order recorded and the company's place prize paid");
+    Check(league.Observe().LastSeasonPlace == place, "the next season shows last season's place");
+    SnapshotValidation.Validate(nextSeason, content);
+}
+// Familiarity: the starting roster is integrated, a new signing is not, and it grows with days and matches.
+{
+    var fresh = New();
+    var startCompany = fresh.Capture().Company;
+    Check(startCompany.Employment.Where(e => e.PersonId != startCompany.Coach.Id).All(e => e.Familiarity == b.StartingFamiliarity), "the starting roster begins integrated");
+    var signing = fresh.Observe().Candidates[0];
+    Submit(fresh, new SigningDecision(signing.Id));
+    var newContract = fresh.Capture().Company.Employment.Single(e => e.PersonId == signing.Id);
+    Check(newContract.Familiarity == 0, "a new signing arrives unfamiliar with the team");
+    var day = Simulation.Step(Simulation.Step(fresh.Capture(), content.Definition), content.Definition);
+    Check(day.Company.Employment.Single(e => e.PersonId == signing.Id).Familiarity == b.FamiliarityPerDay, "familiarity grows each day");
+}
+// Forced restructuring (DEC-016): stuck in distress, the board sells one contract a day, before settlement.
+{
+    var broke = New(5); Submit(broke, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+    for (var i = 0; i < 6; i++) Submit(broke, new AdvanceDecision());
+    var stuck = broke.Capture();
+    while (stuck.World.Calendar.Phase != Phase.Finance) stuck = Simulation.Step(stuck, content.Definition);
+    var day = stuck.World.Calendar.Day;
+    var debt = new FinancialItem($"{Finance.OperationsCause}:day:{day - 1}:debt", Finance.OperationsCause, day - 1, 50_000_000, false, 50_000_000, day - 1);
+    stuck = stuck with { Company = stuck.Company with { Cash = 0, LedgerBase = stuck.Company.LedgerBase - stuck.Company.Cash, Recovery = RecoveryStage.Distress,
+        FinancialItems = [.. stuck.Company.FinancialItems.Where(x => !x.Incoming || x.Remaining == 0).Append(debt)] } };
+    Check(Simulation.Stuck(stuck.Company, day), "a company with overdue debt, no cash and no inflow within three days is stuck");
+    var roster = stuck.Company.People.Length;
+    var afterSales = stuck;
+    for (var phase = 0; phase < 11; phase++) afterSales = Simulation.Step(afterSales, content.Definition);
+    afterSales = Simulation.Step(afterSales, content.Definition);
+    for (var phase = 0; phase < 10; phase++) afterSales = Simulation.Step(afterSales, content.Definition);
+    var sales = afterSales.Company.Settlements.Where(x => x.CauseId.StartsWith("restructuring:", StringComparison.Ordinal)).ToArray();
+    Check(sales.Length == 2 && sales.Select(x => x.Day).Distinct().Count() == 2 && afterSales.Company.People.Length == roster - 2
+        && afterSales.World.Moves.Count(m => m.CauseId.StartsWith("restructuring:", StringComparison.Ordinal) && m.Reason == MoveReason.Released) == 2
+        && afterSales.Company.Reviews.Count(r => r.Id.StartsWith("notice:restructuring:", StringComparison.Ordinal)) == 2,
+        "the board sells one contract a day while the company is stuck, records the move and says what it cost");
+    SnapshotValidation.Validate(afterSales, content);
+    var empty = stuck with { Company = stuck.Company with { People = [], Employment = [.. stuck.Company.Employment.Where(e => e.PersonId == stuck.Company.Coach.Id)] } };
+    Check(ReferenceEquals(Simulation.Step(empty, content.Definition), empty), "with nothing left to sell, time stops");
+}
 
 for (ulong seed = 1; seed <= 16; seed++)
 {

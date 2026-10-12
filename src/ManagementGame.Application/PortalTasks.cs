@@ -25,6 +25,7 @@ public static class ShellSections
         "Offer" or "Negotiation" or "Market" or "Commercial" => Commercial,
         "Contract" or "Renewal" or "League" => Squad,
         "Match" or "Season" or "Meta" => Competition,
+        "Finance" => Finance,
         _ => Portal
     };
 }

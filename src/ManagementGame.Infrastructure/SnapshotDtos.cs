@@ -32,10 +32,10 @@ public sealed record CoachDto(string Id, string Name, int Preparation, int Analy
     public Coach ToDomain() => new(Id, Name, Preparation, Analysis, Adaptability, Capacity, Development);
 }
 
-public sealed record EmploymentDto(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay)
+public sealed record EmploymentDto(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay, int Familiarity)
 {
-    public static EmploymentDto From(Employment x) => new(x.Id, x.PersonId, x.Salary, x.ReleaseCost, x.EndDay);
-    public Employment ToDomain() => new(Id, PersonId, Salary, ReleaseCost, EndDay);
+    public static EmploymentDto From(Employment x) => new(x.Id, x.PersonId, x.Salary, x.ReleaseCost, x.EndDay, x.Familiarity);
+    public Employment ToDomain() => new(Id, PersonId, Salary, ReleaseCost, EndDay, Familiarity);
 }
 
 public sealed record SponsorContractDto(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit)
@@ -98,10 +98,28 @@ public sealed record RivalDto(string Id, string Name, int Strength, int Analysis
     public Rival ToDomain() => new(Id, Name, Strength, Analysis, Adaptability, Posture, Budget, Need);
 }
 
-public sealed record FixtureDto(string Id, int Day, string RivalId, int Importance, long Prize)
+public sealed record FixtureDto(string Id, int Day, string RivalId, int Importance, long Prize, int Games, string Stage)
 {
-    public static FixtureDto From(Fixture x) => new(x.Id, x.Day, x.RivalId, x.Importance, x.Prize);
-    public Fixture ToDomain() => new(Id, Day, RivalId, Importance, Prize);
+    public static FixtureDto From(Fixture x) => new(x.Id, x.Day, x.RivalId, x.Importance, x.Prize, x.Games, x.Stage);
+    public Fixture ToDomain() => new(Id, Day, RivalId, Importance, Prize, Games, Stage);
+}
+
+public sealed record LeagueFixtureDto(string Id, int Day, string HomeId, string AwayId, int Importance, int Games, string Stage)
+{
+    public static LeagueFixtureDto From(LeagueFixture x) => new(x.Id, x.Day, x.HomeId, x.AwayId, x.Importance, x.Games, x.Stage);
+    public LeagueFixture ToDomain() => new(Id, Day, HomeId, AwayId, Importance, Games, Stage);
+}
+
+public sealed record LeagueResultDto(string Id, string FixtureId, int Day, string HomeId, string AwayId, int HomeGames, int AwayGames)
+{
+    public static LeagueResultDto From(LeagueResult x) => new(x.Id, x.FixtureId, x.Day, x.HomeId, x.AwayId, x.HomeGames, x.AwayGames);
+    public LeagueResult ToDomain() => new(Id, FixtureId, Day, HomeId, AwayId, HomeGames, AwayGames);
+}
+
+public sealed record SeasonFinishDto(int Season, ImmutableArray<string> Order)
+{
+    public static SeasonFinishDto From(SeasonFinish x) => new(x.Season, x.Order);
+    public SeasonFinish ToDomain() => new(Season, Order);
 }
 
 public sealed record OfferDto(string Id, string BrandId, string Name, OfferOrigin Origin, int Deadline, int DurationDays, long Payment, long WinBonus, int Load, int MinimumReputation, string? ClaimedBy)
@@ -134,10 +152,13 @@ public sealed record CandidateDto(PersonDto Person, long Fee, long Salary, long 
     public Candidate ToDomain() => new(Person.ToDomain(), Fee, Salary, ReleaseCost, Deadline);
 }
 
-public sealed record CompetitiveOutcomeDto(string Id, string FixtureId, int Day, string RivalId, bool Won, Posture Posture, int Probability, int Base, int Preparation, int Matchup, int Adaptation, int Variance, int Importance, string PlanCause)
+public sealed record CompetitiveOutcomeDto(string Id, string FixtureId, int Day, string RivalId, bool Won, Posture Posture, int Probability, int Base, int Preparation, int Matchup, int Adaptation, int Variance, int Importance, string PlanCause,
+    int Familiarity, int Style, int Composure, int Leadership, int GamesWon, int GamesLost)
 {
-    public static CompetitiveOutcomeDto From(CompetitiveOutcome x) => new(x.Id, x.FixtureId, x.Day, x.RivalId, x.Won, x.Posture, x.Probability, x.Base, x.Preparation, x.Matchup, x.Adaptation, x.Variance, x.Importance, x.PlanCause);
-    public CompetitiveOutcome ToDomain() => new(Id, FixtureId, Day, RivalId, Won, Posture, Probability, Base, Preparation, Matchup, Adaptation, Variance, Importance, PlanCause);
+    public static CompetitiveOutcomeDto From(CompetitiveOutcome x) => new(x.Id, x.FixtureId, x.Day, x.RivalId, x.Won, x.Posture, x.Probability, x.Base, x.Preparation, x.Matchup, x.Adaptation, x.Variance, x.Importance, x.PlanCause,
+        x.Familiarity, x.Style, x.Composure, x.Leadership, x.GamesWon, x.GamesLost);
+    public CompetitiveOutcome ToDomain() => new(Id, FixtureId, Day, RivalId, Won, Posture, Probability, Base, Preparation, Matchup, Adaptation, Variance, Importance, PlanCause,
+        Familiarity, Style, Composure, Leadership, GamesWon, GamesLost);
 }
 
 public sealed record CalendarDto(int Day, Phase Phase, long Sequence)
@@ -152,10 +173,13 @@ public sealed record MoveDto(string Id, int Day, string PersonId, string Name, P
     public Move ToDomain() => new(Id, Day, PersonId, Name, Kind, Role, Reason, Origin, Destination, CauseId);
 }
 
-public sealed record WorldDto(CalendarDto Calendar, ImmutableArray<RivalDto> Rivals, ImmutableArray<FixtureDto> Fixtures, ImmutableArray<CompetitiveOutcomeDto> Results, ImmutableArray<OfferDto> Offers, ImmutableArray<NegotiationDto> Negotiations, ImmutableArray<BrandStatusDto> Brands, ImmutableArray<CandidateDto> Candidates, ImmutableArray<CoachCandidateDto> CoachCandidates, Posture Meta, long NextId, ImmutableArray<MoveDto> Moves)
+public sealed record WorldDto(CalendarDto Calendar, ImmutableArray<RivalDto> Rivals, ImmutableArray<FixtureDto> Fixtures, ImmutableArray<CompetitiveOutcomeDto> Results, ImmutableArray<OfferDto> Offers, ImmutableArray<NegotiationDto> Negotiations, ImmutableArray<BrandStatusDto> Brands, ImmutableArray<CandidateDto> Candidates, ImmutableArray<CoachCandidateDto> CoachCandidates, Posture Meta, long NextId, ImmutableArray<MoveDto> Moves,
+    ImmutableArray<LeagueFixtureDto> LeagueFixtures, ImmutableArray<LeagueResultDto> LeagueResults, ImmutableArray<SeasonFinishDto> Finishes)
 {
-    public static WorldDto From(World x) => new(CalendarDto.From(x.Calendar), x.Rivals.Select(RivalDto.From).ToImmutableArray(), x.Fixtures.Select(FixtureDto.From).ToImmutableArray(), x.Results.Select(CompetitiveOutcomeDto.From).ToImmutableArray(), x.Offers.Select(OfferDto.From).ToImmutableArray(), x.Negotiations.Select(NegotiationDto.From).ToImmutableArray(), x.Brands.Select(BrandStatusDto.From).ToImmutableArray(), x.Candidates.Select(CandidateDto.From).ToImmutableArray(), x.CoachCandidates.Select(CoachCandidateDto.From).ToImmutableArray(), x.Meta, x.NextId, x.Moves.Select(MoveDto.From).ToImmutableArray());
-    public World ToDomain() => new(Calendar.ToDomain(), Rivals.Select(v => v.ToDomain()).ToImmutableArray(), Fixtures.Select(v => v.ToDomain()).ToImmutableArray(), Results.Select(v => v.ToDomain()).ToImmutableArray(), Offers.Select(v => v.ToDomain()).ToImmutableArray(), Negotiations.Select(v => v.ToDomain()).ToImmutableArray(), Brands.Select(v => v.ToDomain()).ToImmutableArray(), Candidates.Select(v => v.ToDomain()).ToImmutableArray(), CoachCandidates.Select(v => v.ToDomain()).ToImmutableArray(), Meta, NextId, Moves.Select(v => v.ToDomain()).ToImmutableArray());
+    public static WorldDto From(World x) => new(CalendarDto.From(x.Calendar), x.Rivals.Select(RivalDto.From).ToImmutableArray(), x.Fixtures.Select(FixtureDto.From).ToImmutableArray(), x.Results.Select(CompetitiveOutcomeDto.From).ToImmutableArray(), x.Offers.Select(OfferDto.From).ToImmutableArray(), x.Negotiations.Select(NegotiationDto.From).ToImmutableArray(), x.Brands.Select(BrandStatusDto.From).ToImmutableArray(), x.Candidates.Select(CandidateDto.From).ToImmutableArray(), x.CoachCandidates.Select(CoachCandidateDto.From).ToImmutableArray(), x.Meta, x.NextId, x.Moves.Select(MoveDto.From).ToImmutableArray(),
+        x.LeagueFixtures.Select(LeagueFixtureDto.From).ToImmutableArray(), x.LeagueResults.Select(LeagueResultDto.From).ToImmutableArray(), x.Finishes.Select(SeasonFinishDto.From).ToImmutableArray());
+    public World ToDomain() => new(Calendar.ToDomain(), Rivals.Select(v => v.ToDomain()).ToImmutableArray(), Fixtures.Select(v => v.ToDomain()).ToImmutableArray(), Results.Select(v => v.ToDomain()).ToImmutableArray(), Offers.Select(v => v.ToDomain()).ToImmutableArray(), Negotiations.Select(v => v.ToDomain()).ToImmutableArray(), Brands.Select(v => v.ToDomain()).ToImmutableArray(), Candidates.Select(v => v.ToDomain()).ToImmutableArray(), CoachCandidates.Select(v => v.ToDomain()).ToImmutableArray(), Meta, NextId, Moves.Select(v => v.ToDomain()).ToImmutableArray(),
+        LeagueFixtures.Select(v => v.ToDomain()).ToImmutableArray(), LeagueResults.Select(v => v.ToDomain()).ToImmutableArray(), Finishes.Select(v => v.ToDomain()).ToImmutableArray());
 }
 
 public sealed record CommandReceiptDto(string Id, string Digest, long Revision, string Message)

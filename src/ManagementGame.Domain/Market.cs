@@ -201,7 +201,7 @@ public static class Market
                 var salary = Pay.Coach(interim);
                 var departed = c.Coach;
                 c = c with { Coach = interim, Employment = c.Employment.Remove(contract)
-                    .Add(new Employment("employment:" + interim.Id, interim.Id, salary, salary * 5, day + b.SeasonLength - 1)) };
+                    .Add(new Employment("employment:" + interim.Id, interim.Id, salary, salary * 5, day + b.SeasonLength - 1, 0)) };
                 w = w with { NextId = next, CoachCandidates = w.CoachCandidates.Add(new CoachCandidate(departed, contract.Salary * 15, contract.Salary, day + b.TalentRefreshInterval - 1)) };
                 w = Moved(Moved(w, day, contract.Id, departed, MoveReason.ContractEnded, c.Id, null), day, contract.Id, interim, MoveReason.Interim, null, c.Id);
                 c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"Head coach {departed.Name} left at contract end. Interim coach {interim.Name} is covering; hire a permanent coach from the market.");

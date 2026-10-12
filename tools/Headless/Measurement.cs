@@ -16,8 +16,8 @@ public static class Measurement
     public static readonly string[] Policies = [Coach, Greedy, Thrift, Balanced];
 
     /// <summary>One closed season of one run. The match columns are diagnostics from the recorded outcome components
-    /// (forfeits excluded): mean win probability, mean base strength and completed preparation of the fielded lineup, and
-    /// the mean rival strength those outcomes imply.</summary>
+    /// (forfeits excluded): mean series win probability, mean base strength and completed preparation of the fielded lineup,
+    /// and the mean strength of the rivals faced (as they stand at the season's end).</summary>
     public sealed record SeasonRow(int Season, int Wins, int Losses, int Forfeits, long CashEnd, int ReputationStart, int ReputationEnd,
         int AudienceEnd, int RosterEnd, int ActiveSponsorsEnd, int NegativeForecastWeeks, int DecisionsMade, int Prompts, int LongestQuiet,
         double MeanWinProbability, double MeanBase, double MeanPreparation, double MeanRivalStrength);
@@ -100,13 +100,11 @@ public static class Measurement
             var quiet = days.Length == 0 ? length : new[] { days[0] - first }.Concat(days.Zip(days.Skip(1), (a, b) => b - a - 1)).Append(last - days[^1]).Max();
             var fielded = results.Where(r => r.PlanCause != "forfeit").ToArray();
             double Mean(Func<CompetitiveOutcome, double> pick) => fielded.Length == 0 ? 0 : Math.Round(fielded.Average(pick), 1);
-            var scale = content.Definition.Balance.MatchScale;
-            var unclamped = fielded.Where(r => r.Probability is > 50_000 and < 950_000).ToArray();
             rows.Add(new SeasonRow(season, results.Count(r => r.Won), results.Count(r => !r.Won), results.Count(r => r.PlanCause == "forfeit"), now.Cash,
                 repStart, now.Reputation, now.Audience, now.People.Length, now.ActiveSponsors,
                 negativeWeeks.Count(w => w * 7 + 1 >= first && w * 7 + 1 <= last), made - madeAtStart, prompts, quiet,
                 Mean(r => r.Probability / 10_000.0), Mean(r => r.Base), Mean(r => r.Preparation),
-                unclamped.Length == 0 ? 0 : Math.Round(unclamped.Average(r => r.Base + r.Preparation + r.Matchup + r.Adaptation + r.Variance - (r.Probability - 500_000.0) / scale), 1)));
+                Mean(r => state.World.Rivals.Single(x => x.Id == r.RivalId).Strength)));
             prompts = 0; madeAtStart = made; repStart = now.Reputation; season = now.Season;
             if (season > seasons) break;
         }

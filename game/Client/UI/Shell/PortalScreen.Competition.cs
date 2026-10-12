@@ -96,7 +96,8 @@ public static partial class PortalScreen
 
     // ---------- season record ----------
     /// <summary>"How is this season going?" The record leads, recent form (oldest to newest, letters not colour alone)
-    /// and the matches still to play support it. No league standing exists in the current rules, so none is shown.</summary>
+    /// and the matches still to play support it. Once a match is played, the league place joins them (rules v4: an
+    /// eight-team league whose top teams reach the playoffs).</summary>
     private static Control Record(UiContext ui, PortalView m, bool roomy)
     {
         var s = m.Season;
@@ -127,7 +128,11 @@ public static partial class PortalScreen
         }
         if (roomy) list.AddChild(Caps(ui, "Recent form", ColorRole.TextMuted));
         list.AddChild(form);
-        var rows = new List<(string, string, ColorRole)> { ("To play", Figures.Count(s.ToPlay), ColorRole.TextPrimary) };
+        var rows = new List<(string, string, ColorRole)>();
+        // The place reads against the playoff line, both as text (where there is room), never by colour alone.
+        if (s.Place > 0) rows.Add(("League place", $"{Figures.Ordinal(s.Place)} of {Figures.Count(s.Teams)}", ColorRole.TextPrimary));
+        if (s.Place > 0 && roomy && s.PlayoffTeams > 0) rows.Add(("Playoff places", $"Top {Figures.Count(s.PlayoffTeams)}", ColorRole.TextSecondary));
+        rows.Add(("To play", Figures.Count(s.ToPlay), ColorRole.TextPrimary));
         // The win rate supports the record where there is room; it never leads it.
         if (roomy) rows.Add(("Win rate", Figures.Percent(s.Won, played), ColorRole.TextSecondary));
         foreach (var (label, value, tone) in rows)

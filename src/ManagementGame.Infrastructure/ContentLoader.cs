@@ -65,7 +65,7 @@ public static class ContentLoader
         Require(b.SeasonLength is >= 28 and <= 400 && b.FirstMatchDay >= 3 && b.MatchInterval is >= 2 and <= 30 && b.RivalCount is >= 2 and <= 12, "season shape");
         Require(b.FirstMatchDay + b.MatchInterval * (2 * b.RivalCount - 1) <= b.SeasonLength - 2, "season schedule must fit inside the season");
         Require(b.StartingCash is >= 0 and <= 1_000_000_000 && b.PrizeBase is >= 0 and <= 1_000_000, "balance cash");
-        Require(b.PreparationScale is > 0 and <= 1000 && b.MatchScale is > 0 and <= 20000 && b.Variance is > 0 and <= 20 && b.RivalCadence > 0, "balance arithmetic bounds");
+        Require(b.PreparationScale is > 0 and <= 1000 && b.LogitScale is >= 100 and <= 5000 && b.Variance is > 0 and <= 20 && b.RivalCadence > 0, "balance arithmetic bounds");
         Require(b.Reputation is >= 0 and <= 100 && b.Audience is >= 0 and <= 1_000_000 && b.Information is >= 0 and <= 100 && b.BaseLoad is >= 0 and <= 1000, "balance resource bounds");
         Require(b.MetaDayOfSeason is >= 1 && b.MetaDayOfSeason <= b.SeasonLength && b.ReputationGain >= 0 && b.AudienceGain >= 0, "meta and commercial bounds");
         Require(b.SponsorSlots is >= 1 and <= 8 && b.MaxOpenOffers is >= 1 and <= 8 && b.MarketInterval is >= 1 and <= 28 && b.OfferWindow is >= 1 and <= 28
@@ -79,6 +79,12 @@ public static class ContentLoader
             && b.SponsorForfeitLimit is >= 0 and <= 16
             && b.ReputationRegression is >= 0 and <= 100 && b.ReputationTargetLow is >= 0 && b.ReputationTargetLow <= b.ReputationTargetHigh && b.ReputationTargetHigh <= 100
             && b.PredictabilityWindow is >= 0 and <= 16, "rules v3 incentive bounds");
+        // Rules v4 league: an even number of teams for the round robin, odd best-of formats, four playoff teams, the playoffs
+        // inside the season, a place prize per team and familiarity on its 0-100 scale.
+        Require(b.RivalCount % 2 == 1 && b.RegularGames is 1 or 3 or 5 or 7 && b.PlayoffGames is 1 or 3 or 5 or 7 && b.PlayoffTeams == 4 && b.RivalCount + 1 >= b.PlayoffTeams
+            && b.PlayoffInterval is >= 1 and <= 14 && b.FirstMatchDay + b.MatchInterval * (2 * b.RivalCount - 1) + 2 * b.PlayoffInterval <= b.SeasonLength - 2
+            && b.PlacePrizes.Length == b.RivalCount + 1 && b.PlacePrizes.All(x => x is >= 0 and <= 10_000_000)
+            && b.FamiliarityPerDay is >= 0 and <= 20 && b.FamiliarityPerMatch is >= 0 and <= 50 && b.StartingFamiliarity is >= 0 and <= 100 && b.MatchFatigue is >= 0 and <= 30, "rules v4 league bounds");
         bool Range(AttributeRange r, int min, int max) => r.Min >= min && r.Max <= max && r.Min <= r.Max;
         bool Unique(IEnumerable<string> values) { var array = values.ToArray(); return array.Distinct(StringComparer.Ordinal).Count() == array.Length; }
         var g = c.Generation;

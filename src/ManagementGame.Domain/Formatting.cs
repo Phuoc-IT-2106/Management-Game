@@ -82,6 +82,8 @@ public static class Figures
     public static string Capped(long value, int cap = 99) => value > cap ? Count(cap) + "+" : Count(value);
     /// <summary>Won–lost record with an en dash: "5–3".</summary>
     public static string Record(int won, int lost) => Count(won) + "–" + Count(lost);
+    /// <summary>A place in an order: 1st, 2nd, 3rd, 4th … 11th, 12th, 13th, 21st.</summary>
+    public static string Ordinal(int n) => Count(n) + (n % 100 is 11 or 12 or 13 ? "th" : (n % 10) switch { 1 => "st", 2 => "nd", 3 => "rd", _ => "th" });
     /// <summary>Whole percent of a part, half away from zero: "63%"; "—" when there is nothing to divide.</summary>
     public static string Percent(long part, long whole) => whole <= 0 ? "—"
         : Count((long)Math.Round(part * 100m / whole, MidpointRounding.AwayFromZero)) + "%";

@@ -19,9 +19,9 @@ migration.
 | Phase | Scope | State |
 |---|---|---|
 | 0 | Safety snapshot commit, baseline | Done (`9b27842`) |
-| 1 | Real-data tooling and the calibration report | Done |
-| 2 | Roles and the player model | Done |
-| 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | — |
+| 1 | Real-data tooling and the calibration report | Done (`101864a`) |
+| 2 | Roles and the player model | Done (`3917e5c`) |
+| 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done |
 | 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | — |
 | 5 | Rivals with real rosters, budgets and posture AI | — |
 | 6 | Measurement and balance (gates 1 and 2) | — |
@@ -152,3 +152,154 @@ Consistency moved into Mind. Coaches gain `Development`.
   - bands containing the truth and narrowing with information.
 - **Shell native:** 3792 / 3830 checks.
 - **Headless hash:** `4f9896b5…`.
+
+## Phase 3 — matches, the league and its playoffs
+
+### Match resolution
+
+Code: `Competition.cs` and `Logistic.cs`.
+
+- **Series.** A match is a best-of-n series: best of 3 in the regular season and best of 5 in the playoffs, as the
+  calibration report found for tier A.
+- **One game.** The strength difference is a fixed part plus that game's keyed variance. The game win probability is
+  the logistic of the difference over `LogitScale`.
+  - The logistic comes from an integer table in millionths (logits 0.00 to 8.00 in steps of 0.01, symmetric), so no
+    floating point runs during play.
+  - Variance and result use the keys `variance:<game>` and `result:<game>`.
+- **The fixed part:**
+  - base: role rating × readiness × (100 + Form)%;
+  - preparation: completed work over `PreparationScale`;
+  - matchup: +3 when the posture suits the meta, −1 otherwise;
+  - adaptation: champion pools and the coach's Adaptability, minus the rival's read of a repeated posture;
+  - familiarity: 0 to +4;
+  - leadership: when the best Communication in the lineup is below 60, up to −3;
+  - style: an early-game lineup in an aggressive meta, or a teamfight lineup in a conservative one, ±3;
+  - composure: in matches of importance 2 or more, ±2.
+- **Spread.** `Variance` + 4 × posture − (mean Consistency − 50) / 10. Consistency narrows the outcome; an aggressive
+  posture widens it.
+- **Recorded outcome.** Games won and lost. `Probability` is the exact series win probability before variance
+  (`Logistic.Series`: integer arithmetic, rounded half to even once).
+- **Rival against rival.** The same game model, from the rivals' compressed `Strength`.
+- **Scale.** `LogitScale` 900 means 9 rating points per logit. Across the rival range of 14 points, the top team wins
+  a best of 3 about 91% of the time; the report found 88% for the top against the bottom of a tier-A league.
+
+### Familiarity and fatigue
+
+- **Familiarity** is stored per contract (`Employment.Familiarity`, 0–100):
+  - the starting roster begins at `StartingFamiliarity` (60), and a new signing at 0;
+  - it grows by `FamiliarityPerDay` (1) each day and by `FamiliarityPerMatch` (4) for each match played;
+  - the lineup's mean, divided by 25, enters the game difference.
+- It replaces the old readiness cap on signing. The plan proposed familiarity per pair of people; one value per
+  contract keeps the save small and says the same thing in the game.
+- **Match fatigue.** Each match costs the lineup `MatchFatigue` (4) readiness; it was a fixed 8.
+
+### The league
+
+Code: `Seasons.cs`.
+
+- **Format.** Eight teams: the company and `RivalCount` (7) rivals.
+  - `SeasonLength` is 84. The first round is on day 6 and a round follows every 4 days.
+  - The regular season is a seeded circle-method double round robin of 14 rounds. Each round the company plays one
+    rival and the other six play three matches; the return leg swaps sides.
+  - The second half carries double stakes.
+- **Storage.**
+  - `World.Fixtures` keeps its meaning: the company's matches.
+  - `World.LeagueFixtures` and `World.LeagueResults` hold the rest of the league. League results leave at season end.
+  - `World.Finishes` keeps the final order of the last ten seasons.
+- **Table.** Derived from results and never stored (DEC-012). One point per series won. Ties go to map difference,
+  then head-to-head among the teams still level, then maps won, then a seeded draw.
+- **Playoffs.** The top four play semifinals: 1 against 4 and 2 against 3.
+  - Day 58 is the last regular day; the semifinals are on day 62 and the final on day 66. Both are best of 5, at
+    importance 3.
+  - Playoff fixtures are derived from results and added when a day closes; validation requires exactly these.
+  - Days 67–84 are the off-season. Contracts end at the season's end.
+- **Final order.** Champion and runner-up first, then the other semifinalists by table place, then the rest of the
+  table.
+- **Place prizes** (`PlacePrizes`): 1st $1,500, 2nd $800, 3rd and 4th $400, due the day after the season ends. The
+  match prize is unchanged; phase 6 balances the two.
+- **League notices.** The end of the regular season (the company's place and semifinal opponent), the final pairing,
+  and the champion. Their inbox kind is Season, so they open Competition.
+
+### Forced restructuring (DEC-016)
+
+This removes the insolvency dead end found in rules v3 wave 1.
+
+- **Stuck** means: distress, no cash, obligations overdue from earlier days, and no incoming payment within three days.
+- **Once a day,** in the Finance phase before settlement, the board sells a contract to the open market for its market
+  fee (20 × wage):
+  - the most valuable contract whose departure still leaves a legal lineup, or failing that the most valuable one;
+  - the proceeds pay obligations that same day;
+  - recovery moves to Restructuring, a Released move is recorded and a Finance notice says what it cost.
+- **Time stops** only when nothing is left to sell.
+- **Bug fixed.** The first version ran the sale at the start of every phase. It could sell twice in one day under one
+  settlement ID, and snapshot validation then rejected the state ("Duplicate/invalid settlement IDs").
+- **Still open (phase 6).** A company that sells everyone still stops: 2 of 32 thrift runs. The board's next lever is
+  undecided.
+
+### Read model and UI
+
+- **Situation** gains:
+  - `Standings` (`StandingRow`);
+  - `LeagueMatches` (`LeagueMatchRow`);
+  - `LeagueNews` (`LeagueNewsRow`);
+  - `League` (`LeagueInfo`);
+  - `LastSeasonPlace`.
+- **`FixtureRow`** gains `Stage`, `Games` and `Score`.
+- **League news** is derived from results, never stored:
+  - a new leader at the top of the table after a round day;
+  - an upset, when a rival beats one at least three places above it.
+  It joins the Portal's world news by day.
+- **Horizon** gains the end of the regular season and the playoff matches of other teams.
+- **Competition** (references `04_competition` and `05_league`) has a Match | League segment track, so no rail item is
+  added:
+  - **Match** keeps the workspace. Fixtures show the stage and the score ("Victory 2–1").
+  - **League** shows the standings (#, Team, W, L, Map diff, Pts; the company's row selected), this week's and next
+    week's matches, the playoffs once they exist, and the league's format, key days and place prizes.
+- **Portal season record** shows the league place ("5th of 8"), and on roomy screens the playoff line ("Top 4").
+- **Not yet:** crests in table rows. The mockup shows them, but tables have no identity marks yet.
+
+### Provisional balance
+
+Phase 6 tunes these values:
+- `PreparationScale` 30 → 70. Under the steeper logistic, preparation added about 15 points and every policy won
+  90–96% of its matches. Now preparation adds about 6.6 points.
+- Rival `Strength` 64–78 → 68–82.
+
+Measurement: 8 seeds × 5 seasons, saved in `artifacts/v4-phase3-measure` (not tracked).
+
+| Policy | Win rate | Cash, season 5 | Insolvent runs |
+|---|---|---|---|
+| Coach | 68.8% | $20,527 | 0 of 8 |
+| Sponsor-greedy | 67.6% | $14,900 | 0 of 8 |
+| Thrift | 65.0% | $6,464 | 2 of 8 |
+| Balanced | 81.2% | $26,471 | 0 of 8 |
+
+- **Gate 1, losing is not profitable:** pass, 8/8 seeds.
+- **Gate 1, reputation follows results:** **fails**, correlation 0.422 against the 0.6 threshold (rules v3 wave 1:
+  0.807). The season's reputation target still follows the win rate only; phase 6 adds the league place.
+- **Gate 2, empty stretches:** 17 days in the worst season, against a limit of 10.
+- **Gate 2, multi-year progress:** measurable now that a table exists; phase 6 adds it to `Measurement.cs`.
+
+### Checks (Phase 3)
+
+- **Integration 308** (24 new), covering:
+  - the logistic table against the logistic function, within one millionth;
+  - exact series probabilities, and series that stop at the majority;
+  - even sides splitting wins and sweeps; a 14-point favourite winning most best-of-threes;
+  - the double round robin and a schedule that is a pure function of seed and season;
+  - every tie-break: map difference, head-to-head both ways, maps won;
+  - a season played through:
+    - semifinals from the table, and the observed standings;
+    - the regular-season notice opening Competition;
+    - the leader story and the order of world news;
+    - a save in the middle of the playoffs;
+    - the final order, the recorded finish and the place prize, and last season's place;
+  - familiarity;
+  - forced restructuring: one sale a day, and time stopping with nothing left to sell.
+- **Career test.** Its owner never renews, and now keeps the league's registered minimum of six. Without that, the
+  longer season's fines bankrupted it.
+- **Shell native:** 3832 checks at 1280×720 and 3871 at 1920×1080 (phase 2: 3792 / 3830). The League view is checked
+  at both sizes.
+- **Native kits:** 24 / 101 / 31.
+- **Headless hash:** `d760e35c…`.
+- **Content:** the fixture's calibration pin now matches the committed report (the report is stored with LF).

@@ -52,13 +52,26 @@ public static class SnapshotValidation
         Require(c.Settlements.All(x => x.Day >= 1 && x.Day <= day), "Invalid settlement date.");
         Unique(w.Rivals.Select(x => x.Id), "rival IDs"); Unique(w.Fixtures.Select(x => x.Id), "fixture IDs");
         Require(w.Rivals.Length == b.RivalCount && w.Rivals.All(r => r.Strength is > 0 and <= 100 && r.Budget >= 0 && Enum.IsDefined(r.Posture) && r.Name.Length is > 0 and <= 60), "Invalid rival state.");
-        Require(w.Fixtures.SequenceEqual(Seasons.Schedule(e.Seed, season, w.Rivals, b)), "Schedule changed without a supported rule.");
+        // The season's fixtures: the generated regular season, then exactly the playoff fixtures its results have produced.
+        var schedule = Seasons.Schedule(e.Seed, season, c.Id, w.Rivals, b); var playoffs = Seasons.Playoffs(w, c.Id, season, e.Seed, b);
+        Require(w.Fixtures.SequenceEqual(schedule.Company.AddRange(playoffs.Company)) && w.LeagueFixtures.SequenceEqual(schedule.League.AddRange(playoffs.League)),
+            "Schedule changed without a supported rule.");
+        Unique(w.LeagueResults.Select(x => x.Id), "league result IDs"); Unique(w.LeagueResults.Select(x => x.FixtureId), "resolved league fixtures");
+        bool Series(int games, int a, int bb) => Math.Max(a, bb) == games / 2 + 1 && Math.Min(a, bb) is >= 0 && Math.Min(a, bb) < games / 2 + 1;
+        Require(w.LeagueResults.All(r => w.LeagueFixtures.FirstOrDefault(f => f.Id == r.FixtureId) is { } f && f.Day == r.Day && f.HomeId == r.HomeId && f.AwayId == r.AwayId
+            && r.Day <= day && (r.Day != day || w.Calendar.Phase > Phase.Competition) && Series(f.Games, r.HomeGames, r.AwayGames)), "Invalid league result.");
+        Require(w.Results.Where(r => r.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal)).All(r => w.Fixtures.First(f => f.Id == r.FixtureId) is var f
+            && (r.PlanCause == "forfeit" ? r.GamesWon == 0 && r.GamesLost == f.Games / 2 + 1 : Series(f.Games, r.GamesWon, r.GamesLost) && r.Won == r.GamesWon > r.GamesLost)), "Invalid series score.");
+        var teams = w.Rivals.Select(r => r.Id).Append(c.Id).Order(StringComparer.Ordinal).ToArray();
+        Require(w.Finishes.All(f => f.Season < season && f.Order.Order(StringComparer.Ordinal).SequenceEqual(teams)) && w.Finishes.Select(f => f.Season).Distinct().Count() == w.Finishes.Length
+            && w.Finishes.Length <= 10, "Invalid season finishes.");
+        Require(c.Employment.All(x => x.Familiarity is >= 0 and <= 100), "Invalid familiarity.");
         Unique(w.Results.Select(x => x.Id), "result IDs"); Unique(w.Results.Select(x => x.FixtureId), "resolved fixtures");
         foreach (var result in w.Results)
         {
             var current = result.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal);
             Require(w.Rivals.Any(r => r.Id == result.RivalId) && result.Day <= day && (result.Day != day || w.Calendar.Phase > Phase.Competition)
-                && result.Probability is >= 50000 and <= 950000 && (current
+                && result.Probability is >= 0 and <= 1_000_000 && (current
                     ? w.Fixtures.Any(f => f.Id == result.FixtureId && f.Day == result.Day && f.RivalId == result.RivalId)
                     : result.Day < Seasons.Start(season, b)), "Invalid result/cursor relationship.");
         }

@@ -3,7 +3,7 @@ using ManagementGame.Formatting;
 
 namespace ManagementGame.Application;
 
-public enum HorizonKind { Match, OfferDeadline, ProposalAnswer, ContractEnd, Receipt, SeasonEnd }
+public enum HorizonKind { Match, OfferDeadline, ProposalAnswer, ContractEnd, Receipt, SeasonEnd, League }
 /// <summary>One operating-horizon event. Kind is the typed category; Subject names the opponent, brand or person
 /// (several names when Count &gt; 1 events of one kind share a day); Amount is set for receipts (minor units). Text is the
 /// full sentence for tooltips; Note carries secondary detail (e.g. "double stakes"). A grouped event routes to its
@@ -15,7 +15,8 @@ public sealed record HorizonWeek(int Season, int Week, int FirstDayOfSeason, int
     bool ScheduleDrawn, ImmutableArray<HorizonEvent> Events);
 
 /// <summary>The operating horizon: the next weeks of the season with every dated commitment the company can observe
-/// (fixtures, offer deadlines, proposal answers, contract ends, scheduled receipts, season end). No longer part of the
+/// (fixtures, offer deadlines, proposal answers, contract ends, scheduled receipts, season end, the league's milestones and
+/// the playoff matches of other teams). No longer part of the
 /// Portal; kept as a read model for calendar-type presentation. It ranks and groups; it decides nothing.</summary>
 public static class HorizonProjection
 {
@@ -64,6 +65,12 @@ public static class HorizonProjection
             list.Add(new(day.Key, HorizonKind.Receipt, "Receipt " + Currency.Format(amount),
                 false, ShellSections.Finance, "day:" + day.Key, Amount: amount));
         }
+        if (v.League is { } league && league.LastRegularDay >= v.Day)
+            list.Add(new(league.LastRegularDay, HorizonKind.League, "Regular season ends", true, ShellSections.Competition, "league:regular:" + v.Season,
+                $"top {league.PlayoffTeams} reach the playoffs", "Regular season"));
+        foreach (var m in (v.LeagueMatches.IsDefault ? [] : v.LeagueMatches).Where(m => !m.Company && m.Stage != "regular" && m.Score.Length == 0))
+            list.Add(new(m.Day, HorizonKind.League, $"{(m.Stage == "final" ? "Final" : "Semifinal")}: {m.Home} vs {m.Away}", false, ShellSections.Competition, m.Id,
+                $"best of {m.Games}", $"{m.Home}, {m.Away}"));
         var seasonEnd = v.Day - v.DayOfSeason + v.SeasonLength;
         list.Add(new(seasonEnd, HorizonKind.SeasonEnd, $"Season {v.Season} ends", true, ShellSections.Competition, "season:" + v.Season, Subject: $"Season {v.Season}"));
         // Several deadlines of one kind and section on one day read as one event; it routes to the section overview.

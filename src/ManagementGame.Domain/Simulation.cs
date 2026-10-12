@@ -55,8 +55,9 @@ public static class Simulation
                 if (c.People.Length >= b.MaxRoster) throw new RuleViolation($"Roster limit of {b.MaxRoster} reached; release a player first.");
                 if (command.Seasons is < 1 or > 3) throw new RuleViolation("Contracts run for one to three seasons.");
                 c = Finance.PayNow(c, candidate.Fee, cause, day);
-                var contract = new Employment("employment:" + candidate.Person.Id + ":" + cause, candidate.Person.Id, candidate.Salary, candidate.ReleaseCost, ContractEnd(day, command.Seasons, b));
-                c = c with { People = c.People.Add(candidate.Person with { Readiness = Math.Min(candidate.Person.Readiness, 70) }), Employment = c.Employment.Add(contract) };
+                // A new signing arrives unfamiliar with the team (familiarity 0): the integration cost of a roster change.
+                var contract = new Employment("employment:" + candidate.Person.Id + ":" + cause, candidate.Person.Id, candidate.Salary, candidate.ReleaseCost, ContractEnd(day, command.Seasons, b), 0);
+                c = c with { People = c.People.Add(candidate.Person), Employment = c.Employment.Add(contract) };
                 w = Market.Moved(w with { Candidates = w.Candidates.Remove(candidate) }, day, cause, candidate.Person, MoveReason.Signed, null, c.Id);
                 break;
             case ReleasePlayer command:
@@ -86,7 +87,7 @@ public static class Simulation
                     .Add(new CoachCandidate(c.Coach, previous.Salary * 15, previous.Salary, day + b.TalentRefreshInterval - 1)) };
                 w = Market.Moved(Market.Moved(w, day, cause, c.Coach, MoveReason.Replaced, c.Id, null), day, cause, hire.Coach, MoveReason.Appointed, null, c.Id);
                 c = c with { Coach = hire.Coach, Employment = c.Employment.Remove(previous)
-                    .Add(new Employment("employment:" + hire.Coach.Id + ":" + cause, hire.Coach.Id, hire.Salary, hire.Salary * 5, ContractEnd(day, 2, b))) };
+                    .Add(new Employment("employment:" + hire.Coach.Id + ":" + cause, hire.Coach.Id, hire.Salary, hire.Salary * 5, ContractEnd(day, 2, b), 0)) };
                 break;
             case AcceptSponsor command:
                 var offer = w.Offers.FirstOrDefault(x => x.Id == command.OfferId) ?? throw new RuleViolation("Unknown sponsor offer.");
@@ -176,14 +177,20 @@ public static class Simulation
     public static Campaign Step(Campaign s, Content content)
     {
         var c = s.Company; var w = s.World; var b = content.Balance; var cursor = w.Calendar; var day = cursor.Day; var seed = s.Execution.Seed;
-        // Do not repeatedly settle or repeat prior phases while blocked. A new sponsor may offer a credible inflow.
-        if (c.Recovery == RecoveryStage.Distress && c.FinancialItems.Any(x => !x.Incoming && x.Remaining > 0 && x.DueDay < day)
-            && !c.FinancialItems.Any(x => x.Incoming && x.Remaining > 0 && x.DueDay <= day + 3) && c.Cash == 0) return s;
+        // Stuck with nothing left to sell: time stops (the board's restructuring below needs a contract to sell).
+        if (Stuck(c, day) && c.People.IsEmpty) return s;
         switch (cursor.Phase)
         {
-            case Phase.Finance: c = Finance.Settle(Finance.Payroll(c, day, b.OperatingCost), day); break;
+            case Phase.Finance:
+                c = Finance.Payroll(c, day, b.OperatingCost);
+                // Stuck in distress (no cash, overdue obligations, no credible inflow within three days): once a day, before
+                // settlement, the board forces a restructuring instead of stopping time (DEC-016); the sale pays today.
+                if (Stuck(c, day) && ForcedSale(c, w, content, day) is { } restructured) (c, w) = restructured;
+                c = Finance.Settle(c, day);
+                break;
             case Phase.Contracts:
-                c = c with { People = c.People.Select(p => p with { Readiness = Math.Min(100, p.Readiness + 1) }).ToImmutableArray() };
+                c = c with { People = c.People.Select(p => p with { Readiness = Math.Min(100, p.Readiness + 1) }).ToImmutableArray(),
+                    Employment = c.Employment.Select(e => e.PersonId == c.Coach.Id ? e : e with { Familiarity = Math.Min(100, e.Familiarity + b.FamiliarityPerDay) }).ToImmutableArray() };
                 (c, w) = Market.Contracts(c, w, seed, content, day);
                 (c, w) = Market.Resolve(c, w, seed, content, day);
                 (c, w) = Market.Expire(c, w, content, day);
@@ -226,7 +233,8 @@ public static class Simulation
                     if (c.Plan is not { } plan)
                     {
                         // No legal lineup: the match is forfeited rather than blocking time.
-                        var forfeit = new CompetitiveOutcome("result:" + fixture.Id, fixture.Id, day, rival.Id, false, Posture.Balanced, 50_000, 0, 0, 0, 0, 0, fixture.Importance, "forfeit");
+                        var forfeit = new CompetitiveOutcome("result:" + fixture.Id, fixture.Id, day, rival.Id, false, Posture.Balanced, 50_000, 0, 0, 0, 0, 0, fixture.Importance, "forfeit",
+                            0, 0, 0, 0, 0, fixture.Games / 2 + 1);
                         w = w with { Results = w.Results.Add(forfeit) };
                         // A forfeit is a public failure to field a team, not an unlucky loss: a fixed, visible commercial penalty.
                         c = Finance.Consume(c, forfeit, fixture, b);
@@ -239,18 +247,23 @@ public static class Simulation
                         break;
                     }
                     var lineup = plan.Lineup.Select(id => c.People.Single(p => p.Id == id)).ToImmutableArray();
+                    var familiarity = (int)Numbers.Divide(lineup.Sum(p => (long)c.Employment.Single(e => e.PersonId == p.Id).Familiarity), lineup.Length);
                     var outcome = Competition.Resolve(new CompetitionInput(seed, fixture, plan, c.Work, lineup,
                         [.. lineup.Select((p, i) => Ratings.InRole(p, Roles.All[i], content))], c.Coach, rival, w.Meta,
-                        w.Results.TakeLast(b.PredictabilityWindow).Count(r => r.Posture == plan.Posture), b));
+                        w.Results.TakeLast(b.PredictabilityWindow).Count(r => r.Posture == plan.Posture), b, familiarity));
                     w = w with { Results = w.Results.Add(outcome) };
                     c = Finance.Consume(c, outcome, fixture, b);
                     c = LeagueFine(c, outcome, fixture, rival, b);
                     c = Commercial.Consume(c, outcome, b);
                     c = c with { Plan = null, Work = new Work(c.Work.Execution / 2, 0, c.Work.Meta / 2),
-                        People = c.People.Select(p => plan.Lineup.Contains(p.Id) ? p with { Readiness = Math.Max(1, p.Readiness - 8) } : p).ToImmutableArray(),
+                        People = c.People.Select(p => plan.Lineup.Contains(p.Id) ? p with { Readiness = Math.Max(1, p.Readiness - b.MatchFatigue) } : p).ToImmutableArray(),
+                        Employment = c.Employment.Select(e => plan.Lineup.Contains(e.PersonId) ? e with { Familiarity = Math.Min(100, e.Familiarity + b.FamiliarityPerMatch) } : e).ToImmutableArray(),
                         Reviews = c.Reviews.Add(new ReviewEntry(outcome.Id, day, plan.CauseId,
-                        $"{(outcome.Won ? "Victory" : "Defeat")} vs {rival.Name}. {plan.Posture} posture; completed preparation contributed {outcome.Preparation}; public meta {(outcome.Matchup > 0 ? "suited" : "challenged")} the plan. Rival response and match-day variance remain uncertain. Any prize/bonus and commercial changes are due tomorrow.")) };
+                        $"{(outcome.Won ? "Victory" : "Defeat")} {outcome.GamesWon}–{outcome.GamesLost} vs {rival.Name}. {plan.Posture} posture; completed preparation contributed {outcome.Preparation}; public meta {(outcome.Matchup > 0 ? "suited" : "challenged")} the plan. Rival response and match-day variance remain uncertain. Any prize/bonus and commercial changes are due tomorrow.")) };
                 }
+                // The rest of the league plays the same day.
+                foreach (var league in w.LeagueFixtures.Where(f => f.Day == day && !w.LeagueResults.Any(r => r.FixtureId == f.Id)).OrderBy(f => f.Id, StringComparer.Ordinal).ToArray())
+                    w = w with { LeagueResults = w.LeagueResults.Add(Competition.Rivals(seed, league, w.Rivals.Single(r => r.Id == league.HomeId), w.Rivals.Single(r => r.Id == league.AwayId), b)) };
                 break;
             case Phase.Consequences: c = Commercial.ApplyDue(c, day); break;
             case Phase.Recovery:
@@ -264,7 +277,67 @@ public static class Simulation
         }
         var nextCursor = cursor.Phase == Phase.Review ? new Calendar(day + 1, Phase.Finance, cursor.Sequence + 1)
             : cursor with { Phase = cursor.Phase + 1, Sequence = cursor.Sequence + 1 };
-        return s with { Company = c, World = w with { Calendar = nextCursor } };
+        w = w with { Calendar = nextCursor };
+        if (cursor.Phase == Phase.Review && day != Seasons.End(Seasons.Of(day, b), b)) (c, w) = Playoffs(c, w, seed, b, day);
+        return s with { Company = c, World = w };
+    }
+
+    /// <summary>When a day closes, the playoff fixtures that now exist are added (derived from results by
+    /// <see cref="Seasons.Playoffs"/>), and the league tells the company where it stands: after the regular season, after
+    /// the semifinals, and when a champion is crowned.</summary>
+    private static (Company, World) Playoffs(Company c, World w, ulong seed, Balance b, int day)
+    {
+        var season = Seasons.Of(day, b);
+        var (company, league) = Seasons.Playoffs(w, c.Id, season, seed, b);
+        var newCompany = company.Where(f => !w.Fixtures.Any(x => x.Id == f.Id)).ToArray();
+        var newLeague = league.Where(f => !w.LeagueFixtures.Any(x => x.Id == f.Id)).ToArray();
+        w = w with { Fixtures = w.Fixtures.AddRange(newCompany), LeagueFixtures = w.LeagueFixtures.AddRange(newLeague) };
+        string Name(string id) => id == c.Id ? c.Name : w.Rivals.Single(r => r.Id == id).Name;
+        Company Notice(string key, string text) => c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}league:{key}:{day}", day, $"season:{season}", text)) };
+        if (day == Seasons.LastRegularDay(season, b))
+        {
+            var table = Seasons.Table(w, c.Id, season, seed);
+            var place = table.Select((s, i) => (s, i)).Single(x => x.s.TeamId == c.Id).i + 1;
+            var own = newCompany.FirstOrDefault(f => f.Stage == Seasons.Semifinal);
+            c = Notice("regular", $"Regular season over: {c.Name} finished {Figures.Ordinal(place)} of {table.Length} ({table[place - 1].Won}–{table[place - 1].Lost}). "
+                + (own is not null ? $"Semifinal against {Name(own.RivalId)} on day {own.Day}, best of {own.Games}." : $"The top {b.PlayoffTeams} play the semifinals; {c.Name} did not qualify."));
+        }
+        else if (day == Seasons.SemifinalDay(season, b) && company.Concat<object>(league).Any())
+        {
+            var final = company.FirstOrDefault(f => f.Stage == Seasons.Final) is { } ownFinal ? (c.Id, ownFinal.RivalId)
+                : league.FirstOrDefault(f => f.Stage == Seasons.Final) is { } other ? (other.HomeId, other.AwayId) : default;
+            if (final != default) c = Notice("final", $"The final is set: {Name(final.Item1)} against {Name(final.Item2)} on day {Seasons.FinalDay(season, b)}.");
+        }
+        else if (day == Seasons.FinalDay(season, b) && Seasons.FinalOrder(w, c.Id, season, seed, b) is { } order)
+            c = Notice("champion", $"{Name(order[0])} are the season {season} champions; {Name(order[1])} finished runners-up.");
+        return (c, w);
+    }
+
+    /// <summary>Distress with no way out by itself: obligations overdue from earlier days, no cash and no incoming payment
+    /// within three days.</summary>
+    public static bool Stuck(Company c, int day) => c.Recovery == RecoveryStage.Distress && c.Cash == 0
+        && c.FinancialItems.Any(x => !x.Incoming && x.Remaining > 0 && x.DueDay < day)
+        && !c.FinancialItems.Any(x => x.Incoming && x.Remaining > 0 && x.DueDay <= day + 3);
+
+    /// <summary>Forced restructuring (DEC-016): the board sells the contract of the most valuable player whose departure
+    /// still leaves a legal lineup (or, failing that, the most valuable player) to the open market for their market fee,
+    /// which pays the overdue obligations at the next settlement. Recovery moves to Restructuring; the move is recorded and
+    /// the company is told what it cost. Null when there is no one to sell.</summary>
+    private static (Company, World)? ForcedSale(Company c, World w, Content content, int day)
+    {
+        var b = content.Balance; var season = Seasons.Of(day, b);
+        if (c.People.IsEmpty) return null;
+        var pick = c.People.Select(p => (Person: p, Fee: Pay.Player(p, season, content) * 20, Keeps: LineupPossible(c with { People = c.People.Remove(p) })))
+            .OrderByDescending(x => x.Keeps).ThenByDescending(x => x.Fee).ThenBy(x => x.Person.Id, StringComparer.Ordinal).First();
+        var cause = $"restructuring:{day}";
+        var employment = c.Employment.Single(e => e.PersonId == pick.Person.Id);
+        c = c with { People = c.People.Remove(pick.Person), Employment = c.Employment.Remove(employment), Plan = null, Recovery = RecoveryStage.Restructuring,
+            Cash = checked(c.Cash + pick.Fee), Settlements = c.Settlements.Add(new Settlement("immediate:" + cause, cause, day, pick.Fee)) };
+        w = w with { Candidates = w.Candidates.Add(new Candidate(pick.Person, pick.Fee, employment.Salary, employment.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
+        w = Market.Moved(w, day, cause, pick.Person, MoveReason.Released, c.Id, null);
+        c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}restructuring:{day}", day, cause,
+            $"The board forced a restructuring: {pick.Person.Handle}'s contract was sold for {Currency.Format(pick.Fee)} to pay overdue obligations. Squad depth is the price of staying solvent.")) };
+        return (c, w);
     }
 
     /// <summary>A match played (or forfeited) below the league's registered-roster minimum: Finance withheld any prize and
@@ -286,6 +359,12 @@ public static class Simulation
     {
         var b = content.Balance; var season = Seasons.Of(day, b); var range = content.Generation.Rival;
         var played = w.Results.Where(r => r.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal)).ToArray();
+        // The final order: champion first, then by the regular-season table (no final played: the table alone). The
+        // company is paid its place prize.
+        var order = Seasons.FinalOrder(w, c.Id, season, seed, b) ?? [.. Seasons.Table(w, c.Id, season, seed).Select(s => s.TeamId)];
+        var place = order.IndexOf(c.Id) + 1;
+        if (place - 1 < b.PlacePrizes.Length && b.PlacePrizes[place - 1] > 0)
+            c = c with { FinancialItems = c.FinancialItems.Add(new FinancialItem($"place:s{season}", $"season:{season}", day + 1, b.PlacePrizes[place - 1], true, b.PlacePrizes[place - 1], null)) };
         var standing = "";
         if (played.Length > 0 && b.ReputationRegression > 0)
         {
@@ -303,9 +382,14 @@ public static class Simulation
         c = Finance.Archive(c, Seasons.Start(season, b));
         c = c with { Reviews = c.Reviews.Skip(Math.Max(0, c.Reviews.Length - 150)).ToImmutableArray() };
         c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}season:{season + 1}:{day}", day, $"season:{season}",
-            $"Season {season} closed {played.Count(r => r.Won)}–{played.Count(r => !r.Won)}.{standing} Season {season + 1} begins with a new schedule; rivals have reshaped their squads.")) };
-        // Transfer history keeps the season just closed and the next one; older moves are no longer news.
-        return (c, w with { Rivals = rivals, Fixtures = Seasons.Schedule(seed, season + 1, rivals, b), Meta = Posture.Balanced,
+            $"Season {season} closed: {c.Name} finished {Figures.Ordinal(place)} of {order.Length}, {played.Count(r => r.Won)}–{played.Count(r => !r.Won)}"
+            + (place - 1 < b.PlacePrizes.Length && b.PlacePrizes[place - 1] > 0 ? $"; a {Currency.Format(b.PlacePrizes[place - 1])} place prize is due tomorrow." : ".")
+            + $"{standing} Season {season + 1} begins with a new schedule; rivals have reshaped their squads.")) };
+        var next = Seasons.Schedule(seed, season + 1, c.Id, rivals, b);
+        // Transfer history keeps the season just closed and the next one; older moves are no longer news. League results
+        // of the closed season leave with it; its final order stays (the last ten seasons).
+        return (c, w with { Rivals = rivals, Fixtures = next.Company, LeagueFixtures = next.League, LeagueResults = [], Meta = Posture.Balanced,
+            Finishes = w.Finishes.Add(new SeasonFinish(season, order)).TakeLast(10).ToImmutableArray(),
             Moves = w.Moves.Where(m => m.Day >= Seasons.Start(season, b)).ToImmutableArray() });
     }
 }

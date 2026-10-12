@@ -20,10 +20,10 @@ public static class CampaignFactory
         {
             var salary = Pay.Player(p, 1, content);
             var seasons = 1 + KeyedRandom.Range(seed, "roster", p.Id, "contract", b.StartingContractSeasons);
-            return new Employment("employment:" + p.Id, p.Id, salary, salary * 3, Seasons.End(seasons, b));
+            return new Employment("employment:" + p.Id, p.Id, salary, salary * 3, Seasons.End(seasons, b), b.StartingFamiliarity);
         }).ToImmutableArray();
         var coachSalary = Pay.Coach(coach);
-        contracts = contracts.Add(new Employment("employment:" + coach.Id, coach.Id, coachSalary, coachSalary * 5, Seasons.End(2, b)));
+        contracts = contracts.Add(new Employment("employment:" + coach.Id, coach.Id, coachSalary, coachSalary * 5, Seasons.End(2, b), 0));
         var company = new Company("company:player", name, people, coach, contracts, [], b.StartingCash, b.StartingCash, [], [],
             b.Reputation, b.Audience, b.Information, new Authority(ControlMode.Manual, Posture.Aggressive), null, new Work(0, 0, 0),
             RecoveryStage.Stable, [], [], [], []);
@@ -37,7 +37,8 @@ public static class CampaignFactory
             company = Finance.AddSponsor(company, starter, 1, "agreement:" + starter.Id, b.SponsorForfeitLimit);
         }
         var rivals = Generator.Rivals(seed, content);
-        var world = new World(new Calendar(1, Phase.Finance, 0), rivals, Seasons.Schedule(seed, 1, rivals, b), [], [], [], [], [], [], Posture.Balanced, next, []);
+        var schedule = Seasons.Schedule(seed, 1, company.Id, rivals, b);
+        var world = new World(new Calendar(1, Phase.Finance, 0), rivals, schedule.Company, [], [], [], [], [], [], Posture.Balanced, next, [], schedule.League, [], []);
         world = Market.Refresh(company, world, seed, content, 1);
         (company, world) = Market.Approach(company, world, seed, content, 1, guaranteed: 2);
         return new Campaign(company, world, new Execution(campaignId, seed, 0, content.RulesVersion, contentHash, []));

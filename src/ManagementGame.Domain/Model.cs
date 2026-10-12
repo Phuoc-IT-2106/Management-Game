@@ -34,7 +34,9 @@ public sealed record Person(string Id, string DefinitionId, string Name, string 
     string Role, string SecondaryRole, Skills Skills, Mind Mind, int Potential, int Readiness, int Form, int Morale, int Popularity);
 /// <summary>A head coach. Analysis sharpens estimates (scouting), Adaptability reads the meta, Development grows players.</summary>
 public sealed record Coach(string Id, string Name, int Preparation, int Analysis, int Adaptability, int Capacity, int Development);
-public sealed record Employment(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay);
+/// <summary>A contract. Familiarity (0–100) is how integrated the person is with the team: it starts at zero for a new
+/// signing and grows with every day and every match played together.</summary>
+public sealed record Employment(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay, int Familiarity);
 /// <summary>A signed agreement. <paramref name="ForfeitLimit"/> is its termination clause: that many forfeits in one season
 /// let the brand end it (0: no clause).</summary>
 public sealed record SponsorContract(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit);
@@ -56,7 +58,14 @@ public sealed record Company(
     ImmutableArray<string> FinanceReceipts, ImmutableArray<string> CommercialReceipts,
     ImmutableArray<ReviewEntry> Reviews);
 public sealed record Rival(string Id, string Name, int Strength, int Analysis, int Adaptability, Posture Posture, int Budget, int Need);
-public sealed record Fixture(string Id, int Day, string RivalId, int Importance, long Prize);
+/// <summary>A match of the company against a rival: regular season, semifinal or final, played as a best-of-<paramref name="Games"/>.</summary>
+public sealed record Fixture(string Id, int Day, string RivalId, int Importance, long Prize, int Games, string Stage);
+/// <summary>A league match between two rivals (the company is not in it).</summary>
+public sealed record LeagueFixture(string Id, int Day, string HomeId, string AwayId, int Importance, int Games, string Stage);
+/// <summary>The result of a league match between rivals: games won by each side.</summary>
+public sealed record LeagueResult(string Id, string FixtureId, int Day, string HomeId, string AwayId, int HomeGames, int AwayGames);
+/// <summary>A finished season's final order of teams, champion first.</summary>
+public sealed record SeasonFinish(int Season, ImmutableArray<string> Order);
 public sealed record Offer(string Id, string BrandId, string Name, OfferOrigin Origin, int Deadline, int DurationDays,
     long Payment, long WinBonus, int Load, int MinimumReputation, string? ClaimedBy);
 public sealed record Negotiation(string Id, string BrandId, long Payment, int DurationDays, int SubmittedDay, int ResponseDay);
@@ -64,8 +73,11 @@ public sealed record Negotiation(string Id, string BrandId, long Payment, int Du
 public sealed record BrandStatus(string BrandId, int AvailableFromDay);
 public sealed record Candidate(Person Person, long Fee, long Salary, long ReleaseCost, int Deadline);
 public sealed record CoachCandidate(Coach Coach, long Fee, long Salary, int Deadline);
+/// <summary>The company's match result. Probability is the series win probability before match-day variance (millionths);
+/// the other figures are the terms of the first game's strength difference (developer truth, never observed).</summary>
 public sealed record CompetitiveOutcome(string Id, string FixtureId, int Day, string RivalId, bool Won, Posture Posture,
-    int Probability, int Base, int Preparation, int Matchup, int Adaptation, int Variance, int Importance, string PlanCause);
+    int Probability, int Base, int Preparation, int Matchup, int Adaptation, int Variance, int Importance, string PlanCause,
+    int Familiarity, int Style, int Composure, int Leadership, int GamesWon, int GamesLost);
 public enum Personnel { Player, HeadCoach }
 /// <summary>Why a person moved: the company signed a player or appointed a head coach; an interim head coach took over
 /// when the head coach's contract ended; the company released a player; a contract ended without renewal; or a head coach
@@ -82,7 +94,8 @@ public sealed record Calendar(int Day, Phase Phase, long Sequence);
 public sealed record World(Calendar Calendar, ImmutableArray<Rival> Rivals, ImmutableArray<Fixture> Fixtures,
     ImmutableArray<CompetitiveOutcome> Results, ImmutableArray<Offer> Offers, ImmutableArray<Negotiation> Negotiations,
     ImmutableArray<BrandStatus> Brands, ImmutableArray<Candidate> Candidates, ImmutableArray<CoachCandidate> CoachCandidates,
-    Posture Meta, long NextId, ImmutableArray<Move> Moves);
+    Posture Meta, long NextId, ImmutableArray<Move> Moves, ImmutableArray<LeagueFixture> LeagueFixtures, ImmutableArray<LeagueResult> LeagueResults,
+    ImmutableArray<SeasonFinish> Finishes);
 public sealed record CommandReceipt(string Id, string Digest, long Revision, string Message);
 public sealed record Execution(string CampaignId, ulong Seed, long Revision, string RulesVersion, string ContentHash,
     ImmutableArray<CommandReceipt> Receipts);
@@ -91,7 +104,7 @@ public sealed record Campaign(Company Company, World World, Execution Execution)
 // All numerical values below are development content, never invisible production defaults.
 public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInterval, int RivalCount,
     long StartingCash, int Reputation, int Audience, int Information,
-    int BaseLoad, int PreparationScale, int MatchScale, int Variance, int MetaDayOfSeason, int RivalCadence,
+    int BaseLoad, int PreparationScale, int LogitScale, int Variance, int MetaDayOfSeason, int RivalCadence,
     int ReputationGain, int AudienceGain, long PrizeBase,
     int SponsorSlots, int MaxOpenOffers, int MarketInterval, int OfferWindow, int NegotiationDelay, int RejectCooldown,
     int RosterSize, int MaxRoster, int CandidateCount, int CoachCandidateCount, int TalentRefreshInterval,
@@ -105,7 +118,16 @@ public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInter
     // How many of the company's latest results a rival reads for a repeated posture. Rules v2 counted every result since
     // the campaign began, so the penalty grew without bound across continuous seasons; v1's four-match season never saw
     // more than three.
-    int PredictabilityWindow);
+    int PredictabilityWindow,
+    // Rules v4 league: the company and RivalCount rivals play a double round robin of best-of-RegularGames; the top
+    // PlayoffTeams play semifinals and a final of best-of-PlayoffGames, PlayoffInterval days apart. PlacePrizes pays the
+    // final order (champion first). LogitScale is rating points per logit unit in hundredths. Familiarity grows by
+    // FamiliarityPerDay each day and FamiliarityPerMatch for each match played; the starting roster begins at
+    // StartingFamiliarity.
+    int RegularGames, int PlayoffGames, int PlayoffTeams, int PlayoffInterval, ImmutableArray<long> PlacePrizes,
+    int FamiliarityPerDay, int FamiliarityPerMatch, int StartingFamiliarity,
+    // Readiness a player loses for each match played (recovered at one point a day).
+    int MatchFatigue);
 public sealed record AttributeRange(int Min, int Max);
 /// <summary>A value with a draw weight (basis points or any positive integers).</summary>
 public sealed record WeightedValue(int Value, int Weight);

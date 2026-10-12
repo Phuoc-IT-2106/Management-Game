@@ -283,6 +283,7 @@ if __name__ == "__main__":
     matches = [m for m in load_records(runs, "matches") if (m.get("begin_at") or "")[:4] == year]
     report = build_report(tournaments, matches, provenance(runs))
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
-    args.output.with_suffix(".md").write_text(markdown(report) + "\n", encoding="utf-8")
+    # LF on every platform: the repository stores text with LF, and the content fixture pins this file's SHA-256.
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+    args.output.with_suffix(".md").write_text(markdown(report) + "\n", encoding="utf-8", newline="\n")
     print(f"Calibration report: {args.output}")

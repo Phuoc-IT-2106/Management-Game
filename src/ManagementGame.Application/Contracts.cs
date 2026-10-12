@@ -31,7 +31,8 @@ public sealed record PlayerSkills(int Mechanics, int EarlyGame, int Teamfight, i
 /// are never observed, so they are not here.</summary>
 public sealed record PersonRow(string Id, string Name, string Role, int Rating, int Readiness, long Salary, long ExitCost, bool CanRelease,
     int ContractEnd = 0, long RenewalSalary = 0, bool CanRenew = false, string FullName = "", string Nationality = "", int Age = 0,
-    string SecondaryRole = "", int SecondaryRating = 0, PlayerSkills? Skills = null, int Form = 0, int Morale = 0, int Popularity = 0, long MarketValue = 0);
+    string SecondaryRole = "", int SecondaryRating = 0, PlayerSkills? Skills = null, int Form = 0, int Morale = 0, int Popularity = 0, long MarketValue = 0,
+    int Familiarity = 0);
 /// <summary>A free agent as the company can estimate them: rating and potential as bands whose width follows the company's
 /// information and the head coach's analysis. Age, nationality, role and fan following are public.</summary>
 public sealed record CandidateRow(string Id, string Name, string Role, string RatingEstimate, long Fee, long Salary, int Deadline,
@@ -50,7 +51,20 @@ public sealed record NegotiationRow(string Id, string Brand, long Payment, int D
 /// <summary>A message the world sent the company; Kind is a stable category, CauseId the affected record and
 /// SubjectId the stable ID of the organization, brand or person it concerns (empty when none is known).</summary>
 public sealed record InboxRow(string Id, int Day, string Kind, string Text, string CauseId, string SubjectId = "");
-public sealed record FixtureRow(string Id, int Day, string Opponent, int Importance, string Result, string RivalId = "");
+/// <summary>A company match: stage (regular, semifinal, final), best-of format and, once played, the result and score ("2–1").</summary>
+public sealed record FixtureRow(string Id, int Day, string Opponent, int Importance, string Result, string RivalId = "", string Stage = "regular", int Games = 1, string Score = "");
+/// <summary>One line of the league table, in table order: place, team, series won and lost, games won and lost, points.</summary>
+public sealed record StandingRow(int Place, string TeamId, string Name, int Played, int Won, int Lost, int GamesWon, int GamesLost, int Points, bool Company);
+/// <summary>A league match of any two teams (the company's included): stage, format and, once played, the score and winner.</summary>
+public sealed record LeagueMatchRow(string Id, int Day, string Stage, int Games, string HomeId, string Home, string AwayId, string Away, string Score, string WinnerId, bool Company);
+/// <summary>A league story the public can read from the results, derived and never stored: a new leader at the top of the
+/// table ("Leader"), or an upset between two rivals ("Upset": the winner sat at least <c>Observations.UpsetGap</c> places
+/// below the loser before the match). SubjectId is the organization the story is about.</summary>
+public sealed record LeagueNewsRow(string Id, int Day, string Kind, string Headline, string Detail, string SubjectId);
+/// <summary>The league's format this season: teams, series per team in the regular season, best-of formats, playoff places,
+/// the key days (absolute) and the place prizes (champion first, minor units).</summary>
+public sealed record LeagueInfo(int Teams, int MatchesPerTeam, int RegularGames, int PlayoffTeams, int PlayoffGames, int FirstDay, int LastRegularDay,
+    int SemifinalDay, int FinalDay, ImmutableArray<long> PlacePrizes);
 /// <summary>Current-season head-to-head record against one rival organization.</summary>
 public sealed record RivalRow(string Id, string Name, int Wins, int Losses, int Remaining);
 /// <summary>How a completed personnel move came about (the domain's <c>MoveReason</c>, in the same order): an
@@ -72,7 +86,9 @@ public sealed record Situation(long Revision, int Day, int Season, int DayOfSeas
     string PendingConsequences, string FixtureLabel, StaffRow CoachContract, ImmutableArray<CoachCandidateRow> CoachCandidates,
     ImmutableArray<BrandRow> Brands, ImmutableArray<NegotiationRow> Negotiations, int SponsorSlots, int ActiveSponsors,
     ImmutableArray<InboxRow> Inbox, ImmutableArray<FixtureRow> Fixtures, ImmutableArray<RivalRow> Rivals,
-    string CompanyId = "", string OpponentId = "", long OperatingCost = 0, int MinimumRoster = 0, ImmutableArray<MoveRow> Moves = default);
+    string CompanyId = "", string OpponentId = "", long OperatingCost = 0, int MinimumRoster = 0, ImmutableArray<MoveRow> Moves = default,
+    ImmutableArray<StandingRow> Standings = default, ImmutableArray<LeagueMatchRow> LeagueMatches = default, int PlayoffTeams = 0, int LastSeasonPlace = 0,
+    ImmutableArray<LeagueNewsRow> LeagueNews = default, LeagueInfo? League = null);
 
 public interface IGameSession
 {
