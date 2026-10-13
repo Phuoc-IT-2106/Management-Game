@@ -32,10 +32,10 @@ public sealed record CoachDto(string Id, string Name, int Preparation, int Analy
     public Coach ToDomain() => new(Id, Name, Preparation, Analysis, Adaptability, Capacity, Development);
 }
 
-public sealed record EmploymentDto(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay, int Familiarity)
+public sealed record EmploymentDto(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay, int Familiarity, int Played)
 {
-    public static EmploymentDto From(Employment x) => new(x.Id, x.PersonId, x.Salary, x.ReleaseCost, x.EndDay, x.Familiarity);
-    public Employment ToDomain() => new(Id, PersonId, Salary, ReleaseCost, EndDay, Familiarity);
+    public static EmploymentDto From(Employment x) => new(x.Id, x.PersonId, x.Salary, x.ReleaseCost, x.EndDay, x.Familiarity, x.Played);
+    public Employment ToDomain() => new(Id, PersonId, Salary, ReleaseCost, EndDay, Familiarity, Played);
 }
 
 public sealed record SponsorContractDto(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit)
@@ -146,10 +146,10 @@ public sealed record CoachCandidateDto(CoachDto Coach, long Fee, long Salary, in
     public CoachCandidate ToDomain() => new(Coach.ToDomain(), Fee, Salary, Deadline);
 }
 
-public sealed record CandidateDto(PersonDto Person, long Fee, long Salary, long ReleaseCost, int Deadline)
+public sealed record CandidateDto(PersonDto Person, long Fee, long Salary, long ReleaseCost)
 {
-    public static CandidateDto From(Candidate x) => new(PersonDto.From(x.Person), x.Fee, x.Salary, x.ReleaseCost, x.Deadline);
-    public Candidate ToDomain() => new(Person.ToDomain(), Fee, Salary, ReleaseCost, Deadline);
+    public static CandidateDto From(Candidate x) => new(PersonDto.From(x.Person), x.Fee, x.Salary, x.ReleaseCost);
+    public Candidate ToDomain() => new(Person.ToDomain(), Fee, Salary, ReleaseCost);
 }
 
 public sealed record CompetitiveOutcomeDto(string Id, string FixtureId, int Day, string RivalId, bool Won, Posture Posture, int Probability, int Base, int Preparation, int Matchup, int Adaptation, int Variance, int Importance, string PlanCause,

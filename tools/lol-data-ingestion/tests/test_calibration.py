@@ -125,6 +125,15 @@ class CalibrationTests(unittest.TestCase):
         for secret in ["SecretHandle", "SecretFirst", "SecretLast", "secret-slug", "SecretTeam", "ST1", "2003-05-01", "1000"]:
             self.assertNotIn(secret, first)
 
+    def test_careers_measure_exits_by_age_and_where_newcomers_come_from(self):
+        third = tournament(3, 12, "2026-09-01T00:00:00Z", [(1, [player(i, ROLES[i % 5]) for i in range(3)] + [player(20, "sup"), player(10, "top", "CN", None)])])
+        careers = build_report([FIRST, SECOND, third], MATCHES, [])["careers"]
+        # Split 10 loses player 4 for good, split 11 loses player 3; everyone else plays on. Team 2 has no later split.
+        self.assertEqual(careers["exit_after_split_by_age"], {"22-24": {"players": 10, "exit_share": .2}})
+        # Player 20 is new to the observed rosters; player 10 arrives from team 2.
+        self.assertEqual(careers["incoming_source_share"], {"players": 2, "from_another_team": .5, "new_to_observed_rosters": .5})
+        self.assertEqual(careers["new_entrant_age"]["n"], 1)
+
     def test_report_measures_turnover_sizes_and_ages(self):
         report = build_report([FIRST, SECOND], MATCHES, [])
         self.assertEqual(report["rosters"]["turnover_between_splits_by_tier"]["s"]["p50"], .2)

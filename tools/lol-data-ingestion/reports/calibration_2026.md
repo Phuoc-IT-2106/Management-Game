@@ -35,3 +35,11 @@ Players: 2312; age coverage 0.6587 (licence_unconfirmed: birthdays come from emb
 
 Age histogram (all roles): {'16': 4, '17': 13, '18': 36, '19': 69, '20': 125, '21': 143, '22': 208, '23': 202, '24': 169, '25': 179, '26': 141, '27': 103, '28': 62, '29': 23, '30': 19, '31': 13, '32': 5, '33': 6, '34': 1, '36': 1, '37': 1}.
 
+## Careers
+
+Exit from the observed rosters within one year: a proxy for retirement and for leaving the observed tiers.
+
+Exit after a split, by age band: {'<=18': 0.093, '19-21': 0.0887, '22-24': 0.0894, '25-27': 0.1043, '28+': 0.16, 'unknown': 0.3001}.
+
+Players new to a team's later split: {'players': 1011, 'from_another_team': 0.5391, 'new_to_observed_rosters': 0.4609}.
+

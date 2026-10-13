@@ -11,12 +11,13 @@ public static class Market
     public static BrandDefinition Brand(Content content, string brandId) =>
         content.Brands.FirstOrDefault(b => b.Id == brandId) ?? throw new RuleViolation("Unknown sponsor brand.");
 
-    /// <summary>What a brand considers fair per weekly payment, from the company's current reputation and audience.</summary>
-    public static long FairPayment(BrandDefinition brand, int reputation, int audience)
+    /// <summary>What a brand considers fair per weekly payment, from the company's current reputation and audience, plus the
+    /// star bonus (percent) its most popular players bring (<see cref="Careers.StarBonus"/>).</summary>
+    public static long FairPayment(BrandDefinition brand, int reputation, int audience, int starBonus = 0)
     {
         var standing = 100 + (reputation - brand.MinimumReputation) + (audience - brand.MinimumAudience) / 1000;
         if (reputation < brand.MinimumReputation) standing -= (brand.MinimumReputation - reputation) * 2;
-        return Round(Numbers.Divide(brand.BasePayment * Math.Max(40, standing), 100));
+        return Round(Numbers.Divide(brand.BasePayment * Math.Max(40, standing) * (100 + starBonus), 10_000));
     }
     private static long Round(long value) => Math.Max(500, Numbers.Divide(value, 500) * 500);
 
@@ -67,7 +68,7 @@ public static class Market
             var durations = brand.DurationDays.Order().ToArray();
             var duration = durations[KeyedRandom.Range(seed, "market", $"{brand.Id}:{day}", "duration", durations.Length)];
             var offer = new Offer($"offer:{brand.Id}:{day}", brand.Id, brand.Name, OfferOrigin.Inbound, day + b.OfferWindow - 1, duration,
-                FairPayment(brand, c.Reputation, c.Audience), brand.WinBonus, brand.Load, brand.MinimumReputation, null);
+                FairPayment(brand, c.Reputation, c.Audience, Careers.StarBonus(c, content.Lifecycle)), brand.WinBonus, brand.Load, brand.MinimumReputation, null);
             w = w with { Offers = w.Offers.Add(offer) };
             c = Notice(c, "offer:" + offer.Id, day, offer.Id,
                 $"{brand.Name} ({brand.Sector}) offers {Currency.Format(offer.Payment)} per week for {duration} days, +{brand.Load} delivery load. Answer by day {offer.Deadline}.");
@@ -81,7 +82,7 @@ public static class Market
         foreach (var n in w.Negotiations.Where(x => x.ResponseDay <= day).OrderBy(x => x.Id, StringComparer.Ordinal))
         {
             var brand = Brand(content, n.BrandId);
-            var fair = FairPayment(brand, c.Reputation, c.Audience);
+            var fair = FairPayment(brand, c.Reputation, c.Audience, Careers.StarBonus(c, content.Lifecycle));
             var ratio = Numbers.Divide(n.Payment * 100, fair);
             var roll = KeyedRandom.Range(seed, "negotiation", n.Id, "response", 100);
             var belowTier = !Qualifies(brand, c);
@@ -154,30 +155,31 @@ public static class Market
         return (c, w);
     }
 
-    /// <summary>Keeps the free-agent and coach markets stocked, always covering any role the roster lacks.</summary>
-    public static World Refresh(Company c, World w, ulong seed, Content content, int day)
+    /// <summary>Keeps the markets stocked. The free-agent pool persists (rules v4 lifecycle): the campaign opens it with
+    /// <c>PoolSize</c> players, one role after another; afterwards a player is generated only for a role that neither the roster
+    /// nor the market can fill, and the company is told why. The coach market keeps rolling listings, refreshed when
+    /// <paramref name="coaches"/> is set.</summary>
+    public static (Company, World) Refresh(Company c, World w, ulong seed, Content content, int day, bool coaches)
     {
-        var b = content.Balance; var next = w.NextId;
-        var players = w.Candidates.Where(x => x.Deadline >= day).ToList();
-        var season = Seasons.Of(day, b);
-        var missing = Roles.All.Where(r => !c.People.Any(p => p.Role == r) && !players.Any(x => x.Person.Role == r)).ToList();
-        while (players.Count < b.CandidateCount || missing.Count > 0)
+        var b = content.Balance; var next = w.NextId; var season = Seasons.Of(day, b);
+        var players = w.Candidates.ToList();
+        Candidate Generate(string role) => Careers.Listing(Generator.Player(seed, content, $"person:g{++next:D5}", role, season), season, content);
+        if (day == 1)
+            while (players.Count < content.Lifecycle.PoolSize) players.Add(Generate(Roles.All[players.Count % Roles.All.Length]));
+        foreach (var role in Roles.All.Where(r => !c.People.Any(p => p.Role == r) && !players.Any(x => x.Person.Role == r)).ToArray())
         {
-            var id = $"person:g{++next:D5}";
-            var role = missing.Count > 0 ? missing[0] : Roles.All[KeyedRandom.Range(seed, "talent", id, "role", Roles.All.Length)];
-            if (missing.Count > 0) missing.RemoveAt(0);
-            var person = Generator.Player(seed, content, id, role, season);
-            var salary = Pay.Player(person, season, content);
-            players.Add(new Candidate(person, salary * 20, salary, salary * 3, day + b.TalentRefreshInterval - 1));
+            var found = Generate(role); players.Add(found);
+            if (day > 1) c = Notice(c, "talent:" + found.Person.Id, day, found.Person.Id,
+                $"No {Roles.Name(role)} was on the market, so {found.Person.Handle} has come forward as a free agent.");
         }
-        var coaches = w.CoachCandidates.Where(x => x.Deadline >= day).ToList();
-        while (coaches.Count < b.CoachCandidateCount)
+        var staff = w.CoachCandidates.Where(x => x.Deadline >= day).ToList();
+        while (coaches && staff.Count < b.CoachCandidateCount)
         {
             var coach = Generator.Coach(seed, content, $"coach:g{++next:D5}");
             var salary = Pay.Coach(coach);
-            coaches.Add(new CoachCandidate(coach, salary * 15, salary, day + b.TalentRefreshInterval - 1));
+            staff.Add(new CoachCandidate(coach, salary * 15, salary, day + b.TalentRefreshInterval - 1));
         }
-        return w with { Candidates = [.. players], CoachCandidates = [.. coaches], NextId = next };
+        return (c, w with { Candidates = [.. players], CoachCandidates = [.. staff], NextId = next });
     }
 
     /// <summary>Records a completed move in transfer history: who moved, from where to where (null: the open market), on which
@@ -201,7 +203,7 @@ public static class Market
                 var salary = Pay.Coach(interim);
                 var departed = c.Coach;
                 c = c with { Coach = interim, Employment = c.Employment.Remove(contract)
-                    .Add(new Employment("employment:" + interim.Id, interim.Id, salary, salary * 5, day + b.SeasonLength - 1, 0)) };
+                    .Add(new Employment("employment:" + interim.Id, interim.Id, salary, salary * 5, day + b.SeasonLength - 1, 0, 0)) };
                 w = w with { NextId = next, CoachCandidates = w.CoachCandidates.Add(new CoachCandidate(departed, contract.Salary * 15, contract.Salary, day + b.TalentRefreshInterval - 1)) };
                 w = Moved(Moved(w, day, contract.Id, departed, MoveReason.ContractEnded, c.Id, null), day, contract.Id, interim, MoveReason.Interim, null, c.Id);
                 c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"Head coach {departed.Name} left at contract end. Interim coach {interim.Name} is covering; hire a permanent coach from the market.");
@@ -210,7 +212,15 @@ public static class Market
             var person = c.People.Single(p => p.Id == contract.PersonId);
             c = c with { People = c.People.Remove(person), Employment = c.Employment.Remove(contract),
                 Plan = c.Plan is { } plan && plan.Lineup.Contains(person.Id) ? null : c.Plan };
-            w = w with { Candidates = w.Candidates.Add(new Candidate(person, contract.Salary * 5, contract.Salary, contract.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
+            // A player whose contract ends may retire instead of returning to the market (rules v4 lifecycle).
+            var age = Ratings.Age(person, Seasons.Of(day, b));
+            if (Careers.Retires(seed, person, age, content, "contract:" + contract.Id))
+            {
+                w = Moved(w, day, contract.Id, person, MoveReason.Retired, c.Id, null);
+                c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"{person.Handle} ({Roles.Name(person.Role)}) retired at {age} when the contract ended.");
+                continue;
+            }
+            w = w with { Candidates = w.Candidates.Add(new Candidate(person, contract.Salary * 5, contract.Salary, contract.ReleaseCost)) };
             w = Moved(w, day, contract.Id, person, MoveReason.ContractEnded, c.Id, null);
             c = Notice(c, "contract:" + contract.Id, day, contract.Id, $"{person.Handle} ({Roles.Name(person.Role)}) left as a free agent when the contract ended.");
         }

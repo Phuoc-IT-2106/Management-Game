@@ -20,8 +20,9 @@ public static class Competition
         // Rating in role, times readiness and form (−10..+10 percent).
         var baseValue = (int)Numbers.Divide(x.Lineup.Select((p, i) => (long)x.Ratings[i] * p.Readiness * (100 + p.Form)).Sum(), n * 100L * 100);
         var opponentMatch = x.Plan.ExpectedOpponent == x.Rival.Posture ? 100 : 25;
+        // Meta work pays more in a shifted meta, and as much more again as the head coach reads it (Adaptability, ±50%).
         var prep = (int)Numbers.Divide(x.Work.Execution + x.Work.Opponent * opponentMatch / 100
-            + x.Work.Meta * (x.Meta == Posture.Balanced ? 70 : 120) / 100, b.PreparationScale);
+            + x.Work.Meta * (x.Meta == Posture.Balanced ? 70 : 120) / 100 * (50 + x.Coach.Adaptability) / 100, b.PreparationScale);
         var matchup = x.Plan.Posture == x.Meta ? 3 : -1;
         // Champion pools and the coach's meta reading; a rival with analysis punishes a repeated posture.
         var adaptation = (int)Numbers.Divide(x.Lineup.Sum(p => (long)p.Skills.ChampionPool) / n + x.Coach.Adaptability, 30)
@@ -70,12 +71,14 @@ public static class Competition
 
 public static class Commercial
 {
-    public static Company Consume(Company c, CompetitiveOutcome result, Balance b)
+    /// <summary>A result's commercial follow-through. The audience moves more with a popular lineup: ×(1 + (the lineup's mean
+    /// popularity − 50) / 200).</summary>
+    public static Company Consume(Company c, CompetitiveOutcome result, Balance b, int popularity = 50)
     {
         if (c.CommercialReceipts.Contains(result.Id)) return c;
         var surprise = result.Won ? 1_000_000 - result.Probability : result.Probability;
         var rep = (int)Numbers.Divide((long)b.ReputationGain * result.Importance * surprise * (result.Won ? 100 - c.Reputation : c.Reputation), 100_000_000);
-        var audience = (int)Numbers.Divide((long)b.AudienceGain * result.Importance * surprise, 1_000_000);
+        var audience = (int)Numbers.Divide((long)b.AudienceGain * result.Importance * surprise * (150 + popularity), 200_000_000);
         var effect = new CommercialEffect("commercial:" + result.Id, result.Id, result.Day + 1, result.Won ? rep : -rep, result.Won ? audience : -audience);
         return c with { PendingEffects = c.PendingEffects.Add(effect), CommercialReceipts = c.CommercialReceipts.Add(result.Id) };
     }

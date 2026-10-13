@@ -21,8 +21,8 @@ migration.
 | 0 | Safety snapshot commit, baseline | Done (`9b27842`) |
 | 1 | Real-data tooling and the calibration report | Done (`101864a`) |
 | 2 | Roles and the player model | Done (`3917e5c`) |
-| 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done |
-| 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | — |
+| 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done (`46c0839`) |
+| 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | Done |
 | 5 | Rivals with real rosters, budgets and posture AI | — |
 | 6 | Measurement and balance (gates 1 and 2) | — |
 | 7 | Documents and handoff | — |
@@ -303,3 +303,145 @@ Measurement: 8 seeds × 5 seasons, saved in `artifacts/v4-phase3-measure` (not t
 - **Native kits:** 24 / 101 / 31.
 - **Headless hash:** `d760e35c…`.
 - **Content:** the fixture's calibration pin now matches the committed report (the report is stored with LF).
+
+## Phase 4 — careers: development, retirement, youth and condition
+
+### Calibration first
+
+The user asked (2026-10-12) for the supporting data to be complete before any new crawl or NPC generation. The 2026
+snapshots already crawled were enough, so no API call was made. Everything below was computed offline.
+
+- **`calibrate.py`** gains a `careers` section. It is aggregate only, like the rest of the report:
+  - the share of players who leave the observed rosters after a split, by age band;
+  - where players new to a team come from: another team in the data, or nowhere in the data;
+  - the ages of those new to the observed rosters.
+- **`apply_calibration.py`** writes two lifecycle tables into the content:
+  - **`RetirementByAge`**: the age histogram read as a stationary life table, 1 − (players a year older) / (players).
+    It is pooled in three-year bands, never falls with age, is zero before 25 and certain from 34;
+  - **`IntakeAges`**: the histogram's growth from one age to the next, for ages 17 to 21.
+- **Tool tests:** 17, one of them new. The report keeps its other sections unchanged.
+
+| Careers measure (2026, one observed year) | Value |
+|---|---|
+| Leave the observed rosters after a split, ages ≤ 27 | 8.9–10.4% |
+| The same, ages 28 and over | 16.0% |
+| Players new to a team who come from another team | 53.9% |
+| Players new to a team who are new to the observed rosters | 46.1% (median age 24.1) |
+| Retirement table (basis points per season) | 25–27: 2,766; 28–30: 4,712; 31–33: 5,000; 34: 10,000 |
+| Intake ages (weights) | 17: 9, 18: 23, 19: 33, 20: 56, 21: 18 |
+
+"Leaving the observed rosters" also counts players who drop below the observed tiers. The game has no lower tier, so it
+reads the exit as retirement; the rating scale (below) keeps strong players on longer.
+
+### Development
+
+Code: `Lifecycle.cs`, class `Careers`.
+
+- **When.** Once a season, at season end, for the company's players and for free agents. Rivals join in phase 5.
+- **The draw.** A keyed draw per person and season in the age's band (content `Development`):
+  - up to 19: +2 to +6;
+  - 20–24: 0 to +3;
+  - 25–27: −1 to +1;
+  - 28 and over: −4 to −1.
+- **Scaling.** Growth moves by up to ±25 percentage points each with Professionalism, the head coach's Development and
+  playing time (the share of the season's matches played; `Employment.Played` counts them). Free agents grow without a
+  coach or matches. Professionalism also slows decline.
+- **Applying it.** Every skill moves by the change, so the role rating moves by about as much. Growth never takes the
+  primary-role rating above Potential.
+- **Notice.** One Development notice lists each changed rating ("Slyvka +2 to 75"). Its inbox kind is Development, in the
+  new Squad filter.
+
+### Retirement
+
+- **Chance.** The calibrated table by age, scaled 4% per rating point below (more likely) or above (less likely) a pivot
+  of 70, from a quarter to three times. At 34 retirement is certain.
+- **A company player** can only retire when the contract ends, not in the middle of it. The move is `Retired` from the
+  company, with a notice ("retired at 27 when the contract ended"). Transfer News tells it ("Orinex retires", the
+  company → Retired).
+- **Free agents** may retire at season end. The move is `Retired` from the open market; it is not news.
+
+### The free-agent pool
+
+- **It persists.** Free agents no longer expire every 28 days; they stay until signed or retired. `Candidate.Deadline`
+  is gone.
+- **Size.** The campaign opens the pool with `PoolSize` (20) players, one role after another.
+- **Each season end:**
+  - free agents develop and age, and some retire;
+  - `YouthIntake` (5) players arrive at the calibrated ages, one role after another;
+  - above `PoolCap` (30), the players with the least potential retire, the oldest first;
+  - every listing's terms follow its player.
+- **Emergency only.** A player is generated during a season only for a role that neither the roster nor the market can
+  fill. The company is told why ("No Jungle was on the market…"), as a Talent notice.
+
+### Condition during the season
+
+- **Form.** After a match, each player in the lineup moves `FormStep` (1) plus up to `FormSurprise` (4) more, the more
+  unexpected the result.
+- **Morale.** A win +4, a loss −3, a match on the bench −2.
+  - Low morale (below 35) halves readiness recovery.
+  - A low-morale player with Ambition of 65 or more will not renew. The profile says so, and the command is refused.
+- **Settling.** Every 7 days form steps back toward steady and morale settles 2 toward 60.
+- **Popularity.** A win adds 1 × importance (2 in the second half, 3 in the playoffs); a match on the bench costs 1.
+  It reaches the company in two ways:
+  - a match's audience moves ×(1 + (the lineup's mean popularity − 50) / 200);
+  - each player at popularity 80 or more adds 5% to what sponsors consider fair, for at most two stars.
+- **Conduct.** Every 28 days each player may break team rules: 40 basis points per point of Professionalism below 40.
+  An incident costs 2 reputation, 8 popularity and 10 morale, and produces a Conduct notice.
+- **Head coach.** Adaptability now multiplies the meta part of preparation (±50%). Analysis now also narrows the
+  opponent's strength estimate.
+
+### Read model and UI
+
+- **`PersonRow`** gains the head coach's estimate of Potential (a band), the trend age suggests (Improving, At peak or
+  Declining) and a renewal note. The squad profile shows "Potential 72–76 (estimate) · at peak at 27".
+- **`CandidateRow`** loses its deadline. The profile no longer says "free agent until day …".
+- **New inbox kinds:** Development, Conduct and Talent, gathered in a new Squad filter. They open Squad. Development is
+  personnel news, so it is not world news.
+- **Transfer News** has a Retired destination (`Standing.Retired`, shown as "Retired").
+
+### Fixes found on the way
+
+- **Lineup validation** rejected a valid lineup that covers a role with a secondary-role player. It now checks each slot
+  against the role it covers.
+- **Notice subjects.** Retirement, Conduct and Talent notices name their person.
+- **Recommendation text.** It still said "cover every role A–E"; it now says "cover all five roles".
+
+### Measurement
+
+8 seeds × 5 seasons, saved in `artifacts/v4-phase4-measure` (not tracked).
+
+| Policy | Win rate | Cash, season 5 | Insolvent runs |
+|---|---|---|---|
+| Coach | 72.8% | $21,726 | 0 of 8 |
+| Sponsor-greedy | 76.9% | $18,295 | 1 of 8 |
+| Thrift | 46.5% | $8,518 | 2 of 8 |
+| Balanced | 82.9% | $24,429 | 0 of 8 |
+
+- **Player value** is now visible: development and retirement widen the gap between owners who keep good players and
+  those who do not. Balanced beats thrift by 36 points of win rate (phase 3: 16 points).
+- **Gate 1, losing is not profitable:** pass, 8/8 seeds.
+- **Gate 1, reputation follows results:** 0.51 (phase 3: 0.42). It still fails against the 0.6 threshold; phase 6.
+- **Insolvency:** 3 of 32 runs stop after selling everyone (phase 3: 2; the rules v3 baseline: 1). The plan's condition
+  for a stronger forced restructuring is met; phase 6 takes it.
+- **Gate 2, empty stretches:** 17 days in the worst season (≤ 10); phase 6.
+
+### Checks (Phase 4)
+
+- **Integration 335** (27 new), covering:
+  - development with age, the potential ceiling, and the three growth factors; professionalism slowing decline;
+  - the retirement table: none before 25, certain at 34, rising with age, likelier for weaker players;
+  - the public trend;
+  - the opening pool and the season-end market: intake ages and roles, retirements from the market, the cap, listings;
+  - playing time restarting each season;
+  - retirement at contract end, its story and its notice;
+  - the pool lasting through a season, and an emergency player for an unfillable role;
+  - form, morale and popularity after a match, and settling afterwards;
+  - renewal refusal and slower recovery at low morale;
+  - conduct and professionalism;
+  - the star bonus, the audience and popularity, and the head coach's adaptability.
+- **Long run.** A sound owner plays eight seasons:
+  - the pool stays between one player per role and its cap (24, 26, 27, then 30 from season 4);
+  - 30 players retire;
+  - the population's mean age stays at 23.3–24.3, against 23.5 in the calibrated mix.
+- **Shell native:** 3832 / 3871. **Native kits:** 24 / 101 / 31.
+- **Headless hash:** `4ba9e86a…`.

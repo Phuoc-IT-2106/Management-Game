@@ -51,12 +51,11 @@ public static class Simulation
                 break;
             case SignPlayer command:
                 var candidate = w.Candidates.FirstOrDefault(x => x.Person.Id == command.PersonId) ?? throw new RuleViolation("Candidate is no longer available.");
-                if (candidate.Deadline < day) throw new RuleViolation("This free agent has moved on.");
                 if (c.People.Length >= b.MaxRoster) throw new RuleViolation($"Roster limit of {b.MaxRoster} reached; release a player first.");
                 if (command.Seasons is < 1 or > 3) throw new RuleViolation("Contracts run for one to three seasons.");
                 c = Finance.PayNow(c, candidate.Fee, cause, day);
                 // A new signing arrives unfamiliar with the team (familiarity 0): the integration cost of a roster change.
-                var contract = new Employment("employment:" + candidate.Person.Id + ":" + cause, candidate.Person.Id, candidate.Salary, candidate.ReleaseCost, ContractEnd(day, command.Seasons, b), 0);
+                var contract = new Employment("employment:" + candidate.Person.Id + ":" + cause, candidate.Person.Id, candidate.Salary, candidate.ReleaseCost, ContractEnd(day, command.Seasons, b), 0, 0);
                 c = c with { People = c.People.Add(candidate.Person), Employment = c.Employment.Add(contract) };
                 w = Market.Moved(w with { Candidates = w.Candidates.Remove(candidate) }, day, cause, candidate.Person, MoveReason.Signed, null, c.Id);
                 break;
@@ -68,13 +67,15 @@ public static class Simulation
                 // Wages accrue daily; due/overdue amounts remain payable after release.
                 c = c with { People = c.People.Remove(person), Employment = c.Employment.Remove(employment), Plan = null,
                     Recovery = c.Recovery == RecoveryStage.Distress ? RecoveryStage.Restructuring : c.Recovery };
-                w = w with { Candidates = w.Candidates.Add(new Candidate(person, employment.ReleaseCost, employment.Salary, employment.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
+                w = w with { Candidates = w.Candidates.Add(new Candidate(person, employment.ReleaseCost, employment.Salary, employment.ReleaseCost)) };
                 w = Market.Moved(w, day, cause, person, MoveReason.Released, c.Id, null);
                 break;
             case RenewContract command:
                 var current = c.Employment.FirstOrDefault(x => x.PersonId == command.PersonId) ?? throw new RuleViolation("No contract to renew.");
                 if (command.Seasons is < 1 or > 3) throw new RuleViolation("Contracts run for one to three seasons.");
                 if (current.EndDay - day > b.RenewalWindow) throw new RuleViolation($"Renewal talks open {b.RenewalWindow} days before the contract ends (day {current.EndDay}).");
+                if (c.People.FirstOrDefault(p => p.Id == current.PersonId) is { } unhappy && Careers.RefusesRenewal(unhappy, content.Lifecycle))
+                    throw new RuleViolation($"{unhappy.Handle} will not renew while morale is this low.");
                 var demand = RenewalDemand(c, current, Seasons.Of(day, b), content);
                 c = c with { Employment = c.Employment.Replace(current, current with { Salary = demand, ReleaseCost = demand * 3, EndDay = current.EndDay + command.Seasons * b.SeasonLength }) };
                 break;
@@ -87,7 +88,7 @@ public static class Simulation
                     .Add(new CoachCandidate(c.Coach, previous.Salary * 15, previous.Salary, day + b.TalentRefreshInterval - 1)) };
                 w = Market.Moved(Market.Moved(w, day, cause, c.Coach, MoveReason.Replaced, c.Id, null), day, cause, hire.Coach, MoveReason.Appointed, null, c.Id);
                 c = c with { Coach = hire.Coach, Employment = c.Employment.Remove(previous)
-                    .Add(new Employment("employment:" + hire.Coach.Id + ":" + cause, hire.Coach.Id, hire.Salary, hire.Salary * 5, ContractEnd(day, 2, b), 0)) };
+                    .Add(new Employment("employment:" + hire.Coach.Id + ":" + cause, hire.Coach.Id, hire.Salary, hire.Salary * 5, ContractEnd(day, 2, b), 0, 0)) };
                 break;
             case AcceptSponsor command:
                 var offer = w.Offers.FirstOrDefault(x => x.Id == command.OfferId) ?? throw new RuleViolation("Unknown sponsor offer.");
@@ -127,7 +128,7 @@ public static class Simulation
     {
         CommitPlan p => $"Committed {p.Plan.Execution}/{p.Plan.Opponent}/{p.Plan.Meta}% preparation and {p.Plan.Posture} posture; only future work changes.",
         SetAuthority a => $"Coach authority: {a.Authority.Mode}, risk ceiling {a.Authority.RiskCeiling}.",
-        SignPlayer s => $"Signed player for {s.Seasons} season(s): fee paid, daily wages committed; initial integration reduces readiness.",
+        SignPlayer s => $"Signed player for {s.Seasons} season(s): fee paid, daily wages committed; the new player starts unfamiliar with the team.",
         ReleasePlayer => "Released player: exit cost paid and future wages stop; existing arrears retained. Roster depth sacrificed.",
         RenewContract r => $"Renewed contract for {r.Seasons} more season(s) at the new asking wage.",
         HireCoach => "Hired a new head coach: signing fee and the previous coach's exit cost paid.",
@@ -176,7 +177,7 @@ public static class Simulation
 
     public static Campaign Step(Campaign s, Content content)
     {
-        var c = s.Company; var w = s.World; var b = content.Balance; var cursor = w.Calendar; var day = cursor.Day; var seed = s.Execution.Seed;
+        var c = s.Company; var w = s.World; var b = content.Balance; var life = content.Lifecycle; var cursor = w.Calendar; var day = cursor.Day; var seed = s.Execution.Seed;
         // Stuck with nothing left to sell: time stops (the board's restructuring below needs a contract to sell).
         if (Stuck(c, day) && c.People.IsEmpty) return s;
         switch (cursor.Phase)
@@ -189,13 +190,16 @@ public static class Simulation
                 c = Finance.Settle(c, day);
                 break;
             case Phase.Contracts:
-                c = c with { People = c.People.Select(p => p with { Readiness = Math.Min(100, p.Readiness + 1) }).ToImmutableArray(),
+                // Readiness recovers a point a day (every other day when morale is low); familiarity grows with time together.
+                c = c with { People = c.People.Select(p => Careers.Recovers(p, life, day) ? p with { Readiness = Math.Min(100, p.Readiness + 1) } : p).ToImmutableArray(),
                     Employment = c.Employment.Select(e => e.PersonId == c.Coach.Id ? e : e with { Familiarity = Math.Min(100, e.Familiarity + b.FamiliarityPerDay) }).ToImmutableArray() };
+                if (day % life.DecayDays == 0) c = Careers.Settle(c, life);
+                if (day % life.ConductInterval == 0) c = Careers.Conduct(c, seed, life, day);
                 (c, w) = Market.Contracts(c, w, seed, content, day);
                 (c, w) = Market.Resolve(c, w, seed, content, day);
                 (c, w) = Market.Expire(c, w, content, day);
                 if (day > 1 && (day - 1) % b.MarketInterval == 0) (c, w) = Market.Approach(c, w, seed, content, day);
-                if (day > 1 && (day - 1) % b.TalentRefreshInterval == 0) w = Market.Refresh(c, w, seed, content, day);
+                (c, w) = Market.Refresh(c, w, seed, content, day, coaches: day > 1 && (day - 1) % b.TalentRefreshInterval == 0);
                 break;
             case Phase.Preparation:
                 if (c.Plan is not null && NextFixture(s) is not null)
@@ -254,10 +258,12 @@ public static class Simulation
                     w = w with { Results = w.Results.Add(outcome) };
                     c = Finance.Consume(c, outcome, fixture, b);
                     c = LeagueFine(c, outcome, fixture, rival, b);
-                    c = Commercial.Consume(c, outcome, b);
+                    c = Commercial.Consume(c, outcome, b, (int)Numbers.Divide(lineup.Sum(p => (long)p.Popularity), lineup.Length));
+                    c = Careers.AfterMatch(c, outcome, plan.Lineup, life);
                     c = c with { Plan = null, Work = new Work(c.Work.Execution / 2, 0, c.Work.Meta / 2),
                         People = c.People.Select(p => plan.Lineup.Contains(p.Id) ? p with { Readiness = Math.Max(1, p.Readiness - b.MatchFatigue) } : p).ToImmutableArray(),
-                        Employment = c.Employment.Select(e => plan.Lineup.Contains(e.PersonId) ? e with { Familiarity = Math.Min(100, e.Familiarity + b.FamiliarityPerMatch) } : e).ToImmutableArray(),
+                        Employment = c.Employment.Select(e => plan.Lineup.Contains(e.PersonId)
+                            ? e with { Familiarity = Math.Min(100, e.Familiarity + b.FamiliarityPerMatch), Played = e.Played + 1 } : e).ToImmutableArray(),
                         Reviews = c.Reviews.Add(new ReviewEntry(outcome.Id, day, plan.CauseId,
                         $"{(outcome.Won ? "Victory" : "Defeat")} {outcome.GamesWon}–{outcome.GamesLost} vs {rival.Name}. {plan.Posture} posture; completed preparation contributed {outcome.Preparation}; public meta {(outcome.Matchup > 0 ? "suited" : "challenged")} the plan. Rival response and match-day variance remain uncertain. Any prize/bonus and commercial changes are due tomorrow.")) };
                 }
@@ -333,7 +339,7 @@ public static class Simulation
         var employment = c.Employment.Single(e => e.PersonId == pick.Person.Id);
         c = c with { People = c.People.Remove(pick.Person), Employment = c.Employment.Remove(employment), Plan = null, Recovery = RecoveryStage.Restructuring,
             Cash = checked(c.Cash + pick.Fee), Settlements = c.Settlements.Add(new Settlement("immediate:" + cause, cause, day, pick.Fee)) };
-        w = w with { Candidates = w.Candidates.Add(new Candidate(pick.Person, pick.Fee, employment.Salary, employment.ReleaseCost, day + b.TalentRefreshInterval - 1)) };
+        w = w with { Candidates = w.Candidates.Add(new Candidate(pick.Person, pick.Fee, employment.Salary, employment.ReleaseCost)) };
         w = Market.Moved(w, day, cause, pick.Person, MoveReason.Released, c.Id, null);
         c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}restructuring:{day}", day, cause,
             $"The board forced a restructuring: {pick.Person.Handle}'s contract was sold for {Currency.Format(pick.Fee)} to pay overdue obligations. Squad depth is the price of staying solvent.")) };
@@ -373,6 +379,10 @@ public static class Simulation
             c = c with { Reputation = Math.Clamp(c.Reputation + shift, 0, 100) };
             standing = $" Reputation {shift:+#;-#;0}: it settles toward {target}, the level this record earns.";
         }
+        // Careers: the company's players develop with their playing time; the open market develops, retires, takes in the
+        // season's youth and keeps within its cap.
+        c = Careers.SeasonDevelopment(c, seed, content, season, day, played.Count(r => r.PlanCause != "forfeit"));
+        w = Careers.SeasonMarket(w, seed, content, season, day);
         var rivals = w.Rivals.Select(r => r with
         {
             Strength = Math.Clamp(r.Strength + KeyedRandom.Range(seed, "rival", $"{r.Id}:{season}", "development", 9) - 4, range.Min - 5, range.Max + 5),

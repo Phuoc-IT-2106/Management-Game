@@ -37,10 +37,10 @@ public static partial class PortalScreen
     /// the arrow says which team it was, and the tooltip says it in full.</summary>
     public static string SideText(JourneySide side, bool origin, bool full = false) => side.Standing switch
     {
-        Standing.Organization => side.Name, Standing.FreeAgent => FreeAgentText,
+        Standing.Organization => side.Name, Standing.FreeAgent => FreeAgentText, Standing.Retired => RetiredText,
         _ => PresentationText.InformationMarker(InformationState.Unknown) + (!full ? " Team unknown" : origin ? " Previous team unknown" : " New team unknown")
     };
-    public const string FreeAgentText = "Free agent";
+    public const string FreeAgentText = "Free agent", RetiredText = "Retired";
 
     private static Control Transfers(UiContext ui, IdentityAssets assets, PortalView m, bool roomy, Routes routes)
     {
@@ -163,7 +163,7 @@ public static partial class PortalScreen
         var (tone, role) = side.Standing switch
         {
             Standing.Organization => origin ? (ColorRole.TextSecondary, TypographyRole.Annotation) : (ColorRole.TextPrimary, TypographyRole.Strong),
-            Standing.FreeAgent => (ColorRole.TextSecondary, TypographyRole.Annotation),
+            Standing.FreeAgent or Standing.Retired => (ColorRole.TextSecondary, TypographyRole.Annotation),
             _ => (ColorRole.InformationUnknown, TypographyRole.Annotation)
         };
         var name = Clamp(Text(ui, SideText(side, origin), role, tone, size: TypographyRole.Annotation), 1); name.Name = "JourneyName";

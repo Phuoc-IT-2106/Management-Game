@@ -11,6 +11,7 @@ public static class Observations
         ("notice:offer:", "Offer"), ("notice:negotiation:", "Negotiation"), ("notice:contract:", "Contract"),
         ("notice:renewal:", "Renewal"), ("notice:season:", "Season"), ("notice:roster:", "League"), ("notice:sponsor:", "Commercial"),
         ("notice:league:", "Season"), ("notice:restructuring:", "Finance"),
+        ("notice:development:", "Development"), ("notice:conduct:", "Conduct"), ("notice:talent:", "Talent"),
         ("result:", "Match"), ("claim:", "Market"),
         ("lapse:", "Market"), ("meta:", "Meta"), ("commercial:", "Commercial")
     ];
@@ -30,9 +31,11 @@ public static class Observations
         if (w.Negotiations.FirstOrDefault(n => n.Id == r.CauseId) is { } negotiation) return negotiation.BrandId;
         if (s.Company.Sponsors.FirstOrDefault(x => x.Id == r.CauseId) is { } agreement) return agreement.BrandId;
         if (s.Company.Employment.FirstOrDefault(e => e.Id == r.CauseId) is { } contract) return contract.PersonId;
+        // Conduct and talent notices are caused by the person themselves.
+        if (s.Company.People.Any(p => p.Id == r.CauseId) || w.Candidates.Any(x => x.Person.Id == r.CauseId)) return r.CauseId;
         // A contract that has ended no longer exists: transfer history names who left with it, and before that history
         // begins, the person it named is on a market under the same stable ID.
-        if (w.Moves.FirstOrDefault(m => m.CauseId == r.CauseId && m.Reason == MoveReason.ContractEnded) is { } ended) return ended.PersonId;
+        if (w.Moves.FirstOrDefault(m => m.CauseId == r.CauseId && m.Reason is MoveReason.ContractEnded or MoveReason.Retired) is { } ended) return ended.PersonId;
         if (w.Candidates.FirstOrDefault(x => EmployedAs(r.CauseId, x.Person.Id)) is { } player) return player.Person.Id;
         if (w.CoachCandidates.FirstOrDefault(x => EmployedAs(r.CauseId, x.Coach.Id)) is { } coach) return coach.Coach.Id;
         return "";
@@ -43,7 +46,7 @@ public static class Observations
     /// <summary>Transfer history, newest first: every move as the simulation recorded it when it happened (who, from where,
     /// to where, when and why). Nothing is reconstructed from current rosters or markets, so a later move never rewrites an
     /// earlier one, and a person who has since left every record keeps their name. Rivals have no rosters in the current
-    /// rules, so every move involves the company and the open market.</summary>
+    /// rules, so every move involves the company and the open market (a retirement from the market involves neither).</summary>
     public static ImmutableArray<MoveRow> Moves(Campaign s) => [.. s.World.Moves.Reverse().Select(m => new MoveRow(m.Id, (MoveKind)m.Reason, m.Day,
         m.PersonId, m.Name, m.Kind == Personnel.HeadCoach, m.Role, m.Origin ?? "", m.Destination ?? "", m.CauseId))];
     private static string Outcome(CompetitiveOutcome r) => r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat";
@@ -120,31 +123,37 @@ public static class Observations
         var c = s.Company; var w = s.World; var b = content.Balance; var day = w.Calendar.Day;
         var fixture = Simulation.NextFixture(s);
         var rival = fixture is null ? null : w.Rivals.Single(r => r.Id == fixture.RivalId);
-        var width = Math.Max(4, (100 - c.Information) / 4);
+        // The opponent's strength is an estimate that narrows with the company's information and the head coach's analysis.
+        var width = Math.Max(3, (100 - c.Information) / 5 + (100 - c.Coach.Analysis) / 10);
         var estimate = rival is null ? 0 : rival.Strength + KeyedRandom.Range(s.Execution.Seed, "information",
             $"player:{rival.Id}:{w.Results.Length}", "strength-estimate", width * 2 + 1) - width;
         var estimatedPosture = rival is null ? Posture.Balanced : (Posture)(((int)rival.Posture +
             (KeyedRandom.Range(s.Execution.Seed, "information", $"player:{rival.Id}:{w.Results.Length}", "tendency", 100) < c.Information ? 0 : 1)) % 3);
         bool Renewable(Employment contract) => contract.EndDay - day <= b.RenewalWindow;
         var season = Seasons.Of(day, b);
-        var people = c.People.OrderBy(p => Roles.All.IndexOf(p.Role)).ThenBy(p => p.Id, StringComparer.Ordinal).Select(p =>
-        {
-            var contract = c.Employment.Single(x => x.PersonId == p.Id);
-            return new PersonRow(p.Id, p.Handle, p.Role, Ratings.Rating(p, content), p.Readiness, contract.Salary, contract.ReleaseCost,
-                c.People.Any(x => x.Id != p.Id && x.Role == p.Role), contract.EndDay, Simulation.RenewalDemand(c, contract, season, content), Renewable(contract),
-                p.Name, p.Nationality, Ratings.Age(p, season), p.SecondaryRole, p.SecondaryRole.Length == 0 ? 0 : Ratings.InRole(p, p.SecondaryRole, content),
-                new PlayerSkills(p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool,
-                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Player(p, season, content) * 20, contract.Familiarity);
-        }).ToImmutableArray();
-        var coachContract = c.Employment.Single(x => x.PersonId == c.Coach.Id);
-        // Estimates of people the company does not employ: a band around a keyed, stable centre. The band narrows with the
-        // company's information and the head coach's analysis; the true value always lies inside it.
+        // Estimates: a band around a keyed, stable centre; the true value always lies inside it. For people the company does
+        // not employ the band narrows with its information and the head coach's analysis; its own players' potential is
+        // read by the head coach alone, more closely.
         var scoutWidth = Math.Max(3, (100 - c.Information) / 5 + (100 - c.Coach.Analysis) / 10);
+        var ownWidth = Math.Max(2, (100 - c.Coach.Analysis) / 10);
         string Band(string id, string purpose, int value, int width)
         {
             var centre = value + KeyedRandom.Range(s.Execution.Seed, "scouting", id, purpose, width + 1) - width / 2;
             return $"{Math.Clamp(centre - width, 1, 99)}–{Math.Clamp(centre + width, 1, 99)} (estimate)";
         }
+        var people = c.People.OrderBy(p => Roles.All.IndexOf(p.Role)).ThenBy(p => p.Id, StringComparer.Ordinal).Select(p =>
+        {
+            var contract = c.Employment.Single(x => x.PersonId == p.Id);
+            var refuses = Careers.RefusesRenewal(p, content.Lifecycle);
+            return new PersonRow(p.Id, p.Handle, p.Role, Ratings.Rating(p, content), p.Readiness, contract.Salary, contract.ReleaseCost,
+                c.People.Any(x => x.Id != p.Id && x.Role == p.Role), contract.EndDay, Simulation.RenewalDemand(c, contract, season, content), Renewable(contract) && !refuses,
+                p.Name, p.Nationality, Ratings.Age(p, season), p.SecondaryRole, p.SecondaryRole.Length == 0 ? 0 : Ratings.InRole(p, p.SecondaryRole, content),
+                new PlayerSkills(p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool,
+                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Player(p, season, content) * 20, contract.Familiarity,
+                Band(p.Id, "potential", p.Potential, ownWidth), Careers.Trend(p, season, content.Lifecycle),
+                Renewable(contract) && refuses ? "Not open to renewal while morale is this low." : "");
+        }).ToImmutableArray();
+        var coachContract = c.Employment.Single(x => x.PersonId == c.Coach.Id);
         var active = Market.ActiveSponsors(c, day);
         string Availability(Offer o) => o.ClaimedBy is not null ? o.ClaimedBy == c.Id ? "Signed" : "Claimed by rival"
             : o.Deadline < day ? "Expired" : c.Reputation < o.MinimumReputation ? "Reputation too low"
@@ -152,7 +161,7 @@ public static class Observations
             : active >= b.SponsorSlots ? "No free sponsor slot" : "Available";
         var brands = content.Brands.OrderBy(x => x.MinimumReputation).ThenBy(x => x.Id, StringComparer.Ordinal).Select(x =>
         {
-            var fair = Market.FairPayment(x, c.Reputation, c.Audience);
+            var fair = Market.FairPayment(x, c.Reputation, c.Audience, Careers.StarBonus(c, content.Lifecycle));
             var status = !Market.Approachable(x, c) ? $"Out of reach: needs reputation {x.MinimumReputation}, audience {x.MinimumAudience:N0}"
                 : Market.Blocked(x, c, w, day) ?? (Market.Qualifies(x, c) ? "Open to proposals" : "Open, but values you below its tier");
             return new BrandRow(x.Id, x.Name, x.Sector, x.MinimumReputation, x.MinimumAudience, status,
@@ -165,8 +174,8 @@ public static class Observations
             estimatedPosture.ToString(), c.Information >= 65 ? "Moderate confidence" : "Low confidence", w.Meta.ToString(),
             c.Plan is null ? null : new PlanView(c.Plan.FixtureId, c.Plan.Execution, c.Plan.Opponent, c.Plan.Meta, (Risk)c.Plan.Posture, c.Plan.Lineup),
             null, "", people,
-            w.Candidates.Where(x => x.Deadline >= day).Select(x => new CandidateRow(x.Person.Id, x.Person.Handle, x.Person.Role,
-                Band(x.Person.Id, "rating", Ratings.Rating(x.Person, content), scoutWidth), x.Fee, x.Salary, x.Deadline, x.Person.Name, x.Person.Nationality,
+            w.Candidates.Select(x => new CandidateRow(x.Person.Id, x.Person.Handle, x.Person.Role,
+                Band(x.Person.Id, "rating", Ratings.Rating(x.Person, content), scoutWidth), x.Fee, x.Salary, x.Person.Name, x.Person.Nationality,
                 Ratings.Age(x.Person, season), Band(x.Person.Id, "potential", x.Person.Potential, scoutWidth * 3 / 2), x.Person.Popularity, x.Person.SecondaryRole)).ToImmutableArray(),
             w.Offers.Select(o => new SponsorRow(o.Id, o.Name, o.Payment, o.WinBonus, o.Load, o.Deadline, o.MinimumReputation, Availability(o), o.Origin.ToString(), o.DurationDays, o.BrandId)).ToImmutableArray(),
             c.Sponsors.Where(x => x.EndDay >= day).Select(x => $"{x.Name}: {Currency.Format(x.Payment)} weekly, delivery load {x.Load}, win bonus {Currency.Format(x.WinBonus)}, ends day {x.EndDay}").ToImmutableArray(),
@@ -185,7 +194,7 @@ public static class Observations
                 Seasons.RoundDay(season, 0, b), Seasons.LastRegularDay(season, b), Seasons.SemifinalDay(season, b), Seasons.FinalDay(season, b), b.PlacePrizes));
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
-            ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover every role A–E."
+            ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover all five roles."
             : $"Coach uses observed readiness, opponent estimates and the public meta. Suggested {recommendation.Execution}/{recommendation.Opponent}/{recommendation.Meta}% allocation; {view.Confidence.ToLowerInvariant()}. Hidden opponent preparation and variance are unknown." };
     }
 }

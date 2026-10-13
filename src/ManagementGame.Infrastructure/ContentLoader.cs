@@ -119,6 +119,22 @@ public static class ContentLoader
                 && brand.BasePayment is > 0 and <= 1_000_000 && brand.WinBonus is >= 0 and <= 1_000_000 && brand.Load is >= 0 and <= 100
                 && brand.DurationDays.Length > 0 && brand.DurationDays.All(d => d is >= 7 and <= 400) && brand.DurationDays.Distinct().Count() == brand.DurationDays.Length, "brand " + brand.Id);
         Require(c.Brands.Any(x => x.MinimumReputation <= b.Reputation && x.MinimumAudience <= b.Audience), "at least one brand must sponsor a new company");
+        // Rules v4 lifecycle: development bands up to every age, a retirement table that never falls with age and ends at
+        // certainty, intake ages, a pool between its start size and cap, and condition steps on their scales.
+        var l = c.Lifecycle;
+        Require(l.Development.Length > 0 && Unique(l.Development.Select(x => x.MaxAge.ToString())) && l.Development.Max(x => x.MaxAge) >= 40
+            && l.Development.All(x => x.Min <= x.Max && x.Min >= -20 && x.Max <= 20), "lifecycle development bands");
+        var retirement = l.RetirementByAge.OrderBy(x => x.Value).ToArray();
+        Require(retirement.Length > 0 && Unique(retirement.Select(x => x.Value.ToString())) && retirement.All(x => x.Value is >= 18 and <= 45 && x.Weight is >= 0 and <= 10_000)
+            && retirement.Zip(retirement.Skip(1)).All(p => p.First.Weight <= p.Second.Weight) && retirement[^1].Weight == 10_000, "lifecycle retirement by age");
+        Require(l.IntakeAges.Length > 0 && l.IntakeAges.All(x => x.Value is >= 15 and <= 25 && x.Weight > 0) && Unique(l.IntakeAges.Select(x => x.Value.ToString())), "lifecycle intake ages");
+        Require(l.RetirementPivot is >= 1 and <= 99 && l.RetirementRatingPercent is >= 0 and <= 20 && l.YouthIntake is >= 0 and <= 20
+            && l.PoolSize >= Roles.All.Length && l.PoolSize <= l.PoolCap && l.PoolCap <= 100, "lifecycle pool");
+        Require(l.FormStep is >= 0 and <= 10 && l.FormSurprise is >= 0 and <= 10 && l.DecayDays is >= 1 and <= 28
+            && new[] { l.MoraleWin, l.MoraleLoss, l.MoraleBench, l.MoraleSettle, l.PopularityWin, l.PopularityBench, l.ConductReputation, l.ConductPopularity, l.ConductMorale }.All(x => x is >= 0 and <= 30)
+            && l.MoraleRest is >= 0 and <= 100 && l.MoraleLow is >= 0 and <= 100 && l.RefusalAmbition is >= 1 and <= 100
+            && l.StarPopularity is >= 1 and <= 100 && l.StarBonusPercent is >= 0 and <= 50 && l.StarBonusCap is >= 0 and <= 8
+            && l.ConductInterval is >= 7 and <= 112 && l.ConductThreshold is >= 0 and <= 100 && l.ConductRate is >= 0 and <= 1000, "lifecycle condition steps");
     }
     public static bool Id(string value) => !string.IsNullOrWhiteSpace(value) && value.Length <= 128 && value.All(ch => ch is >= 'a' and <= 'z' or >= '0' and <= '9' or ':' or '-' or '_');
 }

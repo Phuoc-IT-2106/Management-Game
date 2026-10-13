@@ -3,7 +3,7 @@
 Output: reports/calibration_2026.json (+ .md). Aggregate statistics only: distributions, shares and quantiles.
 No person names, handles, birthdays or provider person ids; no team names (team-level Elo stays local in data/).
 The report feeds world-generation parameters (rival strength spread, roster sizes, series formats, nationality and
-age mixes). It never makes a real person or organization part of the game.
+age mixes, career exits and entries). It never makes a real person or organization part of the game.
 
 Ages come from birthdays embedded in tournament rosters; their licence status is unconfirmed (API discovery report
 section 3), so the report marks them `licence_unconfirmed` and consumers must be able to fall back to authored curves.
@@ -155,6 +155,36 @@ def formats_section(matches):
             "game_length_minutes_by_tier": {k: summary(v) for k, v in sorted(lengths.items())}}
 
 
+AGE_BANDS = (("<=18", 0, 19), ("19-21", 19, 22), ("22-24", 22, 25), ("25-27", 25, 28), ("28+", 28, 200))
+
+
+def age_at(row):
+    """Age in years at the stage's start, from the embedded birthday; None when unknown or implausible."""
+    if not row["birthday"] or not row["begin_at"]:
+        return None
+    try:
+        age = (datetime.fromisoformat(row["begin_at"][:10]) - datetime.fromisoformat(row["birthday"][:10])).days / 365.2425
+    except ValueError:
+        return None
+    return age if 13 <= age <= 45 else None
+
+
+def team_splits(rows):
+    """Each team's splits in start order: its first tournament stage in each series, with the players listed there."""
+    first = {}
+    for r in sorted(rows, key=lambda r: (r["team_id"], r["serie_id"] or 0, r["begin_at"] or "", r["tournament_id"])):
+        split = first.setdefault((r["team_id"], r["serie_id"]), {"team": r["team_id"], "begin": r["begin_at"] or "", "tournament": r["tournament_id"],
+                                                                 "tier": r["tier"], "players": {}})
+        if r["tournament_id"] == split["tournament"]:
+            split["players"][r["player_id"]] = r
+    teams = defaultdict(list)
+    for split in first.values():
+        teams[split["team"]].append(split)
+    for splits in teams.values():
+        splits.sort(key=lambda s: s["begin"])
+    return teams
+
+
 def roster_section(rows):
     teams = defaultdict(set)
     roles = defaultdict(Counter)
@@ -170,25 +200,60 @@ def roster_section(rows):
         for role in ROLES:
             per_role[role].append(counter.get(role, 0))
     # Turnover between consecutive series (splits) of one team: share of the later roster not on the earlier one.
-    by_team_serie = {}
-    for r in sorted(rows, key=lambda r: (r["team_id"], r["serie_id"] or 0, r["begin_at"] or "", r["tournament_id"])):
-        key = (r["team_id"], r["serie_id"])
-        first = by_team_serie.setdefault(key, {"begin": r["begin_at"] or "", "tournament": r["tournament_id"], "players": set(), "tier": r["tier"]})
-        if r["tournament_id"] == first["tournament"]:
-            first["players"].add(r["player_id"])
     turnover = defaultdict(list)
-    splits = defaultdict(list)
-    for (team, _), value in by_team_serie.items():
-        splits[team].append(value)
-    for team, values in splits.items():
-        values.sort(key=lambda v: v["begin"])
-        for before, after in zip(values, values[1:]):
+    for splits in team_splits(rows).values():
+        for before, after in zip(splits, splits[1:]):
             if after["players"]:
-                turnover[after["tier"] or "unknown"].append(len(after["players"] - before["players"]) / len(after["players"]))
+                turnover[after["tier"] or "unknown"].append(len(after["players"].keys() - before["players"].keys()) / len(after["players"]))
     return {"roster_size_share_by_tier": {t: shares(c) for t, c in sorted(sizes.items())},
             "players_per_role_per_team": {role: summary(v) for role, v in per_role.items()},
             "turnover_between_splits_by_tier": {t: summary(v) for t, v in sorted(turnover.items())},
             "team_stages": len(teams)}
+
+
+def careers_section(rows):
+    """Career flow between a team's consecutive splits (rules v4 lifecycle and rival transfers), aggregates only.
+
+    exit_after_split_by_age: of the players on a split the team followed with another, the share listed on no later
+    roster in the data, by age band at the earlier split. It is exit from the observed rosters within one year: a
+    proxy for retirement and for dropping below the observed tiers, not a measured retirement rate.
+    incoming_source_share: players new to a team's later split, by whether the data saw them earlier with another team
+    (a transfer) or not at all (new to the observed rosters); new_entrant_age summarises the latter's ages.
+    """
+    teams = team_splits(rows)
+    starts = defaultdict(list)
+    for splits in teams.values():
+        for split in splits:
+            for player in split["players"]:
+                starts[player].append((split["begin"], split["team"]))
+    exits, totals = Counter(), Counter()
+    for splits in teams.values():
+        for split in splits[:-1]:
+            for player, row in split["players"].items():
+                age = age_at(row)
+                band = "unknown" if age is None else next(name for name, low, high in AGE_BANDS if low <= age < high)
+                totals[band] += 1
+                if not any(begin > split["begin"] for begin, _ in starts[player]):
+                    exits[band] += 1
+    transfers, entrants, entrant_ages = 0, 0, []
+    for splits in teams.values():
+        for before, after in zip(splits, splits[1:]):
+            for player, row in after["players"].items():
+                if player in before["players"]:
+                    continue
+                if any(begin < after["begin"] and team != after["team"] for begin, team in starts[player]):
+                    transfers += 1
+                else:
+                    entrants += 1
+                    if age_at(row) is not None:
+                        entrant_ages.append(age_at(row))
+    incoming = transfers + entrants
+    return {"exit_after_split_by_age": {band: {"players": totals[band], "exit_share": r4(exits[band] / totals[band])}
+                                        for band, _, _ in AGE_BANDS + (("unknown", 0, 0),) if totals[band]},
+            "incoming_source_share": {"players": incoming, "from_another_team": r4(transfers / incoming) if incoming else None,
+                                      "new_to_observed_rosters": r4(entrants / incoming) if incoming else None},
+            "new_entrant_age": summary(entrant_ages) if entrant_ages else {"n": 0},
+            "note": "Exit from the observed rosters within one year: a proxy for retirement and for leaving the observed tiers."}
 
 
 def demographics_section(rows):
@@ -246,7 +311,7 @@ def build_report(tournaments, matches, sources):
             "observed_window": {"from": window[0] if window else None, "to": window[-1] if window else None},
             "counts": {"tournaments": len(tournaments), "matches": len(matches), "roster_rows": len(rows)},
             "elo": elo_section(matches), "formats": formats_section(matches), "rosters": roster_section(rows),
-            "demographics": demographics_section(rows), "density": density_section(matches), "sources": sources}
+            "demographics": demographics_section(rows), "careers": careers_section(rows), "density": density_section(matches), "sources": sources}
 
 
 def markdown(report):
@@ -265,7 +330,10 @@ def markdown(report):
               f"Turnover between splits by tier: { {t: v.get('p50') for t, v in report['rosters']['turnover_between_splits_by_tier'].items()} }.",
               "", "## Demographics", "", f"Players: {report['demographics']['players']}; age coverage {report['demographics']['age']['coverage']} "
               f"({report['demographics']['age']['licence_status']}).", "",
-              f"Age histogram (all roles): {report['demographics']['age']['histogram_all_roles']}.", ""]
+              f"Age histogram (all roles): {report['demographics']['age']['histogram_all_roles']}.", "",
+              "## Careers", "", report["careers"]["note"], "",
+              f"Exit after a split, by age band: { {b: v['exit_share'] for b, v in report['careers']['exit_after_split_by_age'].items()} }.", "",
+              f"Players new to a team's later split: {report['careers']['incoming_source_share']}.", ""]
     return "\n".join(lines)
 
 

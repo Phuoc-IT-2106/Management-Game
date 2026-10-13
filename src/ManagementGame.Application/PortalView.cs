@@ -33,15 +33,16 @@ public enum StorySource { Simulation }
 /// match preparation) outranks a player move. No player or organization prominence is modelled, so nothing finer exists,
 /// and significance orders the feed without enlarging any story.</summary>
 public enum StorySignificance { Player, HeadCoach }
-/// <summary>Where a person stood on one side of a move: with an organization, on the open market (a free agent), or with an
-/// organization the records name but the company cannot (unknown).</summary>
-public enum Standing { Organization, FreeAgent, Unknown }
+/// <summary>Where a person stood on one side of a move: with an organization, on the open market (a free agent), with an
+/// organization the records name but the company cannot (unknown), or out of the game (retired).</summary>
+public enum Standing { Organization, FreeAgent, Unknown, Retired }
 /// <summary>One side of a transfer journey, as it was when the move happened. An organization has its stable ID, display
 /// name and crest. Free agent is a status, not an organization: it has no ID, name or crest. Unknown keeps the ID the
 /// records hold and is shown as unknown, never guessed or replaced by another organization.</summary>
 public sealed record JourneySide(Standing Standing, string OrganizationId, string Name, string CrestAssetId)
 {
     public static readonly JourneySide FreeAgent = new(Standing.FreeAgent, "", "", "");
+    public static readonly JourneySide Retired = new(Standing.Retired, "", "", "");
 }
 
 public sealed record PortalCompany(string Id, string Name, string CrestAssetId, int Reputation, int Audience);
@@ -93,7 +94,7 @@ public static class PortalProjection
     public const int TransferStoryLimit = 4;
     /// <summary>Inbox kinds that concern the company's own people. They are not world news: a contract-end departure is a
     /// transfer story, and a renewal window is a key decision.</summary>
-    public static bool Personnel(string kind) => kind is "Contract" or "Renewal";
+    public static bool Personnel(string kind) => kind is "Contract" or "Renewal" or "Development";
     /// <summary>A transfer story stays news for half a season; older moves stay in the records only.</summary>
     public static int StoryDays(int seasonLength) => seasonLength / 2;
 
@@ -136,7 +137,7 @@ public static class PortalProjection
             : v.Rivals.FirstOrDefault(r => r.Id == id) is { } rival ? new(Standing.Organization, id, rival.Name, AssetIds.Crest(id))
             : new(Standing.Unknown, id, "", "");
         // Moves are newest first in recorded order, so a higher index is an earlier move.
-        var moves = v.Moves.Select((m, order) => new Told(m, order, Side(m.From), Side(m.To))).ToArray();
+        var moves = v.Moves.Select((m, order) => new Told(m, order, Side(m.From), m.Kind == MoveKind.Retirement ? JourneySide.Retired : Side(m.To))).ToArray();
         // The person's previous move, when it took them away from the organization they now join from the open market.
         MoveRow? Left(Told t) => t.From.Standing == Standing.FreeAgent && t.To.Standing == Standing.Organization
             && moves.Skip(t.Order + 1).FirstOrDefault(p => p.Move.PersonId == t.Move.PersonId) is { } prior
@@ -170,6 +171,7 @@ public static class PortalProjection
             (Standing.Organization, Standing.Organization, _) => ($"{players} join {to.Name}", $"{names} moved directly from {from.Name}."),
             (_, Standing.Organization, _) => ($"{players} sign with {to.Name}", $"{names} signed from the free-agent market."),
             (_, _, MoveKind.Release) => ($"{players} released by {from.Name}", $"{names}; released before their contracts ended."),
+            (_, _, MoveKind.Retirement) => ($"{players} retire from {from.Name}", $"{names}; retired when their contracts ended."),
             _ => ($"{players} leave {from.Name}", $"{names}; contracts ended without renewals.")
         };
         return new TransferStory($"roundup:{first.Kind.ToString().ToLowerInvariant()}:{first.From}:{first.To}:{first.Day}", first.Kind, StoryStatus.Confirmed,
@@ -203,6 +205,7 @@ public static class PortalProjection
             _ => m.Kind switch
             {
                 _ when to.Standing == Standing.Unknown => ($"{m.Name} leaves {from.Name}", $"{who}; where they went is not on record."),
+                MoveKind.Retirement => ($"{m.Name} retires", $"{who}; retired when the contract with {from.Name} ended."),
                 MoveKind.Release => ($"{m.Name} released by {from.Name}", $"{who}; released before the contract ended."),
                 MoveKind.Replacement => ($"{m.Name} leaves {from.Name}",
                     Partner(MoveKind.Appointment) is { } successor ? $"{who}; replaced by {successor}." : $"{who}; replaced by a new appointment."),

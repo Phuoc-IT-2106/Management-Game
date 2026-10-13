@@ -23,7 +23,7 @@ public static class ShellSections
     public static string ForInbox(string kind) => kind switch
     {
         "Offer" or "Negotiation" or "Market" or "Commercial" => Commercial,
-        "Contract" or "Renewal" or "League" => Squad,
+        "Contract" or "Renewal" or "League" or "Development" or "Conduct" or "Talent" => Squad,
         "Match" or "Season" or "Meta" => Competition,
         "Finance" => Finance,
         _ => Portal

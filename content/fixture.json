@@ -54,7 +54,18 @@
     {"Id":"DE","Weight":299,"FamilyFirst":false,"Given":["Lukas","Leon","Finn","Jonas","Paul","Felix","Elias","Noah","Niklas","Tim","Jan","Moritz","Tobias","Florian","Julian","Fabian"],"Family":["Muller","Schmidt","Schneider","Fischer","Weber","Meyer","Wagner","Becker","Schulz","Hoffmann","Koch","Richter","Klein","Wolf","Neumann","Schwarz"]}
   ],
   "Handles": {"Prefixes":["Vex","Kaev","Nyr","Ashk","Ryn","Zeph","Lumr","Orin","Slyv","Tarn","Viox","Quil","Brix","Dusk","Embr","Frost","Gald","Hazr","Irok","Jett","Kod","Lumo","Mirr","Nov","Onyr","Pyrn","Rook","Sabl","Thorn","Umbr","Valk","Wren","Xan","Yuv","Zerr"],"Suffixes":["a","o","ix","is","en","yn","ar","os","ia","ex","on","us","el","ka","ri"]},
-  "Calibration": {"Source":"PandaScore 2026 aggregates, calibration_2026.json (format lol-calibration-report v1)","ReportSha256":"49371c25339b3010f4256b5b502752a0dc193bf8f8729f89707c5afd3b5b7ddf","ObservedFrom":"2026-01-01","ObservedTo":"2026-10-08"},
+  "Calibration": {"Source":"PandaScore 2026 aggregates, calibration_2026.json (format lol-calibration-report v1)","ReportSha256":"e787b6b7e50da4ece9500a3c0ef0cadf28330fff6f0d6c439b8b33ca9db6881d","ObservedFrom":"2026-01-01","ObservedTo":"2026-10-08"},
+  "Lifecycle": {
+    "Development": [{"MaxAge":19,"Min":2,"Max":6},{"MaxAge":24,"Min":0,"Max":3},{"MaxAge":27,"Min":-1,"Max":1},{"MaxAge":99,"Min":-4,"Max":-1}],
+    "RetirementByAge": [{"Value":25,"Weight":2766},{"Value":26,"Weight":2766},{"Value":27,"Weight":2766},{"Value":28,"Weight":4712},{"Value":29,"Weight":4712},{"Value":30,"Weight":4712},{"Value":31,"Weight":5000},{"Value":32,"Weight":5000},{"Value":33,"Weight":5000},{"Value":34,"Weight":10000}],
+    "IntakeAges": [{"Value":17,"Weight":9},{"Value":18,"Weight":23},{"Value":19,"Weight":33},{"Value":20,"Weight":56},{"Value":21,"Weight":18}],
+    "RetirementPivot": 70, "RetirementRatingPercent": 4,
+    "YouthIntake": 5, "PoolSize": 20, "PoolCap": 30,
+    "FormStep": 1, "FormSurprise": 4, "DecayDays": 7,
+    "MoraleWin": 4, "MoraleLoss": 3, "MoraleBench": 2, "MoraleRest": 60, "MoraleSettle": 2, "MoraleLow": 35, "RefusalAmbition": 65,
+    "PopularityWin": 1, "PopularityBench": 1, "StarPopularity": 80, "StarBonusPercent": 5, "StarBonusCap": 2,
+    "ConductInterval": 28, "ConductThreshold": 40, "ConductRate": 40, "ConductReputation": 2, "ConductPopularity": 8, "ConductMorale": 10
+  },
   "OrganizationNames": ["Ember Collective","Tide Union","Northwind Gaming","Crimson Lantern","Ironbark Esports","Saltmarsh Five","Paper Tigers GG","Hollow Peak","Glasswing","Quarry Club","Foxglove Esports","Stormhaven","Blue Heron Squad","Copper Kites","Night Ferry","Lotus Signal","Red Kiln","Granite Owls","Silver Current","Marigold Union"],
   "Brands": [
     {"Id":"brand:northfield-coffee","Name":"Northfield Coffee","Sector":"Food & beverage","MinimumReputation":0,"MinimumAudience":0,"BasePayment":30000,"WinBonus":2500,"Load":12,"DurationDays":[28,56]},

@@ -111,7 +111,7 @@ public partial class GameShell
             return box.GetMeta("standing").AsString() == side.Standing.ToString() && box.GetMeta("organization_id").AsString() == side.OrganizationId && side.Standing switch
             {
                 Standing.Organization => crest?.AssetId == side.CrestAssetId && name.Text == side.Name && name.Size.X >= 40,
-                Standing.FreeAgent => crest is null && name.Text == PortalScreen.FreeAgentText
+                Standing.FreeAgent or Standing.Retired => crest is null && name.Text == (side.Standing == Standing.Retired ? PortalScreen.RetiredText : PortalScreen.FreeAgentText)
                     && name.GetThemeFont("font").GetStringSize(name.Text, HorizontalAlignment.Left, -1, name.GetThemeFontSize("font_size")).X <= name.Size.X + 1,
                 _ => crest is null && name.Text == PortalScreen.SideText(side, origin) && name.Text.StartsWith(PresentationText.InformationMarker(InformationState.Unknown), StringComparison.Ordinal)
                     && name.TooltipText.EndsWith(origin ? "Previous team unknown" : "New team unknown", StringComparison.Ordinal)

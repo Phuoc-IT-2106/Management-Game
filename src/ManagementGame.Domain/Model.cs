@@ -35,8 +35,9 @@ public sealed record Person(string Id, string DefinitionId, string Name, string 
 /// <summary>A head coach. Analysis sharpens estimates (scouting), Adaptability reads the meta, Development grows players.</summary>
 public sealed record Coach(string Id, string Name, int Preparation, int Analysis, int Adaptability, int Capacity, int Development);
 /// <summary>A contract. Familiarity (0–100) is how integrated the person is with the team: it starts at zero for a new
-/// signing and grows with every day and every match played together.</summary>
-public sealed record Employment(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay, int Familiarity);
+/// signing and grows with every day and every match played together. Played counts the person's matches this season
+/// (playing time, which feeds development); it restarts at each season.</summary>
+public sealed record Employment(string Id, string PersonId, long Salary, long ReleaseCost, int EndDay, int Familiarity, int Played);
 /// <summary>A signed agreement. <paramref name="ForfeitLimit"/> is its termination clause: that many forfeits in one season
 /// let the brand end it (0: no clause).</summary>
 public sealed record SponsorContract(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit);
@@ -71,7 +72,9 @@ public sealed record Offer(string Id, string BrandId, string Name, OfferOrigin O
 public sealed record Negotiation(string Id, string BrandId, long Payment, int DurationDays, int SubmittedDay, int ResponseDay);
 /// <summary>A brand is unavailable to offers and approaches until the given day (after a rejection, expiry or rival deal).</summary>
 public sealed record BrandStatus(string BrandId, int AvailableFromDay);
-public sealed record Candidate(Person Person, long Fee, long Salary, long ReleaseCost, int Deadline);
+/// <summary>A free agent on the open market: asking fee and terms. Free agents stay on the market until someone signs them
+/// or they retire (rules v4 lifecycle); their terms follow them as they develop and age.</summary>
+public sealed record Candidate(Person Person, long Fee, long Salary, long ReleaseCost);
 public sealed record CoachCandidate(Coach Coach, long Fee, long Salary, int Deadline);
 /// <summary>The company's match result. Probability is the series win probability before match-day variance (millionths);
 /// the other figures are the terms of the first game's strength difference (developer truth, never observed).</summary>
@@ -81,8 +84,8 @@ public sealed record CompetitiveOutcome(string Id, string FixtureId, int Day, st
 public enum Personnel { Player, HeadCoach }
 /// <summary>Why a person moved: the company signed a player or appointed a head coach; an interim head coach took over
 /// when the head coach's contract ended; the company released a player; a contract ended without renewal; or a head coach
-/// was replaced by a new appointment.</summary>
-public enum MoveReason { Signed, Appointed, Interim, Released, ContractEnded, Replaced }
+/// was replaced by a new appointment; or a player retired, when a contract ended or from the open market.</summary>
+public enum MoveReason { Signed, Appointed, Interim, Released, ContractEnded, Replaced, Retired }
 /// <summary>A completed personnel move, recorded when it happens and never rewritten (transfer history). Origin and
 /// Destination are the organizations the person left and joined; null is the open market, where a person is a free
 /// agent. Name and Role are the person as they were then (Role is empty for a head coach), so the move can still be told
@@ -149,11 +152,33 @@ public sealed record Nationality(string Id, int Weight, bool FamilyFirst, Immuta
 public sealed record HandleParts(ImmutableArray<string> Prefixes, ImmutableArray<string> Suffixes);
 /// <summary>Where the generation tables were calibrated from: an aggregate report and its hash (no person data).</summary>
 public sealed record Calibration(string Source, string ReportSha256, string ObservedFrom, string ObservedTo);
+/// <summary>The per-season change of the primary-role rating for ages up to <paramref name="MaxAge"/>: a keyed draw in
+/// [<paramref name="Min"/>, <paramref name="Max"/>] before professionalism, the coach and playing time scale it.</summary>
+public sealed record DevelopmentBand(int MaxAge, int Min, int Max);
+/// <summary>The player lifecycle (rules v4 phase 4). Development by age; retirement by age (basis points per season,
+/// calibrated) scaled by rating; youth intake by age (weights, calibrated); a free-agent pool that persists between
+/// <see cref="PoolSize"/> at the start and <see cref="PoolCap"/>; form, morale and popularity from matches; conduct from
+/// professionalism.</summary>
+public sealed record Lifecycle(
+    ImmutableArray<DevelopmentBand> Development, ImmutableArray<WeightedValue> RetirementByAge, ImmutableArray<WeightedValue> IntakeAges,
+    // Retirement chance moves RetirementRatingPercent percent per rating point below (more) or above (less) RetirementPivot.
+    int RetirementPivot, int RetirementRatingPercent,
+    int YouthIntake, int PoolSize, int PoolCap,
+    // Form moves by FormStep plus up to FormSurprise more for an unexpected result, and back toward 0 every DecayDays.
+    int FormStep, int FormSurprise, int DecayDays,
+    // Morale: a win, a loss, a match on the bench; every DecayDays it settles MoraleSettle toward MoraleRest. Below MoraleLow
+    // readiness recovers at half speed, and a player of at least RefusalAmbition will not renew.
+    int MoraleWin, int MoraleLoss, int MoraleBench, int MoraleRest, int MoraleSettle, int MoraleLow, int RefusalAmbition,
+    // Popularity: a win (times its importance), a match on the bench; stars (StarPopularity and above) add StarBonusPercent
+    // to sponsors' fair payment, for at most StarBonusCap of them.
+    int PopularityWin, int PopularityBench, int StarPopularity, int StarBonusPercent, int StarBonusCap,
+    // Conduct, every ConductInterval days: ConductRate basis points per point of professionalism below ConductThreshold.
+    int ConductInterval, int ConductThreshold, int ConductRate, int ConductReputation, int ConductPopularity, int ConductMorale);
 public sealed record BrandDefinition(string Id, string Name, string Sector, int MinimumReputation, int MinimumAudience,
     long BasePayment, long WinBonus, int Load, ImmutableArray<int> DurationDays);
 public sealed record Content(string Format, int Schema, string Label, string RulesVersion, string DefaultCompanyName,
     Balance Balance, Generation Generation, ImmutableArray<RoleWeight> RoleWeights, ImmutableArray<Nationality> Nationalities,
-    HandleParts Handles, Calibration Calibration, ImmutableArray<string> OrganizationNames, ImmutableArray<BrandDefinition> Brands);
+    HandleParts Handles, Calibration Calibration, ImmutableArray<string> OrganizationNames, ImmutableArray<BrandDefinition> Brands, Lifecycle Lifecycle);
 
 public abstract record Intent;
 public sealed record CommitPlan(Plan Plan) : Intent;

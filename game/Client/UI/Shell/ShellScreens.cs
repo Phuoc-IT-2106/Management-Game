@@ -168,7 +168,7 @@ public partial class GameShell
         var page = Page(out var body, "Inbox", $"{view.Inbox.Length} recent messages · newest first");
         var messages = Card(body, "Messages", "What happened, and who does it affect?", "inbox");
         var groups = new (string Name, string[] Kinds)[] { ("All", []), ("Offers & deals", ["Offer", "Negotiation", "Market", "Commercial"]),
-            ("Contracts", ["Contract", "Renewal"]), ("Matches & season", ["Match", "Season", "Meta", "League"]) };
+            ("Contracts", ["Contract", "Renewal"]), ("Squad", ["Development", "Conduct", "Talent"]), ("Matches & season", ["Match", "Season", "Meta", "League"]) };
         messages.AddChild(Segments("InboxFilterTrack", "Filter_", groups.Select(g => (g.Name,
             view.Inbox.Count(r => g.Kinds.Length == 0 || g.Kinds.Contains(r.Kind)).ToString(System.Globalization.CultureInfo.InvariantCulture))), inboxFilter,
             name => { inboxFilter = name; ShowSection(); }));
@@ -253,6 +253,8 @@ public partial class GameShell
             var rating = SemanticText.Create(ui, person.Rating.ToString(Invariant), TypographyRole.Display, ColorRole.StatePositive); rating.Name = "ProfileRating";
             profile.AddChild(rating);
             profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Known, "Rating in role, observed in training and competition."));
+            if (person.PotentialEstimate.Length > 0)
+                profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, $"Potential {person.PotentialEstimate} · {person.Trend.ToLowerInvariant()} at {person.Age}"));
             if (person.Skills is { } s)
             {
                 profile.AddChild(Caps("Core attributes"));
@@ -274,7 +276,8 @@ public partial class GameShell
                     "Renew", () => Send(new RenewalDecision(person.Id, seasons.Selected + 1))));
                 renew.Name = "Renew"; profile.AddChild(renew);
             }
-            else Line(profile, "Renewal talks open near the end of the contract.", tone: ColorRole.TextSecondary);
+            else Line(profile, person.RenewalNote.Length > 0 ? $"{PresentationText.WarningMarker} {person.RenewalNote}" : "Renewal talks open near the end of the contract.",
+                tone: person.RenewalNote.Length > 0 ? ColorRole.StateWarning : ColorRole.TextSecondary);
             var release = ui.Button("Release player", () => Confirm("Release player", $"Release {person.Name}? Pay {Currency.Format(person.ExitCost)} now; wages stop. Arrears remain payable.",
                 "Release", () => Send(new ReleaseDecision(person.Id))));
             release.Name = "Release"; release.Disabled = !person.CanRelease; profile.AddChild(release);
@@ -287,7 +290,7 @@ public partial class GameShell
             profile.AddChild(SectionHeader.Create(ui, candidate.Name, $"{RoleNames.Name(candidate.Role)}{secondary} · age {candidate.Age} · {candidate.Nationality} · {candidate.FullName}"));
             profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Rating " + candidate.RatingEstimate));
             profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Potential " + candidate.PotentialEstimate));
-            Line(profile, $"Popularity {candidate.Popularity} · free agent until day {candidate.Deadline}", tone: ColorRole.TextSecondary);
+            Line(profile, $"Popularity {candidate.Popularity} · free agent", tone: ColorRole.TextSecondary);
             Line(profile, $"Signing fee {Currency.Format(candidate.Fee)} · wage {Currency.PerDay(candidate.Salary)}");
             var seasons = Seasons("SignSeasons"); profile.AddChild(seasons);
             var sign = ui.PrimaryButton("Sign player", () => Confirm("Sign player", $"Sign {candidate.Name} for {seasons.Selected + 1} season(s)? Pay {Currency.Format(candidate.Fee)} now and {Currency.PerDay(candidate.Salary)}. New signings start with reduced readiness.",

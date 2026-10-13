@@ -1,4 +1,48 @@
 {
+  "careers": {
+    "exit_after_split_by_age": {
+      "19-21": {
+        "exit_share": 0.0887,
+        "players": 812
+      },
+      "22-24": {
+        "exit_share": 0.0894,
+        "players": 1175
+      },
+      "25-27": {
+        "exit_share": 0.1043,
+        "players": 786
+      },
+      "28+": {
+        "exit_share": 0.16,
+        "players": 175
+      },
+      "<=18": {
+        "exit_share": 0.093,
+        "players": 129
+      },
+      "unknown": {
+        "exit_share": 0.3001,
+        "players": 673
+      }
+    },
+    "incoming_source_share": {
+      "from_another_team": 0.5391,
+      "new_to_observed_rosters": 0.4609,
+      "players": 1011
+    },
+    "new_entrant_age": {
+      "max": 33.2738,
+      "mean": 24.1314,
+      "min": 16.6656,
+      "n": 286,
+      "p10": 20.1852,
+      "p50": 24.1032,
+      "p90": 27.6091,
+      "sd": 3.0048
+    },
+    "note": "Exit from the observed rosters within one year: a proxy for retirement and for leaving the observed tiers."
+  },
   "counts": {
     "matches": 3829,
     "roster_rows": 9706,

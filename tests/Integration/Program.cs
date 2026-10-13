@@ -231,9 +231,9 @@ Check(departures > 0, "contracts lapse over seasons and people leave");
 // Transfer history is recorded when moves happen: a contract-end departure is a move from the company to the open market.
 var departed = departureView!.Inbox.Where(r => r.Kind == "Contract" && r.Day == departureView.Day).ToArray();
 Check(departed.Length > 0 && departed.All(r => r.SubjectId.Length > 0), "a contract-end notice names the departed person by stable ID");
-var endings = departureView.Moves.Where(m => m.Kind == MoveKind.ContractEnd && m.Day == departureView.Day).ToArray();
+var endings = departureView.Moves.Where(m => m.Kind is MoveKind.ContractEnd or MoveKind.Retirement && m.Day == departureView.Day).ToArray();
 Check(departed.All(r => endings.Any(m => m.PersonId == r.SubjectId && m.From == departureView.CompanyId && m.To.Length == 0 && m.CauseId == r.CauseId)),
-    "every contract-end departure is a recorded move from the company to the open market, caused by the contract that ended");
+    "every contract-end departure is a recorded move from the company to the open market (or into retirement), caused by the contract that ended");
 var departurePortal = PortalProjection.Build(departureView);
 var departureStories = PortalProjection.TransferStories(departureView);
 var usSide = new JourneySide(Standing.Organization, departureView.CompanyId, departureView.Company, AssetIds.Crest(departureView.CompanyId));
@@ -251,7 +251,7 @@ Check(departureStories.All(t => !t.Headline.Contains('$') && !t.Summary.Contains
     "transfer stories carry no fee, wage or ability");
 // A player who left and re-signs: the return is a new story from the open market, with the departure only as context,
 // and every story told before is still told the same way.
-var leaver = endings.First(m => !m.Coach);
+var leaver = endings.First(m => !m.Coach && m.Kind == MoveKind.ContractEnd);
 var returned = departureView with { Moves = [new MoveRow("move:test-return", MoveKind.Signing, departureView.Day, leaver.PersonId, leaver.Name, false, leaver.Role, "",
     departureView.CompanyId, "test-return"), .. departureView.Moves] };
 var returnStories = PortalProjection.TransferStories(returned);
@@ -774,6 +774,169 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     SnapshotValidation.Validate(afterSales, content);
     var empty = stuck with { Company = stuck.Company with { People = [], Employment = [.. stuck.Company.Employment.Where(e => e.PersonId == stuck.Company.Coach.Id)] } };
     Check(ReferenceEquals(Simulation.Step(empty, content.Definition), empty), "with nothing left to sell, time stops");
+}
+
+// Rules v4 phase 4: careers. Development, retirement, youth intake and a lasting pool; form, morale, popularity, conduct.
+{
+    var life = content.Definition.Lifecycle; var definition = content.Definition;
+    var youngster = Generator.Player(42, definition, "person:test-youngster", "mid", 1, 18);
+    var veteran = Generator.Player(42, definition, "person:test-veteran", "mid", 1, 30);
+    var grown = Careers.Develop(youngster, Careers.Change(42, youngster, 1, life, 70, 100), definition);
+    Check(Ratings.Rating(grown, definition) >= Ratings.Rating(youngster, definition) && Ratings.Rating(grown, definition) <= youngster.Potential
+        && Careers.Develop(youngster, 50, definition) is var capped && Ratings.Rating(capped, definition) <= youngster.Potential && Ratings.Rating(capped, definition) >= Ratings.Rating(youngster, definition),
+        "a young player grows, and never past the potential ceiling");
+    Check(Careers.Change(42, veteran, 1, life, 70, 100) < 0 && Ratings.Rating(Careers.Develop(veteran, Careers.Change(42, veteran, 1, life, 70, 100), definition), definition) < Ratings.Rating(veteran, definition),
+        "a veteran declines with age");
+    Person With(Person p, int professionalism) => p with { Mind = p.Mind with { Professionalism = professionalism } };
+    var draws = Enumerable.Range(0, 40).Select(i => Generator.Player(7, definition, $"person:test-growth:{i}", Roles.All[i % 5], 1, 18)).ToArray();
+    Check(draws.Sum(p => Careers.Change(7, With(p, 90), 1, life, 50, 50)) > draws.Sum(p => Careers.Change(7, With(p, 10), 1, life, 50, 50))
+        && draws.Sum(p => Careers.Change(7, p, 1, life, 90, 50)) > draws.Sum(p => Careers.Change(7, p, 1, life, 10, 50))
+        && draws.Sum(p => Careers.Change(7, p, 1, life, 50, 100)) > draws.Sum(p => Careers.Change(7, p, 1, life, 50, 0)),
+        "growth scales with professionalism, the head coach's development and playing time");
+    var olds = Enumerable.Range(0, 40).Select(i => Generator.Player(7, definition, $"person:test-decline:{i}", Roles.All[i % 5], 1, 30)).ToArray();
+    Check(olds.Sum(p => Careers.Change(7, With(p, 90), 1, life, 50, 50)) > olds.Sum(p => Careers.Change(7, With(p, 10), 1, life, 50, 50)),
+        "professionalism slows decline");
+    var mid = Generator.Player(42, definition, "person:test-retire", "top", 1, 26);
+    Check(Careers.RetirementChance(mid, 24, definition) == 0 && Careers.RetirementChance(mid, life.RetirementByAge.Max(x => x.Value), definition) == 10_000
+        && Enumerable.Range(25, 9).Select(a => Careers.RetirementChance(mid, a, definition)).Zip(Enumerable.Range(26, 9).Select(a => Careers.RetirementChance(mid, a, definition))).All(p => p.First <= p.Second)
+        && Careers.RetirementChance(Careers.Develop(mid, -12, definition), 29, definition) > Careers.RetirementChance(mid, 29, definition),
+        "retirement follows the calibrated age table: none before 25, certain at its last age, rising with age, likelier for weaker players");
+    Check(Careers.Trend(youngster, 1, life) == "Improving" && Careers.Trend(veteran, 1, life) == "Declining", "the public trend follows age");
+
+    // Season end on the open openMarket.
+    var openMarket = New(9).Capture(); var closeDay = Seasons.End(1, b);
+    Check(openMarket.World.Candidates.Length == life.PoolSize && Roles.All.All(r => openMarket.World.Candidates.Count(x => x.Person.Role == r) >= life.PoolSize / Roles.All.Length),
+        "the campaign opens a free-agent pool of its full size, every role represented");
+    var end = openMarket with { World = openMarket.World with { Calendar = new Calendar(closeDay, Phase.Review, (closeDay - 1L) * 11 + (int)Phase.Review - 1) } };
+    var rolledOver = Simulation.Step(end, definition);
+    var poolBefore = end.World.Candidates.Select(x => x.Person.Id).ToHashSet();
+    var arrivals = rolledOver.World.Candidates.Where(x => !poolBefore.Contains(x.Person.Id)).ToArray();
+    var retired = rolledOver.World.Moves.Where(m => m.Reason == MoveReason.Retired).ToArray();
+    Check(arrivals.Length == life.YouthIntake && arrivals.All(x => life.IntakeAges.Any(a => a.Value == Ratings.Age(x.Person, 2))) && arrivals.Select(x => x.Person.Role).Distinct().Count() == Math.Min(5, life.YouthIntake),
+        "the season's youth intake arrives at the calibrated entry ages, one role after another");
+    Check(rolledOver.World.Candidates.Length <= life.PoolCap && retired.All(m => m.Origin is null && m.Destination is null && poolBefore.Contains(m.PersonId) && !rolledOver.World.Candidates.Any(x => x.Person.Id == m.PersonId))
+        && poolBefore.Count + arrivals.Length - retired.Length == rolledOver.World.Candidates.Length,
+        "free agents retire from the open market as recorded moves, and the pool keeps within its cap");
+    Check(rolledOver.World.Candidates.All(x => x.Salary == Pay.Player(x.Person, 2, definition) && x.Fee == x.Salary * 20), "every listing follows its player into the new season");
+    Check(rolledOver.Company.Employment.All(e => e.Played == 0), "playing time restarts with the season");
+    SnapshotValidation.Validate(rolledOver, content);
+
+    // A player whose contract ends may retire instead of becoming a free agent (certain at the table's last age).
+    var lastAge = life.RetirementByAge.Max(x => x.Value);
+    var expiring = New().Capture(); var oldest = expiring.Company.People[0];
+    var aged = oldest with { BornSeason = 1 - lastAge };
+    expiring = expiring with { Company = expiring.Company with { People = expiring.Company.People.Replace(oldest, aged),
+        Employment = expiring.Company.Employment.Select(e => e.PersonId == oldest.Id ? e with { EndDay = 0 } : e).ToImmutableArray() } };
+    var afterEnd = Simulation.Step(Simulation.Step(expiring, definition), definition);
+    Check(afterEnd.World.Moves.Any(m => m.PersonId == oldest.Id && m.Reason == MoveReason.Retired && m.Origin == expiring.Company.Id && m.Destination is null)
+        && !afterEnd.World.Candidates.Any(x => x.Person.Id == oldest.Id) && afterEnd.Company.Reviews.Any(r => r.Text.Contains($"retired at {lastAge}", StringComparison.Ordinal)),
+        "a player whose contract ends at the last age retires: a recorded move and a notice, not a free agent");
+    var afterView = Observations.Build(afterEnd, definition);
+    var told = PortalProjection.TransferStories(afterView).Single(t => t.Records.Any(id => afterView.Moves.Any(m => m.Id == id && m.PersonId == oldest.Id)));
+    Check(told.Kind == MoveKind.Retirement && told.To == JourneySide.Retired && told.Headline == $"{aged.Handle} retires",
+        "transfer news tells a retirement: from the company into retirement");
+    Check(afterView.Inbox.Any(r => r.Kind == "Contract" && r.SubjectId == oldest.Id), "the retirement notice names the player");
+
+    // The pool lasts: no free agent vanishes during a season; a role nobody can fill brings a free agent forward.
+    var lasting = New(9); Submit(lasting, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+    var openingPool = lasting.Capture().World.Candidates.Select(x => x.Person.Id).ToHashSet();
+    for (var i = 0; i < 8; i++) Submit(lasting, new AdvanceDecision());
+    Check(lasting.Observe().Season == 1 && openingPool.All(id => lasting.Capture().World.Candidates.Any(x => x.Person.Id == id)), "free agents stay on the market until signed or retired");
+    // Mid-season (day 1 opens the whole pool instead): take a role away from both the roster and the market for a day.
+    var gap = lasting.Capture(); var gapRole = gap.Company.People[0].Role;
+    gap = gap with { Company = gap.Company with { People = [.. gap.Company.People.Where(p => p.Role != gapRole)], Plan = null,
+        Employment = [.. gap.Company.Employment.Where(e => gap.Company.People.All(p => p.Id != e.PersonId || p.Role != gapRole))] },
+        World = gap.World with { Candidates = [.. gap.World.Candidates.Where(x => x.Person.Role != gapRole)] } };
+    var filled = Enumerable.Range(0, 11).Aggregate(gap, (state, _) => Simulation.Step(state, definition));
+    Check(filled.World.Candidates.Count(x => x.Person.Role == gapRole) == 1 && filled.Company.Reviews.Any(r => r.Id.StartsWith("notice:talent:", StringComparison.Ordinal)),
+        "a role neither the roster nor the market can fill brings one free agent forward, and the company is told");
+
+    // Condition from matches.
+    var squad = New().Capture().Company; var lineup = squad.People.Take(5).Select(p => p.Id).ToImmutableArray(); var bench = squad.People[5];
+    CompetitiveOutcome Outcome(bool won, int probability, int importance) => new("result:test", "fixture:s1:01", 6, "rival:r01", won, Posture.Balanced, probability,
+        0, 0, 0, 0, 0, importance, "test", 0, 0, 0, 0, won ? 2 : 0, won ? 0 : 2);
+    var upset = Careers.AfterMatch(squad, Outcome(true, 200_000, 2), lineup, life);
+    var expectedForm = life.FormStep + life.FormSurprise * 800_000 / 1_000_000;
+    Check(lineup.All(id => upset.People.Single(p => p.Id == id) is var p && squad.People.Single(x => x.Id == id) is var q
+            && p.Form == Math.Clamp(q.Form + expectedForm, -10, 10) && p.Morale == Math.Min(100, q.Morale + life.MoraleWin) && p.Popularity == Math.Min(100, q.Popularity + 2 * life.PopularityWin))
+        && upset.People.Single(p => p.Id == bench.Id) is var benched && benched.Morale == Math.Max(0, bench.Morale - life.MoraleBench) && benched.Popularity == Math.Max(0, bench.Popularity - life.PopularityBench),
+        "an unexpected win lifts the lineup's form, morale and popularity; the bench loses morale and a little popularity");
+    var expected = Careers.AfterMatch(squad, Outcome(true, 900_000, 1), lineup, life);
+    Check(lineup.All(id => expected.People.Single(p => p.Id == id).Form < upset.People.Single(p => p.Id == id).Form || upset.People.Single(p => p.Id == id).Form == 10),
+        "an expected win moves form less than an upset");
+    var settled = Careers.Settle(upset, life);
+    Check(settled.People.All(p => Math.Abs(p.Form) <= Math.Abs(upset.People.Single(x => x.Id == p.Id).Form)
+        && Math.Abs(p.Morale - life.MoraleRest) <= Math.Abs(upset.People.Single(x => x.Id == p.Id).Morale - life.MoraleRest)), "form and morale settle back over time");
+
+    // Low morale: slower recovery and, with ambition, no renewal.
+    var sulking = New().Capture(); var unhappy = sulking.Company.People[0];
+    var unhappyContract = sulking.Company.Employment.Single(e => e.PersonId == unhappy.Id);
+    sulking = sulking with { Company = sulking.Company with {
+        People = sulking.Company.People.Replace(unhappy, unhappy with { Morale = life.MoraleLow - 5, Mind = unhappy.Mind with { Ambition = life.RefusalAmbition + 5 } }),
+        Employment = sulking.Company.Employment.Replace(unhappyContract, unhappyContract with { EndDay = b.RenewalWindow - 1 }) } };
+    var sulkView = Observations.Build(sulking, definition).People.Single(p => p.Id == unhappy.Id);
+    var refusal = new Session(definition, sulking);
+    Check(!sulkView.CanRenew && sulkView.RenewalNote.Length > 0 && !Submit(refusal, new RenewalDecision(unhappy.Id, 1)).Accepted,
+        "an ambitious player with low morale will not renew, and the profile says so");
+    Check(!Careers.Recovers(sulking.Company.People.Single(p => p.Id == unhappy.Id), life, 3) && Careers.Recovers(sulking.Company.People.Single(p => p.Id == unhappy.Id), life, 4)
+        && Careers.Recovers(squad.People[1] with { Morale = 80 }, life, 3), "low morale halves readiness recovery");
+
+    // Conduct follows professionalism.
+    var careless = squad with { People = [.. squad.People.Select(p => p with { Mind = p.Mind with { Professionalism = 1 } })] };
+    var careful = squad with { People = [.. squad.People.Select(p => p with { Mind = p.Mind with { Professionalism = 95 } })] };
+    var carelessAfter = Enumerable.Range(1, 24).Aggregate(careless, (company, i) => Careers.Conduct(company, 11, life, i * life.ConductInterval));
+    var carefulAfter = Enumerable.Range(1, 24).Aggregate(careful, (company, i) => Careers.Conduct(company, 11, life, i * life.ConductInterval));
+    Check(carelessAfter.Reviews.Count(r => r.Id.StartsWith(Careers.ConductPrefix, StringComparison.Ordinal)) > 0 && carelessAfter.Reputation < careless.Reputation
+        && carefulAfter.Reviews.All(r => !r.Id.StartsWith(Careers.ConductPrefix, StringComparison.Ordinal)) && carefulAfter.Reputation == careful.Reputation,
+        "unprofessional players break team rules and cost reputation; professional ones do not");
+
+    // Popularity reaches the company: sponsors' star bonus and a match's audience.
+    var stars = squad with { People = [.. squad.People.Select((p, i) => i < 3 ? p with { Popularity = 95 } : p with { Popularity = 40 })] };
+    var plain = squad with { People = [.. squad.People.Select(p => p with { Popularity = 40 })] };
+    var sponsorBrand = definition.Brands[0];
+    Check(Careers.StarBonus(stars, life) == life.StarBonusCap * life.StarBonusPercent && Careers.StarBonus(plain, life) == 0
+        && Market.FairPayment(sponsorBrand, 50, 5000, Careers.StarBonus(stars, life)) > Market.FairPayment(sponsorBrand, 50, 5000, 0),
+        "popular players raise what sponsors pay, for a capped number of stars");
+    var fans = Commercial.Consume(squad, Outcome(true, 300_000, 1), b, 90).PendingEffects.Single().Audience;
+    var few = Commercial.Consume(squad, Outcome(true, 300_000, 1), b, 10).PendingEffects.Single().Audience;
+    Check(fans > few, "a popular lineup moves the audience more");
+
+    // The head coach's adaptability multiplies the value of meta work.
+    var prepared = New().Capture(); var firstFixture = prepared.World.Fixtures[0]; var rival = prepared.World.Rivals.Single(r => r.Id == firstFixture.RivalId);
+    var lineupPeople = prepared.Company.People.Take(5).ToImmutableArray();
+    int MetaPrep(int adaptability) => Competition.Resolve(new CompetitionInput(1, firstFixture, new Plan(firstFixture.Id, 0, 0, 100, Posture.Balanced, [.. lineupPeople.Select(p => p.Id)], Posture.Balanced, "test"),
+        new Work(0, 0, 3000), lineupPeople, [.. lineupPeople.Select(p => 70)], prepared.Company.Coach with { Adaptability = adaptability }, rival, Posture.Aggressive, 0, b, 50)).Preparation;
+    Check(MetaPrep(90) > MetaPrep(10), "a head coach who reads the meta gets more from meta preparation");
+
+    // A long campaign stays a living pool: steady size, retirements and intake, and ages that stay near the calibrated mix.
+    var long_ = New(3); Submit(long_, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+    var ageMean = definition.Generation.Ages.Sum(a => (double)a.Value * a.Weight) / definition.Generation.Ages.Sum(a => a.Weight);
+    var sizes = new List<int>(); var means = new List<double>(); var retirements = 0; var seen = new HashSet<string>();
+    for (var guard = 0; guard < 2400 && long_.Observe().Season <= 8; guard++)
+    {
+        var v = long_.Observe();
+        // A sound owner: takes a sponsor, covers every role, keeps the registered minimum and renews.
+        foreach (var free in v.Offers.Where(o => o.Availability == "Available").Take(1)) Submit(long_, new SponsorDecision(free.Id));
+        foreach (var role in Roles.All.Where(role => !v.People.Any(p => p.Role == role)))
+            if (v.Candidates.FirstOrDefault(c => c.Role == role && c.Fee <= v.Cash) is { } cover) Submit(long_, new SigningDecision(cover.Id));
+        for (var depth = long_.Observe(); depth.People.Length < b.MinimumRoster && depth.Candidates.FirstOrDefault(c => c.Fee <= depth.Cash) is { } extra; depth = long_.Observe())
+            if (!Submit(long_, new SigningDecision(extra.Id)).Accepted) break;
+        foreach (var p in v.People.Where(p => p.CanRenew)) Submit(long_, new RenewalDecision(p.Id, 1));
+        if (v.CoachContract.CanRenew) Submit(long_, new RenewalDecision(v.CoachContract.Id, 1));
+        var season = v.Season;
+        if (!Submit(long_, new AdvanceDecision()).Accepted) throw new Exception("Long campaign blocked on day " + v.Day);
+        var state = long_.Capture();
+        retirements += state.World.Moves.Count(m => m.Reason == MoveReason.Retired && seen.Add(m.Id));
+        if (long_.Observe().Season != season)
+        {
+            var everyone = state.Company.People.Concat(state.World.Candidates.Select(x => x.Person)).ToArray();
+            sizes.Add(state.World.Candidates.Length); means.Add(everyone.Average(p => Ratings.Age(p, long_.Observe().Season)));
+        }
+    }
+    Check(sizes.Count >= 7 && sizes.All(n => n >= Roles.All.Length && n <= life.PoolCap) && retirements > 0,
+        $"over eight seasons the pool stays between one per role and its cap, and players retire ({string.Join(",", sizes)}; {retirements} retirements)");
+    Check(means.All(m => Math.Abs(m - ageMean) <= 2.5), $"the population's mean age stays near the calibrated mix ({ageMean:0.0}: {string.Join(", ", means.Select(m => m.ToString("0.0")))})");
+    SnapshotValidation.Validate(long_.Capture(), content);
 }
 
 for (ulong seed = 1; seed <= 16; seed++)

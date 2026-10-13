@@ -65,7 +65,8 @@ public static class SnapshotValidation
         var teams = w.Rivals.Select(r => r.Id).Append(c.Id).Order(StringComparer.Ordinal).ToArray();
         Require(w.Finishes.All(f => f.Season < season && f.Order.Order(StringComparer.Ordinal).SequenceEqual(teams)) && w.Finishes.Select(f => f.Season).Distinct().Count() == w.Finishes.Length
             && w.Finishes.Length <= 10, "Invalid season finishes.");
-        Require(c.Employment.All(x => x.Familiarity is >= 0 and <= 100), "Invalid familiarity.");
+        Require(c.Employment.All(x => x.Familiarity is >= 0 and <= 100 && x.Played is >= 0 and <= 64), "Invalid familiarity or playing time.");
+        Require(w.Candidates.Length <= definition.Lifecycle.PoolCap + definition.Lifecycle.YouthIntake + Roles.All.Length + b.MaxRoster, "Free-agent pool exceeds its bounds.");
         Unique(w.Results.Select(x => x.Id), "result IDs"); Unique(w.Results.Select(x => x.FixtureId), "resolved fixtures");
         foreach (var result in w.Results)
         {
@@ -81,8 +82,9 @@ public static class SnapshotValidation
         Require(w.Moves.Zip(w.Moves.Skip(1)).All(p => p.First.Day <= p.Second.Day) && w.Moves.All(m => m.Day >= Seasons.Start(Math.Max(1, season - 1), b) && m.Day <= day
             && m.PersonId.Length > 0 && m.Name.Length is > 0 and <= 120 && m.CauseId.Length > 0 && Enum.IsDefined(m.Kind) && Enum.IsDefined(m.Reason)
             && (m.Kind == Personnel.Player ? Roles.Valid(m.Role) : m.Role.Length == 0)
-            && (m.Reason is MoveReason.Signed or MoveReason.Appointed or MoveReason.Interim ? m.Origin is null && m.Destination == c.Id : m.Origin == c.Id && m.Destination is null)
-            && (m.Reason is MoveReason.Signed or MoveReason.Released ? m.Kind == Personnel.Player : m.Reason == MoveReason.ContractEnded || m.Kind == Personnel.HeadCoach)),
+            && (m.Reason is MoveReason.Signed or MoveReason.Appointed or MoveReason.Interim ? m.Origin is null && m.Destination == c.Id
+                : m.Reason == MoveReason.Retired ? (m.Origin is null || m.Origin == c.Id) && m.Destination is null : m.Origin == c.Id && m.Destination is null)
+            && (m.Reason is MoveReason.Signed or MoveReason.Released or MoveReason.Retired ? m.Kind == Personnel.Player : m.Reason == MoveReason.ContractEnded || m.Kind == Personnel.HeadCoach)),
             "Invalid transfer history.");
         Require(c.FinanceReceipts.Order().SequenceEqual(w.Results.Select(r => r.Id).Order()) && c.CommercialReceipts.Order().SequenceEqual(w.Results.Select(r => r.Id).Order()), "Immediate outcome consumers incomplete/duplicated.");
         Unique(c.PendingEffects.Select(x => x.Id), "pending effects");
@@ -103,7 +105,7 @@ public static class SnapshotValidation
         {
             Require(Simulation.NextFixture(s)?.Id == p.FixtureId && p.Execution >= 0 && p.Opponent >= 0 && p.Meta >= 0 && (long)p.Execution + p.Opponent + p.Meta == 100 && Enum.IsDefined(p.Posture) && Enum.IsDefined(p.ExpectedOpponent), "Invalid committed plan.");
             Require(p.Lineup.Length == 5 && p.Lineup.Distinct().Count() == 5 && p.Lineup.All(id => c.People.Any(x => x.Id == id)), "Invalid lineup references.");
-            Require(p.Lineup.Select(id => c.People.Single(x => x.Id == id).Role).Distinct().Count() == 5, "Invalid lineup roles.");
+            Require(p.Lineup.Select((id, i) => Ratings.Proficiency(c.People.Single(x => x.Id == id), Roles.All[i]) > 0).All(x => x), "Invalid lineup roles.");
         }
     }
 }

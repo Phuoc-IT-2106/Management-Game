@@ -27,15 +27,16 @@ public static class RoleNames
 /// <summary>The skills and match-relevant mind of a player the company employs (known exactly to its own staff).</summary>
 public sealed record PlayerSkills(int Mechanics, int EarlyGame, int Teamfight, int Macro, int ChampionPool, int Consistency, int Composure, int Communication);
 /// <summary>A player on the company's roster. Name is the in-game handle shown in play; FullName is the legal name. Rating
-/// is the primary-role rating; SecondaryRating the rating in the secondary role (0 without one). Personality and potential
-/// are never observed, so they are not here.</summary>
+/// is the primary-role rating; SecondaryRating the rating in the secondary role (0 without one). Personality is never
+/// observed; potential only as the head coach's estimate. Trend is the direction age suggests ("Improving", "At peak",
+/// "Declining"). RenewalNote says why a contract in its renewal window cannot be renewed (empty otherwise).</summary>
 public sealed record PersonRow(string Id, string Name, string Role, int Rating, int Readiness, long Salary, long ExitCost, bool CanRelease,
     int ContractEnd = 0, long RenewalSalary = 0, bool CanRenew = false, string FullName = "", string Nationality = "", int Age = 0,
     string SecondaryRole = "", int SecondaryRating = 0, PlayerSkills? Skills = null, int Form = 0, int Morale = 0, int Popularity = 0, long MarketValue = 0,
-    int Familiarity = 0);
+    int Familiarity = 0, string PotentialEstimate = "", string Trend = "", string RenewalNote = "");
 /// <summary>A free agent as the company can estimate them: rating and potential as bands whose width follows the company's
 /// information and the head coach's analysis. Age, nationality, role and fan following are public.</summary>
-public sealed record CandidateRow(string Id, string Name, string Role, string RatingEstimate, long Fee, long Salary, int Deadline,
+public sealed record CandidateRow(string Id, string Name, string Role, string RatingEstimate, long Fee, long Salary,
     string FullName = "", string Nationality = "", int Age = 0, string PotentialEstimate = "", int Popularity = 0, string SecondaryRole = "");
 public sealed record SponsorRow(string Id, string Name, long Payment, long WinBonus, int Load, int Deadline, int MinimumReputation, string Availability,
     string Origin = "", int DurationDays = 0, string BrandId = "");
@@ -69,8 +70,8 @@ public sealed record LeagueInfo(int Teams, int MatchesPerTeam, int RegularGames,
 public sealed record RivalRow(string Id, string Name, int Wins, int Losses, int Remaining);
 /// <summary>How a completed personnel move came about (the domain's <c>MoveReason</c>, in the same order): an
 /// organization signed a player or appointed a head coach, an interim head coach took over, a player was released, a
-/// contract ended without renewal, or a head coach was replaced by a new appointment.</summary>
-public enum MoveKind { Signing, Appointment, Interim, Release, ContractEnd, Replacement }
+/// contract ended without renewal, a head coach was replaced by a new appointment, or a player retired.</summary>
+public enum MoveKind { Signing, Appointment, Interim, Release, ContractEnd, Replacement, Retirement }
 /// <summary>A completed personnel move exactly as the simulation recorded it when it happened (transfer history). From
 /// and To are the stable IDs of the organizations the person left and joined; empty is the open market, where the person
 /// is a free agent. Name and Role are the person as they were then; Role is empty for a head coach. CauseId is the command
