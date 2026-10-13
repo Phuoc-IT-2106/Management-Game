@@ -41,6 +41,13 @@ public static class Pay
         if (Ratings.Age(p, season) <= 21) wage = wage * (100 + Math.Max(0, p.Potential - rating)) / 100;
         return Math.Max(100, wage);
     }
+    /// <summary>A player's transfer fee: the asking wage for FeeDaysMin days up to the pivot rating, FeeDaysPerPoint more days
+    /// for every point above it, at most FeeDaysMax. Good players are dear, so a strong squad is built over seasons.</summary>
+    public static long Fee(Person p, int season, Content content)
+    {
+        var b = content.Balance; var rating = Ratings.Rating(p, content);
+        return Player(p, season, content) * Math.Clamp(b.FeeDaysMin + Math.Max(0, rating - b.FeePivot) * b.FeeDaysPerPoint, b.FeeDaysMin, b.FeeDaysMax);
+    }
     public static long Coach(Coach coach) => (coach.Preparation + coach.Analysis + coach.Adaptability + coach.Development) * 4L + coach.Capacity * 2L;
     /// <summary>A renewing person asks for at least their current pay, scaled by the company's standing; loyalty lowers the
     /// premium (−10..+10 percentage points around neutral 50).</summary>

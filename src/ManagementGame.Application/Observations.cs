@@ -149,7 +149,7 @@ public static class Observations
                 c.People.Any(x => x.Id != p.Id && x.Role == p.Role), contract.EndDay, Simulation.RenewalDemand(c, contract, season, content), Renewable(contract) && !refuses,
                 p.Name, p.Nationality, Ratings.Age(p, season), p.SecondaryRole, p.SecondaryRole.Length == 0 ? 0 : Ratings.InRole(p, p.SecondaryRole, content),
                 new PlayerSkills(p.Skills.Mechanics, p.Skills.EarlyGame, p.Skills.Teamfight, p.Skills.Macro, p.Skills.ChampionPool,
-                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Player(p, season, content) * 20, contract.Familiarity,
+                    p.Mind.Consistency, p.Mind.Composure, p.Mind.Communication), p.Form, p.Morale, p.Popularity, Pay.Fee(p, season, content), contract.Familiarity,
                 Band(p.Id, "potential", p.Potential, ownWidth), Careers.Trend(p, season, content.Lifecycle),
                 Renewable(contract) && refuses ? "Not open to renewal while morale is this low." : "");
         }).ToImmutableArray();

@@ -146,7 +146,10 @@ public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInter
     int RegularGames, int PlayoffGames, int PlayoffTeams, int PlayoffInterval, ImmutableArray<long> PlacePrizes,
     int FamiliarityPerDay, int FamiliarityPerMatch, int StartingFamiliarity,
     // Readiness a player loses for each match played (recovered at one point a day).
-    int MatchFatigue);
+    int MatchFatigue,
+    // Rules v4 transfer fees, in days of the asking wage: FeeDaysMin up to the FeePivot rating, FeeDaysPerPoint more for
+    // every point above it, at most FeeDaysMax, so a strong squad takes seasons to buy (the user's decision, 2026-10-13).
+    int FeeDaysMin, int FeeDaysMax, int FeePivot, int FeeDaysPerPoint);
 public sealed record AttributeRange(int Min, int Max);
 /// <summary>A value with a draw weight (basis points or any positive integers).</summary>
 public sealed record WeightedValue(int Value, int Weight);

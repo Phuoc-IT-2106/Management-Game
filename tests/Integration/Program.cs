@@ -825,7 +825,13 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     Check(rolledOver.World.Candidates.Length <= life.PoolCap && retired.All(m => m.Origin is null && m.Destination is null && poolBefore.Contains(m.PersonId) && !rolledOver.World.Candidates.Any(x => x.Person.Id == m.PersonId))
         && poolBefore.Count + arrivals.Length - retired.Length == rolledOver.World.Candidates.Length,
         "free agents retire from the open market as recorded moves, and the pool keeps within its cap");
-    Check(rolledOver.World.Candidates.All(x => x.Salary == Pay.Player(x.Person, 2, definition) && x.Fee == x.Salary * 20), "every listing follows its player into the new season");
+    Check(rolledOver.World.Candidates.All(x => x.Salary == Pay.Player(x.Person, 2, definition) && x.Fee == Pay.Fee(x.Person, 2, definition)), "every listing follows its player into the new season");
+    // Transfer fees rise with quality: FeeDaysMin days' wage up to the pivot, more above it, at most FeeDaysMax.
+    var feeDays = Enumerable.Range(0, 60).Select(i => Generator.Player(5, definition, $"person:test-fee:{i}", Roles.All[i % 5], 1, 24, (i % 6) * 4 - 8))
+        .Select(p => (Rating: Ratings.Rating(p, definition), Days: Pay.Fee(p, 1, definition) / (double)Pay.Player(p, 1, definition))).ToArray();
+    Check(feeDays.All(x => x.Days >= b.FeeDaysMin - .01 && x.Days <= b.FeeDaysMax + .01) && feeDays.Where(x => x.Rating <= b.FeePivot).All(x => Math.Abs(x.Days - b.FeeDaysMin) < .01)
+        && feeDays.Where(x => x.Rating > b.FeePivot).All(x => x.Days > b.FeeDaysMin) && feeDays.Any(x => Math.Abs(x.Days - b.FeeDaysMax) < .01),
+        "transfer fees rise with quality, from the minimum days of wage up to the cap for the best players");
     Check(fullRollover.Company.Employment.All(e => e.Played == 0), "playing time restarts with the season");
     SnapshotValidation.Validate(fullRollover, content);
 

@@ -24,7 +24,7 @@ migration.
 | 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done (`46c0839`) |
 | 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | Done (`7cdcd31`) |
 | 5 | Rivals with real rosters, budgets and posture AI | Done (`a4a5a6b`) |
-| 6 | Measurement and balance (gates 1 and 2) | Stopped after 3 rounds: gate 1 reputation and gate 2 progress open (decision) |
+| 6 | Measurement and balance (gates 1 and 2) | Done: gates 1 and 2 pass (round 5, after the user's decisions) |
 | 7 | Documents and handoff | — |
 
 ## Phase 1 — real data and calibration
@@ -560,11 +560,11 @@ are now world transfer news too.
 - **Shell native:** 3842 / 3882 (the rival profile region and table are checked). **Native kits:** 24 / 101 / 31.
 - **Headless hash:** `fca16245…`.
 
-## Phase 6 — measurement and balance (stopped at the plan's stop point)
+## Phase 6 — measurement and balance
 
-**State: stopped after three tuning rounds, as the plan requires.** Gate 1 "reputation follows results" and gate 2
-"multi-year progress" still fail. The values below are the best known state, committed as a restore point. The options
-for closing the two gates need the user's decision.
+**State: done. Gates 1 and 2 pass in round 5.** The first three rounds stopped at the plan's stop point with two gates
+open. The user then decided twice (rounds 4 and 5, below), and every gate-1 and gate-2 measure now passes. One gate
+measure changed by the user's decision (reputation, partial correlation); a Director DEC entry should confirm it.
 
 ### Measurement
 
@@ -682,3 +682,31 @@ The user chose an underdog start and a base reputation gain for every win.
    - (a) free-agent fees that rise with quality (for example 20 days' wage for an average player, up to 60 for the best);
    - (b) transfer windows (signings in the off-season and a short mid-season window);
    - (c) less starting cash.
+
+### Round 5: quality-scaled fees; the reputation gate reads the partial correlation (2026-10-13)
+
+The user's second decision:
+- **Transfer fees rise with quality** (`Pay.Fee`; content `FeeDaysMin` 20, `FeeDaysMax` 60, `FeePivot` 70,
+  `FeeDaysPerPoint` 3). A player costs 20 days' wage up to a rating of 70 and 3 more days per point above it, at most 60.
+  The same fee applies on the open market, between rivals, in a forced sale and as market value.
+- **Gate 1 "reputation follows results" reads the partial correlation** (the season's reputation change against its
+  win rate, holding the starting reputation fixed). The raw figure stays as a reference. **The Director should confirm
+  this change of gate.**
+
+| Measure | Round 5 | Threshold |
+|---|---|---|
+| Gate 1: losing is not profitable | 8/8 seeds | ≥ 6/8 ✓ |
+| Gate 1: reputation follows results (partial) | 0.912 (level r 0.939; raw 0.544) | ≥ 0.6 ✓ |
+| Gate 2: empty stretches | 9 days | ≤ 10 ✓ |
+| Gate 2: multi-year progress | +1.12 places (2.6, 1.6, 1.4, 1.0, 1.5) | ≥ 1, not at the ceiling ✓ |
+| Win rate: coach / sponsor-greedy / thrift / balanced | 46 / 62 / 24 / 84% | — |
+| Insolvency | 0 of 32 | — |
+| Rival churn / spread | 15.7% / 14.6 | 15–35% / 10–20 ✓ |
+
+**References still outside their ranges (later waves):**
+- **player value:** 37 points against 5–15. Full coach delegation never recruits, so it falls far behind an owner who
+  does;
+- **outcome diversity:** 0.87 against ≥ 1;
+- **market depth:** 87.5% against ≥ 90%;
+- **financial pressure:** 3% against 20–60%;
+- **decision density:** 1.93 against ≥ 2 (a gate-3 measure, wave 3).

@@ -217,8 +217,8 @@ public static class Rivals
     /// as it keeps the registered minimum.</summary>
     private static bool Spare(Rival seller, Person p, int minimumRoster, Content content) => seller.People.Length > minimumRoster
         && (seller.Strategy is Strategy.Rebuild or Strategy.Conserve || !Lineup(seller, content).Any(x => x.Person.Id == p.Id));
-    /// <summary>The fee between organizations: twenty days' asking wage, as on the open market.</summary>
-    public static long Fee(Person p, int season, Content content) => Pay.Player(p, season, content) * 20;
+    /// <summary>The fee between organizations: the market's fee for the player (<see cref="Pay.Fee"/>).</summary>
+    public static long Fee(Person p, int season, Content content) => Pay.Fee(p, season, content);
 
     private static World Sign(World w, string id, Candidate x, ulong seed, Content content, int season, int day)
     {

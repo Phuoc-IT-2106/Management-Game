@@ -85,6 +85,7 @@ public static class ContentLoader
             && b.PlayoffInterval is >= 1 and <= 14 && b.FirstMatchDay + b.MatchInterval * (2 * b.RivalCount - 1) + 2 * b.PlayoffInterval <= b.SeasonLength - 2
             && b.PlacePrizes.Length == b.RivalCount + 1 && b.PlacePrizes.All(x => x is >= 0 and <= 10_000_000)
             && b.FamiliarityPerDay is >= 0 and <= 20 && b.FamiliarityPerMatch is >= 0 and <= 50 && b.StartingFamiliarity is >= 0 and <= 100 && b.MatchFatigue is >= 0 and <= 30, "rules v4 league bounds");
+        Require(b.FeeDaysMin is >= 1 and <= 365 && b.FeeDaysMax >= b.FeeDaysMin && b.FeeDaysMax <= 365 && b.FeePivot is >= 1 and <= 99 && b.FeeDaysPerPoint is >= 0 and <= 30, "transfer fee bounds");
         bool Range(AttributeRange r, int min, int max) => r.Min >= min && r.Max <= max && r.Min <= r.Max;
         bool Unique(IEnumerable<string> values) { var array = values.ToArray(); return array.Distinct(StringComparer.Ordinal).Count() == array.Length; }
         var g = c.Generation;

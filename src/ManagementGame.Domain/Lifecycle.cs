@@ -75,7 +75,7 @@ public static class Careers
     public static Candidate Listing(Person p, int season, Content content)
     {
         var salary = Pay.Player(p, season, content);
-        return new Candidate(p, salary * 20, salary, salary * 3);
+        return new Candidate(p, Pay.Fee(p, season, content), salary, salary * 3);
     }
 
     /// <summary>Season end on the open market: free agents develop (without a coach or matches) and age; some retire; the

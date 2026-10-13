@@ -333,7 +333,7 @@ public static class Simulation
     {
         var b = content.Balance; var season = Seasons.Of(day, b);
         if (c.People.IsEmpty) return null;
-        var pick = c.People.Select(p => (Person: p, Fee: Pay.Player(p, season, content) * 20, Keeps: LineupPossible(c with { People = c.People.Remove(p) })))
+        var pick = c.People.Select(p => (Person: p, Fee: Pay.Fee(p, season, content), Keeps: LineupPossible(c with { People = c.People.Remove(p) })))
             .OrderByDescending(x => x.Keeps).ThenByDescending(x => x.Fee).ThenBy(x => x.Person.Id, StringComparer.Ordinal).First();
         var cause = $"restructuring:{day}";
         var employment = c.Employment.Single(e => e.PersonId == pick.Person.Id);
