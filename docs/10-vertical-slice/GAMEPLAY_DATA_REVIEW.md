@@ -3,6 +3,15 @@
 Status: **PROPOSAL — review for the Director and the user** (2026-10-09). Nothing here changes rules, content, saves or
 accepted decisions.
 
+**Implemented** (2026-10-13), by the user's plan, as [rules v4](RULES_V4_PLAYER_WORLD.md):
+- five roles and the decision-led player model (§5.1);
+- the logistic best-of resolver and the league (§6.2);
+- development (§6.4) and popularity reaching the company (§6.5);
+- rivals with squads and recruitment (§5.4, §6.6, minimal);
+- real data for aggregate calibration only (§7.2–7.3).
+
+Where the implementation differs, the rules v4 document is current.
+
 Source request: the user's instruction (2026-10-09) to review the standards for attributes, formulas, metrics and
 information for players, teams and rival companies. The review should say what shapes the core gameplay, what needs
 fixing, and how real API data and generated NPC data should feed future gameplay.

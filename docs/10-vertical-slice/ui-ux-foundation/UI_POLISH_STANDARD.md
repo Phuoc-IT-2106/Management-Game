@@ -109,7 +109,8 @@ Rules:
 | Portal | Key decisions, Next match | World news, Transfer news, Season record, Money snapshot |
 | Inbox | none | Messages |
 | Squad | Profile (renew, release, sign) | Players, Free agents |
-| Competition | Next match, Preparation plan | Coach authority, Season fixtures, Head-to-head |
+| Competition, Match view | Next match, Preparation plan | Coach authority, Season fixtures, Head-to-head |
+| Competition, League view (rules v4) | League standings | the selected rival's profile, Playoffs, Matches, League information |
 | Commercial | Approach a brand | Active agreements, Offers, Proposals under review |
 | Finance | none | Position, Next 14 days, Sponsor income, Payroll |
 | Staff | none | Head coach, Coach market |

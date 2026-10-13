@@ -1,6 +1,11 @@
 # Rules v4 — the player world: roles, attributes, league, lifecycle and rivals
 
-Status: **IN PROGRESS, built phase by phase** (started 2026-10-09). This spec is kept current as each phase lands.
+Status: **DONE** (2026-10-09 to 2026-10-13). All eight phases are built, and gates 1 and 2 pass
+(`build/Measure-Rules.ps1 -Gate 2`: `MEASURE_GATES_PASS 1..2`).
+
+Two confirmations are still needed:
+- a Director DEC entry for rules v4 itself, which stands on explicit user instruction;
+- the Director's confirmation of the user's change to how gate 1 measures reputation (phase 6, round 5).
 
 **Authority.**
 - The user's plan (2026-10-09) implements the [gameplay data review](GAMEPLAY_DATA_REVIEW.md). It was approved with four
@@ -24,8 +29,8 @@ migration.
 | 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done (`46c0839`) |
 | 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | Done (`7cdcd31`) |
 | 5 | Rivals with real rosters, budgets and posture AI | Done (`a4a5a6b`) |
-| 6 | Measurement and balance (gates 1 and 2) | Done: gates 1 and 2 pass (round 5, after the user's decisions) |
-| 7 | Documents and handoff | — |
+| 6 | Measurement and balance (gates 1 and 2) | Done (`222d15a`): gates 1 and 2 pass in round 5, after the user's decisions |
+| 7 | Documents and handoff | Done |
 
 ## Phase 1 — real data and calibration
 
@@ -710,3 +715,46 @@ The user's second decision:
 - **market depth:** 87.5% against ≥ 90%;
 - **financial pressure:** 3% against 20–60%;
 - **decision density:** 1.93 against ≥ 2 (a gate-3 measure, wave 3).
+
+## Phase 7 — documents and handoff
+
+### Evidence
+
+Captured at 1280×720 and 1920×1080 in [screen-evidence/rules-v4](genre-shell/screen-evidence/rules-v4/). The run plays 8
+results and then the transfer run.
+
+| Screen | After (rules v4) | Before (end of phase 2) |
+|---|---|---|
+| Squad | `squad-*` | `before-squad-1280x720` |
+| Competition, Match view | `competition-*` | `before-competition-1280x720` |
+| Competition, League view | `competition-league-*` | (new) |
+| Portal | `portal-*` | `before-portal-1280x720` |
+| Portal after the first season end (transfer news with rival moves and a retirement) | `portal-transfers-departures-*` | (new) |
+
+A late fix found by these captures: at 1920×1080 the Portal's lead story could push the bottom row out of the first
+viewport after a season end. Two changes:
+- The season and regular-season notices now lead with a short first sentence ("Season 1 closed: 6th of 8, 6–8"), without
+  the company's name, which can be 60 characters long.
+- The lead story's detail is one line on roomy screens; the rest stays in the tooltip and the Inbox.
+
+### Documents updated
+
+- [DATA_SCOPE.md](DATA_SCOPE.md): content schema 4.
+- [TRANSFER_NEWS.md](genre-shell/TRANSFER_NEWS.md): rival moves, transfers and retirements are live.
+- [UI polish standard](ui-ux-foundation/UI_POLISH_STANDARD.md): tier assignments for the two Competition views.
+- [GAMEPLAY_DATA_REVIEW.md](GAMEPLAY_DATA_REVIEW.md): what rules v4 implemented.
+- The [Player Data](player-data/README.md) and [Entity Data](entity-data-foundation/README.md) indexes: superseded in
+  part by rules v4.
+- The [session handoff of 2026-10-13](../05-handoffs/SESSION_HANDOFF_2026-10-13.md),
+  [PROJECT_STATE](../00-project/PROJECT_STATE.md), the [vertical slice README](README.md) and the repository README.
+
+### Final verification (2026-10-13, Debug)
+
+| Check | Result |
+|---|---|
+| `build/Verify.ps1 -Configuration Debug -Evidence artifacts/v4-final-verify` | Domain 15, Integration 349, UI 3, UiKit 222, OperatingMap 48, SponsorWorkspace 48; headless two-cycle `7cfbf499…` |
+| `build/Verify-Shell.ps1` | 3842 checks at 1280×720 and 3882 at 1920×1080 |
+| Native kits | UI kit 24, operating map 101, sponsor 31 |
+| `build/Measure-Rules.ps1 -Gate 2` | `MEASURE_GATES_PASS 1..2` |
+| Calibration tool tests | 17 |
+| Captures, both sizes, with the transfer run | pass |

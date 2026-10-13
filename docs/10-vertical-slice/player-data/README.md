@@ -1,6 +1,7 @@
 # Player Data Foundation — document index
 
-Status: **PROPOSED — NOT APPROVED**  
+Status: **PROPOSED — NOT APPROVED**; superseded in part by [rules v4](../RULES_V4_PLAYER_WORLD.md), the player model as
+implemented (2026-10-13)  
 Current proposal: **v0.2** · Ngày: 2026-10-08 (Asia/Saigon)
 
 v0.2 là design repair để Director review, không phải approval, BUILD hoặc calibrated player pack. **LoL vẫn là working design candidate.** Current inspected runtime: `slice-rules-v3`, content schema3, save schema3; [compatibility contract](RUNTIME_COMPATIBILITY_V02.md) ghi branch/HEAD và dirty-worktree scope.

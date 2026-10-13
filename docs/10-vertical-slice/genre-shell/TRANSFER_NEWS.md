@@ -240,11 +240,13 @@ campaign):
 
 ## 8. Known limits and unsupported scenarios
 
-- **Rival moves do not exist.**
-  - Rivals have no rosters, so every live journey involves the company and the open market.
-  - Team-to-team and unknown-organization journeys are verified only with DEV fixtures.
-  - Rival people and roster actions (RIVAL_SIMULATION §5–6, rules v3 wave 4) would write `Move`s with rival origins or
-    destinations. The read model and UI already tell them.
+- **Rival moves are live** (rules v4 phase 5).
+  - Rivals sign free agents, let players go, retire players and transfer players between each other at season end.
+    Transfer News tells these moves as it tells the company's: "2 players sign with Northwind Gaming", "Tarnka joins
+    Paper Tigers GG".
+  - Retirement has its own destination: the company → Retired. A free agent's retirement names no organization and
+    is not news.
+  - Unknown-organization journeys are still verified only with DEV fixtures.
 - **Free agents' earlier careers are unknown.** Generated free agents have no earlier career. Signing them shows "Free
   agent → Company" and never an invented former team.
 - **No rumours, reports or developing stories.** A public-information mechanism is needed first. Hidden `Rival.Need`

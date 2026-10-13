@@ -1,6 +1,7 @@
 # Team, Coach & Rival Organization Data Foundation v0.1
 
-Status: **PROPOSED — NOT APPROVED**  
+Status: **PROPOSED — NOT APPROVED**; superseded in part by [rules v4](../RULES_V4_PLAYER_WORLD.md), which gives rivals real
+squads instead of compressed capability (2026-10-13)  
 2026-10-08 · PLAN → SPEC → VERIFY · Specification only
 
 ## Scope and deliverables

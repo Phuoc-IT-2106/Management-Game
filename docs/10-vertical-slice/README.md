@@ -16,11 +16,14 @@ approved a labeled fictional 5v5 development fixture in this task.
   - [rules v2 continuous campaign](RULES_V2_CONTINUOUS_CAMPAIGN.md);
   - [rules v3 wave 1: incentives and measurement](RULES_V3_INCENTIVES.md) (2026-10-08), gate 1 passed;
   - the player-facing [genre shell](genre-shell/README.md), with every screen finished to the
-    [UI polish standard](ui-ux-foundation/UI_POLISH_STANDARD.md) (2026-10-08).
+    [UI polish standard](ui-ux-foundation/UI_POLISH_STANDARD.md) (2026-10-08);
+  - [rules v4: the player world](RULES_V4_PLAYER_WORLD.md) (2026-10-13): five roles, a calibrated generated world, an
+    eight-team league with playoffs, careers, and rivals with squads. Gates 1 and 2 pass.
 - Active:
   - Director/human review of the screens;
-  - a DEC entry confirming rules v2 and rules v3 wave 1;
-  - rules v3 waves 2–4 and the remaining balance findings.
+  - DEC entries confirming rules v2, rules v3 wave 1 and rules v4, and the changed reputation gate;
+  - the remaining balance references: player value, outcome diversity, market depth, financial pressure and decision
+    density.
 - Blockers: no implementation blocker currently; see OPEN_QUESTIONS.md.
 - Deferred: final content/balance, all expanded systems, DV-01–DV-10 obligations.
 - Exit: launch, meaningful decisions, ordered daily simulation, competition/business

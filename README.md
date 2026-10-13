@@ -18,14 +18,17 @@ matches is not the sole success condition.
   - Infrastructure for JSON content and snapshot saves;
   - a Godot client;
   - a headless runner.
-- **Gameplay (rules v3 wave 1, noncanonical development values):**
+- **Gameplay (rules v4, noncanonical development values):**
   - continuous seasons;
   - a negotiated sponsor market;
   - staggered contracts and renewals;
   - a coach market;
-  - a world generated per seed;
-  - incentives that make losing costly: a fixed running cost, a registered-roster minimum, sponsor termination after
-    repeated forfeits, and season-end reputation that follows the record.
+  - incentives that make losing costly (rules v3 wave 1);
+  - five roles and a role-weighted player model;
+  - a world generated per seed, calibrated from aggregate 2026 data;
+  - an eight-team league with best-of series and playoffs;
+  - player careers (development, retirement, youth intake);
+  - rivals with real squads that recruit and trade.
 - **Player client: the genre shell.** It has a top bar with Continue, a navigation rail, the Portal home, and Inbox, Squad,
   Competition, Commercial, Finance, Staff and Company sections, plus the sponsor decision workspace. Every screen follows the
   [UI polish standard](docs/10-vertical-slice/ui-ux-foundation/UI_POLISH_STANDARD.md).
@@ -33,8 +36,8 @@ matches is not the sole success condition.
   - Money shows in US dollars: a nominal 1:1 relabel of the development currency unit, with no economic change.
 - **Open items:**
   - Director/human review of the screens;
-  - a DEC entry confirming rules v2 and rules v3 wave 1;
-  - rules v3 waves 2–4 and the remaining balance findings;
+  - DEC entries confirming rules v2, rules v3 wave 1 and rules v4, and the changed reputation gate;
+  - the remaining balance references (player value, outcome diversity, market depth, financial pressure);
   - the deferred validation obligations DV-01 to DV-10.
 
 ## Start here
@@ -42,7 +45,7 @@ matches is not the sole success condition.
 1. [Project State](docs/00-project/PROJECT_STATE.md)
 2. [Decision Log](docs/01-governance/DECISION_LOG.md)
 3. [Game Vision](docs/00-project/GAME_VISION.md)
-4. [Vertical Slice](docs/10-vertical-slice/README.md), including [rules v2](docs/10-vertical-slice/RULES_V2_CONTINUOUS_CAMPAIGN.md) and [rules v3 wave 1](docs/10-vertical-slice/RULES_V3_INCENTIVES.md)
+4. [Vertical Slice](docs/10-vertical-slice/README.md), including [rules v2](docs/10-vertical-slice/RULES_V2_CONTINUOUS_CAMPAIGN.md), [rules v3 wave 1](docs/10-vertical-slice/RULES_V3_INCENTIVES.md) and [rules v4](docs/10-vertical-slice/RULES_V4_PLAYER_WORLD.md)
 5. [Genre shell](docs/10-vertical-slice/genre-shell/README.md) and the [UI polish standard](docs/10-vertical-slice/ui-ux-foundation/UI_POLISH_STANDARD.md)
 6. [Stage 5 visual / UX governance](docs/01-governance/STAGE5_VISUAL_UX_GOVERNANCE.md) and the [genre-shell amendment](docs/01-governance/STAGE5_GENRE_SHELL_AMENDMENT.md)
 7. [Technical Foundation](docs/09-technical-foundation/README.md) and its [closure register](docs/09-technical-foundation/PHASE4_CLOSURE.md)
@@ -57,7 +60,7 @@ The pinned SDK and Godot binaries live under `qualification/.tools` (`build/Envi
 | Build, all six test suites and the headless two-cycle run, into a scratch folder | `build/Verify.ps1 -Configuration Debug -Evidence artifacts/verify` |
 | The same into tracked evidence (`docs/10-vertical-slice/evidence`) | `build/Verify.ps1` (Release) |
 | Native shell checks at 1280×720 and 1920×1080 | `build/Verify-Shell.ps1` |
-| Rules measurement: four owner policies × 8 seeds × 5 seasons, failing if a rules v3 gate is not met | `build/Measure-Rules.ps1 -Gate 1` |
+| Rules measurement: four owner policies × 8 seeds × 5 seasons, failing if a gate is not met (gates 1 and 2 pass in rules v4) | `build/Measure-Rules.ps1 -Gate 2` |
 | Native UI kit, operating map and sponsor workspace checks | `build/Verify-UiKit.ps1`, `build/Verify-OperatingMap.ps1`, `build/Verify-SponsorWorkspace.ps1` |
 | Screen captures (needs an interactive desktop) | `build/Capture-Shell.ps1 -Results 1 -Cases -Output artifacts/<dir>` |
 | Play | `build/Run-Game.ps1` |

@@ -302,6 +302,28 @@ contract ends, replaced coaches). Earlier, moves were inferred from current reco
 Save schema moves to 4 and schema-3 saves are rejected. Rules, content and balance are unchanged. Articles share one
 layout, with bare identity art. Details: [TRANSFER_NEWS.md](../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
 
+### Rules v4 — the player world — 2026-10-09 to 2026-10-13
+
+By explicit user instruction (the user's plan of 2026-10-09, built phase by phase), rules v4 is
+[implemented](../10-vertical-slice/RULES_V4_PLAYER_WORLD.md):
+- five roles and a role-weighted player model;
+- a generated world calibrated from aggregate 2026 data, with no real person in the game;
+- logistic best-of series and an eight-team league with playoffs;
+- player careers: development, retirement, youth intake, form, morale, popularity and conduct;
+- rival organizations with real squads that recruit and trade.
+
+The measurement passes gates 1 and 2. Content is schema 4 and saves are schema 5; older saves are rejected.
+
+During balancing, the user made three decisions:
+- an underdog start for the company;
+- a base reputation gain for every win;
+- transfer fees that rise with quality, and gate 1 measuring reputation by a partial correlation.
+
+A Director DEC entry should confirm rules v4 and the changed gate.
+
 ## Current Priority
 
-Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Phase 4 is closed; production development is authorized. The closure task ends with governance/documentation only and starts no gameplay or Vertical Slice implementation.
+Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Rules v4 is
+done; next are the Director's DEC entries (rules v2, rules v3 wave 1, rules v4 and the changed reputation gate), human
+review of the screens, and the balance references still outside their ranges (see the
+[session handoff of 2026-10-13](../05-handoffs/SESSION_HANDOFF_2026-10-13.md)).

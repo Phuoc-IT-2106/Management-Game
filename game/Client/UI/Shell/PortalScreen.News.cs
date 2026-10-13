@@ -96,7 +96,9 @@ public static partial class PortalScreen
             words.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
             words.AddChild(Chip(ui, KindName(n.Category).ToUpper(Invariant), ColorRole.TextPrimary));
             words.AddChild(Clamp(Text(ui, n.Headline, TypographyRole.Strong, size: TypographyRole.CompanyIdentity), 2));
-            if (n.Detail.Length > 0) words.AddChild(Clamp(Text(ui, n.Detail, TypographyRole.Body, ColorRole.TextSecondary, size: TypographyRole.Annotation), 2));
+            // One line of detail: a two-line headline must still leave the Portal inside the first viewport (the rest is in the
+            // tooltip and the Inbox).
+            if (n.Detail.Length > 0) words.AddChild(Clamp(Text(ui, n.Detail, TypographyRole.Body, ColorRole.TextSecondary, size: TypographyRole.Annotation), 1));
             words.AddChild(StoryMeta(ui, n, today, routes, category: false));
             split.AddChild(words);
             var room = Spacer(); room.SizeFlagsStretchRatio = .38f; split.AddChild(room);

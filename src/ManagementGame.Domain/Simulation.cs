@@ -305,7 +305,8 @@ public static class Simulation
             var table = Seasons.Table(w, c.Id, season, seed);
             var place = table.Select((s, i) => (s, i)).Single(x => x.s.TeamId == c.Id).i + 1;
             var own = newCompany.FirstOrDefault(f => f.Stage == Seasons.Semifinal);
-            c = Notice("regular", $"Regular season over: {c.Name} finished {Figures.Ordinal(place)} of {table.Length} ({table[place - 1].Won}–{table[place - 1].Lost}). "
+            // The first sentence is the story's headline: short, without the company's own name (it can be 60 characters).
+            c = Notice("regular", $"Regular season over: {Figures.Ordinal(place)} of {table.Length}, {table[place - 1].Won}–{table[place - 1].Lost}. "
                 + (own is not null ? $"Semifinal against {Name(own.RivalId)} on day {own.Day}, best of {own.Games}." : $"The top {b.PlayoffTeams} play the semifinals; {c.Name} did not qualify."));
         }
         else if (day == Seasons.SemifinalDay(season, b) && company.Concat<object>(league).Any())
@@ -395,8 +396,8 @@ public static class Simulation
         c = Finance.Archive(c, Seasons.Start(season, b));
         c = c with { Reviews = c.Reviews.Skip(Math.Max(0, c.Reviews.Length - 150)).ToImmutableArray() };
         c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}season:{season + 1}:{day}", day, $"season:{season}",
-            $"Season {season} closed: {c.Name} finished {Figures.Ordinal(place)} of {order.Length}, {played.Count(r => r.Won)}–{played.Count(r => !r.Won)}"
-            + (place - 1 < b.PlacePrizes.Length && b.PlacePrizes[place - 1] > 0 ? $"; a {Currency.Format(b.PlacePrizes[place - 1])} place prize is due tomorrow." : ".")
+            $"Season {season} closed: {Figures.Ordinal(place)} of {order.Length}, {played.Count(r => r.Won)}–{played.Count(r => !r.Won)}."
+            + (place - 1 < b.PlacePrizes.Length && b.PlacePrizes[place - 1] > 0 ? $" A {Currency.Format(b.PlacePrizes[place - 1])} place prize is due tomorrow." : "")
             + $"{standing} Season {season + 1} begins with a new schedule; rivals have reshaped their squads.")) };
         var next = Seasons.Schedule(seed, season + 1, c.Id, rivals, b);
         // Transfer history keeps the season just closed and the next one; older moves are no longer news. League results
