@@ -592,14 +592,18 @@ var termination = clause.Observe().Inbox.SingleOrDefault(r => r.Id.StartsWith("n
 Check(termination is { Kind: "Commercial" } && termination.SubjectId == starter.BrandId, "the termination reaches the inbox, about its brand");
 SnapshotValidation.Validate(clause.Capture(), content);
 // Season end: reputation moves part of the way toward the level the season's record earns.
-Check(Simulation.ReputationTarget(0, 8, b) == b.ReputationTargetLow && Simulation.ReputationTarget(8, 8, b) == b.ReputationTargetHigh
-    && Enumerable.Range(0, 8).All(wins => Simulation.ReputationTarget(wins, 8, b) <= Simulation.ReputationTarget(wins + 1, 8, b)), "the reputation target rises with the season's wins");
+var leagueTeams = b.RivalCount + 1;
+Check(Simulation.ReputationTarget(0, 8, leagueTeams, leagueTeams, b) == b.ReputationTargetLow && Simulation.ReputationTarget(8, 8, 1, leagueTeams, b) == b.ReputationTargetHigh
+    && Enumerable.Range(0, 8).All(wins => Simulation.ReputationTarget(wins, 8, 4, leagueTeams, b) <= Simulation.ReputationTarget(wins + 1, 8, 4, leagueTeams, b))
+    && Enumerable.Range(1, leagueTeams - 1).All(place => Simulation.ReputationTarget(4, 8, place, leagueTeams, b) >= Simulation.ReputationTarget(4, 8, place + 1, leagueTeams, b)),
+    "the reputation target rises with the season's wins and with its final place");
 var closing = New().Capture(); var seasonEnd = Seasons.End(1, b);
 var seasonRecord = closing.World.Fixtures.Select((f, i) => new CompetitiveOutcome("result:" + f.Id, f.Id, f.Day, f.RivalId, i < 2, Posture.Balanced, 500_000, 0, 0, 0, 0, 0, f.Importance, "test", 0, 0, 0, 0, i < 2 ? 2 : 0, i < 2 ? 0 : 2)).ToImmutableArray();
 closing = closing with { World = closing.World with { Results = seasonRecord, Calendar = new Calendar(seasonEnd, Phase.Review, (seasonEnd - 1L) * 11 + (int)Phase.Review - 1) },
     Company = closing.Company with { Reputation = 60, FinanceReceipts = [.. seasonRecord.Select(r => r.Id)], CommercialReceipts = [.. seasonRecord.Select(r => r.Id)] } };
 var rolled = Simulation.Step(closing, content.Definition);
-var seasonTarget = Simulation.ReputationTarget(2, seasonRecord.Length, b);
+var closingPlace = rolled.World.Finishes.Single(f => f.Season == 1).Order.IndexOf(closing.Company.Id) + 1;
+var seasonTarget = Simulation.ReputationTarget(2, seasonRecord.Length, closingPlace, leagueTeams, b);
 Check(seasonTarget < 60 && rolled.Company.Reputation == 60 + (int)Numbers.Divide((long)(seasonTarget - 60) * b.ReputationRegression, 100)
     && rolled.Company.Reviews.Any(r => r.Id.StartsWith("notice:season:2:", StringComparison.Ordinal) && r.Text.Contains("settles toward " + seasonTarget, StringComparison.Ordinal)),
     "a losing season pulls reputation toward the level its record earns, and the season notice says so");

@@ -23,8 +23,8 @@ migration.
 | 2 | Roles and the player model | Done (`3917e5c`) |
 | 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done (`46c0839`) |
 | 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | Done (`7cdcd31`) |
-| 5 | Rivals with real rosters, budgets and posture AI | Done |
-| 6 | Measurement and balance (gates 1 and 2) | — |
+| 5 | Rivals with real rosters, budgets and posture AI | Done (`a4a5a6b`) |
+| 6 | Measurement and balance (gates 1 and 2) | Stopped after 3 rounds: gate 1 reputation and gate 2 progress open (decision) |
 | 7 | Documents and handoff | — |
 
 ## Phase 1 — real data and calibration
@@ -559,3 +559,85 @@ are now world transfer news too.
   23–29, and about 10 players retire each season.
 - **Shell native:** 3842 / 3882 (the rival profile region and table are checked). **Native kits:** 24 / 101 / 31.
 - **Headless hash:** `fca16245…`.
+
+## Phase 6 — measurement and balance (stopped at the plan's stop point)
+
+**State: stopped after three tuning rounds, as the plan requires.** Gate 1 "reputation follows results" and gate 2
+"multi-year progress" still fail. The values below are the best known state, committed as a restore point. The options
+for closing the two gates need the user's decision.
+
+### Measurement
+
+Code: `tools/Headless/Measurement.cs`.
+
+- **Gate 2 multi-year progress is now measured** from the league table: the balanced owner's mean final place, season 1
+  against season 5. It passes on a gain of at least one place, with seasons 1–3 averaging above 1.5 (not already at
+  the ceiling).
+- **Outcome diversity** (reference): the spread of the balanced owner's season-5 place across seeds.
+- **New references for the rules v4 world:**
+  - **market depth:** season ends with at least three free agents in every role;
+  - **rival churn:** newcomers as a share of rival squads each season, against the calibrated 15–35%;
+  - **rival spread:** strongest minus weakest rival, against the calibrated 10–20 points.
+- **The balanced owner manages its squad,** as the plan asks: it renews by value (a good player aged 28 or younger, or
+  one the squad needs). It upgrades by estimated rating, signing a free agent at least 4 points better than the weakest
+  player in that role when the fee is under half the cash, then letting the displaced player go.
+- **Bug fixed.** Decision density divided by 56, the rules v3 season length. It now uses the content's season length,
+  so earlier phase 3–5 densities were overstated by half.
+
+### Rule and content changes
+
+- **Reputation target:** half the season's record and half its final place (`Simulation.ReputationTarget`).
+- **Pool cap sheds veterans first.** It used to remove the least potential. With 15 young players a season that was a
+  selection effect that raised the whole population's mean rating by about 0.9 a season.
+- **`AgeProfiles` made consistent.** A young player's expected ceiling (age shift plus mean headroom) was 4–7 points
+  above prime-age players, so each cohort that replaced the opening players lifted the world. Every age now expects
+  about +1.
+- **Content:**
+  - season length 84 → 76;
+  - reputation regression 25 → 40%;
+  - rival edge 4 → 6, one upgrade a season at a 4-point margin, funds 12,000 + 4,000 per place;
+  - youth intake 15;
+  - retirement 2% per rating point.
+
+### Rounds
+
+8 seeds × 5 seasons each; the logs are in `artifacts/v4-phase6/` (not tracked).
+
+| Round | Change | Coach / balanced win rate | Reputation r | Empty days | Balanced places, seasons 1→5 |
+|---|---|---|---|---|---|
+| 1 | Reputation by record and place; new measures | 54 / 67% | 0.545 | 17 | 2.9 → 4.0 (falls) |
+| 2 | Season 76, regression 40, fewer rival upgrades, edge 6, intake 15 | 52 / 67% | 0.591 | 9 ✓ | 2.9 → 4.9 (falls) |
+| 3 | Consistent age profiles; balanced owner upgrades | 55 / 83% | 0.561 | 9 ✓ | 2.1 → 1.9 (at the top) |
+| Committed (3b) | Pool cap sheds veterans; retirement 2% per point | 58 / 85% | 0.569 | 9 ✓ | 2.1 → 1.6 (at the top) |
+
+Other results in the committed state:
+- losing is not profitable: 7/8 ✓;
+- insolvency: 0 of 32;
+- rival churn 16.6% ✓; rival spread 17.1 ✓;
+- market depth 87.5% (≥ 90%);
+- player value 26.5 points (5–15).
+
+### Why the two gates stay open
+
+- **Multi-year progress depends on how good the company is at the start, relative to the league.**
+  - A passive owner declines as the opening squad ages: places 2.9 → 4.9.
+  - An active owner is near the top from season 2: places 2.1 → 1.6.
+  - Neither can gain a place, because the company starts among the best. Fixing it means deciding how strong a new
+    organization is on day one.
+- **Reputation.** The in-season change is weighted by surprise: a favourite gains little from a win and loses a lot in a
+  loss. That keeps the season's reputation change from tracking the win rate, even with the season-end pull at 40%.
+
+### Options for the user
+
+1. **Start the company as an underdog** (recommended), for the "new organization rising" fantasy. Generate the opening
+   squad 3–5 points weaker (or the league 2–3 points stronger), so a well-run company starts mid-table and climbs.
+   This is likely to close multi-year progress and to bring player value back toward 5–15.
+2. **Reputation, either:**
+   - (a) raise the season-end pull further (about 60%); or
+   - (b) give each win a base reputation gain, not only the surprise; or
+   - (c) redefine the gate around the league place, which in rules v4 is a better measure of results than the win
+     rate. This one needs the Director, because it changes the proposal's gate.
+3. **Keep the measured owner as defined, or limit its upgrades to the off-season.** Its strength decides what
+   "progress" means.
+
+Phase 7 (documents and handoff) waits for this decision; the plan ends with every gate passed.

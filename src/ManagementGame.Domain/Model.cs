@@ -127,7 +127,8 @@ public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInter
     // Rules v3 wave 1 (incentives): a fixed daily running cost; a registered roster minimum whose shortfall withholds each
     // match's prize and owes ShortfallFinePercent of it as a fine; a sponsor termination clause after repeated forfeits; and
     // a season-end pull of reputation toward the level the season's record earns (ReputationRegression percent of the gap,
-    // the target running from ReputationTargetLow at no wins to ReputationTargetHigh at all wins).
+    // the target running from ReputationTargetLow at no wins to ReputationTargetHigh at all wins; rules v4 weighs the final
+    // league place equally with the record).
     long OperatingCost, int MinimumRoster, int ShortfallFinePercent, int SponsorForfeitLimit, int ReputationRegression,
     int ReputationTargetLow, int ReputationTargetHigh,
     // How many of the company's latest results a rival reads for a repeated posture. Rules v2 counted every result since

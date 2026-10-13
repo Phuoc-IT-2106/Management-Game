@@ -79,8 +79,9 @@ public static class Careers
     }
 
     /// <summary>Season end on the open market: free agents develop (without a coach or matches) and age; some retire; the
-    /// season's youth intake arrives, one role after another; above the cap, the players with the least potential retire
-    /// (the older first); and every listing follows its player. Retirements are recorded moves from the open market.</summary>
+    /// season's youth intake arrives, one role after another; above the cap, the oldest retire (the least potential first
+    /// among equals), so the cap sheds veterans rather than selecting for ability; and every listing follows its player.
+    /// Retirements are recorded moves from the open market.</summary>
     public static World SeasonMarket(World w, ulong seed, Content content, int season, int day)
     {
         var life = content.Lifecycle; var next = season + 1; var cause = $"retirement:s{season}";
@@ -98,7 +99,7 @@ public static class Careers
             return Listing(Generator.Player(seed, content, personId, Roles.All[(first + i) % Roles.All.Length], next, age), next, content);
         }).ToArray();
         w = w with { Candidates = w.Candidates.AddRange(intake), NextId = id };
-        foreach (var x in w.Candidates.OrderBy(x => x.Person.Potential).ThenByDescending(x => Ratings.Age(x.Person, next)).ThenBy(x => x.Person.Id, StringComparer.Ordinal)
+        foreach (var x in w.Candidates.OrderByDescending(x => Ratings.Age(x.Person, next)).ThenBy(x => x.Person.Potential).ThenBy(x => x.Person.Id, StringComparer.Ordinal)
             .Take(Math.Max(0, w.Candidates.Length - life.PoolCap)).ToArray())
             w = Retire(w, x);
         return w with { Candidates = [.. w.Candidates.Select(x => Listing(x.Person, next, content))] };

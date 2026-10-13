@@ -355,9 +355,14 @@ public static class Simulation
             $"League fine vs {rival.Name}: {c.People.Length} registered players of the required {b.MinimumRoster}. A {Currency.Format(fine.Amount)} fine is due tomorrow{(outcome.Won ? " and the win earns no prize" : "")}. Sign a player to restore the minimum.")) };
     }
 
-    /// <summary>The reputation a season's record earns: from the low target at no wins to the high one at all wins.</summary>
-    public static int ReputationTarget(int won, int played, Balance b) => played == 0 ? b.ReputationTargetLow
-        : b.ReputationTargetLow + (int)Numbers.Divide((long)(b.ReputationTargetHigh - b.ReputationTargetLow) * won, played);
+    /// <summary>The reputation a season earns (rules v4: its record and its final place, half each): from the low target with
+    /// no wins in last place to the high one with every win as champion.</summary>
+    public static int ReputationTarget(int won, int played, int place, int teams, Balance b)
+    {
+        if (played == 0) return b.ReputationTargetLow;
+        var share = Numbers.Divide(1000L * won, played) + (teams <= 1 ? 1000 : Numbers.Divide(1000L * (teams - place), teams - 1));
+        return b.ReputationTargetLow + (int)Numbers.Divide((long)(b.ReputationTargetHigh - b.ReputationTargetLow) * share, 2000);
+    }
 
     /// <summary>Closes a season: record, reputation settling toward what the record earns, rival evolution, next schedule,
     /// and bounded history.</summary>
@@ -374,10 +379,10 @@ public static class Simulation
         var standing = "";
         if (played.Length > 0 && b.ReputationRegression > 0)
         {
-            var target = ReputationTarget(played.Count(r => r.Won), played.Length, b);
+            var target = ReputationTarget(played.Count(r => r.Won), played.Length, place, order.Length, b);
             var shift = (int)Numbers.Divide((long)(target - c.Reputation) * b.ReputationRegression, 100);
             c = c with { Reputation = Math.Clamp(c.Reputation + shift, 0, 100) };
-            standing = $" Reputation {shift:+#;-#;0}: it settles toward {target}, the level this record earns.";
+            standing = $" Reputation {shift:+#;-#;0}: it settles toward {target}, the level this record and place earn.";
         }
         // Careers: the company's players develop with their playing time; the open market develops, retires, takes in the
         // season's youth and keeps within its cap.

@@ -18,9 +18,13 @@ public static class Measurement
     /// <summary>One closed season of one run. The match columns are diagnostics from the recorded outcome components
     /// (forfeits excluded): mean series win probability, mean base strength and completed preparation of the fielded lineup,
     /// and the mean strength of the rivals faced (as they stand at the season's end).</summary>
+    /// <remarks>Rules v4 adds the league: the company's final <c>Place</c>; the open market's thinnest role at season end
+    /// (<c>PoolMinPerRole</c>); the rivals' newcomers at season end (signings and transfers) against their squad sizes; and
+    /// the spread of rival strength (strongest minus weakest) at season end.</remarks>
     public sealed record SeasonRow(int Season, int Wins, int Losses, int Forfeits, long CashEnd, int ReputationStart, int ReputationEnd,
         int AudienceEnd, int RosterEnd, int ActiveSponsorsEnd, int NegativeForecastWeeks, int DecisionsMade, int Prompts, int LongestQuiet,
-        double MeanWinProbability, double MeanBase, double MeanPreparation, double MeanRivalStrength);
+        double MeanWinProbability, double MeanBase, double MeanPreparation, double MeanRivalStrength,
+        int Place, int PoolMinPerRole, int RivalNewcomers, int RivalPlayers, int RivalSpread);
     /// <summary>A run that cannot advance (distress with no cash and no inflow) is insolvent: its final cash stands in for the
     /// seasons it did not reach.</summary>
     public sealed record Run(string Policy, ulong Seed, bool Blocked, string BlockedReason, int Days, long FinalCash, ImmutableArray<SeasonRow> Seasons);
@@ -36,7 +40,7 @@ public static class Measurement
         foreach (var seed in seeds)
             foreach (var policy in Policies)
                 runs.Add(Play(content, seed, policy, seasons));
-        return new Report(content.Definition.RulesVersion, content.Hash, [.. seeds], seasons, [.. runs], Gates(runs, seeds, seasons),
+        return new Report(content.Definition.RulesVersion, content.Hash, [.. seeds], seasons, [.. runs], Gates(runs, seeds, seasons, content.Definition.Balance.SeasonLength),
             ["Development measurement: four scripted owner policies, not player data. Thresholds are the proposal's starting values.",
              "Gates for later waves are reported for reference; a gate whose mechanism does not exist yet is not measurable."]);
     }
@@ -104,7 +108,12 @@ public static class Measurement
                 repStart, now.Reputation, now.Audience, now.People.Length, now.ActiveSponsors,
                 negativeWeeks.Count(w => w * 7 + 1 >= first && w * 7 + 1 <= last), made - madeAtStart, prompts, quiet,
                 Mean(r => r.Probability / 10_000.0), Mean(r => r.Base), Mean(r => r.Preparation),
-                Mean(r => Rivals.Strength(state.World.Rivals.Single(x => x.Id == r.RivalId), content.Definition))));
+                Mean(r => Rivals.Strength(state.World.Rivals.Single(x => x.Id == r.RivalId), content.Definition)),
+                state.World.Finishes.FirstOrDefault(f => f.Season == season)?.Order.IndexOf(state.Company.Id) + 1 ?? 0,
+                Roles.All.Min(role => state.World.Candidates.Count(x => x.Person.Role == role)),
+                state.World.Moves.Count(m => m.Day == last && m.Reason is MoveReason.Signed or MoveReason.Transferred && m.Destination is not null && m.Destination != state.Company.Id),
+                state.World.Rivals.Sum(r => r.People.Length),
+                state.World.Rivals.Max(r => Rivals.Strength(r, content.Definition)) - state.World.Rivals.Min(r => Rivals.Strength(r, content.Definition))));
             prompts = 0; madeAtStart = made; repStart = now.Reputation; season = now.Season;
             if (season > seasons) break;
         }
@@ -150,12 +159,26 @@ public static class Measurement
                     send(new ReleaseDecision(spare.Id));
                 break;
             case Balanced:
-                foreach (var person in people.Where(p => p.CanRenew && (p.Rating >= 66 || people.Count(x => x.Role == p.Role) == 1 || people.Length <= v.MinimumRosterOrDefault())))
+                // Rules v4: renew by value (a good player not yet in decline, or one the squad cannot do without).
+                foreach (var person in people.Where(p => p.CanRenew && (p.Rating >= 66 && p.Age <= 28 || people.Count(x => x.Role == p.Role) == 1 || people.Length <= v.MinimumRosterOrDefault())))
                     send(new RenewalDecision(person.Id, 1));
                 if (v.CoachContract.CanRenew) send(new RenewalDecision(v.CoachContract.Id, 1));
                 // Keep the registered roster at the league minimum (six when no rule says otherwise) with the best affordable player.
                 if (people.Length < v.MinimumRosterOrDefault() && v.Candidates.Where(c => c.Fee <= v.Forecast).OrderByDescending(c => Midpoint(c.RatingEstimate)).FirstOrDefault() is { } depth)
                     send(new SigningDecision(depth.Id));
+                // Upgrade by estimated rating: a free agent at least four points better (estimate midpoint) than the weakest player
+                // in their role, affordable from under half the cash, while the roster has room; then let the displaced player go
+                // when the exit is affordable and the squad stays above the minimum.
+                if (people.Length < v.MaxRosterOrDefault() && people.Length > 0)
+                {
+                    var upgrade = v.Candidates.Where(c => c.Fee * 2 <= v.Cash && people.Any(p => p.Role == c.Role && Midpoint(c.RatingEstimate) >= p.Rating + 4))
+                        .OrderByDescending(c => Midpoint(c.RatingEstimate) - people.Where(p => p.Role == c.Role).Min(p => p.Rating)).ThenBy(c => c.Id, StringComparer.Ordinal).FirstOrDefault();
+                    if (upgrade is not null && send(new SigningDecision(upgrade.Id)))
+                    {
+                        var displaced = people.Where(p => p.Role == upgrade.Role && p.CanRelease).OrderBy(p => p.Rating).ThenBy(p => p.Id, StringComparer.Ordinal).FirstOrDefault();
+                        if (displaced is not null && people.Length + 1 > v.MinimumRosterOrDefault() && displaced.ExitCost * 4 <= v.Cash) send(new ReleaseDecision(displaced.Id));
+                    }
+                }
                 break;
             default:
                 foreach (var person in people.Where(p => p.CanRenew && (policy == Coach || p.Rating >= 66))) send(new RenewalDecision(person.Id, 1));
@@ -175,6 +198,7 @@ public static class Measurement
         .OrderByDescending(b => b.GuideHigh).ThenBy(b => b.Id, StringComparer.Ordinal).FirstOrDefault();
 
     private static int MinimumRosterOrDefault(this Situation v) => v.MinimumRoster > 0 ? v.MinimumRoster : 6;
+    private static int MaxRosterOrDefault(this Situation v) => 8;
 
     private static double Midpoint(string band)
     {
@@ -182,7 +206,7 @@ public static class Measurement
         return digits.Length == 2 ? (digits[0] + digits[1]) / 2.0 : 0;
     }
 
-    private static ImmutableArray<Gate> Gates(List<Run> runs, IReadOnlyList<ulong> seeds, int seasons)
+    private static ImmutableArray<Gate> Gates(List<Run> runs, IReadOnlyList<ulong> seeds, int seasons, int seasonLength)
     {
         Run Of(string policy, ulong seed) => runs.Single(r => r.Policy == policy && r.Seed == seed);
         // Season-N cash; an insolvent run keeps the cash it stopped with.
@@ -207,7 +231,7 @@ public static class Measurement
         gates.Add(new("Player value", "Win rate, balanced minus full coach delegation", "+5 to +15 percentage points", Math.Round(playerValue, 1),
             "percentage points, mean over seeds", playerValue is >= 5 and <= 15, 0, 3, "4"));
         var allSeasons = runs.SelectMany(r => r.Seasons).ToArray();
-        var density = allSeasons.Length == 0 ? 0 : allSeasons.Average(s => (s.DecisionsMade) * 7.0 / 56);
+        var density = allSeasons.Length == 0 ? 0 : allSeasons.Average(s => s.DecisionsMade * 7.0 / seasonLength);
         gates.Add(new("Decision density", "Consequential decisions made per 7 days (offers, renewals, signings, releases, plans, proposals)", "mean >= 2; no off-season week at 0",
             Math.Round(density, 2), "per 7 days, mean over seasons; off-season weeks are not separated yet", density >= 2, 3, 3, "8"));
         var quiet = allSeasons.Length == 0 ? 0 : allSeasons.Max(s => s.LongestQuiet);
@@ -216,10 +240,27 @@ public static class Measurement
         var pressured = allSeasons.Length == 0 ? 0 : allSeasons.Count(s => s.NegativeForecastWeeks > 0) * 100.0 / allSeasons.Length;
         gates.Add(new("Financial pressure", "Share of seasons with at least one week of negative 7-day forecast", "20-60%", Math.Round(pressured, 1),
             $"percent of {allSeasons.Length} seasons played; {runs.Count(r => r.Blocked)} of {runs.Count} runs insolvent", pressured is >= 20 and <= 60, 0, 1, "1, 5"));
-        gates.Add(new("Multi-year progress", "Mean league position of the balanced owner, season 1 to 5", "improves >= 1 place, not at the ceiling before season 4", null,
-            "not measurable: no league table until wave 2", null, 2, 2, "2, 3"));
-        gates.Add(new("Outcome diversity", "Standard deviation of final league position across seeds, same policy", ">= 1 place", null,
-            "not measurable: no league table until wave 2", null, 0, 2, "6, 9"));
+        // 2 and 3. Multi-year progress and outcome diversity read the final league places (rules v4 league).
+        double MeanPlace(int season) => seeds.Select(s => Of(Balanced, s).Seasons.FirstOrDefault(x => x.Season == season)?.Place ?? 0).Where(p => p > 0).DefaultIfEmpty(0).Average();
+        var places = Enumerable.Range(1, seasons).Select(MeanPlace).ToArray();
+        var progress = places[0] - places[^1];
+        var ceiling = places.Take(Math.Min(3, seasons)).Average();
+        gates.Add(new("Multi-year progress", $"Mean final league place of the balanced owner, season 1 to {seasons}", "improves >= 1 place, not at the ceiling (mean of seasons 1-3 above 1.5)",
+            Math.Round(progress, 2), $"mean places by season: {string.Join(", ", places.Select(p => p.ToString("0.0", CultureInfo.InvariantCulture)))}", progress >= 1 && ceiling > 1.5, 2, 2, "2, 3"));
+        var finals = seeds.Select(s => (double)(Of(Balanced, s).Seasons.FirstOrDefault(x => x.Season == seasons)?.Place ?? 0)).Where(p => p > 0).ToArray();
+        var spread = finals.Length < 2 ? 0 : Math.Sqrt(finals.Average(p => (p - finals.Average()) * (p - finals.Average())));
+        gates.Add(new("Outcome diversity", $"Standard deviation of the balanced owner's season-{seasons} league place across seeds", ">= 1 place", Math.Round(spread, 2),
+            $"places: {string.Join(", ", finals)}", spread >= 1, 0, 2, "6, 9"));
+        // Rules v4 world references: the open market stays stocked, rivals turn over like real squads, the league keeps its spread.
+        var stocked = allSeasons.Length == 0 ? 0 : allSeasons.Count(s => s.PoolMinPerRole >= 3) * 100.0 / allSeasons.Length;
+        gates.Add(new("Market depth", "Share of season ends with at least three free agents in every role", ">= 90%", Math.Round(stocked, 1),
+            $"thinnest role at season end: min {(allSeasons.Length == 0 ? 0 : allSeasons.Min(s => s.PoolMinPerRole))}, mean {(allSeasons.Length == 0 ? 0 : allSeasons.Average(s => s.PoolMinPerRole)):0.0}", stocked >= 90, 0, 4, "rules v4"));
+        var churn = allSeasons.Where(s => s.RivalPlayers > 0).Select(s => s.RivalNewcomers * 100.0 / s.RivalPlayers).DefaultIfEmpty(0).Average();
+        gates.Add(new("Rival churn", "Rival newcomers (signings and transfers) per season, percent of rival squads", "15-35% (calibrated: two splits of 12.6%)", Math.Round(churn, 1),
+            "mean over seasons", churn is >= 15 and <= 35, 0, 4, "rules v4"));
+        var rivalSpread = allSeasons.Where(s => s.RivalSpread > 0).Select(s => (double)s.RivalSpread).DefaultIfEmpty(0).Average();
+        gates.Add(new("Rival spread", "Strongest minus weakest rival strength at season end", "10-20 points (calibrated: about 14)", Math.Round(rivalSpread, 1),
+            "mean over seasons", rivalSpread is >= 10 and <= 20, 0, 4, "rules v4"));
         gates.Add(new("No solved preparation", "Win rate gap between the best focus pair and the mean pair", "<= 5 percentage points", null,
             "not measurable: weekly focus pairs arrive in wave 3", null, 3, 3, "4"));
         gates.Add(new("No solved negotiation", "Profit of the best fixed ask vs estimate-based asks", "fixed ask wins on <= 50% of brands", null,
