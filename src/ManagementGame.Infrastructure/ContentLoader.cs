@@ -135,6 +135,13 @@ public static class ContentLoader
             && l.MoraleRest is >= 0 and <= 100 && l.MoraleLow is >= 0 and <= 100 && l.RefusalAmbition is >= 1 and <= 100
             && l.StarPopularity is >= 1 and <= 100 && l.StarBonusPercent is >= 0 and <= 50 && l.StarBonusCap is >= 0 and <= 8
             && l.ConductInterval is >= 7 and <= 112 && l.ConductThreshold is >= 0 and <= 100 && l.ConductRate is >= 0 and <= 1000, "lifecycle condition steps");
+        // Rules v4 rivals: squads from the registered minimum up to the roster limit, a bounded edge, wage caps, funds and
+        // recruitment limits.
+        var r = c.Rivals;
+        Require(r.Edge is >= -20 and <= 20 && r.RosterSizes.Length > 0 && r.RosterSizes.All(x => x.Value >= b.MinimumRoster && x.Value <= b.MaxRoster && x.Weight > 0)
+            && Unique(r.RosterSizes.Select(x => x.Value.ToString())) && r.WageCapBase is > 0 and <= 10_000_000 && r.WageCapPerReputation is >= 0 and <= 100_000
+            && r.FundsBase is >= 0 and <= 100_000_000 && r.FundsPerPlace is >= 0 and <= 10_000_000 && r.MaxMoves is >= 0 and <= 8 && r.BuyPercent is >= 0 and <= 100
+            && r.UpgradeMargin is >= 0 and <= 30 && r.PoorPlace >= 1 && r.PoorPlace <= b.RivalCount + 1 && r.CoachPatience is >= 1 and <= 10 && r.SellAge is >= 18 and <= 40, "rival rules");
     }
     public static bool Id(string value) => !string.IsNullOrWhiteSpace(value) && value.Length <= 128 && value.All(ch => ch is >= 'a' and <= 'z' or >= '0' and <= '9' or ':' or '-' or '_');
 }

@@ -36,7 +36,7 @@ public static class CampaignFactory
             var starter = new Offer($"offer:{brand.Id}:starter", brand.Id, brand.Name, OfferOrigin.Inbound, 1, b.SeasonLength, brand.BasePayment, brand.WinBonus, brand.Load, 0, company.Id);
             company = Finance.AddSponsor(company, starter, 1, "agreement:" + starter.Id, b.SponsorForfeitLimit);
         }
-        var rivals = Generator.Rivals(seed, content);
+        var rivals = Rivals.Create(seed, content, ref next);
         var schedule = Seasons.Schedule(seed, 1, company.Id, rivals, b);
         var world = new World(new Calendar(1, Phase.Finance, 0), rivals, schedule.Company, [], [], [], [], [], [], Posture.Balanced, next, [], schedule.League, [], []);
         (company, world) = Market.Refresh(company, world, seed, content, 1, coaches: true);

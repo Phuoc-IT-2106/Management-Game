@@ -197,7 +197,7 @@ public static class Simulation
                 if (day % life.ConductInterval == 0) c = Careers.Conduct(c, seed, life, day);
                 (c, w) = Market.Contracts(c, w, seed, content, day);
                 (c, w) = Market.Resolve(c, w, seed, content, day);
-                (c, w) = Market.Expire(c, w, content, day);
+                (c, w) = Market.Expire(c, w, seed, content, day);
                 if (day > 1 && (day - 1) % b.MarketInterval == 0) (c, w) = Market.Approach(c, w, seed, content, day);
                 (c, w) = Market.Refresh(c, w, seed, content, day, coaches: day > 1 && (day - 1) % b.TalentRefreshInterval == 0);
                 break;
@@ -211,11 +211,11 @@ public static class Simulation
                 break;
             case Phase.Organization: break; // No second aggregate strength penalty for preparation overload.
             case Phase.Rivals:
-                if (day % b.RivalCadence == 0)
+                // A rival whose head coach reads opponents (analysis 60 or more) answers the company's latest posture.
+                if (day % b.RivalCadence == 0 && w.Results.Length > 0)
                 {
-                    var history = w.Results; var range = content.Generation.Rival;
-                    w = w with { Rivals = w.Rivals.Select(r => r with { Strength = Math.Clamp(r.Strength + (r.Need > 0 ? 1 : -1), range.Min - 5, range.Max + 5),
-                        Posture = history.Length > 0 && r.Analysis >= 60 ? (Posture)(((int)history[^1].Posture + 1) % 3) : r.Posture }).ToImmutableArray() };
+                    var last = w.Results[^1].Posture;
+                    w = w with { Rivals = w.Rivals.Select(r => r.Coach.Analysis >= 60 ? r with { Posture = (Posture)(((int)last + 1) % 3) } : r).ToImmutableArray() };
                 }
                 break;
             case Phase.Meta:
@@ -254,7 +254,7 @@ public static class Simulation
                     var familiarity = (int)Numbers.Divide(lineup.Sum(p => (long)c.Employment.Single(e => e.PersonId == p.Id).Familiarity), lineup.Length);
                     var outcome = Competition.Resolve(new CompetitionInput(seed, fixture, plan, c.Work, lineup,
                         [.. lineup.Select((p, i) => Ratings.InRole(p, Roles.All[i], content))], c.Coach, rival, w.Meta,
-                        w.Results.TakeLast(b.PredictabilityWindow).Count(r => r.Posture == plan.Posture), b, familiarity));
+                        w.Results.TakeLast(b.PredictabilityWindow).Count(r => r.Posture == plan.Posture), b, familiarity, Rivals.Strength(rival, content)));
                     w = w with { Results = w.Results.Add(outcome) };
                     c = Finance.Consume(c, outcome, fixture, b);
                     c = LeagueFine(c, outcome, fixture, rival, b);
@@ -269,7 +269,7 @@ public static class Simulation
                 }
                 // The rest of the league plays the same day.
                 foreach (var league in w.LeagueFixtures.Where(f => f.Day == day && !w.LeagueResults.Any(r => r.FixtureId == f.Id)).OrderBy(f => f.Id, StringComparer.Ordinal).ToArray())
-                    w = w with { LeagueResults = w.LeagueResults.Add(Competition.Rivals(seed, league, w.Rivals.Single(r => r.Id == league.HomeId), w.Rivals.Single(r => r.Id == league.AwayId), b)) };
+                    w = w with { LeagueResults = w.LeagueResults.Add(Competition.Rivals(seed, league, w.Rivals.Single(r => r.Id == league.HomeId), w.Rivals.Single(r => r.Id == league.AwayId), content)) };
                 break;
             case Phase.Consequences: c = Commercial.ApplyDue(c, day); break;
             case Phase.Recovery:
@@ -363,7 +363,7 @@ public static class Simulation
     /// and bounded history.</summary>
     private static (Company, World) Rollover(Company c, World w, ulong seed, Content content, int day)
     {
-        var b = content.Balance; var season = Seasons.Of(day, b); var range = content.Generation.Rival;
+        var b = content.Balance; var season = Seasons.Of(day, b);
         var played = w.Results.Where(r => r.FixtureId.StartsWith(Seasons.FixturePrefix(season), StringComparison.Ordinal)).ToArray();
         // The final order: champion first, then by the regular-season table (no final played: the table alone). The
         // company is paid its place prize.
@@ -383,12 +383,10 @@ public static class Simulation
         // season's youth and keeps within its cap.
         c = Careers.SeasonDevelopment(c, seed, content, season, day, played.Count(r => r.PlanCause != "forfeit"));
         w = Careers.SeasonMarket(w, seed, content, season, day);
-        var rivals = w.Rivals.Select(r => r with
-        {
-            Strength = Math.Clamp(r.Strength + KeyedRandom.Range(seed, "rival", $"{r.Id}:{season}", "development", 9) - 4, range.Min - 5, range.Max + 5),
-            Posture = (Posture)KeyedRandom.Range(seed, "rival", $"{r.Id}:{season}", "posture", 3),
-            Budget = 40, Need = KeyedRandom.Range(seed, "rival", $"{r.Id}:{season}", "need", 2)
-        }).ToImmutableArray();
+        // Rivals: departures, development, standing and coaching, then recruitment from the market and from each other.
+        w = Rivals.Departures(w, seed, content, season, day, order);
+        w = Rivals.Recruit(w, seed, content, season, day);
+        var rivals = w.Rivals;
         c = Finance.Archive(c, Seasons.Start(season, b));
         c = c with { Reviews = c.Reviews.Skip(Math.Max(0, c.Reviews.Length - 150)).ToImmutableArray() };
         c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"{Market.NoticePrefix}season:{season + 1}:{day}", day, $"season:{season}",

@@ -104,7 +104,7 @@ public static class Measurement
                 repStart, now.Reputation, now.Audience, now.People.Length, now.ActiveSponsors,
                 negativeWeeks.Count(w => w * 7 + 1 >= first && w * 7 + 1 <= last), made - madeAtStart, prompts, quiet,
                 Mean(r => r.Probability / 10_000.0), Mean(r => r.Base), Mean(r => r.Preparation),
-                Mean(r => state.World.Rivals.Single(x => x.Id == r.RivalId).Strength)));
+                Mean(r => Rivals.Strength(state.World.Rivals.Single(x => x.Id == r.RivalId), content.Definition))));
             prompts = 0; madeAtStart = made; repStart = now.Reputation; season = now.Season;
             if (season > seasons) break;
         }

@@ -45,8 +45,8 @@ public static class Observations
         employmentId == "employment:" + personId || employmentId.StartsWith("employment:" + personId + ":", StringComparison.Ordinal);
     /// <summary>Transfer history, newest first: every move as the simulation recorded it when it happened (who, from where,
     /// to where, when and why). Nothing is reconstructed from current rosters or markets, so a later move never rewrites an
-    /// earlier one, and a person who has since left every record keeps their name. Rivals have no rosters in the current
-    /// rules, so every move involves the company and the open market (a retirement from the market involves neither).</summary>
+    /// earlier one, and a person who has since left every record keeps their name. Moves involve the company, the rivals
+    /// (rules v4 phase 5) and the open market; a retirement from the market involves no organization.</summary>
     public static ImmutableArray<MoveRow> Moves(Campaign s) => [.. s.World.Moves.Reverse().Select(m => new MoveRow(m.Id, (MoveKind)m.Reason, m.Day,
         m.PersonId, m.Name, m.Kind == Personnel.HeadCoach, m.Role, m.Origin ?? "", m.Destination ?? "", m.CauseId))];
     private static string Outcome(CompetitiveOutcome r) => r.PlanCause == "forfeit" ? "Forfeit" : r.Won ? "Victory" : "Defeat";
@@ -125,7 +125,7 @@ public static class Observations
         var rival = fixture is null ? null : w.Rivals.Single(r => r.Id == fixture.RivalId);
         // The opponent's strength is an estimate that narrows with the company's information and the head coach's analysis.
         var width = Math.Max(3, (100 - c.Information) / 5 + (100 - c.Coach.Analysis) / 10);
-        var estimate = rival is null ? 0 : rival.Strength + KeyedRandom.Range(s.Execution.Seed, "information",
+        var estimate = rival is null ? 0 : Rivals.Strength(rival, content) + KeyedRandom.Range(s.Execution.Seed, "information",
             $"player:{rival.Id}:{w.Results.Length}", "strength-estimate", width * 2 + 1) - width;
         var estimatedPosture = rival is null ? Posture.Balanced : (Posture)(((int)rival.Posture +
             (KeyedRandom.Range(s.Execution.Seed, "information", $"player:{rival.Id}:{w.Results.Length}", "tendency", 100) < c.Information ? 0 : 1)) % 3);
@@ -154,6 +154,16 @@ public static class Observations
                 Renewable(contract) && refuses ? "Not open to renewal while morale is this low." : "");
         }).ToImmutableArray();
         var coachContract = c.Employment.Single(x => x.PersonId == c.Coach.Id);
+        // Rival profiles: each squad scouted like the free agents, the posture read with the company's information, and the
+        // strength as the same band the next opponent shows.
+        var profiles = w.Rivals.OrderBy(r => r.Name, StringComparer.Ordinal).Select(r =>
+        {
+            var centre = Rivals.Strength(r, content) + KeyedRandom.Range(s.Execution.Seed, "information", $"profile:{r.Id}:{w.Results.Length}", "strength-estimate", width * 2 + 1) - width;
+            var posture = (Posture)(((int)r.Posture + (KeyedRandom.Range(s.Execution.Seed, "information", $"profile:{r.Id}:{w.Results.Length}", "tendency", 100) < c.Information ? 0 : 1)) % 3);
+            return new RivalProfile(r.Id, r.Name, r.Coach.Name, posture.ToString(), $"{Math.Max(0, centre - width)}–{Math.Min(100, centre + width)} (estimate)",
+                [.. r.People.OrderBy(p => Roles.All.IndexOf(p.Role)).ThenBy(p => p.Id, StringComparer.Ordinal).Select(p => new RivalPlayerRow(p.Id, p.Handle, p.Role,
+                    Ratings.Age(p, season), Band(p.Id, "rating", Ratings.Rating(p, content), scoutWidth), p.Popularity))]);
+        }).ToImmutableArray();
         var active = Market.ActiveSponsors(c, day);
         string Availability(Offer o) => o.ClaimedBy is not null ? o.ClaimedBy == c.Id ? "Signed" : "Claimed by rival"
             : o.Deadline < day ? "Expired" : c.Reputation < o.MinimumReputation ? "Reputation too low"
@@ -191,7 +201,7 @@ public static class Observations
             b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "", b.OperatingCost, b.MinimumRoster, Moves(s),
             StandingRows(s, content), LeagueMatchRows(s), b.PlayoffTeams, w.Finishes.LastOrDefault() is { } last ? last.Order.IndexOf(c.Id) + 1 : 0,
             LeagueNews(s, content), new LeagueInfo(b.RivalCount + 1, Seasons.Rounds(b), b.RegularGames, b.PlayoffTeams, b.PlayoffGames,
-                Seasons.RoundDay(season, 0, b), Seasons.LastRegularDay(season, b), Seasons.SemifinalDay(season, b), Seasons.FinalDay(season, b), b.PlacePrizes));
+                Seasons.RoundDay(season, 0, b), Seasons.LastRegularDay(season, b), Seasons.SemifinalDay(season, b), Seasons.FinalDay(season, b), b.PlacePrizes), profiles);
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
             ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover all five roles."

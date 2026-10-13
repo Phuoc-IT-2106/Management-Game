@@ -22,8 +22,8 @@ migration.
 | 1 | Real-data tooling and the calibration report | Done (`101864a`) |
 | 2 | Roles and the player model | Done (`3917e5c`) |
 | 3 | Logistic series resolver, familiarity, an 8-team league, playoffs | Done (`46c0839`) |
-| 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | Done |
-| 5 | Rivals with real rosters, budgets and posture AI | — |
+| 4 | Lifecycle: development, retirement, youth intake, form, morale, popularity, conduct | Done (`7cdcd31`) |
+| 5 | Rivals with real rosters, budgets and posture AI | Done |
 | 6 | Measurement and balance (gates 1 and 2) | — |
 | 7 | Documents and handoff | — |
 
@@ -445,3 +445,117 @@ Code: `Lifecycle.cs`, class `Careers`.
   - the population's mean age stays at 23.3–24.3, against 23.5 in the calibrated mix.
 - **Shell native:** 3832 / 3871. **Native kits:** 24 / 101 / 31.
 - **Headless hash:** `4ba9e86a…`.
+
+## Phase 5 — rival organizations with squads, budgets and recruitment
+
+### Data check before generation
+
+No new crawl was needed. The 2026 report already gives what rival generation calibrates against:
+- the league's strength spread: tier-A Elo, top against bottom about 88% per series;
+- squad sizes: 5 players 76%, 6 19%, 7 3%;
+- turnover between splits: 12.6% in tier A;
+- where newcomers come from: 54% from another team.
+
+There is no real data on budgets, so the values for funds and wage caps are authored.
+
+The entity data proposal (v0.1) kept rivals compressed, with no hidden squads. The approved rules v4 plan replaces that
+with real squads.
+
+### The rival model
+
+Code: `Model.cs` (`Rival`, `RivalContract`, `Strategy`, content `RivalRules`) and `Rivals.cs`.
+
+- **A rival organization** has:
+  - players and their contracts (`RivalContract`: wage and last day);
+  - a real head coach, whose Analysis and Adaptability are the rival's;
+  - the season's transfer funds and a reputation;
+  - the match posture it tends to play;
+  - a strategy (Contend, Balanced, Rebuild or Conserve);
+  - tendencies: Aggression (how readily it buys) and YouthFocus;
+  - its run of poor seasons.
+- **Strength is derived, not stored.** It is the mean rating in role of the rival's best lineup (an exact search over
+  primary and secondary roles), plus `Edge` (4), which stands for its own preparation. The old `Strength`, `Need` and
+  `Budget` drift is gone. Company matches and rival-against-rival matches both read it.
+- **Ownership.** Every person has exactly one owner: the company, a rival or the open market. Snapshot validation checks
+  this across players and coaches.
+
+### The opening league
+
+- **Target strength.** Each rival draws a target from `Generation.Rival` (68–82, the phase 3 calibration).
+- **The squad** has 6–8 players by `RosterSizes`, one per role and the rest keyed. It comes from the shared player
+  distribution, shifted so the lineup lands near the target less Edge. A squad that misses by more than 2 points is
+  redrawn, at most twice, and the closest draw stands.
+- **The rest:** contracts run one or two seasons; reputation follows the target; the strongest contend and the weakest
+  rebuild; posture and tendencies are keyed.
+
+### Season end
+
+Order: the company's development → the open market → rival departures → rival recruitment.
+
+1. **Departures** (`Rivals.Departures`):
+   - every rival player develops, with the head coach and playing time (starters as regulars);
+   - a player whose contract ends retires, is kept or joins the market. A player is kept as a starter, as someone close
+     to the weakest starter, or as a young player with room to grow, within the wage cap; a rebuilding rival lets players
+     of 28 and over go;
+   - reputation moves with the final place (+7 for the champion, −7 for last);
+   - funds reset to `FundsBase` + `FundsPerPlace` for each place above last;
+   - strategy follows place, poor seasons and funds;
+   - a rival placed 6th or lower for 2 seasons replaces its head coach from the coach market. The moves are a replaced
+     coach and an appointment.
+2. **Recruitment** (`Rivals.Recruit`), rivals in order of reputation:
+   - **fill:** every role in the best lineup and the registered minimum, from the market;
+   - **upgrade:** a contender or balanced rival seeks up to `MaxMoves` (2) players at least 3 points better than its
+     weakest starter. `BuyPercent` (54%, scaled by aggression) of the time it buys from another rival that can spare
+     the player, for a fee of 20 days' wage paid to the seller; otherwise it signs from the market;
+   - a rebuilding rival lets one veteran go who is not needed; a squad above 8 releases its weakest non-starter.
+3. **Youth intake** rises to 10 a season. With rival squads the world holds about 83 players, and about 11 leave each
+   season.
+4. **Sponsors.** A rival that takes a lapsed inbound offer is now a draw weighted by reputation.
+
+**New move:** `Transferred` (rival to rival), shown as `MoveKind.Transfer`. Transfer News already tells team-to-team
+moves ("Tarnka joins Paper Tigers GG", one crest to the other). Rival signings, departures, releases and retirements
+are now world transfer news too.
+
+### Read model and UI
+
+- **`Situation.RivalProfiles`:** each rival's squad as scouted (handle, role, age, a rating band), its head coach, the
+  posture it is believed to play and a strength band (`LevelEstimate`).
+- **League view.** Selecting a team in the standings opens its profile below: head coach, posture and strength
+  estimates, and the squad table. Before any selection it shows the next opponent.
+- **Not built:** showing rival players as "under contract" in Squad and Staff. Those screens list only the company's
+  people and the open market.
+
+### Measurement
+
+8 seeds × 5 seasons, saved in `artifacts/v4-phase5-measure` (not tracked).
+
+| Policy | Win rate | Cash, season 5 | Insolvent runs | Mean rival strength faced |
+|---|---|---|---|---|
+| Coach | 53.7% | $14,473 | 0 of 8 | 80.2 |
+| Sponsor-greedy | 59.1% | $12,268 | 1 of 8 | 80.1 |
+| Thrift | 25.4% | $6,774 | 0 of 8 | 80.3 |
+| Balanced | 67.2% | $16,670 | 0 of 8 | 80.2 |
+
+- **Rivals improve.** Recruitment and development lift mean rival strength from about 74 at the start to about 80 by
+  each season's end, so win rates fall (phase 4: 73–83%). A contender's upgrades are bounded, but nothing yet pulls a
+  strong league back. Phase 6 balances the drift against the company's own growth.
+- **Insolvency:** 1 of 32 runs, back to the rules v3 baseline (phase 4: 3).
+- **Gate 1, losing is not profitable:** pass, 8/8. **Reputation follows results:** 0.556 (phase 4: 0.51), still below
+  0.6.
+- **Player value:** 13.6 points. **Empty stretches:** 17 days.
+
+### Checks (Phase 5)
+
+- **Integration 348** (13 new), covering:
+  - opening squads that cover every role, with one- or two-season contracts and funds;
+  - derived strength across the calibrated spread, and a rival weakening when it loses its best player;
+  - varied strategies;
+  - a deterministic season end, after which every rival covers all five roles with funds of zero or more;
+  - every rival move going where it says;
+  - several seasons of recruitment and trading, with churn compared to the calibration (16% against about 25% a season);
+  - a save and load of rival squads;
+  - public profiles, team-to-team stories, and a coach replaced after poor seasons.
+- **Long run.** With rivals, the whole population's mean age stays at 23.4–24.0, against 23.5. The pool stays at
+  23–29, and about 10 players retire each season.
+- **Shell native:** 3842 / 3882 (the rival profile region and table are checked). **Native kits:** 24 / 101 / 31.
+- **Headless hash:** `fca16245…`.

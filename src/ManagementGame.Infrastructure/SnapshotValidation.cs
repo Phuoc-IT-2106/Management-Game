@@ -29,7 +29,9 @@ public static class SnapshotValidation
         Require(e.Receipts.Select((r, i) => r.Revision == i + 1 && r.Digest.Length == 64).All(x => x), "Receipt sequence invalid.");
         Require(day >= 1 && Enum.IsDefined(w.Calendar.Phase) && w.Calendar.Sequence == (day - 1L) * 11 + (int)w.Calendar.Phase - 1, "Invalid daily cursor.");
         Require(c.Id == "company:player" && c.Name.Trim().Length is > 0 and <= 60 && c.People.Length <= b.MaxRoster && c.People.All(Person) && Coach(c.Coach), "Roster bounds or attributes invalid.");
-        Unique(c.People.Select(p => p.Id).Concat(w.Candidates.Select(p => p.Person.Id)).Append(c.Coach.Id).Concat(w.CoachCandidates.Select(x => x.Coach.Id)), "current person owners");
+        // Every person has exactly one owner: the company, a rival, or the open market (players and coaches alike).
+        Unique(c.People.Select(p => p.Id).Concat(w.Candidates.Select(p => p.Person.Id)).Append(c.Coach.Id).Concat(w.CoachCandidates.Select(x => x.Coach.Id))
+            .Concat(w.Rivals.SelectMany(r => r.People.Select(p => p.Id).Append(r.Coach.Id))), "current person owners");
         Require(w.Candidates.All(x => Person(x.Person) && x.Fee >= 0 && x.Salary >= 0 && x.ReleaseCost >= 0) && w.CoachCandidates.All(x => Coach(x.Coach) && x.Fee >= 0 && x.Salary >= 0), "Invalid market entries.");
         Unique(c.Employment.Select(x => x.Id), "employment IDs");
         Unique(c.Employment.Select(x => x.PersonId), "employment person references");
@@ -51,7 +53,12 @@ public static class SnapshotValidation
         }
         Require(c.Settlements.All(x => x.Day >= 1 && x.Day <= day), "Invalid settlement date.");
         Unique(w.Rivals.Select(x => x.Id), "rival IDs"); Unique(w.Fixtures.Select(x => x.Id), "fixture IDs");
-        Require(w.Rivals.Length == b.RivalCount && w.Rivals.All(r => r.Strength is > 0 and <= 100 && r.Budget >= 0 && Enum.IsDefined(r.Posture) && r.Name.Length is > 0 and <= 60), "Invalid rival state.");
+        // Rivals (rules v4 phase 5): a squad within the roster limit that can field all five roles, one contract per player
+        // running past today, a valid head coach, funds that never go negative, and bounded standing and tendencies.
+        Require(w.Rivals.Length == b.RivalCount && w.Rivals.All(r => r.Name.Length is > 0 and <= 60 && Enum.IsDefined(r.Posture) && Enum.IsDefined(r.Strategy)
+            && r.People.Length >= 5 && r.People.Length <= b.MaxRoster && r.People.All(Person) && Coach(r.Coach) && Rivals.Lineup(r, definition).Length == Roles.All.Length
+            && r.Contracts.Length == r.People.Length && r.People.All(p => r.Contracts.Count(x => x.PersonId == p.Id) == 1) && r.Contracts.All(x => x.Salary > 0 && x.EndDay >= day - 1)
+            && r.Funds >= 0 && r.Reputation is >= 0 and <= 100 && r.Aggression is >= 1 and <= 99 && r.YouthFocus is >= 1 and <= 99 && r.PoorSeasons is >= 0 and <= 20), "Invalid rival state.");
         // The season's fixtures: the generated regular season, then exactly the playoff fixtures its results have produced.
         var schedule = Seasons.Schedule(e.Seed, season, c.Id, w.Rivals, b); var playoffs = Seasons.Playoffs(w, c.Id, season, e.Seed, b);
         Require(w.Fixtures.SequenceEqual(schedule.Company.AddRange(playoffs.Company)) && w.LeagueFixtures.SequenceEqual(schedule.League.AddRange(playoffs.League)),
@@ -66,7 +73,7 @@ public static class SnapshotValidation
         Require(w.Finishes.All(f => f.Season < season && f.Order.Order(StringComparer.Ordinal).SequenceEqual(teams)) && w.Finishes.Select(f => f.Season).Distinct().Count() == w.Finishes.Length
             && w.Finishes.Length <= 10, "Invalid season finishes.");
         Require(c.Employment.All(x => x.Familiarity is >= 0 and <= 100 && x.Played is >= 0 and <= 64), "Invalid familiarity or playing time.");
-        Require(w.Candidates.Length <= definition.Lifecycle.PoolCap + definition.Lifecycle.YouthIntake + Roles.All.Length + b.MaxRoster, "Free-agent pool exceeds its bounds.");
+        Require(w.Candidates.Length <= definition.Lifecycle.PoolCap + definition.Lifecycle.YouthIntake + Roles.All.Length + (b.RivalCount + 1) * b.MaxRoster, "Free-agent pool exceeds its bounds.");
         Unique(w.Results.Select(x => x.Id), "result IDs"); Unique(w.Results.Select(x => x.FixtureId), "resolved fixtures");
         foreach (var result in w.Results)
         {
@@ -79,12 +86,21 @@ public static class SnapshotValidation
         // Transfer history: each move once, in the order it happened, within the current and the previous season, in the
         // direction its reason allows. In these rules the company and the open market (null) are the only parties.
         Unique(w.Moves.Select(x => x.Id), "move IDs");
+        // The organizations a move may name: the company and the rivals.
+        bool RivalId(string? id) => id is not null && w.Rivals.Any(r => r.Id == id);
+        bool Organization(string? id) => id == c.Id || RivalId(id);
         Require(w.Moves.Zip(w.Moves.Skip(1)).All(p => p.First.Day <= p.Second.Day) && w.Moves.All(m => m.Day >= Seasons.Start(Math.Max(1, season - 1), b) && m.Day <= day
             && m.PersonId.Length > 0 && m.Name.Length is > 0 and <= 120 && m.CauseId.Length > 0 && Enum.IsDefined(m.Kind) && Enum.IsDefined(m.Reason)
             && (m.Kind == Personnel.Player ? Roles.Valid(m.Role) : m.Role.Length == 0)
-            && (m.Reason is MoveReason.Signed or MoveReason.Appointed or MoveReason.Interim ? m.Origin is null && m.Destination == c.Id
-                : m.Reason == MoveReason.Retired ? (m.Origin is null || m.Origin == c.Id) && m.Destination is null : m.Origin == c.Id && m.Destination is null)
-            && (m.Reason is MoveReason.Signed or MoveReason.Released or MoveReason.Retired ? m.Kind == Personnel.Player : m.Reason == MoveReason.ContractEnded || m.Kind == Personnel.HeadCoach)),
+            && (m.Reason switch
+            {
+                MoveReason.Signed or MoveReason.Appointed or MoveReason.Interim => m.Origin is null && Organization(m.Destination),
+                MoveReason.Retired => (m.Origin is null || Organization(m.Origin)) && m.Destination is null,
+                MoveReason.Transferred => RivalId(m.Origin) && RivalId(m.Destination) && m.Origin != m.Destination,
+                _ => Organization(m.Origin) && m.Destination is null
+            })
+            && (m.Reason is MoveReason.Signed or MoveReason.Released or MoveReason.Retired or MoveReason.Transferred ? m.Kind == Personnel.Player
+                : m.Reason == MoveReason.ContractEnded || m.Kind == Personnel.HeadCoach)),
             "Invalid transfer history.");
         Require(c.FinanceReceipts.Order().SequenceEqual(w.Results.Select(r => r.Id).Order()) && c.CommercialReceipts.Order().SequenceEqual(w.Results.Select(r => r.Id).Order()), "Immediate outcome consumers incomplete/duplicated.");
         Unique(c.PendingEffects.Select(x => x.Id), "pending effects");

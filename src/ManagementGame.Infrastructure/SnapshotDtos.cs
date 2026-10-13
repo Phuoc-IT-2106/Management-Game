@@ -92,10 +92,18 @@ public sealed record CompanyDto(string Id, string Name, ImmutableArray<PersonDto
     public Company ToDomain() => new(Id, Name, People.Select(v => v.ToDomain()).ToImmutableArray(), Coach.ToDomain(), Employment.Select(v => v.ToDomain()).ToImmutableArray(), Sponsors.Select(v => v.ToDomain()).ToImmutableArray(), Cash, LedgerBase, FinancialItems.Select(v => v.ToDomain()).ToImmutableArray(), Settlements.Select(v => v.ToDomain()).ToImmutableArray(), Reputation, Audience, Information, Authority.ToDomain(), Plan?.ToDomain(), Work.ToDomain(), Recovery, PendingEffects.Select(v => v.ToDomain()).ToImmutableArray(), FinanceReceipts, CommercialReceipts, Reviews.Select(v => v.ToDomain()).ToImmutableArray());
 }
 
-public sealed record RivalDto(string Id, string Name, int Strength, int Analysis, int Adaptability, Posture Posture, int Budget, int Need)
+public sealed record RivalContractDto(string PersonId, long Salary, int EndDay)
 {
-    public static RivalDto From(Rival x) => new(x.Id, x.Name, x.Strength, x.Analysis, x.Adaptability, x.Posture, x.Budget, x.Need);
-    public Rival ToDomain() => new(Id, Name, Strength, Analysis, Adaptability, Posture, Budget, Need);
+    public static RivalContractDto From(RivalContract x) => new(x.PersonId, x.Salary, x.EndDay);
+    public RivalContract ToDomain() => new(PersonId, Salary, EndDay);
+}
+public sealed record RivalDto(string Id, string Name, ImmutableArray<PersonDto> People, ImmutableArray<RivalContractDto> Contracts, CoachDto Coach,
+    long Funds, int Reputation, Posture Posture, Strategy Strategy, int Aggression, int YouthFocus, int PoorSeasons)
+{
+    public static RivalDto From(Rival x) => new(x.Id, x.Name, x.People.Select(PersonDto.From).ToImmutableArray(), x.Contracts.Select(RivalContractDto.From).ToImmutableArray(),
+        CoachDto.From(x.Coach), x.Funds, x.Reputation, x.Posture, x.Strategy, x.Aggression, x.YouthFocus, x.PoorSeasons);
+    public Rival ToDomain() => new(Id, Name, People.Select(p => p.ToDomain()).ToImmutableArray(), Contracts.Select(c => c.ToDomain()).ToImmutableArray(),
+        Coach.ToDomain(), Funds, Reputation, Posture, Strategy, Aggression, YouthFocus, PoorSeasons);
 }
 
 public sealed record FixtureDto(string Id, int Day, string RivalId, int Importance, long Prize, int Games, string Stage)

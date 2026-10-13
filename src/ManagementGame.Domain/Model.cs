@@ -58,7 +58,18 @@ public sealed record Company(
     RecoveryStage Recovery, ImmutableArray<CommercialEffect> PendingEffects,
     ImmutableArray<string> FinanceReceipts, ImmutableArray<string> CommercialReceipts,
     ImmutableArray<ReviewEntry> Reviews);
-public sealed record Rival(string Id, string Name, int Strength, int Analysis, int Adaptability, Posture Posture, int Budget, int Need);
+/// <summary>A rival organization's strategy for a season (rules v4 phase 5): Contend spends to win now, Balanced keeps the
+/// squad competitive, Rebuild lets experience go and plays youth, Conserve protects its funds.</summary>
+public enum Strategy { Contend, Balanced, Rebuild, Conserve }
+/// <summary>A rival's contract with one of its players: the daily wage and the last day.</summary>
+public sealed record RivalContract(string PersonId, long Salary, int EndDay);
+/// <summary>A rival organization (rules v4 phase 5): its players and their contracts, a head coach, the season's transfer
+/// funds (minor units), reputation, the match posture it tends to play (what the company's scouting reads), its strategy,
+/// its tendencies (Aggression: how readily it buys; YouthFocus: how much it favours young players) and its run of poor
+/// seasons. Its strength is derived from its players and never stored (<see cref="Rivals.Strength"/>); its analysis and
+/// adaptability are its head coach's.</summary>
+public sealed record Rival(string Id, string Name, ImmutableArray<Person> People, ImmutableArray<RivalContract> Contracts, Coach Coach,
+    long Funds, int Reputation, Posture Posture, Strategy Strategy, int Aggression, int YouthFocus, int PoorSeasons);
 /// <summary>A match of the company against a rival: regular season, semifinal or final, played as a best-of-<paramref name="Games"/>.</summary>
 public sealed record Fixture(string Id, int Day, string RivalId, int Importance, long Prize, int Games, string Stage);
 /// <summary>A league match between two rivals (the company is not in it).</summary>
@@ -84,8 +95,9 @@ public sealed record CompetitiveOutcome(string Id, string FixtureId, int Day, st
 public enum Personnel { Player, HeadCoach }
 /// <summary>Why a person moved: the company signed a player or appointed a head coach; an interim head coach took over
 /// when the head coach's contract ended; the company released a player; a contract ended without renewal; or a head coach
-/// was replaced by a new appointment; or a player retired, when a contract ended or from the open market.</summary>
-public enum MoveReason { Signed, Appointed, Interim, Released, ContractEnded, Replaced, Retired }
+/// was replaced by a new appointment; a player retired, when a contract ended or from the open market; or a player moved
+/// directly from one organization to another for a fee (rival organizations, rules v4 phase 5).</summary>
+public enum MoveReason { Signed, Appointed, Interim, Released, ContractEnded, Replaced, Retired, Transferred }
 /// <summary>A completed personnel move, recorded when it happens and never rewritten (transfer history). Origin and
 /// Destination are the organizations the person left and joined; null is the open market, where a person is a free
 /// agent. Name and Role are the person as they were then (Role is empty for a head coach), so the move can still be told
@@ -174,11 +186,20 @@ public sealed record Lifecycle(
     int PopularityWin, int PopularityBench, int StarPopularity, int StarBonusPercent, int StarBonusCap,
     // Conduct, every ConductInterval days: ConductRate basis points per point of professionalism below ConductThreshold.
     int ConductInterval, int ConductThreshold, int ConductRate, int ConductReputation, int ConductPopularity, int ConductMorale);
+/// <summary>Rival organizations (rules v4 phase 5). Edge is what a rival adds to its lineup's rating in a match (its own
+/// preparation and adaptation, not modelled in detail). Squads are 6–8 players by <see cref="RosterSizes"/>. Wages stay
+/// under WageCapBase + WageCapPerReputation × reputation a day; funds for fees are FundsBase + FundsPerPlace for every
+/// place above last, each season. At most MaxMoves recruitment moves a season besides filling the squad; BuyPercent of
+/// upgrades are sought from another organization (the calibrated share of newcomers who come from another team); an
+/// upgrade must be UpgradeMargin points better. A rival PoorPlace or lower for CoachPatience seasons replaces its head
+/// coach; a rebuilding rival lets players of SellAge or older go.</summary>
+public sealed record RivalRules(int Edge, ImmutableArray<WeightedValue> RosterSizes, long WageCapBase, long WageCapPerReputation,
+    long FundsBase, long FundsPerPlace, int MaxMoves, int BuyPercent, int UpgradeMargin, int PoorPlace, int CoachPatience, int SellAge);
 public sealed record BrandDefinition(string Id, string Name, string Sector, int MinimumReputation, int MinimumAudience,
     long BasePayment, long WinBonus, int Load, ImmutableArray<int> DurationDays);
 public sealed record Content(string Format, int Schema, string Label, string RulesVersion, string DefaultCompanyName,
     Balance Balance, Generation Generation, ImmutableArray<RoleWeight> RoleWeights, ImmutableArray<Nationality> Nationalities,
-    HandleParts Handles, Calibration Calibration, ImmutableArray<string> OrganizationNames, ImmutableArray<BrandDefinition> Brands, Lifecycle Lifecycle);
+    HandleParts Handles, Calibration Calibration, ImmutableArray<string> OrganizationNames, ImmutableArray<BrandDefinition> Brands, Lifecycle Lifecycle, RivalRules Rivals);
 
 public abstract record Intent;
 public sealed record CommitPlan(Plan Plan) : Intent;

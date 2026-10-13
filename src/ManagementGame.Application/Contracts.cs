@@ -62,6 +62,11 @@ public sealed record LeagueMatchRow(string Id, int Day, string Stage, int Games,
 /// table ("Leader"), or an upset between two rivals ("Upset": the winner sat at least <c>Observations.UpsetGap</c> places
 /// below the loser before the match). SubjectId is the organization the story is about.</summary>
 public sealed record LeagueNewsRow(string Id, int Day, string Kind, string Headline, string Detail, string SubjectId);
+/// <summary>A rival's player as the company can scout them: handle, role, age, a rating band and fan following.</summary>
+public sealed record RivalPlayerRow(string Id, string Name, string Role, int Age, string RatingEstimate, int Popularity);
+/// <summary>A rival's public profile (rules v4 phase 5): its squad as scouted, its head coach, the posture it is believed to
+/// play and a band for its strength. Estimates narrow with the company's information and its head coach's analysis.</summary>
+public sealed record RivalProfile(string Id, string Name, string Coach, string Posture, string LevelEstimate, ImmutableArray<RivalPlayerRow> Players);
 /// <summary>The league's format this season: teams, series per team in the regular season, best-of formats, playoff places,
 /// the key days (absolute) and the place prizes (champion first, minor units).</summary>
 public sealed record LeagueInfo(int Teams, int MatchesPerTeam, int RegularGames, int PlayoffTeams, int PlayoffGames, int FirstDay, int LastRegularDay,
@@ -70,8 +75,9 @@ public sealed record LeagueInfo(int Teams, int MatchesPerTeam, int RegularGames,
 public sealed record RivalRow(string Id, string Name, int Wins, int Losses, int Remaining);
 /// <summary>How a completed personnel move came about (the domain's <c>MoveReason</c>, in the same order): an
 /// organization signed a player or appointed a head coach, an interim head coach took over, a player was released, a
-/// contract ended without renewal, a head coach was replaced by a new appointment, or a player retired.</summary>
-public enum MoveKind { Signing, Appointment, Interim, Release, ContractEnd, Replacement, Retirement }
+/// contract ended without renewal, a head coach was replaced by a new appointment, a player retired, or a player moved
+/// directly between organizations for a fee.</summary>
+public enum MoveKind { Signing, Appointment, Interim, Release, ContractEnd, Replacement, Retirement, Transfer }
 /// <summary>A completed personnel move exactly as the simulation recorded it when it happened (transfer history). From
 /// and To are the stable IDs of the organizations the person left and joined; empty is the open market, where the person
 /// is a free agent. Name and Role are the person as they were then; Role is empty for a head coach. CauseId is the command
@@ -89,7 +95,7 @@ public sealed record Situation(long Revision, int Day, int Season, int DayOfSeas
     ImmutableArray<InboxRow> Inbox, ImmutableArray<FixtureRow> Fixtures, ImmutableArray<RivalRow> Rivals,
     string CompanyId = "", string OpponentId = "", long OperatingCost = 0, int MinimumRoster = 0, ImmutableArray<MoveRow> Moves = default,
     ImmutableArray<StandingRow> Standings = default, ImmutableArray<LeagueMatchRow> LeagueMatches = default, int PlayoffTeams = 0, int LastSeasonPlace = 0,
-    ImmutableArray<LeagueNewsRow> LeagueNews = default, LeagueInfo? League = null);
+    ImmutableArray<LeagueNewsRow> LeagueNews = default, LeagueInfo? League = null, ImmutableArray<RivalProfile> RivalProfiles = default);
 
 public interface IGameSession
 {

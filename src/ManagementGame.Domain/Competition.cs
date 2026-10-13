@@ -1,9 +1,10 @@
 namespace ManagementGame.Domain;
 
-// Pure resolver: receives competitive inputs only; cannot mutate finance or commercial state.
+// Pure resolver: receives competitive inputs only; cannot mutate finance or commercial state. RivalStrength is the rival's
+// derived strength (Rivals.Strength), computed by the caller from its players.
 public sealed record CompetitionInput(ulong Seed, Fixture Fixture, Plan Plan, Work Work,
     System.Collections.Immutable.ImmutableArray<Person> Lineup, System.Collections.Immutable.ImmutableArray<int> Ratings, Coach Coach, Rival Rival, Posture Meta,
-    int RepeatedPosture, Balance Balance, int Familiarity);
+    int RepeatedPosture, Balance Balance, int Familiarity, int RivalStrength);
 
 /// <summary>Match resolution (rules v4). A series is best-of-n games. Each game's strength difference is a fixed part
 /// (rating, preparation, matchup, adaptation, familiarity, leadership, style, composure) plus that game's keyed variance;
@@ -26,7 +27,7 @@ public static class Competition
         var matchup = x.Plan.Posture == x.Meta ? 3 : -1;
         // Champion pools and the coach's meta reading; a rival with analysis punishes a repeated posture.
         var adaptation = (int)Numbers.Divide(x.Lineup.Sum(p => (long)p.Skills.ChampionPool) / n + x.Coach.Adaptability, 30)
-            - x.RepeatedPosture * x.Rival.Analysis / 30;
+            - x.RepeatedPosture * x.Rival.Coach.Analysis / 30;
         // Integration: 0..+4 from the lineup's mean familiarity.
         var familiarity = x.Familiarity / 25;
         // Someone must make the calls: below 60 communication the team loses up to 3.
@@ -37,7 +38,7 @@ public static class Competition
         var style = Math.Clamp(early * (x.Meta == Posture.Aggressive ? 1 : x.Meta == Posture.Conservative ? -1 : 0) / 4, -3, 3);
         // Composure counts when the stakes are high (±2).
         var composure = x.Fixture.Importance >= 2 ? Math.Clamp((x.Lineup.Sum(p => p.Mind.Composure) / n - 50) / 12, -2, 2) : 0;
-        var difference = baseValue - x.Rival.Strength + prep + matchup + adaptation + familiarity + leadership + style + composure;
+        var difference = baseValue - x.RivalStrength + prep + matchup + adaptation + familiarity + leadership + style + composure;
         var spread = Spread(b, x.Plan.Posture, x.Lineup.Sum(p => p.Mind.Consistency) / n);
         var (won, lost, firstVariance) = Play(x.Seed, "competition", x.Fixture.Id, difference, spread, x.Fixture.Games, b.LogitScale);
         var probability = Logistic.Series(Logistic.Probability(Logistic.Logit(difference, b.LogitScale)), x.Fixture.Games);
@@ -61,10 +62,12 @@ public static class Competition
         return (won, lost, first);
     }
 
-    /// <summary>A league match between two rivals, from their strengths alone (compressed rivals have no preparation).</summary>
-    public static LeagueResult Rivals(ulong seed, LeagueFixture fixture, Rival home, Rival away, Balance b)
+    /// <summary>A league match between two rivals, from their derived strengths alone (their preparation is in Edge).</summary>
+    public static LeagueResult Rivals(ulong seed, LeagueFixture fixture, Rival home, Rival away, Content content)
     {
-        var (won, lost, _) = Play(seed, "league", fixture.Id, home.Strength - away.Strength, Spread(b, Posture.Balanced, 50), fixture.Games, b.LogitScale);
+        var b = content.Balance;
+        var (won, lost, _) = Play(seed, "league", fixture.Id, Domain.Rivals.Strength(home, content) - Domain.Rivals.Strength(away, content),
+            Spread(b, Posture.Balanced, 50), fixture.Games, b.LogitScale);
         return new LeagueResult("result:" + fixture.Id, fixture.Id, fixture.Day, home.Id, away.Id, won, lost);
     }
 }

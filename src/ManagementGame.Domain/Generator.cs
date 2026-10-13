@@ -89,16 +89,4 @@ public static class Generator
         return new Coach(id, Identity(seed, content, id).Name, Skill("preparation"), Skill("analysis"), Skill("adaptability"),
             Math.Clamp(Roll(seed, "coach", id, "capacity", g.CoachCapacity) + skillShift, 20, 1000), Skill("development"));
     }
-
-    public static ImmutableArray<Rival> Rivals(ulong seed, Content content)
-    {
-        var names = Shuffle(seed, "rivals", content.OrganizationNames.Order(StringComparer.Ordinal).ToArray());
-        return Enumerable.Range(1, content.Balance.RivalCount).Select(i =>
-        {
-            var id = $"rival:r{i:D2}";
-            int Skill(string purpose) => Roll(seed, "rival", id, purpose, content.Generation.Rival);
-            return new Rival(id, names[i - 1], Skill("strength"), Skill("analysis"), Skill("adaptability"),
-                (Posture)KeyedRandom.Range(seed, "rival", id, "posture", 3), 40, KeyedRandom.Range(seed, "rival", id, "need", 2));
-        }).ToImmutableArray();
-    }
 }

@@ -29,7 +29,7 @@ Check(snapshot.CompetitionDays.SequenceEqual(session.Capture().World.Fixtures.Se
 var sponsorTrack = SponsorPresentation.Track(snapshot, offer); var sponsorLines = PresentationText.DayTrackSummary(sponsorTrack);
 Check(sponsorLines[0].StartsWith("If accepted:") && sponsorLines.Any(l => l.StartsWith("Receipts · this offer: day 4, 11, 18, 25")) &&
     sponsorLines.Any(l => l.StartsWith("Competition: day")), "sponsor track states overload, offer receipts and matches in text");
-var hidden = session.Capture() with { World = session.Capture().World with { Rivals = session.Capture().World.Rivals.Select(r => r with { Strength = 1, Budget = 999, Need = 88 }).ToImmutableArray() } };
+var hidden = session.Capture() with { World = session.Capture().World with { Rivals = session.Capture().World.Rivals.Select(r => r with { Funds = 999, Aggression = 88, PoorSeasons = 3 }).ToImmutableArray() } };
 Check(JsonSerializer.Serialize(SponsorProjection.Build(hidden, content.Definition)) == JsonSerializer.Serialize(snapshot), "private rival changes are invisible to sponsor read model");
 Check(!JsonSerializer.Serialize(snapshot).Contains("Probability") && !JsonSerializer.Serialize(snapshot).Contains("Variance"), "no hidden resolver fields");
 Check(SponsorPresentation.Document(snapshot, offer).Sections.Any(s => s.Value.Contains("day 25")), "document renders Application dates");

@@ -73,6 +73,9 @@ public partial class GameShell
         var standings = Find<Tree>("Standings");
         Check(standings.GetRoot().GetChildCount() == view.Standings.Length && standings.GetSelected()?.GetMetadata(0).AsString() == view.CompanyId,
             "the league view lists every team, with the company's row selected");
+        var rivalSquad = Find<Tree>("RivalSquad");
+        Check(view.RivalProfiles.Any(p => p.Players.Length == rivalSquad.GetRoot().GetChildCount() && p.Players.All(x => x.RatingEstimate.Contains("(estimate)"))),
+            "the league view profiles a rival: its squad as scouted, every rating an estimate");
         LayoutCheck("competition-league"); SectionChromeCheck("competition-league");
         await Press("View_Match");
         Navigate(ShellSections.Portal); await Settle();
@@ -200,7 +203,8 @@ public partial class GameShell
     /// story told before the later moves is still told the same way after them.</summary>
     private async Task TransferEvidence(string output)
     {
-        for (var guard = 0; guard < 400 && !view.Moves.Any(m => m.Kind == MoveKind.ContractEnd); guard++)
+        // The company's own departures (rivals' contracts end the day before, at the season's close).
+        for (var guard = 0; guard < 400 && !view.Moves.Any(m => m.Kind == MoveKind.ContractEnd && m.From == view.CompanyId); guard++)
         {
             if (view.Offers.FirstOrDefault(o => o.Availability == "Available") is { } offer) Send(new SponsorDecision(offer.Id));
             if (view.CommittedPlan is null && view.Recommendation is { } plan && view.NextMatchDay == view.Day)
@@ -215,7 +219,7 @@ public partial class GameShell
         var told = PortalProjection.TransferStories(view);
         // One departed player re-signs (a return), one free agent who never played here joins, a head coach is appointed
         // (the previous one is replaced) and a player is released.
-        var departures = view.Moves.Where(m => m.Kind == MoveKind.ContractEnd && !m.Coach).ToArray();
+        var departures = view.Moves.Where(m => m.Kind == MoveKind.ContractEnd && !m.Coach && m.From == view.CompanyId).ToArray();
         var back = departures.FirstOrDefault(m => view.Candidates.Any(c => c.Id == m.PersonId));
         if (back is not null) Send(new SigningDecision(back.PersonId, 2));
         if (view.Candidates.FirstOrDefault(c => !departures.Any(m => m.PersonId == c.Id)) is { } fresh) Send(new SigningDecision(fresh.Id, 2));

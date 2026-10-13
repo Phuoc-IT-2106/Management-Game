@@ -238,7 +238,7 @@ var departurePortal = PortalProjection.Build(departureView);
 var departureStories = PortalProjection.TransferStories(departureView);
 var usSide = new JourneySide(Standing.Organization, departureView.CompanyId, departureView.Company, AssetIds.Crest(departureView.CompanyId));
 Check(endings.All(m => departureStories.Count(t => t.Records.Contains(m.Id)) == 1)
-    && departureStories.Where(t => t.Kind == MoveKind.ContractEnd).All(t => t.Status == StoryStatus.Confirmed && t.Source == StorySource.Simulation
+    && departureStories.Where(t => t.Kind == MoveKind.ContractEnd && t.From.OrganizationId == departureView.CompanyId).All(t => t.Status == StoryStatus.Confirmed && t.Source == StorySource.Simulation
         && t.From == usSide && t.To == JourneySide.FreeAgent && t.Headline.Contains(departureView.Company, StringComparison.Ordinal)
         && (t.Records.Length == 1 ? t.PortraitAssetId == AssetIds.Portrait(t.PersonId) && t.Headline.StartsWith(t.PersonName, StringComparison.Ordinal)
             : t.PersonName.Length == 0 && t.Id.StartsWith("roundup:", StringComparison.Ordinal) && t.Headline.StartsWith($"{t.Records.Length} players ", StringComparison.Ordinal))),
@@ -808,7 +808,9 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     Check(openMarket.World.Candidates.Length == life.PoolSize && Roles.All.All(r => openMarket.World.Candidates.Count(x => x.Person.Role == r) >= life.PoolSize / Roles.All.Length),
         "the campaign opens a free-agent pool of its full size, every role represented");
     var end = openMarket with { World = openMarket.World with { Calendar = new Calendar(closeDay, Phase.Review, (closeDay - 1L) * 11 + (int)Phase.Review - 1) } };
-    var rolledOver = Simulation.Step(end, definition);
+    // The open market's own season end (rivals recruit from it afterwards, in the full rollover below).
+    var rolledOver = end with { World = Careers.SeasonMarket(end.World, end.Execution.Seed, definition, 1, seasonEnd) };
+    var fullRollover = Simulation.Step(end, definition);
     var poolBefore = end.World.Candidates.Select(x => x.Person.Id).ToHashSet();
     var arrivals = rolledOver.World.Candidates.Where(x => !poolBefore.Contains(x.Person.Id)).ToArray();
     var retired = rolledOver.World.Moves.Where(m => m.Reason == MoveReason.Retired).ToArray();
@@ -818,8 +820,8 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
         && poolBefore.Count + arrivals.Length - retired.Length == rolledOver.World.Candidates.Length,
         "free agents retire from the open market as recorded moves, and the pool keeps within its cap");
     Check(rolledOver.World.Candidates.All(x => x.Salary == Pay.Player(x.Person, 2, definition) && x.Fee == x.Salary * 20), "every listing follows its player into the new season");
-    Check(rolledOver.Company.Employment.All(e => e.Played == 0), "playing time restarts with the season");
-    SnapshotValidation.Validate(rolledOver, content);
+    Check(fullRollover.Company.Employment.All(e => e.Played == 0), "playing time restarts with the season");
+    SnapshotValidation.Validate(fullRollover, content);
 
     // A player whose contract ends may retire instead of becoming a free agent (certain at the table's last age).
     var lastAge = life.RetirementByAge.Max(x => x.Value);
@@ -905,7 +907,7 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     var prepared = New().Capture(); var firstFixture = prepared.World.Fixtures[0]; var rival = prepared.World.Rivals.Single(r => r.Id == firstFixture.RivalId);
     var lineupPeople = prepared.Company.People.Take(5).ToImmutableArray();
     int MetaPrep(int adaptability) => Competition.Resolve(new CompetitionInput(1, firstFixture, new Plan(firstFixture.Id, 0, 0, 100, Posture.Balanced, [.. lineupPeople.Select(p => p.Id)], Posture.Balanced, "test"),
-        new Work(0, 0, 3000), lineupPeople, [.. lineupPeople.Select(p => 70)], prepared.Company.Coach with { Adaptability = adaptability }, rival, Posture.Aggressive, 0, b, 50)).Preparation;
+        new Work(0, 0, 3000), lineupPeople, [.. lineupPeople.Select(p => 70)], prepared.Company.Coach with { Adaptability = adaptability }, rival, Posture.Aggressive, 0, b, 50, 75)).Preparation;
     Check(MetaPrep(90) > MetaPrep(10), "a head coach who reads the meta gets more from meta preparation");
 
     // A long campaign stays a living pool: steady size, retirements and intake, and ages that stay near the calibrated mix.
@@ -929,14 +931,100 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
         retirements += state.World.Moves.Count(m => m.Reason == MoveReason.Retired && seen.Add(m.Id));
         if (long_.Observe().Season != season)
         {
-            var everyone = state.Company.People.Concat(state.World.Candidates.Select(x => x.Person)).ToArray();
+            var everyone = state.Company.People.Concat(state.World.Candidates.Select(x => x.Person)).Concat(state.World.Rivals.SelectMany(r => r.People)).ToArray();
             sizes.Add(state.World.Candidates.Length); means.Add(everyone.Average(p => Ratings.Age(p, long_.Observe().Season)));
         }
     }
     Check(sizes.Count >= 7 && sizes.All(n => n >= Roles.All.Length && n <= life.PoolCap) && retirements > 0,
         $"over eight seasons the pool stays between one per role and its cap, and players retire ({string.Join(",", sizes)}; {retirements} retirements)");
-    Check(means.All(m => Math.Abs(m - ageMean) <= 2.5), $"the population's mean age stays near the calibrated mix ({ageMean:0.0}: {string.Join(", ", means.Select(m => m.ToString("0.0")))})");
+    Check(means.All(m => Math.Abs(m - ageMean) <= 2.5), $"the whole population's mean age (company, rivals, market) stays near the calibrated mix ({ageMean:0.0}: {string.Join(", ", means.Select(m => m.ToString("0.0")))})");
     SnapshotValidation.Validate(long_.Capture(), content);
+}
+
+// Rules v4 phase 5: rival organizations with real squads, budgets and recruitment.
+{
+    var rules = content.Definition.Rivals; var gen = content.Definition.Generation; var world = content.Definition;
+    var openingLeague = New(13).Capture();
+    var strengths = openingLeague.World.Rivals.Select(r => Rivals.Strength(r, world)).ToArray();
+    Check(openingLeague.World.Rivals.All(r => r.People.Length >= b.MinimumRoster && r.People.Length <= b.MaxRoster && Rivals.Lineup(r, world).Length == Roles.All.Length
+            && r.Contracts.Length == r.People.Length && r.Contracts.All(x => x.EndDay == Seasons.End(1, b) || x.EndDay == Seasons.End(2, b)) && r.Funds > 0),
+        "every rival opens with a full squad that covers all five roles, one- or two-season contracts and transfer funds");
+    Check(strengths.All(x => x >= gen.Rival.Min - 4 && x <= gen.Rival.Max + 4) && strengths.Max() - strengths.Min() >= 8,
+        $"rival strength comes from the squads and spans the league's calibrated spread ({string.Join(", ", strengths)})");
+    var strongest = openingLeague.World.Rivals.OrderByDescending(r => Rivals.Strength(r, world)).First();
+    var star = Rivals.Lineup(strongest, world).OrderByDescending(x => x.Rating).First().Person;
+    var weakened = strongest with { People = strongest.People.Remove(star), Contracts = strongest.Contracts.RemoveAll(x => x.PersonId == star.Id) };
+    Check(Rivals.Strength(weakened, world) < Rivals.Strength(strongest, world), "a rival that loses its best player is weaker");
+    Check(openingLeague.World.Rivals.Select(r => r.Strategy).Distinct().Count() >= 2, "rivals open with different strategies");
+
+    // Season end: departures, development and recruitment keep every rival legal and every person with one owner.
+    var close = Seasons.End(1, b);
+    var atEnd = openingLeague with { World = openingLeague.World with { Calendar = new Calendar(close, Phase.Review, (close - 1L) * 11 + (int)Phase.Review - 1) } };
+    var afterEnd5 = Simulation.Step(atEnd, world);
+    var again = Simulation.Step(atEnd, world);
+    SnapshotValidation.Validate(afterEnd5, content);
+    Check(Canonical.Hash(afterEnd5) == Canonical.Hash(again), "the rivals' season end is deterministic");
+    var rivalIds = openingLeague.World.Rivals.Select(r => r.Id).ToHashSet();
+    var moves = afterEnd5.World.Moves.Where(m => m.Day == close).ToArray();
+    Check(afterEnd5.World.Rivals.All(r => Rivals.Lineup(r, world).Length == Roles.All.Length && r.People.Length >= b.MinimumRoster && r.Funds >= 0),
+        "after the season end every rival still covers all five roles, with funds that never go negative");
+    Check(moves.Where(m => m.Reason == MoveReason.Signed && rivalIds.Contains(m.Destination!)).All(m => m.Origin is null
+            && afterEnd5.World.Rivals.Single(r => r.Id == m.Destination).People.Any(p => p.Id == m.PersonId) && !afterEnd5.World.Candidates.Any(x => x.Person.Id == m.PersonId))
+        && moves.Where(m => m.Reason == MoveReason.Transferred).All(m => rivalIds.Contains(m.Origin!) && rivalIds.Contains(m.Destination!)
+            && afterEnd5.World.Rivals.Single(r => r.Id == m.Destination).People.Any(p => p.Id == m.PersonId) && afterEnd5.World.Rivals.Single(r => r.Id == m.Origin).People.All(p => p.Id != m.PersonId))
+        && moves.Where(m => m.Reason is MoveReason.ContractEnded or MoveReason.Released && rivalIds.Contains(m.Origin!)).All(m => m.Destination is null
+            && afterEnd5.World.Candidates.Any(x => x.Person.Id == m.PersonId))
+        && moves.Where(m => m.Reason == MoveReason.Retired && m.Origin is not null && rivalIds.Contains(m.Origin)).All(m =>
+            afterEnd5.World.Rivals.All(r => r.People.All(p => p.Id != m.PersonId)) && afterEnd5.World.Candidates.All(x => x.Person.Id != m.PersonId)),
+        "rival moves go where they say: signings from the market, transfers between rivals, departures to the market, retirements out of the game");
+    Check(moves.Any(m => m.Origin is not null && rivalIds.Contains(m.Origin) || m.Destination is not null && rivalIds.Contains(m.Destination)),
+        "rivals reshape their squads at season end");
+
+    // Several seasons: rivals keep recruiting, trade with each other, and their turnover stays near the calibrated churn.
+    var league = New(17); Submit(league, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+    var transfers = 0; var rivalSignings = 0; var counted = new HashSet<string>(); var rosterSeasons = 0;
+    for (var guard = 0; guard < 1600 && league.Observe().Season <= 4; guard++)
+    {
+        var v = league.Observe();
+        foreach (var free in v.Offers.Where(o => o.Availability == "Available").Take(1)) Submit(league, new SponsorDecision(free.Id));
+        foreach (var role in Roles.All.Where(role => !v.People.Any(p => p.Role == role)))
+            if (v.Candidates.FirstOrDefault(c => c.Role == role && c.Fee <= v.Cash) is { } cover) Submit(league, new SigningDecision(cover.Id));
+        for (var depth = league.Observe(); depth.People.Length < b.MinimumRoster && depth.Candidates.FirstOrDefault(c => c.Fee <= depth.Cash) is { } extra; depth = league.Observe())
+            if (!Submit(league, new SigningDecision(extra.Id)).Accepted) break;
+        foreach (var p in v.People.Where(p => p.CanRenew)) Submit(league, new RenewalDecision(p.Id, 1));
+        if (v.CoachContract.CanRenew) Submit(league, new RenewalDecision(v.CoachContract.Id, 1));
+        var season = v.Season;
+        if (!Submit(league, new AdvanceDecision()).Accepted) throw new Exception("Rival league blocked on day " + v.Day);
+        var state = league.Capture();
+        foreach (var m in state.World.Moves.Where(m => counted.Add(m.Id)))
+        {
+            if (m.Reason == MoveReason.Transferred) transfers++;
+            if (m.Reason == MoveReason.Signed && m.Destination is not null && m.Destination.StartsWith("rival:", StringComparison.Ordinal)) rivalSignings++;
+        }
+        if (league.Observe().Season != season) rosterSeasons += state.World.Rivals.Sum(r => r.People.Length);
+    }
+    var churn = (transfers + rivalSignings) / (double)Math.Max(1, rosterSeasons);
+    Check(transfers > 0 && rivalSignings > 0 && churn is > 0.08 and < 0.6,
+        $"over several seasons rivals sign free agents and trade with each other; newcomers are {churn:P0} of rival squads a season (calibrated: about 25%)");
+    SnapshotValidation.Validate(league.Capture(), content);
+    var store5 = new SnapshotStore(Path.GetFullPath("artifacts/save-tests-" + Guid.NewGuid().ToString("N")), content);
+    store5.Save("rivals", league.Capture());
+    Check(Canonical.Hash(store5.Load("rivals")) == Canonical.Hash(league.Capture()), "rival squads, contracts and coaches survive a save and load");
+    var view5 = league.Observe();
+    Check(view5.RivalProfiles.Length == b.RivalCount && view5.RivalProfiles.All(p => p.Players.Length >= b.MinimumRoster && p.Players.All(x => x.RatingEstimate.EndsWith("(estimate)", StringComparison.Ordinal))
+            && p.LevelEstimate.EndsWith("(estimate)", StringComparison.Ordinal) && p.Coach.Length > 0),
+        "every rival has a public profile: its squad as scouted, its head coach and a strength estimate");
+    var story = PortalProjection.TransferStories(view5 with { Moves = [.. view5.Moves.Where(m => m.Kind == MoveKind.Transfer)] }).FirstOrDefault();
+    Check(story is null || story.From.Standing == Standing.Organization && story.To.Standing == Standing.Organization && story.Headline.Contains(" joins ", StringComparison.Ordinal),
+        "a transfer between rivals is told as a team-to-team story");
+
+    // A rival that keeps finishing poorly replaces its head coach.
+    var struggling = atEnd with { World = atEnd.World with { Rivals = atEnd.World.Rivals.Select(r => r with { PoorSeasons = rules.CoachPatience }).ToImmutableArray() } };
+    var order = Seasons.Table(struggling.World, struggling.Company.Id, 1, struggling.Execution.Seed).Select(x => x.TeamId).ToImmutableArray();
+    var replaced = Rivals.Departures(struggling.World, struggling.Execution.Seed, world, 1, close, order);
+    var poor = struggling.World.Rivals.Where(r => order.IndexOf(r.Id) + 1 >= rules.PoorPlace).ToArray();
+    Check(poor.Length > 0 && poor.Any(r => replaced.Moves.Any(m => m.Reason == MoveReason.Replaced && m.Origin == r.Id) && Rivals.Get(replaced, r.Id).Coach.Id != r.Coach.Id && Rivals.Get(replaced, r.Id).PoorSeasons == 0),
+        "a rival that keeps finishing poorly replaces its head coach from the coach market");
 }
 
 for (ulong seed = 1; seed <= 16; seed++)

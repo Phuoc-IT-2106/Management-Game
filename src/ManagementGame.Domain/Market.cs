@@ -108,18 +108,18 @@ public static class Market
         return (c, w);
     }
 
-    /// <summary>Unanswered offers lapse; a rival with budget may take an inbound one. Settled offers are pruned.</summary>
-    public static (Company, World) Expire(Company c, World w, Content content, int day)
+    /// <summary>Unanswered offers lapse; a rival may take an inbound one, the better known the likelier (a draw weighted by
+    /// reputation). Settled offers are pruned.</summary>
+    public static (Company, World) Expire(Company c, World w, ulong seed, Content content, int day)
     {
         var b = content.Balance;
         foreach (var offer in w.Offers.Where(o => o.ClaimedBy is null && o.Deadline < day).OrderBy(o => o.Id, StringComparer.Ordinal))
         {
-            var rival = offer.Origin == OfferOrigin.Inbound
-                ? w.Rivals.Where(r => r.Need > 0 && r.Budget >= 10).OrderBy(r => r.Id, StringComparer.Ordinal).FirstOrDefault() : null;
+            var rival = offer.Origin == OfferOrigin.Inbound && w.Rivals.Length > 0
+                ? Generator.Weighted(seed, "market", offer.Id, "rival-claim", w.Rivals.OrderBy(r => r.Id, StringComparer.Ordinal).ToArray(), r => Math.Max(1, r.Reputation)) : null;
             if (rival is not null)
             {
-                w = w with { Offers = w.Offers.Replace(offer, offer with { ClaimedBy = rival.Id }),
-                    Rivals = w.Rivals.Replace(rival, rival with { Budget = rival.Budget - 10, Need = 0 }) };
+                w = w with { Offers = w.Offers.Replace(offer, offer with { ClaimedBy = rival.Id }) };
                 w = Cooldown(w, offer.BrandId, day + b.SeasonLength / 2);
                 c = c with { Reviews = c.Reviews.Add(new ReviewEntry($"claim:{offer.Id}", day, offer.Id, $"{rival.Name} signed with {offer.Name} after your offer lapsed.")) };
             }

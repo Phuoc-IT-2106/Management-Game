@@ -301,6 +301,7 @@ public partial class GameShell
 
     // ---------- Competition (approved references 04_competition and 05_league) ----------
     private string competitionView = "Match";
+    private string? leagueSelection;
     /// <summary>The company's place in the league table, once a match is played ("" before).</summary>
     private string LeaguePlace() => view.Standings.IsDefaultOrEmpty || view.Standings.All(s => s.Played == 0) ? ""
         : $"{Figures.Ordinal(view.Standings.Single(s => s.Company).Place)} of {Figures.Count(view.Standings.Length)}";
@@ -387,12 +388,26 @@ public partial class GameShell
         var table = Card(left, "League standings", "Where do we stand, and who is above the playoff line?", "record", FrameTier.Premium);
         var standings = view.Standings.IsDefault ? [] : view.Standings;
         var company = standings.FirstOrDefault(s => s.Company);
+        // Selecting a rival's row opens its profile below; the company's own row stays selected until then.
         table.AddChild(Table("Standings", ["#", "Team", "W", "L", "Map diff", "Pts"],
             standings.Select(s => (s.TeamId, new[] { s.Place.ToString(Invariant), s.Name, s.Won.ToString(Invariant), s.Lost.ToString(Invariant),
-                (s.GamesWon - s.GamesLost).ToString("+#;−#;0", Invariant), s.Points.ToString(Invariant) })), null, company?.TeamId, primary: 1, numeric: [2, 3, 4, 5], fit: [0]));
+                (s.GamesWon - s.GamesLost).ToString("+#;−#;0", Invariant), s.Points.ToString(Invariant) })),
+            id => { if (id == (leagueSelection ?? company?.TeamId)) return; leagueSelection = id; ShowSection(); }, leagueSelection ?? company?.TeamId,
+            primary: 1, numeric: [2, 3, 4, 5], fit: [0]));
         if (info is not null)
             Line(table, $"Top {info.PlayoffTeams} reach the playoffs. Level teams are separated by map difference, then head-to-head, then maps won.", TypographyRole.Annotation, ColorRole.TextSecondary);
 
+        // The rival profile: the selected rival, otherwise the next opponent, otherwise the leader.
+        var profiles = view.RivalProfiles.IsDefault ? [] : view.RivalProfiles;
+        if ((profiles.FirstOrDefault(p => p.Id == leagueSelection) ?? profiles.FirstOrDefault(p => p.Id == view.OpponentId)
+            ?? profiles.FirstOrDefault(p => standings.Any(s => !s.Company && s.TeamId == p.Id && s.Place == standings.Where(x => !x.Company).Min(x => x.Place)))) is { } rival)
+        {
+            var team = Card(left, rival.Name, "Who plays for them, and how do they play?", "staff");
+            Line(team, $"Head coach {rival.Coach} · plays {rival.Posture.ToLowerInvariant()} (estimate)", tone: ColorRole.TextSecondary);
+            team.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Strength " + rival.LevelEstimate));
+            team.AddChild(Table("RivalSquad", ["Player", "Role", "Age", "Rating (est.)"],
+                rival.Players.Select(p => (p.Id, new[] { p.Name, RoleNames.Name(p.Role), p.Age.ToString(Invariant), Band(p.RatingEstimate) })), null, primary: 0, numeric: [2], fit: [1, 3]));
+        }
         var matches = view.LeagueMatches.IsDefault ? [] : view.LeagueMatches;
         var playoffs = matches.Where(m => m.Stage != "regular").ToArray();
         if (playoffs.Length > 0)
