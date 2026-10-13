@@ -147,11 +147,13 @@ Check(young.Average(p => p.Potential - Ratings.Rating(p, def)) > prime.Average(p
 var nationalityShare = sample.GroupBy(p => p.Nationality).ToDictionary(g => g.Key, g => g.Count() / 500.0);
 Check(def.Nationalities.All(n => Math.Abs(nationalityShare.GetValueOrDefault(n.Id) - n.Weight / (double)def.Nationalities.Sum(x => x.Weight)) < .06),
     "nationalities follow the calibrated mix");
-// Market and starting roster share one ability distribution (no unexplained gap).
+// Market and starting roster share one ability distribution; the opening squad is deliberately shifted by StartingShift
+// (a new organization starts as an underdog), and by nothing else.
 var starts = Enumerable.Range(1, 8).Select(seed => New((ulong)seed).Capture()).ToArray();
 var rosterMean = starts.SelectMany(s => s.Company.People).Average(p => Ratings.Rating(p, def));
 var marketMean = starts.SelectMany(s => s.World.Candidates).Average(x => Ratings.Rating(x.Person, def));
-Check(Math.Abs(rosterMean - marketMean) <= 3, $"market and starting roster ratings share one mean ({rosterMean:0.0} vs {marketMean:0.0})");
+Check(Math.Abs(rosterMean - (marketMean + def.Generation.StartingShift)) <= 3,
+    $"the starting roster is the market's distribution shifted only by the underdog start ({rosterMean:0.0} vs {marketMean:0.0} {def.Generation.StartingShift:+#;-#;0})");
 // Rating: role weights times skills (basis points), scaled by proficiency; a secondary role at 80%, others not at all.
 var probe = sample.First(p => p.SecondaryRole.Length > 0);
 var probeWeights = def.RoleWeights.Single(w => w.Role == probe.Role).Weights;

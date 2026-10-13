@@ -641,3 +641,44 @@ Other results in the committed state:
    "progress" means.
 
 Phase 7 (documents and handoff) waits for this decision; the plan ends with every gate passed.
+
+### Round 4: the user's decisions (2026-10-13)
+
+The user chose an underdog start and a base reputation gain for every win.
+
+- **`Generation.StartingShift` −4.** The company's opening squad is the shared distribution 4 points weaker (67.4 against
+  the market's 70.1). The Integration test now checks exactly that shift.
+- **`Balance.ReputationWinBase` 1.** Every win adds 1 × its importance to reputation, besides the surprise-weighted change.
+
+| | Round 4 |
+|---|---|
+| Win rate: coach / sponsor-greedy / thrift / balanced | 42 / 50 / 19 / 82% |
+| Losing is not profitable | pass, 8/8 |
+| Reputation follows results (gate measure) | 0.56, fails |
+| Empty stretches | 9 days, pass |
+| Multi-year progress | balanced places 2.4, 1.5, 1.8, 1.4, 1.9: fails (0.5) |
+| Outcome diversity | 1.36, pass |
+| Rival churn / spread | 16.5% / 16.8, pass |
+| Insolvency | 1 of 32 |
+| Player value | 40.5 points (5–15) |
+
+**What the data shows** (`artifacts/v4-phase6/round4.json`):
+- **Reputation does follow results.**
+  - Season win rate against season-end reputation: r = 0.95.
+  - Win rate against the season's reputation change, holding the starting reputation fixed: partial r = 0.92. Within
+    each band of starting reputation it is 0.87–0.93.
+  - The gate's raw measure (0.56) is diluted because reputation converges on what a season earns. A team that already
+    wins has a high reputation, so even a strong season changes it little; r(win rate, starting reputation) = 0.60. A
+    base gain cannot remove that.
+  - `Measurement.cs` now reports the partial correlation as a reference.
+- **The active owner buys its way up within the first season.** Free agents cost 20 days' wage: about $256 for an
+  80-rated player, against $2,600 of starting cash. So the underdog start lasts weeks, not seasons, and the passive
+  owners fall far behind (player value 40 points).
+
+**Options for the user:**
+1. **Reputation:** adopt the partial correlation (0.92) as the gate's measure, or keep the raw one and remove
+   convergence. The second makes reputation a running total that saturates at 100.
+2. **Multi-year progress**, by making a strong squad take time to build:
+   - (a) free-agent fees that rise with quality (for example 20 days' wage for an average player, up to 60 for the best);
+   - (b) transfer windows (signings in the off-season and a short mid-season window);
+   - (c) less starting cash.

@@ -4,7 +4,7 @@
   "Label": "NONCANONICAL DEVELOPMENT FIXTURE — fictional 5-role league; rules v4 generated world calibrated from aggregate 2026 data",
   "RulesVersion": "slice-rules-v4",
   "DefaultCompanyName": "DEV_ORG_001",
-  "Balance": {"SeasonLength":76,"FirstMatchDay":6,"MatchInterval":4,"RivalCount":7,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"BaseLoad":35,"PreparationScale":70,"LogitScale":900,"Variance":8,"MetaDayOfSeason":21,"RivalCadence":8,"ReputationGain":8,"AudienceGain":180,"PrizeBase":14000,"SponsorSlots":2,"MaxOpenOffers":3,"MarketInterval":7,"OfferWindow":7,"NegotiationDelay":2,"RejectCooldown":21,"RosterSize":6,"MaxRoster":8,"CandidateCount":4,"CoachCandidateCount":3,"TalentRefreshInterval":28,"RenewalWindow":21,"StartingContractSeasons":2,"OperatingCost":2500,"MinimumRoster":6,"ShortfallFinePercent":50,"SponsorForfeitLimit":2,"ReputationRegression":40,"ReputationTargetLow":15,"ReputationTargetHigh":85,"PredictabilityWindow":3,"RegularGames":3,"PlayoffGames":5,"PlayoffTeams":4,"PlayoffInterval":4,"PlacePrizes":[150000,80000,40000,40000,0,0,0,0],"FamiliarityPerDay":1,"FamiliarityPerMatch":4,"StartingFamiliarity":60,"MatchFatigue":4},
+  "Balance": {"SeasonLength":76,"FirstMatchDay":6,"MatchInterval":4,"RivalCount":7,"StartingCash":260000,"Reputation":45,"Audience":3200,"Information":70,"BaseLoad":35,"PreparationScale":70,"LogitScale":900,"Variance":8,"MetaDayOfSeason":21,"RivalCadence":8,"ReputationGain":8,"AudienceGain":180,"PrizeBase":14000,"SponsorSlots":2,"MaxOpenOffers":3,"MarketInterval":7,"OfferWindow":7,"NegotiationDelay":2,"RejectCooldown":21,"RosterSize":6,"MaxRoster":8,"CandidateCount":4,"CoachCandidateCount":3,"TalentRefreshInterval":28,"RenewalWindow":21,"StartingContractSeasons":2,"OperatingCost":2500,"MinimumRoster":6,"ShortfallFinePercent":50,"SponsorForfeitLimit":2,"ReputationRegression":40,"ReputationTargetLow":15,"ReputationTargetHigh":85,"ReputationWinBase":1,"PredictabilityWindow":3,"RegularGames":3,"PlayoffGames":5,"PlayoffTeams":4,"PlayoffInterval":4,"PlacePrizes":[150000,80000,40000,40000,0,0,0,0],"FamiliarityPerDay":1,"FamiliarityPerMatch":4,"StartingFamiliarity":60,"MatchFatigue":4},
   "Generation": {
     "AbilityBands": [{"Value":60,"Weight":2500},{"Value":70,"Weight":5000},{"Value":78,"Weight":2300},{"Value":88,"Weight":200}],
     "SkillJitter": 4,
@@ -30,6 +30,7 @@
     "Mind": {"Min":35,"Max":85},
     "Personality": {"Min":20,"Max":90},
     "SecondaryRoleChance": 2500,
+    "StartingShift": -4,
     "CoachSkill": {"Min":58,"Max":80},
     "CoachCapacity": {"Min":72,"Max":90},
     "Rival": {"Min":68,"Max":82}

@@ -13,7 +13,8 @@ public static class CampaignFactory
         long next = 0;
         var roles = Roles.All.ToList();
         while (roles.Count < b.RosterSize) roles.Add(Roles.All[KeyedRandom.Range(seed, "roster", "extra:" + roles.Count, "role", Roles.All.Length)]);
-        var people = roles.Select(role => Generator.Player(seed, content, $"person:g{++next:D5}", role, 1)).ToImmutableArray();
+        // The opening squad starts as an underdog (StartingShift): a new organization has to build.
+        var people = roles.Select(role => Generator.Player(seed, content, $"person:g{++next:D5}", role, 1, null, g.StartingShift)).ToImmutableArray();
         var coach = Generator.Coach(seed, content, $"coach:g{++next:D5}");
         // Staggered starting contracts so renewals arrive over several seasons.
         var contracts = people.Select(p =>

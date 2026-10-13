@@ -225,6 +225,17 @@ public static class Measurement
         var correlation = Pearson(samples);
         gates.Add(new("Reputation follows results", "Pearson r of season win rate vs season reputation change, all policies and seeds", ">= 0.6",
             Math.Round(correlation, 3), $"{samples.Length} seasons", correlation >= .6, 1, 1, "7"));
+        // The same, holding the season's starting reputation fixed (partial correlation): reputation converges on what a
+        // season earns, so a strong team's change is small even in a strong season, which dilutes the raw figure above.
+        var withStart = runs.SelectMany(r => r.Seasons).Where(s => s.Wins + s.Losses > 0).ToArray();
+        double R(Func<SeasonRow, double> x, Func<SeasonRow, double> y) => Pearson([.. withStart.Select(s => (x(s), y(s)))]);
+        double Win(SeasonRow s) => (double)s.Wins / (s.Wins + s.Losses);
+        double Change(SeasonRow s) => s.ReputationEnd - s.ReputationStart;
+        double Start(SeasonRow s) => s.ReputationStart;
+        var (rxy, rxz, ryz) = (R(Win, Change), R(Win, Start), R(Change, Start));
+        var partial = (rxy - rxz * ryz) / Math.Sqrt(Math.Max(1e-9, (1 - rxz * rxz) * (1 - ryz * ryz)));
+        gates.Add(new("Reputation follows results, given where it started", "Partial correlation of season win rate with the season's reputation change, holding the starting reputation fixed",
+            ">= 0.6 (reference)", Math.Round(partial, 3), $"level: r(win rate, season-end reputation) {Math.Round(R(Win, s => s.ReputationEnd), 3)}", partial >= .6, 0, 1, "7"));
         // Reference metrics for later waves.
         double WinRate(Run r) => r.Seasons.Sum(s => s.Wins) / (double)Math.Max(1, r.Seasons.Sum(s => s.Wins + s.Losses));
         var playerValue = seeds.Average(s => WinRate(Of(Balanced, s)) - WinRate(Of(Coach, s))) * 100;

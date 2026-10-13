@@ -74,13 +74,15 @@ public static class Competition
 
 public static class Commercial
 {
-    /// <summary>A result's commercial follow-through. The audience moves more with a popular lineup: ×(1 + (the lineup's mean
+    /// <summary>A result's commercial follow-through. Reputation moves with how unexpected the result was, and every win adds
+    /// <c>ReputationWinBase</c> × its importance. The audience moves more with a popular lineup: ×(1 + (the lineup's mean
     /// popularity − 50) / 200).</summary>
     public static Company Consume(Company c, CompetitiveOutcome result, Balance b, int popularity = 50)
     {
         if (c.CommercialReceipts.Contains(result.Id)) return c;
         var surprise = result.Won ? 1_000_000 - result.Probability : result.Probability;
-        var rep = (int)Numbers.Divide((long)b.ReputationGain * result.Importance * surprise * (result.Won ? 100 - c.Reputation : c.Reputation), 100_000_000);
+        var rep = (int)Numbers.Divide((long)b.ReputationGain * result.Importance * surprise * (result.Won ? 100 - c.Reputation : c.Reputation), 100_000_000)
+            + (result.Won ? b.ReputationWinBase * result.Importance : 0);
         var audience = (int)Numbers.Divide((long)b.AudienceGain * result.Importance * surprise * (150 + popularity), 200_000_000);
         var effect = new CommercialEffect("commercial:" + result.Id, result.Id, result.Day + 1, result.Won ? rep : -rep, result.Won ? audience : -audience);
         return c with { PendingEffects = c.PendingEffects.Add(effect), CommercialReceipts = c.CommercialReceipts.Add(result.Id) };

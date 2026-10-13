@@ -78,7 +78,7 @@ public static class ContentLoader
         Require(b.OperatingCost is >= 0 and <= 1_000_000 && b.MinimumRoster is >= 5 && b.MinimumRoster <= b.RosterSize && b.ShortfallFinePercent is >= 0 and <= 300
             && b.SponsorForfeitLimit is >= 0 and <= 16
             && b.ReputationRegression is >= 0 and <= 100 && b.ReputationTargetLow is >= 0 && b.ReputationTargetLow <= b.ReputationTargetHigh && b.ReputationTargetHigh <= 100
-            && b.PredictabilityWindow is >= 0 and <= 16, "rules v3 incentive bounds");
+            && b.PredictabilityWindow is >= 0 and <= 16 && b.ReputationWinBase is >= 0 and <= 10, "rules v3 incentive bounds");
         // Rules v4 league: an even number of teams for the round robin, odd best-of formats, four playoff teams, the playoffs
         // inside the season, a place prize per team and familiarity on its 0-100 scale.
         Require(b.RivalCount % 2 == 1 && b.RegularGames is 1 or 3 or 5 or 7 && b.PlayoffGames is 1 or 3 or 5 or 7 && b.PlayoffTeams == 4 && b.RivalCount + 1 >= b.PlayoffTeams
@@ -89,7 +89,7 @@ public static class ContentLoader
         bool Unique(IEnumerable<string> values) { var array = values.ToArray(); return array.Distinct(StringComparer.Ordinal).Count() == array.Length; }
         var g = c.Generation;
         Require(Range(g.CoachSkill, 1, 100) && Range(g.CoachCapacity, 20, 1000) && Range(g.Rival, 6, 95) && Range(g.Mind, 1, 99) && Range(g.Personality, 1, 99)
-            && g.SkillJitter is >= 0 and <= 20 && g.SecondaryRoleChance is >= 0 and <= 10_000, "generation ranges");
+            && g.SkillJitter is >= 0 and <= 20 && g.SecondaryRoleChance is >= 0 and <= 10_000 && g.StartingShift is >= -20 and <= 20, "generation ranges");
         // Rules v4 player generation: ability bands, ages and age profiles, and archetypes covering every role.
         Require(g.AbilityBands.Length > 0 && g.AbilityBands.All(x => x.Value is >= 1 and <= 99 && x.Weight > 0) && Unique(g.AbilityBands.Select(x => x.Value.ToString())), "ability bands");
         Require(g.Ages.Length > 0 && g.Ages.All(x => x.Value is >= 14 and <= 40 && x.Weight > 0) && Unique(g.Ages.Select(x => x.Value.ToString())), "age weights");

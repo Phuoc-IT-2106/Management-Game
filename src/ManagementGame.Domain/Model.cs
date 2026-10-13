@@ -131,6 +131,9 @@ public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInter
     // league place equally with the record).
     long OperatingCost, int MinimumRoster, int ShortfallFinePercent, int SponsorForfeitLimit, int ReputationRegression,
     int ReputationTargetLow, int ReputationTargetHigh,
+    // Rules v4: every win also earns ReputationWinBase × its importance, whatever was expected (the user's decision,
+    // 2026-10-13), besides the surprise-weighted change.
+    int ReputationWinBase,
     // How many of the company's latest results a rival reads for a repeated posture. Rules v2 counted every result since
     // the campaign began, so the penalty grew without bound across continuous seasons; v1's four-match season never saw
     // more than three.
@@ -153,10 +156,12 @@ public sealed record Archetype(string Id, ImmutableArray<string> Roles, int Weig
 /// headroom above the generated rating.</summary>
 public sealed record AgeProfile(int MaxAge, int Shift, int HeadroomMin, int HeadroomMax);
 /// <summary>Player generation (rules v4). Abilities come from one shared band distribution for the starting roster, the
-/// market and rivals, shifted by age; an archetype of the role shapes the skills.</summary>
+/// market and rivals, shifted by age; an archetype of the role shapes the skills. The company's opening squad is shifted by
+/// <paramref name="StartingShift"/> more: a new organization starts as an underdog and has to build (the user's decision,
+/// 2026-10-13).</summary>
 public sealed record Generation(ImmutableArray<WeightedValue> AbilityBands, int SkillJitter, ImmutableArray<Archetype> Archetypes,
     ImmutableArray<WeightedValue> Ages, ImmutableArray<AgeProfile> AgeProfiles, AttributeRange Mind, AttributeRange Personality,
-    int SecondaryRoleChance, AttributeRange CoachSkill, AttributeRange CoachCapacity, AttributeRange Rival);
+    int SecondaryRoleChance, AttributeRange CoachSkill, AttributeRange CoachCapacity, AttributeRange Rival, int StartingShift);
 /// <summary>The weight of each skill (Skills order, basis points summing to 10,000) in a role's rating.</summary>
 public sealed record RoleWeight(string Role, ImmutableArray<int> Weights);
 /// <summary>A nationality of generated people: its draw weight and name pools. FamilyFirst writes the family name first.</summary>
