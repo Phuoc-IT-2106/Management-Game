@@ -130,7 +130,8 @@ public static class ContentLoader
             && retirement.Zip(retirement.Skip(1)).All(p => p.First.Weight <= p.Second.Weight) && retirement[^1].Weight == 10_000, "lifecycle retirement by age");
         Require(l.IntakeAges.Length > 0 && l.IntakeAges.All(x => x.Value is >= 15 and <= 25 && x.Weight > 0) && Unique(l.IntakeAges.Select(x => x.Value.ToString())), "lifecycle intake ages");
         Require(l.RetirementPivot is >= 1 and <= 99 && l.RetirementRatingPercent is >= 0 and <= 20 && l.YouthIntake is >= 0 and <= 20
-            && l.PoolSize >= Roles.All.Length && l.PoolSize <= l.PoolCap && l.PoolCap <= 100, "lifecycle pool");
+            && l.PoolSize >= Roles.All.Length && l.PoolSize <= l.PoolCap && l.PoolCap <= 100
+            && l.PoolFloor >= 0 && l.PoolFloor * Roles.All.Length <= l.PoolCap, "lifecycle pool");
         Require(l.FormStep is >= 0 and <= 10 && l.FormSurprise is >= 0 and <= 10 && l.DecayDays is >= 1 and <= 28
             && new[] { l.MoraleWin, l.MoraleLoss, l.MoraleBench, l.MoraleSettle, l.PopularityWin, l.PopularityBench, l.ConductReputation, l.ConductPopularity, l.ConductMorale }.All(x => x is >= 0 and <= 30)
             && l.MoraleRest is >= 0 and <= 100 && l.MoraleLow is >= 0 and <= 100 && l.RefusalAmbition is >= 1 and <= 100

@@ -415,8 +415,8 @@ public partial class GameShell
         var fee = Limit("RecruitFee", view.RecruitFee, 10); var wage = Limit("RecruitWage", view.RecruitWage, 1);
         var limits = ui.Flow(); authority.AddChild(limits); limits.AddChild(Field("Max signing fee", fee)); limits.AddChild(Field("Max wage per day", wage));
         Line(authority, view.Delegation == Delegation.Autonomous && view.RecruitWage > 0 && view.RecruitFee > 0
-            ? $"The coach signs free agents within {Currency.Format(view.RecruitFee)} and {Currency.PerDay(view.RecruitWage)}: a missing role first, then the league minimum, then at most one upgrade every {CoachRecruiting.UpgradeInterval} days. Releases and renewals stay with you."
-            : "With autonomous control and both limits above zero, the coach also signs free agents within them. Releases and renewals stay with you.",
+            ? $"The coach signs free agents within {Currency.Format(view.RecruitFee)} and {Currency.PerDay(view.RecruitWage)}: a missing role first, then the league minimum, then at most one upgrade every {CoachRecruiting.UpgradeInterval} days, letting the displaced player go when the exit cost fits the fee limit. Renewals stay with you."
+            : "With autonomous control and both limits above zero, the coach also signs free agents within them. Renewals stay with you.",
             TypographyRole.Annotation, ColorRole.TextSecondary);
         var apply = ui.Button("Apply authority", () => Send(new CoachDecision((Delegation)mode.Selected, (Risk)ceiling.Selected,
             (long)fee.Value * Currency.MinorPerUnit, (long)wage.Value * Currency.MinorPerUnit)));

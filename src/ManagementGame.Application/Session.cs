@@ -22,12 +22,18 @@ public sealed partial class Session(Content content, Campaign initial, ISnapshot
             {
                 var staged = state;
                 // An autonomous coach recruits inside the owner's limits before the day advances, from the same observation the
-                // owner sees and through the same signing decision; a signing the rules refuse is skipped, never a blocked day.
+                // owner sees and through the same decisions: the displaced player's release first, then the signing. A move the
+                // rules refuse is undone whole and skipped, never a blocked day.
                 if (request.Decision is AdvanceDecision && state.Company.Authority is { Mode: ControlMode.Autonomous, RecruitFee: > 0, RecruitWage: > 0 })
                 {
                     var observation = Observations.Build(staged, content);
-                    if (CoachRecruiting.Next(observation, LastCoachSigning(staged)) is { } signing)
-                        try { staged = ApplyDecision(staged, signing, CoachRecruiting.CausePrefix + request.Id); }
+                    if (CoachRecruiting.Next(observation, LastCoachSigning(staged)) is { } move)
+                        try
+                        {
+                            var cause = CoachRecruiting.CausePrefix + request.Id;
+                            var recruited = move.Release is null ? staged : ApplyDecision(staged, move.Release, cause);
+                            staged = ApplyDecision(recruited, move.Signing, cause);
+                        }
                         catch (RuleViolation) { }
                 }
                 if (request.Decision is AdvanceDecision && staged.Company.Plan is null && Simulation.NextFixture(state) is not null && state.Company.Authority.Mode == ControlMode.Autonomous)

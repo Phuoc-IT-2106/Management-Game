@@ -994,7 +994,7 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
 
     // Several seasons: rivals keep recruiting, trade with each other, and their turnover stays near the calibrated churn.
     var league = New(17); Submit(league, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
-    var transfers = 0; var rivalSignings = 0; var counted = new HashSet<string>(); var rosterSeasons = 0;
+    var transfers = 0; var rivalSignings = 0; var counted = new HashSet<string>(); var rosterSeasons = 0; var thinnest = int.MaxValue;
     for (var guard = 0; guard < 1600 && league.Observe().Season <= 4; guard++)
     {
         var v = league.Observe();
@@ -1013,8 +1013,14 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
             if (m.Reason == MoveReason.Transferred) transfers++;
             if (m.Reason == MoveReason.Signed && m.Destination is not null && m.Destination.StartsWith("rival:", StringComparison.Ordinal)) rivalSignings++;
         }
-        if (league.Observe().Season != season) rosterSeasons += state.World.Rivals.Sum(r => r.People.Length);
+        if (league.Observe().Season != season)
+        {
+            rosterSeasons += state.World.Rivals.Sum(r => r.People.Length);
+            thinnest = Math.Min(thinnest, Roles.All.Min(r => state.World.Candidates.Count(x => x.Person.Role == r)));
+        }
     }
+    Check(thinnest != int.MaxValue && thinnest >= world.Lifecycle.PoolFloor && world.Lifecycle.PoolFloor == 3,
+        $"after every season's recruitment each role keeps at least {world.Lifecycle.PoolFloor} free agents (thinnest: {thinnest})");
     var churn = (transfers + rivalSignings) / (double)Math.Max(1, rosterSeasons);
     Check(transfers > 0 && rivalSignings > 0 && churn is > 0.08 and < 0.6,
         $"over several seasons rivals sign free agents and trade with each other; newcomers are {churn:P0} of rival squads a season (calibrated: about 25%)");
@@ -1042,34 +1048,48 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
 // Bounded delegation of recruitment (DEC-014): an autonomous coach signs free agents inside the owner's limits, from the
 // estimates the owner sees, and never releases, renews or passes the roster limit.
 {
+    SigningDecision? Sign(Situation s, int last) => CoachRecruiting.Next(s, last)?.Signing;
     var view = New(31).Observe();
     var wage = view.Candidates.Max(c => c.Salary); var fee = view.Candidates.Max(c => c.Fee);
     var open = view with { Delegation = Delegation.Autonomous, RecruitFee = fee, RecruitWage = wage, Cash = fee * 10 };
     var noMid = open with { People = [.. view.People.Where(p => p.Role != "mid")] };
-    var pick = CoachRecruiting.Next(noMid, int.MinValue / 2);
+    var pick = Sign(noMid, int.MinValue / 2);
     var mids = view.Candidates.Where(c => c.Role == "mid").ToArray();
     Check(pick is not null && mids.Any(c => c.Id == pick.PersonId)
         && CoachRecruiting.Midpoint(mids.Single(c => c.Id == pick.PersonId).RatingEstimate) == mids.Max(c => CoachRecruiting.Midpoint(c.RatingEstimate)),
         "an autonomous coach covers a missing role with the best free agent by estimate");
-    Check(CoachRecruiting.Next(noMid with { Delegation = Delegation.Recommend }, int.MinValue / 2) is null && CoachRecruiting.Next(noMid with { RecruitWage = 0 }, int.MinValue / 2) is null,
+    Check(Sign(noMid with { Delegation = Delegation.Recommend }, int.MinValue / 2) is null && Sign(noMid with { RecruitWage = 0 }, int.MinValue / 2) is null,
         "only an autonomous coach with limits recruits");
     var cheapest = mids.Min(c => c.Fee); var lowest = mids.Min(c => c.Salary);
     var tight = noMid with { RecruitFee = cheapest, RecruitWage = lowest };
-    Check(CoachRecruiting.Next(tight, int.MinValue / 2) is not { } bounded || view.Candidates.Single(c => c.Id == bounded.PersonId) is { } chosen && chosen.Fee <= cheapest && chosen.Salary <= lowest,
+    Check(Sign(tight, int.MinValue / 2) is not { } bounded || view.Candidates.Single(c => c.Id == bounded.PersonId) is { } chosen && chosen.Fee <= cheapest && chosen.Salary <= lowest,
         "the coach's signing stays within the fee and the wage limits");
-    Check(CoachRecruiting.Next(noMid with { RecruitFee = cheapest - 1 }, int.MinValue / 2)?.PersonId is not { } over || view.Candidates.Single(c => c.Id == over).Fee <= cheapest - 1,
+    Check(Sign(noMid with { RecruitFee = cheapest - 1 }, int.MinValue / 2)?.PersonId is not { } over || view.Candidates.Single(c => c.Id == over).Fee <= cheapest - 1,
         "no free agent above the fee limit is signed");
-    Check(CoachRecruiting.Next(noMid with { Cash = 0 }, int.MinValue / 2) is null, "the coach does not sign what the company cannot pay now");
-    Check(CoachRecruiting.Next(noMid with { MaxRoster = noMid.People.Length }, int.MinValue / 2) is null, "the coach never passes the roster limit");
+    Check(Sign(noMid with { Cash = 0 }, int.MinValue / 2) is null, "the coach does not sign what the company cannot pay now");
+    Check(CoachRecruiting.Next(noMid with { MaxRoster = noMid.People.Length }, int.MinValue / 2) is not { } atLimit || atLimit.Release is not null,
+        "the coach never passes the roster limit: on a full roster a signing comes with a release");
     // Upgrades: a weak squad, a free agent clearing the weakest role's best player by the margin, at most once per interval.
     var weak = open with { People = [.. view.People.Select(p => p with { Rating = 30 })], Day = 200 };
-    var upgrade = CoachRecruiting.Next(weak, weak.Day - CoachRecruiting.UpgradeInterval);
+    var upgrade = Sign(weak, weak.Day - CoachRecruiting.UpgradeInterval);
     Check(upgrade is not null && CoachRecruiting.Midpoint(view.Candidates.Single(c => c.Id == upgrade.PersonId).RatingEstimate) >= 30 + CoachRecruiting.UpgradeMargin
         && view.Candidates.Single(c => c.Id == upgrade.PersonId).Fee * 2 <= weak.Cash, "an upgrade clears the weakest role by the margin and costs at most half the cash");
-    Check(CoachRecruiting.Next(weak, weak.Day - CoachRecruiting.UpgradeInterval + 1) is null, "the coach upgrades at most once per interval");
-    Check(CoachRecruiting.Next(open with { Day = 200 }, int.MinValue / 2) is not { } strong
+    Check(Sign(weak, weak.Day - CoachRecruiting.UpgradeInterval + 1) is null, "the coach upgrades at most once per interval");
+    Check(Sign(open with { Day = 200 }, int.MinValue / 2) is not { } strong
         || CoachRecruiting.Midpoint(view.Candidates.Single(c => c.Id == strong.PersonId).RatingEstimate) >= view.People.Where(p => p.Role == view.Candidates.Single(c => c.Id == strong.PersonId).Role).Max(p => p.Rating) + CoachRecruiting.UpgradeMargin,
         "a squad no estimate clears by the margin keeps its players");
+
+    // The upgrade displaces the weakest player of its role who can be released, when the exit cost fits the fee limit; on a
+    // full roster the upgrade needs that release, and the coach never recruits in distress.
+    var fullWeak = weak with { MaxRoster = weak.People.Length };
+    var paired = CoachRecruiting.Next(fullWeak, fullWeak.Day - CoachRecruiting.UpgradeInterval);
+    var role = paired is null ? "" : view.Candidates.Single(c => c.Id == paired.Signing.PersonId).Role;
+    Check(paired?.Release is { } let && fullWeak.People.Single(p => p.Id == let.PersonId) is { CanRelease: true } gone && gone.ExitCost <= fullWeak.RecruitFee
+        && (gone.Role == role || !fullWeak.People.Any(p => p.Role == role && p.CanRelease)),
+        "on a full roster an upgrade comes with the release of the displaced player, within the fee limit");
+    Check(CoachRecruiting.Next(fullWeak with { RecruitFee = fullWeak.People.Min(p => p.ExitCost) - 1 }, fullWeak.Day - CoachRecruiting.UpgradeInterval) is null,
+        "on a full roster no upgrade is made when no displaced player's exit fits the fee limit");
+    Check(CoachRecruiting.Next(noMid with { Status = nameof(RecoveryStage.Distress) }, int.MinValue / 2) is null, "the coach does not recruit in distress");
 
     // Through the session: a squad that lost its mids is covered on the next advance, inside the limits, as a signing.
     var baseCampaign = New(31).Capture();

@@ -397,6 +397,7 @@ public static class Simulation
         // Rivals: departures, development, standing and coaching, then recruitment from the market and from each other.
         w = Rivals.Departures(w, seed, content, season, day, order);
         w = Rivals.Recruit(w, seed, content, season, day);
+        w = Careers.Floor(w, seed, content, season);
         var rivals = w.Rivals;
         c = Finance.Archive(c, Seasons.Start(season, b));
         c = c with { Reviews = c.Reviews.Skip(Math.Max(0, c.Reviews.Length - 150)).ToImmutableArray() };

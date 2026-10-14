@@ -181,8 +181,8 @@ public sealed record Calibration(string Source, string ReportSha256, string Obse
 public sealed record DevelopmentBand(int MaxAge, int Min, int Max);
 /// <summary>The player lifecycle (rules v4 phase 4). Development by age; retirement by age (basis points per season,
 /// calibrated) scaled by rating; youth intake by age (weights, calibrated); a free-agent pool that persists between
-/// <see cref="PoolSize"/> at the start and <see cref="PoolCap"/>; form, morale and popularity from matches; conduct from
-/// professionalism.</summary>
+/// <see cref="PoolSize"/> at the start and <see cref="PoolCap"/>, with at least <see cref="PoolFloor"/> free agents in every role
+/// once a season's recruitment is over; form, morale and popularity from matches; conduct from professionalism.</summary>
 public sealed record Lifecycle(
     ImmutableArray<DevelopmentBand> Development, ImmutableArray<WeightedValue> RetirementByAge, ImmutableArray<WeightedValue> IntakeAges,
     // Retirement chance moves RetirementRatingPercent percent per rating point below (more) or above (less) RetirementPivot.
@@ -197,7 +197,8 @@ public sealed record Lifecycle(
     // to sponsors' fair payment, for at most StarBonusCap of them.
     int PopularityWin, int PopularityBench, int StarPopularity, int StarBonusPercent, int StarBonusCap,
     // Conduct, every ConductInterval days: ConductRate basis points per point of professionalism below ConductThreshold.
-    int ConductInterval, int ConductThreshold, int ConductRate, int ConductReputation, int ConductPopularity, int ConductMorale);
+    int ConductInterval, int ConductThreshold, int ConductRate, int ConductReputation, int ConductPopularity, int ConductMorale,
+    int PoolFloor = 0);
 /// <summary>Rival organizations (rules v4 phase 5). Edge is what a rival adds to its lineup's rating in a match (its own
 /// preparation and adaptation, not modelled in detail). Squads are 6–8 players by <see cref="RosterSizes"/>. Wages stay
 /// under WageCapBase + WageCapPerReputation × reputation a day; funds for fees are FundsBase + FundsPerPlace for every

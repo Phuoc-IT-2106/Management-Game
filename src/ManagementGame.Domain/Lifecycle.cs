@@ -105,6 +105,24 @@ public static class Careers
         return w with { Candidates = [.. w.Candidates.Select(x => Listing(x.Person, next, content))] };
     }
 
+    /// <summary>After the season's recruitment (the rivals', at season end): a role with fewer than <c>PoolFloor</c> free agents
+    /// takes young players in, by the youth intake's ages and generator, so every role keeps a market (world health; the pool
+    /// cap applies again at the next season end).</summary>
+    public static World Floor(World w, ulong seed, Content content, int season)
+    {
+        var life = content.Lifecycle; var next = season + 1; var id = w.NextId;
+        var ages = life.IntakeAges.OrderBy(a => a.Value).ToArray();
+        var added = new List<Candidate>();
+        foreach (var role in Roles.All)
+            for (var n = w.Candidates.Count(x => x.Person.Role == role); n < life.PoolFloor; n++)
+            {
+                var personId = $"person:g{++id:D5}";
+                var age = Generator.Weighted(seed, "intake", personId, "age", ages, a => a.Weight).Value;
+                added.Add(Listing(Generator.Player(seed, content, personId, role, next, age), next, content));
+            }
+        return w with { Candidates = w.Candidates.AddRange(added), NextId = id };
+    }
+
     // ---------- condition during the season ----------
     /// <summary>After a match: the lineup's form moves with the result, more when it was unexpected; its morale with the
     /// result; its popularity with a win, more in a bigger match. Players left out lose morale and a little popularity.</summary>
