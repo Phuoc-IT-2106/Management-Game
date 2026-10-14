@@ -94,7 +94,7 @@ Other facts:
 
 DEC-005 asks for depth only where it creates decisions. Each entry below names the decision it creates and the company
 link. The **Wave** column maps to the rules v3 roadmap in the
-[handoff](../05-handoffs/SESSION_HANDOFF_2026-10-08.md#what-remains).
+[handoff](../90-archive/05-handoffs/SESSION_HANDOFF_2026-10-08.md#what-remains).
 
 | Need | Decision it creates | Company link | Wave |
 |---|---|---|---|

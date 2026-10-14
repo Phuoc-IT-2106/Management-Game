@@ -321,9 +321,26 @@ During balancing, the user made three decisions:
 
 A Director DEC entry should confirm rules v4 and the changed gate.
 
+### Rules v4 follow-ups — 2026-10-14
+
+By explicit user instruction ([after rules v4](../10-vertical-slice/RULES_V4_PLAYER_WORLD.md#after-rules-v4-2026-10-14)):
+- the league table shows crests;
+- rival players and head coaches appear as under contract in Squad and Staff;
+- an autonomous head coach recruits within fee and wage limits the owner sets, and releases the player an upgrade
+  displaces, under DEC-014's authority envelope;
+- every role keeps a floor of three free agents at season end.
+
+Saves move to schema 6, and schema-5 saves are rejected. Player value (11.4 points) and market depth (100%) are now inside
+their ranges. Gates 1 and 2 still pass.
+
+The DEC entries still missing are drafted for the Director in
+[PROPOSED_DECISIONS](../01-governance/PROPOSED_DECISIONS.md), DEC-024 to DEC-030.
+
 ## Current Priority
 
-Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Rules v4 is
-done; next are the Director's DEC entries (rules v2, rules v3 wave 1, rules v4 and the changed reputation gate), human
-review of the screens, and the balance references still outside their ranges (see the
-[session handoff of 2026-10-13](../05-handoffs/SESSION_HANDOFF_2026-10-13.md)).
+Proceed with **Phase 5 — Vertical Slice BUILD** within the accepted foundation and bounded roadmap scope. Next:
+- the Director's review of the proposed DEC-024 to DEC-030;
+- human review of the screens;
+- the balance references still outside their ranges: financial pressure, outcome diversity and decision density.
+
+See the [session handoff of 2026-10-14](../05-handoffs/SESSION_HANDOFF_2026-10-14.md).

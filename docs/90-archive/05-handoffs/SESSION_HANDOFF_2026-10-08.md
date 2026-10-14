@@ -1,8 +1,12 @@
 # Session handoff — 2026-10-08 (paused)
 
+> **Archived 2026-10-14.** Superseded: everything listed here was committed in `9b27842`, and the open work moved to
+> [the 2026-10-13 handoff](../../05-handoffs/SESSION_HANDOFF_2026-10-13.md) and later. Links are rewritten for this folder;
+> the text is otherwise unchanged.
+
 Status: **PAUSED by the user.** Everything below was committed in `9b27842` (2026-10-09). Rules v4 continued from there
 and partly supersedes [What remains](#what-remains): its phase table in
-[RULES_V4_PLAYER_WORLD.md](../10-vertical-slice/RULES_V4_PLAYER_WORLD.md) is the current progress record.
+[RULES_V4_PLAYER_WORLD.md](../../10-vertical-slice/RULES_V4_PLAYER_WORLD.md) is the current progress record.
 
 **Repository state when paused.**
 - Branch `stage5-sponsor-instruments`, HEAD `14b9f48`.
@@ -17,9 +21,9 @@ Both are verified (see [How to verify](#how-to-verify)). Everything still open i
 
 ## A. Sidebar redesign — done
 
-Full record: [genre-shell README, "Sidebar redesign"](../10-vertical-slice/genre-shell/README.md) and
-[UI polish standard §6 Rail](../10-vertical-slice/ui-ux-foundation/UI_POLISH_STANDARD.md).
-Evidence: [portal-evidence/sidebar](../10-vertical-slice/genre-shell/portal-evidence/sidebar/).
+Full record: [genre-shell README, "Sidebar redesign"](../../10-vertical-slice/genre-shell/README.md) and
+[UI polish standard §6 Rail](../../10-vertical-slice/ui-ux-foundation/UI_POLISH_STANDARD.md).
+Evidence: [portal-evidence/sidebar](../../10-vertical-slice/genre-shell/portal-evidence/sidebar).
 
 - All eight rail sections show their own approved module art (`SemanticAssets.ForSection`). Inbox, Competition,
   Commercial and Finance were vector icons before. No asset was missing; Calendar stays catalogued and unused.
@@ -39,8 +43,8 @@ Evidence: [portal-evidence/sidebar](../10-vertical-slice/genre-shell/portal-evid
 
 ## B. Rules v3 wave 1 — done, gate 1 passed
 
-Full record: [RULES_V3_INCENTIVES.md](../10-vertical-slice/RULES_V3_INCENTIVES.md).
-Evidence: [rules-v3/evidence](../10-vertical-slice/rules-v3/evidence/).
+Full record: [RULES_V3_INCENTIVES.md](../../10-vertical-slice/RULES_V3_INCENTIVES.md).
+Evidence: [rules-v3/evidence](../../10-vertical-slice/rules-v3/evidence).
 Source proposal: the user's [Rules v3 doc](https://claude.ai/artifact/2NFWaMQeFuQSEx9XeBoEeH). Its "Kết quả đợt 1"
 section and its decision checklist were updated this session.
 
@@ -66,9 +70,9 @@ section and its decision checklist were updated this session.
 
 ## C. Top bar typography and USD — done
 
-Full record: [genre-shell README, "Top bar typography and USD"](../10-vertical-slice/genre-shell/README.md) and
-[UI polish standard §6 Top bar, §7 Text and numbers](../10-vertical-slice/ui-ux-foundation/UI_POLISH_STANDARD.md).
-Evidence: [portal-evidence/topbar](../10-vertical-slice/genre-shell/portal-evidence/topbar/).
+Full record: [genre-shell README, "Top bar typography and USD"](../../10-vertical-slice/genre-shell/README.md) and
+[UI polish standard §6 Top bar, §7 Text and numbers](../../10-vertical-slice/ui-ux-foundation/UI_POLISH_STANDARD.md).
+Evidence: [portal-evidence/topbar](../../10-vertical-slice/genre-shell/portal-evidence/topbar).
 
 - **Font.** Inter 4.1 (SIL OFL 1.1) is bundled in three weights (`game/Client/Assets/Fonts`). It replaces the system
   Segoe UI and Bahnschrift everywhere.
@@ -87,7 +91,7 @@ Evidence: [portal-evidence/topbar](../10-vertical-slice/genre-shell/portal-evide
 
 ## D. Portal Transfer News redesign — done (later session, same day)
 
-Full record: [TRANSFER_NEWS.md](../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
+Full record: [TRANSFER_NEWS.md](../../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
 Evidence: `portal-evidence/transfer-news` (removed 2026-10-12, superseded; in git history at `3917e5c`).
 Also uncommitted.
 
@@ -104,8 +108,8 @@ Also uncommitted.
 
 ## E. Transfer News v2 — done (2026-10-09, next session)
 
-Full record: [TRANSFER_NEWS.md](../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
-Evidence: [portal-evidence/transfer-news-v2](../10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/).
+Full record: [TRANSFER_NEWS.md](../../10-vertical-slice/genre-shell/TRANSFER_NEWS.md).
+Evidence: [portal-evidence/transfer-news-v2](../../10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2).
 Also uncommitted.
 
 - **Journeys.** Transfer News shows every move as origin → destination: an organization's crest and name, "Free

@@ -11,7 +11,8 @@ probabilities use integer millionths. Arithmetic rounds ties to even at explicit
 division boundaries. Keyed SHA-256 rng-v1 uses length-prefixed NFC UTF-8 fields and
 big-endian lengths/output, with rejection sampling. Golden vectors precede use.
 
-Content schema 4 (rules v4, see [the player world](RULES_V4_PLAYER_WORLD.md)), with save schema 5:
+Content schema 4 (rules v4, see [the player world](RULES_V4_PLAYER_WORLD.md)), with save schema 6 (since 2026-10-14; the
+authority envelope's recruitment limits; `Lifecycle.PoolFloor` is a content field of schema 4):
 - **from schemas 2 and 3** ([rules v2](RULES_V2_CONTINUOUS_CAMPAIGN.md), [rules v3 wave 1](RULES_V3_INCENTIVES.md)):
   balance and season shape, the incentives, rival organization names and the sponsor brand pool;
 - **players:** role weights; ability bands; archetypes per role; age and nationality tables calibrated from aggregate

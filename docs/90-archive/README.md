@@ -22,3 +22,9 @@ folder of its original location under `docs/`:
 
 Superseded screen captures and rejected UI drafts were deleted rather than archived; they remain in git history at
 `3917e5c`.
+
+## Moved here on 2026-10-14
+
+| File | Why | Superseded by |
+|---|---|---|
+| `05-handoffs/SESSION_HANDOFF_2026-10-08.md` | Its work was committed in `9b27842`; it still said nothing was committed | The [current session handoff](../05-handoffs/README.md) |

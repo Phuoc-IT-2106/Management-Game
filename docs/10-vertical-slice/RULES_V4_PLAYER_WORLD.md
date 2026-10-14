@@ -16,7 +16,8 @@ Two confirmations are still needed:
   - build all phases in one run.
 - Like rules v2 and v3 wave 1, this stands on explicit user instruction. A Director DEC entry should confirm it.
 
-Identity: rules `slice-rules-v4`, content schema 4, save schema 5. Saves of schema 4 or older are rejected; no
+Identity: rules `slice-rules-v4`, content schema 4, save schema 5 (schema 6 since 2026-10-14: the coach's recruitment
+limits, see [After rules v4](#after-rules-v4-2026-10-14)). Saves of an older schema are rejected; no
 migration.
 
 ## Phases
@@ -758,3 +759,65 @@ viewport after a season end. Two changes:
 | `build/Measure-Rules.ps1 -Gate 2` | `MEASURE_GATES_PASS 1..2` |
 | Calibration tool tests | 17 |
 | Captures, both sizes, with the transfer run | pass |
+
+## After rules v4 (2026-10-14)
+
+The session handoff of 2026-10-13 listed the work that remained. The user chose this order: the UI follow-ups first,
+then the balance references. The user made three decisions:
+- a delegated head coach recruits within limits the owner sets;
+- the coach may release the player an upgrade displaces;
+- every role keeps a floor of free agents.
+
+### UI follow-ups (`e917a05`)
+
+- **Crests in the standings.** Each row of the league table shows the team's crest beside its name (reference
+  `05_league`). The shared asset mark renders into a small transparent viewport, and that texture is the cell's icon. A
+  crest drawn by the tree's custom-draw callback was hidden under the selected row's style, which the icon is not.
+- **People under contract.**
+  - Squad's market has a "Free agents | Under contract" view (reference `03_squad`). It lists rival players with role,
+    age, a rating estimate and their club. Their profile says why they cannot be signed.
+  - Staff's coach market has "Available | Under contract" (reference `09_staff`). Rival head coaches are listed with
+    their club. Their skill is not scouted, so none is shown.
+  - Transfer stories about rival people open them there.
+  - `RivalProfile` carries the head coach's stable ID.
+
+Evidence: [screen-evidence/rules-v4-followups](genre-shell/screen-evidence/rules-v4-followups/).
+
+### The head coach recruits within the owner's limits (`9a29251`, then the release and the floor)
+
+**The envelope (DEC-014).** `Authority` gains `RecruitFee` and `RecruitWage`: the largest signing fee and the largest
+daily wage of one signing. Zero, the default, turns recruiting off. The owner sets both in the Competition screen's
+authority card, in dollars. The change raises the save schema to 6, and schema-5 saves are rejected.
+
+**What the coach does** (`CoachRecruiting`, Application). The coach acts only when its control mode is autonomous and
+both limits are set. It recruits on each advance, before the day runs. It works from the owner's own observation: rating
+estimates by their midpoint, never true ratings. It acts through the same signing and release decisions an owner
+makes. In order, the coach:
+1. covers a role nobody in the squad plays as their own;
+2. keeps the league's registered-roster minimum;
+3. makes at most one upgrade every 28 days, for the squad's weakest role, when an estimate clears that role's best
+   player by 4 points. The fee may be at most half the cash.
+
+An upgrade releases the displaced player: the weakest player of that role who can be released, or, on a full roster,
+the squad's weakest such player. The exit cost must also fit the fee limit. On a full roster without such a release
+there is no upgrade. The coach never renews contracts and never recruits in distress or restructuring. A move the rules
+refuse is undone whole and skipped.
+
+**The free-agent floor.** At season end, after the rivals recruit, a role with fewer than `Lifecycle.PoolFloor` (3) free
+agents takes young players in, with the youth intake's ages and generator.
+
+**Measurement** (`build/Measure-Rules.ps1 -Gate 2`). The delegating owner sets limits once, from the opening squad: a
+wage up to a quarter above the best-paid player's, and a fee up to 40 days of that wage.
+
+| Reference | Before | Round 1: signing only | Round 2: release and floor | Range |
+|---|---|---|---|---|
+| Player value (balanced minus coach, win rate) | 37 | 19.4 | **11.4** | 5–15 |
+| Coach policy win rate | ≈ 46% | 64.3% | 72.2% | — |
+| Market depth (season ends with 3+ free agents in every role) | 87.5% | 85 | **100** | ≥ 90% |
+| Gates 1 and 2 | pass | pass | **pass** | — |
+| Financial pressure | 3% | 3.1% | 3.1% | 20–60% |
+| Outcome diversity | 0.87 | 0.87 | 0.87 | ≥ 1 |
+| Decision density (gate 3) | 1.93 | 1.97 | 1.97 | ≥ 2 |
+
+Round 1 shows why the release matters. The coach's squad reached the 8-player limit in season 1. With no release, the
+coach could not upgrade again, and its lineup's base strength stayed at 72–74. The balanced owner's rose from 71 to 82.
