@@ -409,7 +409,18 @@ public partial class GameShell
         var mode = new OptionButton { Name = "Delegation" }; foreach (var name in Enum.GetNames<Delegation>()) mode.AddItem(name); mode.Selected = (int)view.Delegation;
         var ceiling = new OptionButton { Name = "Ceiling" }; foreach (var name in Enum.GetNames<Risk>()) ceiling.AddItem(name); ceiling.Selected = (int)view.Ceiling;
         var row = ui.Flow(); authority.AddChild(row); row.AddChild(Field("Coach control", mode)); row.AddChild(Field("Risk ceiling", ceiling));
-        authority.AddChild(ui.Button("Apply authority", () => Send(new CoachDecision((Delegation)mode.Selected, (Risk)ceiling.Selected))));
+        // The recruitment envelope (DEC-014): whole dollars here, minor units in the decision. Zero turns recruiting off.
+        SpinBox Limit(string name, long minor, double step) => new() { Name = name, MinValue = 0, MaxValue = 1_000_000, Step = step, Prefix = Currency.Symbol,
+            Value = minor / Currency.MinorPerUnit, CustomMinimumSize = new Vector2(ui.Tokens.ActionMinimumWidth * 0.8f, 0) };
+        var fee = Limit("RecruitFee", view.RecruitFee, 10); var wage = Limit("RecruitWage", view.RecruitWage, 1);
+        var limits = ui.Flow(); authority.AddChild(limits); limits.AddChild(Field("Max signing fee", fee)); limits.AddChild(Field("Max wage per day", wage));
+        Line(authority, view.Delegation == Delegation.Autonomous && view.RecruitWage > 0 && view.RecruitFee > 0
+            ? $"The coach signs free agents within {Currency.Format(view.RecruitFee)} and {Currency.PerDay(view.RecruitWage)}: a missing role first, then the league minimum, then at most one upgrade every {CoachRecruiting.UpgradeInterval} days. Releases and renewals stay with you."
+            : "With autonomous control and both limits above zero, the coach also signs free agents within them. Releases and renewals stay with you.",
+            TypographyRole.Annotation, ColorRole.TextSecondary);
+        var apply = ui.Button("Apply authority", () => Send(new CoachDecision((Delegation)mode.Selected, (Risk)ceiling.Selected,
+            (long)fee.Value * Currency.MinorPerUnit, (long)wage.Value * Currency.MinorPerUnit)));
+        apply.Name = "ApplyAuthority"; authority.AddChild(apply);
 
         var fixtures = Card(right, "Season fixtures", "What is left this season, and what did we win?", "calendar");
         fixtures.AddChild(Table("Fixtures", ["Day", "Opponent", "Stage", "Result"],

@@ -21,7 +21,16 @@ public sealed partial class Session(Content content, Campaign initial, ISnapshot
             try
             {
                 var staged = state;
-                if (request.Decision is AdvanceDecision && state.Company.Plan is null && Simulation.NextFixture(state) is not null && state.Company.Authority.Mode == ControlMode.Autonomous)
+                // An autonomous coach recruits inside the owner's limits before the day advances, from the same observation the
+                // owner sees and through the same signing decision; a signing the rules refuse is skipped, never a blocked day.
+                if (request.Decision is AdvanceDecision && state.Company.Authority is { Mode: ControlMode.Autonomous, RecruitFee: > 0, RecruitWage: > 0 })
+                {
+                    var observation = Observations.Build(staged, content);
+                    if (CoachRecruiting.Next(observation, LastCoachSigning(staged)) is { } signing)
+                        try { staged = ApplyDecision(staged, signing, CoachRecruiting.CausePrefix + request.Id); }
+                        catch (RuleViolation) { }
+                }
+                if (request.Decision is AdvanceDecision && staged.Company.Plan is null && Simulation.NextFixture(state) is not null && state.Company.Authority.Mode == ControlMode.Autonomous)
                 {
                     var observation = Observations.Build(staged, content);
                     if (observation.Confidence == "Low confidence") throw new RuleViolation("Coach escalates uncertain opponent information. Review and commit a plan manually.");
@@ -48,7 +57,7 @@ public sealed partial class Session(Content content, Campaign initial, ISnapshot
         {
             PreparationDecision p => new CommitPlan(new Plan(p.FixtureId, p.Execution, p.Opponent, p.Meta, (Posture)p.Posture, p.Lineup,
                 Enum.Parse<Posture>(Observations.Build(s, content).OpponentTendency), cause)),
-            CoachDecision a => new SetAuthority(new Authority((ControlMode)a.Mode, (Posture)a.Ceiling)),
+            CoachDecision a => new SetAuthority(new Authority((ControlMode)a.Mode, (Posture)a.Ceiling, a.RecruitFee, a.RecruitWage)),
             SigningDecision p => new SignPlayer(p.PersonId, p.Seasons), ReleaseDecision p => new ReleasePlayer(p.PersonId),
             SponsorDecision o => new AcceptSponsor(o.OfferId), ProposalDecision p => new ProposeSponsorship(p.BrandId, p.Payment, p.DurationDays),
             RenewalDecision r => new RenewContract(r.PersonId, r.Seasons), HireCoachDecision h => new HireCoach(h.CoachId),
@@ -58,6 +67,9 @@ public sealed partial class Session(Content content, Campaign initial, ISnapshot
         return Simulation.Apply(s, intent, content, cause);
     }
     private Response Reject(string reason) => new(false, state.Execution.Revision, reason);
+    /// <summary>The day of the coach's latest signing for the company, or a day long past when there is none in the history.</summary>
+    private static int LastCoachSigning(Campaign s) => s.World.Moves.Where(m => m.Reason == MoveReason.Signed && m.Destination == s.Company.Id
+        && m.CauseId.StartsWith(CoachRecruiting.CausePrefix, StringComparison.Ordinal)).Select(m => m.Day).DefaultIfEmpty(int.MinValue / 2).Max();
     public Response Save(string slot)
     {
         lock (gate)

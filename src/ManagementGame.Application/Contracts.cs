@@ -6,7 +6,9 @@ public enum Risk { Conservative, Balanced, Aggressive }
 public enum Delegation { Manual, Recommend, Autonomous }
 public abstract record Decision;
 public sealed record PreparationDecision(string FixtureId, int Execution, int Opponent, int Meta, Risk Posture, ImmutableArray<string> Lineup) : Decision;
-public sealed record CoachDecision(Delegation Mode, Risk Ceiling) : Decision;
+/// <summary>The coach's authority. An autonomous coach also recruits when both limits are above zero: free agents whose
+/// fee and daily wage (minor units) are within them (see <see cref="CoachRecruiting"/>).</summary>
+public sealed record CoachDecision(Delegation Mode, Risk Ceiling, long RecruitFee = 0, long RecruitWage = 0) : Decision;
 public sealed record SigningDecision(string PersonId, int Seasons = 1) : Decision;
 public sealed record ReleaseDecision(string PersonId) : Decision;
 public sealed record SponsorDecision(string OfferId) : Decision;
@@ -97,7 +99,8 @@ public sealed record Situation(long Revision, int Day, int Season, int DayOfSeas
     ImmutableArray<InboxRow> Inbox, ImmutableArray<FixtureRow> Fixtures, ImmutableArray<RivalRow> Rivals,
     string CompanyId = "", string OpponentId = "", long OperatingCost = 0, int MinimumRoster = 0, ImmutableArray<MoveRow> Moves = default,
     ImmutableArray<StandingRow> Standings = default, ImmutableArray<LeagueMatchRow> LeagueMatches = default, int PlayoffTeams = 0, int LastSeasonPlace = 0,
-    ImmutableArray<LeagueNewsRow> LeagueNews = default, LeagueInfo? League = null, ImmutableArray<RivalProfile> RivalProfiles = default);
+    ImmutableArray<LeagueNewsRow> LeagueNews = default, LeagueInfo? League = null, ImmutableArray<RivalProfile> RivalProfiles = default,
+    long RecruitFee = 0, long RecruitWage = 0, int MaxRoster = 0);
 
 public interface IGameSession
 {

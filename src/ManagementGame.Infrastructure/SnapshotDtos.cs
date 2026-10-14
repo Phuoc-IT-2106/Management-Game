@@ -56,10 +56,10 @@ public sealed record SettlementDto(string Id, string CauseId, int Day, long Delt
     public Settlement ToDomain() => new(Id, CauseId, Day, Delta);
 }
 
-public sealed record AuthorityDto(ControlMode Mode, Posture RiskCeiling)
+public sealed record AuthorityDto(ControlMode Mode, Posture RiskCeiling, long RecruitFee, long RecruitWage)
 {
-    public static AuthorityDto From(Authority x) => new(x.Mode, x.RiskCeiling);
-    public Authority ToDomain() => new(Mode, RiskCeiling);
+    public static AuthorityDto From(Authority x) => new(x.Mode, x.RiskCeiling, x.RecruitFee, x.RecruitWage);
+    public Authority ToDomain() => new(Mode, RiskCeiling, RecruitFee, RecruitWage);
 }
 
 public sealed record PlanDto(string FixtureId, int Execution, int Opponent, int Meta, Posture Posture, ImmutableArray<string> Lineup, Posture ExpectedOpponent, string CauseId)

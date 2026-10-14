@@ -117,6 +117,7 @@ public partial class GameShell
         }
         await SigningStory();
         await UnderContractChecks();
+        await RecruitmentLimitChecks();
         Navigate(ShellSections.Commercial); await Settle();
         var review = Descendants(this).OfType<Button>().FirstOrDefault(b => b.Name.ToString().StartsWith("Review_", StringComparison.Ordinal) && !b.Disabled);
         if (review is not null)
@@ -200,6 +201,25 @@ public partial class GameShell
         await Press("Coaches_Available");
         Check(coachMarket == AvailableView && Find<Tree>("CoachMarket").GetRoot().GetChildCount() == view.CoachCandidates.Length
             && view.CoachCandidates.Any(c => c.Id == coachSelection) == !view.CoachCandidates.IsEmpty, "the coach market returns to the coaches the company may hire");
+    }
+
+    /// <summary>The owner sets the coach's recruitment limits in the authority card (DEC-014 envelope), in whole dollars, and
+    /// can turn recruiting off again; the card states what the coach may do.</summary>
+    private async Task RecruitmentLimitChecks()
+    {
+        Navigate(ShellSections.Competition); await Settle();
+        var (mode, ceiling) = (view.Delegation, view.Ceiling);
+        Find<OptionButton>("Delegation").Select((int)Delegation.Autonomous);
+        Find<SpinBox>("RecruitFee").Value = 400; Find<SpinBox>("RecruitWage").Value = 12;
+        await Press("ApplyAuthority");
+        Check(view.Delegation == Delegation.Autonomous && view.RecruitFee == 400 * Formatting.Currency.MinorPerUnit && view.RecruitWage == 12 * Formatting.Currency.MinorPerUnit
+            && Find<SpinBox>("RecruitFee").Value == 400 && Descendants(content).OfType<Label>().Any(l => l.Text.StartsWith("The coach signs free agents within $400 and $12", StringComparison.Ordinal)),
+            "the owner sets the coach's recruitment limits in dollars, and the card says what the coach may do");
+        LayoutCheck("competition-recruitment");
+        Find<OptionButton>("Delegation").Select((int)mode); Find<OptionButton>("Ceiling").Select((int)ceiling);
+        Find<SpinBox>("RecruitFee").Value = 0; Find<SpinBox>("RecruitWage").Value = 0;
+        await Press("ApplyAuthority");
+        Check(view.Delegation == mode && view.RecruitFee == 0 && view.RecruitWage == 0, "recruiting turns off again with zero limits");
     }
 
     private async Task CaptureAll(string output)

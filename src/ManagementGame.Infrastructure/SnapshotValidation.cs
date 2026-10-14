@@ -40,7 +40,8 @@ public static class SnapshotValidation
             && x.Salary >= 0 && x.ReleaseCost >= 0 && x.EndDay >= day - 1), "Invalid employment references/terms.");
         Require(c.Cash >= 0 && c.Cash == checked(c.LedgerBase + c.Settlements.Sum(x => x.Delta)), "Cash ledger does not reconcile.");
         Require(c.Reputation is >= 0 and <= 100 && c.Audience >= 0 && c.Information is >= 0 and <= 100 && Enum.IsDefined(c.Recovery), "Resource bounds invalid.");
-        Require(Enum.IsDefined(c.Authority.Mode) && Enum.IsDefined(c.Authority.RiskCeiling), "Invalid authority.");
+        Require(Enum.IsDefined(c.Authority.Mode) && Enum.IsDefined(c.Authority.RiskCeiling)
+            && c.Authority.RecruitFee is >= 0 and <= Simulation.MaxRecruitLimit && c.Authority.RecruitWage is >= 0 and <= Simulation.MaxRecruitLimit, "Invalid authority.");
         Require(c.Work.Execution >= 0 && c.Work.Opponent >= 0 && c.Work.Meta >= 0, "Invalid completed work.");
         Unique(c.FinancialItems.Select(x => x.Id), "financial item IDs");
         Unique(c.Settlements.Select(x => x.Id), "settlement IDs");

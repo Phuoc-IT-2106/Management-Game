@@ -13,6 +13,8 @@ using ManagementGame.Infrastructure;
 public static class Measurement
 {
     public const string Coach = "coach", Greedy = "sponsor-greedy", Thrift = "thrift", Balanced = "balanced";
+    /// <summary>The delegating owner's fee limit, in days of the wage limit.</summary>
+    public const int RecruitFeeDays = 40;
     public static readonly string[] Policies = [Coach, Greedy, Thrift, Balanced];
 
     /// <summary>One closed season of one run. The match columns are diagnostics from the recorded outcome components
@@ -73,7 +75,13 @@ public static class Measurement
             }
             foreach (var f in v.Fixtures) eventDays.Add(f.Day);
         }
-        if (policy == Coach) Send(new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+        // The delegating owner hands recruitment to the coach too (DEC-014 envelope), with limits read once from the start:
+        // a wage up to a quarter above the best-paid player's, and a fee up to 40 days of that wage.
+        if (policy == Coach)
+        {
+            var wage = start.People.Max(p => p.Salary) * 5 / 4;
+            Send(new CoachDecision(Delegation.Autonomous, Risk.Balanced, wage * RecruitFeeDays, wage));
+        }
         else Send(new CoachDecision(Delegation.Recommend, policy == Balanced ? Risk.Aggressive : Risk.Balanced));
         Watch(start);
         string blocked = "";

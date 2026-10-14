@@ -43,7 +43,10 @@ public sealed record Employment(string Id, string PersonId, long Salary, long Re
 public sealed record SponsorContract(string Id, string BrandId, string Name, int StartDay, int EndDay, int Load, long WinBonus, long Payment, int ForfeitLimit);
 public sealed record FinancialItem(string Id, string CauseId, int DueDay, long Amount, bool Incoming, long Remaining, int? MissedDay);
 public sealed record Settlement(string Id, string CauseId, int Day, long Delta);
-public sealed record Authority(ControlMode Mode, Posture RiskCeiling);
+/// <summary>The head coach's authority envelope (DEC-014): the control mode, the risk ceiling and, for an autonomous coach,
+/// the recruitment limits the owner sets: the largest signing fee and the largest daily wage of one signing (minor units).
+/// Zero limits mean the coach does not recruit.</summary>
+public sealed record Authority(ControlMode Mode, Posture RiskCeiling, long RecruitFee = 0, long RecruitWage = 0);
 public sealed record Plan(string FixtureId, int Execution, int Opponent, int Meta, Posture Posture, ImmutableArray<string> Lineup, Posture ExpectedOpponent, string CauseId);
 public sealed record Work(int Execution, int Opponent, int Meta);
 public sealed record CommercialEffect(string Id, string CauseId, int DueDay, int Reputation, int Audience);

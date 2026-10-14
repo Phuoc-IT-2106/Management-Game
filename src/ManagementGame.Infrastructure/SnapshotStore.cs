@@ -10,9 +10,10 @@ public sealed record SaveEnvelope(string Format, int Schema, string Rules, strin
 
 public sealed class SnapshotStore(string directory, LoadedContent content) : ISnapshotStore
 {
-    /// <summary>Save schema 5 (2026-10-09, rules v4: the new person and coach model). Schema 4 added transfer history
-    /// (World.Moves). Older saves are rejected, as this build supports only its exact identity.</summary>
-    public const int Schema = 5;
+    /// <summary>Save schema 6 (2026-10-14: the coach's recruitment limits in the authority envelope). Schema 5 was rules v4's
+    /// person and coach model; schema 4 added transfer history (World.Moves). Older saves are rejected, as this build
+    /// supports only its exact identity.</summary>
+    public const int Schema = 6;
     public string PrimaryPath(string slot)
     {
         if (slot.Length is < 1 or > 32 || slot.Any(c => !char.IsAsciiLetterOrDigit(c) && c != '-')) throw new ArgumentException("Invalid save slot.");

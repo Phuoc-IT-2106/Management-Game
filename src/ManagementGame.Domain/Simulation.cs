@@ -5,6 +5,8 @@ namespace ManagementGame.Domain;
 
 public static class Simulation
 {
+    /// <summary>The largest recruitment limit an owner may set (minor units), far above any fee or wage the rules produce.</summary>
+    public const long MaxRecruitLimit = 1_000_000_000_000;
     public static Fixture? NextFixture(Campaign s) => s.World.Fixtures.FirstOrDefault(f => !s.World.Results.Any(r => r.FixtureId == f.Id));
     public static int Load(Company c, Balance b, int day) => b.BaseLoad + c.People.Length * 3 + c.Sponsors.Where(x => x.EndDay >= day).Sum(x => x.Load);
     /// <summary>Five distinct available players can cover the five roles (primary or secondary role).</summary>
@@ -47,6 +49,8 @@ public static class Simulation
                 break;
             case SetAuthority command:
                 if (!Enum.IsDefined(command.Authority.Mode) || !Enum.IsDefined(command.Authority.RiskCeiling)) throw new RuleViolation("Unknown authority setting.");
+                if (command.Authority.RecruitFee is < 0 or > MaxRecruitLimit || command.Authority.RecruitWage is < 0 or > MaxRecruitLimit)
+                    throw new RuleViolation("Recruitment limits must be between zero and the largest supported amount.");
                 c = c with { Authority = command.Authority };
                 break;
             case SignPlayer command:
@@ -127,7 +131,8 @@ public static class Simulation
     private static string Describe(Intent intent, Content content) => intent switch
     {
         CommitPlan p => $"Committed {p.Plan.Execution}/{p.Plan.Opponent}/{p.Plan.Meta}% preparation and {p.Plan.Posture} posture; only future work changes.",
-        SetAuthority a => $"Coach authority: {a.Authority.Mode}, risk ceiling {a.Authority.RiskCeiling}.",
+        SetAuthority a => $"Coach authority: {a.Authority.Mode}, risk ceiling {a.Authority.RiskCeiling}"
+            + (a.Authority.RecruitWage > 0 ? $"; recruits within a fee of {Currency.Format(a.Authority.RecruitFee)} and a wage of {Currency.PerDay(a.Authority.RecruitWage)}." : "."),
         SignPlayer s => $"Signed player for {s.Seasons} season(s): fee paid, daily wages committed; the new player starts unfamiliar with the team.",
         ReleasePlayer => "Released player: exit cost paid and future wages stop; existing arrears retained. Roster depth sacrificed.",
         RenewContract r => $"Renewed contract for {r.Seasons} more season(s) at the new asking wage.",

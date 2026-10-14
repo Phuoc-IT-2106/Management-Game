@@ -201,7 +201,8 @@ public static class Observations
             b.SponsorSlots, active, Inbox(s), FixtureRows(s), RivalRows(s), c.Id, rival?.Id ?? "", b.OperatingCost, b.MinimumRoster, Moves(s),
             StandingRows(s, content), LeagueMatchRows(s), b.PlayoffTeams, w.Finishes.LastOrDefault() is { } last ? last.Order.IndexOf(c.Id) + 1 : 0,
             LeagueNews(s, content), new LeagueInfo(b.RivalCount + 1, Seasons.Rounds(b), b.RegularGames, b.PlayoffTeams, b.PlayoffGames,
-                Seasons.RoundDay(season, 0, b), Seasons.LastRegularDay(season, b), Seasons.SemifinalDay(season, b), Seasons.FinalDay(season, b), b.PlacePrizes), profiles);
+                Seasons.RoundDay(season, 0, b), Seasons.LastRegularDay(season, b), Seasons.SemifinalDay(season, b), Seasons.FinalDay(season, b), b.PlacePrizes), profiles,
+            c.Authority.RecruitFee, c.Authority.RecruitWage, b.MaxRoster);
         var recommendation = CoachPolicy.Recommend(view);
         return view with { Recommendation = recommendation, RecommendationReason = recommendation is null
             ? view.NextFixtureId.Length == 0 ? "No match to prepare until next season." : "No legal lineup: sign players to cover all five roles."

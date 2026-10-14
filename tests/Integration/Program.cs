@@ -375,13 +375,13 @@ Check(movedPortal.Transfers.All(t => !t.Headline.Contains('$') && !t.Summary.Con
 // Reloading tells the same stories: transfer history is saved (schema 4), so nothing is repeated or lost.
 store.Save("moves", mover.Capture());
 var savedMoves = System.Text.Json.JsonDocument.Parse(File.ReadAllText(store.PrimaryPath("moves"))).RootElement;
-Check(savedMoves.GetProperty("Schema").GetInt32() == SnapshotStore.Schema && SnapshotStore.Schema == 5
-    && savedMoves.GetProperty("Snapshot").GetProperty("World").GetProperty("Moves").GetArrayLength() == 3, "transfer history is part of the save (schema 5)");
+Check(savedMoves.GetProperty("Schema").GetInt32() == SnapshotStore.Schema && SnapshotStore.Schema == 6
+    && savedMoves.GetProperty("Snapshot").GetProperty("World").GetProperty("Moves").GetArrayLength() == 3, "transfer history is part of the save (schema 6)");
 var reloaded = new Session(content.Definition, store.Load("moves"));
 Check(PortalProjection.Build(reloaded.Observe()).Transfers.SequenceEqual(movedPortal.Transfers) && PortalProjection.Build(mover.Observe()).Transfers.SequenceEqual(movedPortal.Transfers),
     "transfer news survives save and load unchanged, and re-observing does not regenerate it");
-File.WriteAllText(store.PrimaryPath("moves"), File.ReadAllText(store.PrimaryPath("moves")).Replace("\"Schema\":5", "\"Schema\":4", StringComparison.Ordinal));
-try { store.Load("moves"); Check(false, "a schema-4 save is rejected"); } catch (InvalidDataException) { Check(true, "a schema-4 save is rejected"); }
+File.WriteAllText(store.PrimaryPath("moves"), File.ReadAllText(store.PrimaryPath("moves")).Replace("\"Schema\":6", "\"Schema\":5", StringComparison.Ordinal));
+try { store.Load("moves"); Check(false, "a schema-5 save is rejected"); } catch (InvalidDataException) { Check(true, "a schema-5 save is rejected"); }
 // Transfer history is validated: a move in a direction its reason does not allow, or from the future, is rejected.
 var recorded = mover.Capture();
 // World.Moves is in recorded order: the signing, the replaced coach, the appointment.
@@ -1037,6 +1037,69 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     var poor = struggling.World.Rivals.Where(r => order.IndexOf(r.Id) + 1 >= rules.PoorPlace).ToArray();
     Check(poor.Length > 0 && poor.Any(r => replaced.Moves.Any(m => m.Reason == MoveReason.Replaced && m.Origin == r.Id) && Rivals.Get(replaced, r.Id).Coach.Id != r.Coach.Id && Rivals.Get(replaced, r.Id).PoorSeasons == 0),
         "a rival that keeps finishing poorly replaces its head coach from the coach market");
+}
+
+// Bounded delegation of recruitment (DEC-014): an autonomous coach signs free agents inside the owner's limits, from the
+// estimates the owner sees, and never releases, renews or passes the roster limit.
+{
+    var view = New(31).Observe();
+    var wage = view.Candidates.Max(c => c.Salary); var fee = view.Candidates.Max(c => c.Fee);
+    var open = view with { Delegation = Delegation.Autonomous, RecruitFee = fee, RecruitWage = wage, Cash = fee * 10 };
+    var noMid = open with { People = [.. view.People.Where(p => p.Role != "mid")] };
+    var pick = CoachRecruiting.Next(noMid, int.MinValue / 2);
+    var mids = view.Candidates.Where(c => c.Role == "mid").ToArray();
+    Check(pick is not null && mids.Any(c => c.Id == pick.PersonId)
+        && CoachRecruiting.Midpoint(mids.Single(c => c.Id == pick.PersonId).RatingEstimate) == mids.Max(c => CoachRecruiting.Midpoint(c.RatingEstimate)),
+        "an autonomous coach covers a missing role with the best free agent by estimate");
+    Check(CoachRecruiting.Next(noMid with { Delegation = Delegation.Recommend }, int.MinValue / 2) is null && CoachRecruiting.Next(noMid with { RecruitWage = 0 }, int.MinValue / 2) is null,
+        "only an autonomous coach with limits recruits");
+    var cheapest = mids.Min(c => c.Fee); var lowest = mids.Min(c => c.Salary);
+    var tight = noMid with { RecruitFee = cheapest, RecruitWage = lowest };
+    Check(CoachRecruiting.Next(tight, int.MinValue / 2) is not { } bounded || view.Candidates.Single(c => c.Id == bounded.PersonId) is { } chosen && chosen.Fee <= cheapest && chosen.Salary <= lowest,
+        "the coach's signing stays within the fee and the wage limits");
+    Check(CoachRecruiting.Next(noMid with { RecruitFee = cheapest - 1 }, int.MinValue / 2)?.PersonId is not { } over || view.Candidates.Single(c => c.Id == over).Fee <= cheapest - 1,
+        "no free agent above the fee limit is signed");
+    Check(CoachRecruiting.Next(noMid with { Cash = 0 }, int.MinValue / 2) is null, "the coach does not sign what the company cannot pay now");
+    Check(CoachRecruiting.Next(noMid with { MaxRoster = noMid.People.Length }, int.MinValue / 2) is null, "the coach never passes the roster limit");
+    // Upgrades: a weak squad, a free agent clearing the weakest role's best player by the margin, at most once per interval.
+    var weak = open with { People = [.. view.People.Select(p => p with { Rating = 30 })], Day = 200 };
+    var upgrade = CoachRecruiting.Next(weak, weak.Day - CoachRecruiting.UpgradeInterval);
+    Check(upgrade is not null && CoachRecruiting.Midpoint(view.Candidates.Single(c => c.Id == upgrade.PersonId).RatingEstimate) >= 30 + CoachRecruiting.UpgradeMargin
+        && view.Candidates.Single(c => c.Id == upgrade.PersonId).Fee * 2 <= weak.Cash, "an upgrade clears the weakest role by the margin and costs at most half the cash");
+    Check(CoachRecruiting.Next(weak, weak.Day - CoachRecruiting.UpgradeInterval + 1) is null, "the coach upgrades at most once per interval");
+    Check(CoachRecruiting.Next(open with { Day = 200 }, int.MinValue / 2) is not { } strong
+        || CoachRecruiting.Midpoint(view.Candidates.Single(c => c.Id == strong.PersonId).RatingEstimate) >= view.People.Where(p => p.Role == view.Candidates.Single(c => c.Id == strong.PersonId).Role).Max(p => p.Rating) + CoachRecruiting.UpgradeMargin,
+        "a squad no estimate clears by the margin keeps its players");
+
+    // Through the session: a squad that lost its mids is covered on the next advance, inside the limits, as a signing.
+    var baseCampaign = New(31).Capture();
+    var mid = baseCampaign.Company.People.Where(p => p.Role == "mid").Select(p => p.Id).ToHashSet();
+    var short_ = baseCampaign with { Company = baseCampaign.Company with { People = [.. baseCampaign.Company.People.Where(p => !mid.Contains(p.Id))],
+        Employment = [.. baseCampaign.Company.Employment.Where(e => !mid.Contains(e.PersonId))] } };
+    Session Short() => new(content.Definition, short_);
+    var delegated = Short(); var unlimited = Short();
+    Check(!Submit(delegated, new CoachDecision(Delegation.Autonomous, Risk.Balanced, -1, wage)).Accepted, "negative recruitment limits are refused");
+    Check(Submit(delegated, new CoachDecision(Delegation.Autonomous, Risk.Balanced, fee, wage)).Accepted && delegated.Observe() is { RecruitFee: var f, RecruitWage: var w2 } && f == fee && w2 == wage,
+        "the owner sets the coach's recruitment limits");
+    Submit(unlimited, new CoachDecision(Delegation.Autonomous, Risk.Balanced));
+    var cashBeforeCoach = delegated.Observe().Cash;
+    Submit(delegated, new AdvanceDecision()); Submit(unlimited, new AdvanceDecision());
+    var recruited = delegated.Capture();
+    var coachMove = recruited.World.Moves.SingleOrDefault(m => m.CauseId.StartsWith(CoachRecruiting.CausePrefix, StringComparison.Ordinal));
+    Check(coachMove is { Reason: MoveReason.Signed, Role: "mid" } && coachMove.Destination == recruited.Company.Id && recruited.Company.People.Any(p => p.Id == coachMove.PersonId)
+        && recruited.Company.Employment.Single(e => e.PersonId == coachMove.PersonId).Salary <= wage && delegated.Observe().Cash < cashBeforeCoach,
+        "on the next advance the coach signs a mid within the limits; the move is recorded as the coach's signing");
+    Check(!unlimited.Capture().Company.People.Any(p => p.Role == "mid") && !unlimited.Capture().World.Moves.Any(m => m.CauseId.StartsWith(CoachRecruiting.CausePrefix, StringComparison.Ordinal)),
+        "a coach without limits signs nobody");
+    Campaign Replay() { var s = Short(); s.Submit(new Request("limits", 0, new CoachDecision(Delegation.Autonomous, Risk.Balanced, fee, wage))); s.Submit(new Request("day", 1, new AdvanceDecision())); return s.Capture(); }
+    Check(Canonical.Hash(Replay()) == Canonical.Hash(Replay()) && Replay().World.Moves.Single(m => m.CauseId == CoachRecruiting.CausePrefix + "day").PersonId == coachMove!.PersonId,
+        "the coach's recruitment is deterministic");
+    var store6 = new SnapshotStore(Path.GetFullPath("artifacts/save-tests-" + Guid.NewGuid().ToString("N")), content);
+    store6.Save("recruit", recruited);
+    Check(store6.Load("recruit") is { } loaded6 && Canonical.Hash(loaded6) == Canonical.Hash(recruited) && loaded6.Company.Authority == recruited.Company.Authority,
+        "the recruitment limits survive a save and load (schema 6)");
+    try { SnapshotValidation.Validate(recruited with { Company = recruited.Company with { Authority = recruited.Company.Authority with { RecruitWage = -5 } } }, content); Check(false, "invalid recruitment limits are rejected on load"); }
+    catch (InvalidDataException) { Check(true, "invalid recruitment limits are rejected on load"); }
 }
 
 for (ulong seed = 1; seed <= 16; seed++)
