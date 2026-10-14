@@ -162,7 +162,7 @@ public static class Observations
             var posture = (Posture)(((int)r.Posture + (KeyedRandom.Range(s.Execution.Seed, "information", $"profile:{r.Id}:{w.Results.Length}", "tendency", 100) < c.Information ? 0 : 1)) % 3);
             return new RivalProfile(r.Id, r.Name, r.Coach.Name, posture.ToString(), $"{Math.Max(0, centre - width)}–{Math.Min(100, centre + width)} (estimate)",
                 [.. r.People.OrderBy(p => Roles.All.IndexOf(p.Role)).ThenBy(p => p.Id, StringComparer.Ordinal).Select(p => new RivalPlayerRow(p.Id, p.Handle, p.Role,
-                    Ratings.Age(p, season), Band(p.Id, "rating", Ratings.Rating(p, content), scoutWidth), p.Popularity))]);
+                    Ratings.Age(p, season), Band(p.Id, "rating", Ratings.Rating(p, content), scoutWidth), p.Popularity))], r.Coach.Id);
         }).ToImmutableArray();
         var active = Market.ActiveSponsors(c, day);
         string Availability(Offer o) => o.ClaimedBy is not null ? o.ClaimedBy == c.Id ? "Signed" : "Claimed by rival"

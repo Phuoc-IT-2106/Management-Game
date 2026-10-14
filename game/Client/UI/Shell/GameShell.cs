@@ -503,8 +503,11 @@ public partial class GameShell : Control
     private void OpenTarget(string target, string id)
     {
         if (view.Inbox.Any(r => r.Id == id)) seenInbox.Add(id);
-        if (target == ShellSections.Squad && (view.People.Any(p => p.Id == id) || view.Candidates.Any(c => c.Id == id))) squadSelection = id;
-        if (target == ShellSections.Staff && view.CoachCandidates.Any(c => c.Id == id)) coachSelection = id;
+        if (target == ShellSections.Squad && (view.People.Any(p => p.Id == id) || view.Candidates.Any(c => c.Id == id))) { squadSelection = id; squadMarket = FreeAgentsView; }
+        // A person a rival employs opens where the company would look for them, shown as under contract.
+        if (target == ShellSections.Squad && RivalPlayers().Any(x => x.Player.Id == id)) { squadSelection = id; squadMarket = UnderContractView; }
+        if (target == ShellSections.Staff && view.CoachCandidates.Any(c => c.Id == id)) { coachSelection = id; coachMarket = AvailableView; }
+        if (target == ShellSections.Staff && RivalCoaches().Any(x => x.CoachId == id)) { coachSelection = id; coachMarket = UnderContractView; }
         Navigate(target);
         if (target == ShellSections.Commercial && view.Offers.Any(o => o.Id == id && o.Availability == "Available")) OpenOffer(id);
     }

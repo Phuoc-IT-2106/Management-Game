@@ -73,6 +73,9 @@ public partial class GameShell
         var standings = Find<Tree>("Standings");
         Check(standings.GetRoot().GetChildCount() == view.Standings.Length && standings.GetSelected()?.GetMetadata(0).AsString() == view.CompanyId,
             "the league view lists every team, with the company's row selected");
+        Check(standings.GetRoot().GetChildren().All(r => r.GetIcon(1) is ViewportTexture
+                && r.GetMetadata(1).AsString() == AssetIds.Crest(r.GetMetadata(0).AsString()) && r.GetText(1) == view.Standings.Single(s => s.TeamId == r.GetMetadata(0).AsString()).Name),
+            "every standings row shows its team's crest, resolved by stable team ID, beside the full team name");
         var rivalSquad = Find<Tree>("RivalSquad");
         Check(view.RivalProfiles.Any(p => p.Players.Length == rivalSquad.GetRoot().GetChildCount() && p.Players.All(x => x.RatingEstimate.Contains("(estimate)"))),
             "the league view profiles a rival: its squad as scouted, every rating an estimate");
@@ -113,6 +116,7 @@ public partial class GameShell
             Check(!overlay.Visible && view.Revision == revision, "cancelled confirmation changes nothing");
         }
         await SigningStory();
+        await UnderContractChecks();
         Navigate(ShellSections.Commercial); await Settle();
         var review = Descendants(this).OfType<Button>().FirstOrDefault(b => b.Name.ToString().StartsWith("Review_", StringComparison.Ordinal) && !b.Disabled);
         if (review is not null)
@@ -169,6 +173,35 @@ public partial class GameShell
         Check(portal.Transfers.SequenceEqual(PortalProjection.Build(session!.Observe()).Transfers), "opening the Portal again tells the same stories, none regenerated");
     }
 
+    /// <summary>People a rival employs are visible where the company looks for players and coaches (rules v4 phase 5): listed
+    /// as under contract with their club, opened from a transfer story, and never offered for signing or hiring.</summary>
+    private async Task UnderContractChecks()
+    {
+        var rivals = RivalPlayers();
+        Check(rivals.Length > 0, "rivals employ players");
+        var player = rivals[^1].Player;
+        OpenTarget(ShellSections.Squad, player.Id); await Settle();
+        var table = Find<Tree>("UnderContract");
+        Check(squadMarket == UnderContractView && table.GetRoot().GetChildCount() == rivals.Length && table.GetSelected()?.GetMetadata(0).AsString() == player.Id,
+            "a rival's player opens in Squad among the players under contract, selected");
+        Check(Find<Label>("ContractStatus").Text.EndsWith("under contract with " + rivals[^1].Club, StringComparison.Ordinal)
+            && !Descendants(this).OfType<Button>().Any(b => b.Name == "Sign"), "a player under contract shows the club and offers no signing");
+        LayoutCheck("squad-under-contract");
+        await Press("Market_Free");
+        Check(squadMarket == FreeAgentsView && Find<Tree>("FreeAgents").GetRoot().GetChildCount() == view.Candidates.Length, "the market returns to the free agents");
+        var coaches = RivalCoaches();
+        Check(coaches.Length == view.RivalProfiles.Length, "every rival has a head coach");
+        OpenTarget(ShellSections.Staff, coaches[^1].CoachId); await Settle();
+        var rows = Find<Tree>("CoachesUnderContract").GetRoot().GetChildren();
+        Check(coachMarket == UnderContractView && rows.Count == coaches.Length && Find<Tree>("CoachesUnderContract").GetSelected()?.GetMetadata(0).AsString() == coaches[^1].CoachId
+            && coaches.All(c => rows.Any(r => r.GetMetadata(0).AsString() == c.CoachId && r.GetText(0) == c.Coach && r.GetText(1) == c.Name))
+            && !Descendants(this).OfType<Button>().Any(b => b.Name == "HireCoach"), "a rival's head coach opens in Staff, under contract with the club, with no hiring action");
+        LayoutCheck("staff-under-contract");
+        await Press("Coaches_Available");
+        Check(coachMarket == AvailableView && Find<Tree>("CoachMarket").GetRoot().GetChildCount() == view.CoachCandidates.Length
+            && view.CoachCandidates.Any(c => c.Id == coachSelection) == !view.CoachCandidates.IsEmpty, "the coach market returns to the coaches the company may hire");
+    }
+
     private async Task CaptureAll(string output)
     {
         System.IO.Directory.CreateDirectory(output);
@@ -187,6 +220,8 @@ public partial class GameShell
         if (Arg("--shell-results") is { } results && int.TryParse(results, out var played)) PlayForward(played);
         foreach (var (id, _, _) in Sections) { Navigate(id); await Shot(id); }
         Navigate(ShellSections.Competition); await Press("View_League"); await Shot("competition-league"); await Press("View_Match");
+        if (RivalPlayers() is { Length: > 0 } rivals) { OpenTarget(ShellSections.Squad, rivals[0].Player.Id); await Shot("squad-under-contract"); squadMarket = FreeAgentsView; }
+        if (RivalCoaches() is { Length: > 0 } coaches) { OpenTarget(ShellSections.Staff, coaches[0].CoachId); await Shot("staff-under-contract"); coachMarket = AvailableView; }
         if (view.Offers.FirstOrDefault(o => o.Availability == "Available") is { } offer) { Navigate(ShellSections.Commercial); OpenOffer(offer.Id); await Shot("offer"); CloseOverlay(); }
         // A material commitment's confirmation (hiring a coach opens it without committing anything).
         if (!view.CoachCandidates.IsEmpty) { Navigate(ShellSections.Staff); await Press("HireCoach"); await Shot("confirm"); CloseOverlay(); }

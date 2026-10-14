@@ -13,6 +13,15 @@ public partial class GameShell
     private string inboxFilter = "All";
     private string? squadSelection;
     private string? coachSelection;
+    private const string FreeAgentsView = "Free agents", AvailableView = "Available", UnderContractView = "Under contract";
+    private string squadMarket = FreeAgentsView;
+    private string coachMarket = AvailableView;
+    /// <summary>Every player a rival employs, with the club, as the company scouts them (reference 03_squad: candidates
+    /// with a status). They are shown, never offered: the company cannot sign a player under contract.</summary>
+    private (string Club, RivalPlayerRow Player)[] RivalPlayers() =>
+        [.. (view.RivalProfiles.IsDefault ? [] : view.RivalProfiles).SelectMany(r => r.Players.Select(p => (r.Name, p)))];
+    /// <summary>Every rival head coach with the club (reference 09_staff: availability), shown as under contract.</summary>
+    private RivalProfile[] RivalCoaches() => [.. (view.RivalProfiles.IsDefault ? [] : view.RivalProfiles).Where(r => r.CoachId.Length > 0)];
 
     // ---------- Shared composition (UI polish standard §5, §11) ----------
     /// <summary>Section page: the display title and one supporting line, closed by an engraved rule with a short brass
@@ -83,9 +92,10 @@ public partial class GameShell
     /// tabular figures, so amounts line up by place value. <paramref name="fit"/> lists short label columns (a day) that, like
     /// amounts, must never be cut: each such column keeps room for its widest cell and title. A cell of any other column
     /// too narrow for its text is trimmed by the table; every cell keeps its full text as a tooltip, so nothing is lost
-    /// (polish standard §7).</summary>
+    /// (polish standard §7). <paramref name="crest"/> puts a team's crest before the text of one column, resolved from the
+    /// row's stable ID (reference 05_league); the cell keeps its text, so the name is never replaced by the mark.</summary>
     private Tree Table(string name, string[] columns, IEnumerable<(string Id, string[] Cells)> rows, Action<string>? select, string? selected = null, int primary = 0,
-        int[]? numeric = null, int[]? fit = null)
+        int[]? numeric = null, int[]? fit = null, (int Column, Func<string, string> AssetId)? crest = null)
     {
         bool Numeric(int column) => numeric is not null && numeric.Contains(column);
         int[] whole = [.. (numeric ?? []).Concat(fit ?? []).Distinct()];
@@ -95,9 +105,23 @@ public partial class GameShell
         var root = tree.CreateItem(); var count = 0; TreeItem? chosen = null;
         var widest = new float[columns.Length];
         var cellFont = ui.Theme.GetFont("font", "Tree"); var cellSize = ui.Theme.GetFontSize("font_size", "Tree");
+        // A crest is as tall as the cell's text, so rows keep the height the table is sized by. Each team's crest is drawn
+        // once by the shared asset mark into a small transparent viewport, whose texture is the cell's icon: the tree draws
+        // it like any icon, above the row's selection and before the text.
+        var crestSize = new Vector2I((int)MathF.Round(MathF.Floor(cellFont.GetHeight(cellSize)) * 100f / 120), (int)MathF.Floor(cellFont.GetHeight(cellSize)));
+        var crests = new Dictionary<string, Texture2D>();
+        Texture2D Crest(string assetId)
+        {
+            if (crests.TryGetValue(assetId, out var texture)) return texture;
+            var canvas = new SubViewport { Name = "Crest_" + crests.Count, Size = crestSize, TransparentBg = true, Disable3D = true,
+                RenderTargetUpdateMode = SubViewport.UpdateMode.Once };
+            canvas.AddChild(assets.Create(assetId, crestSize)); tree.AddChild(canvas);
+            return crests[assetId] = canvas.GetTexture();
+        }
         foreach (var (id, cells) in rows)
         {
             var item = tree.CreateItem(root); item.SetMetadata(0, id); count++;
+            if (crest is { } c) { item.SetMetadata(c.Column, c.AssetId(id)); item.SetIcon(c.Column, Crest(c.AssetId(id))); }
             for (var i = 0; i < cells.Length; i++) widest[i] = Math.Max(widest[i], cellFont.GetStringSize(cells[i], HorizontalAlignment.Left, -1, cellSize).X);
             for (var i = 0; i < cells.Length; i++)
             {
@@ -126,7 +150,11 @@ public partial class GameShell
         var titleHeight = ui.Theme.GetFont("title_button_font", "Tree").GetHeight(ui.Theme.GetFontSize("title_button_font_size", "Tree")) + title.ContentMarginTop + title.ContentMarginBottom;
         tree.CustomMinimumSize = new Vector2(0, MathF.Ceiling(titleHeight + count * rowHeight) + 6);
         // The naming column gets the most width.
-        if (primary >= 0) { tree.SetColumnExpandRatio(primary, 3); tree.SetColumnCustomMinimumWidth(primary, (int)(ui.Tokens.ActionMinimumWidth * 1.15f)); }
+        if (primary >= 0)
+        {
+            tree.SetColumnExpandRatio(primary, 3);
+            tree.SetColumnCustomMinimumWidth(primary, (int)(ui.Tokens.ActionMinimumWidth * 1.15f) + (crest?.Column == primary ? crestSize.X + ui.Theme.GetConstant("h_separation", "Tree") : 0));
+        }
         if (select is not null) tree.ItemSelected += () => { if (tree.GetSelected() is { } item) select(item.GetMetadata(0).AsString()); };
         chosen?.Select(0);
         // Rows are defined by tone (polish standard §6): alternate rows sit a step darker; the selected row shows the brass
@@ -212,9 +240,16 @@ public partial class GameShell
         players.AddChild(Table("SquadTable", ["Player", "Role", "Rating", "Age", "Readiness", "Wage/day", "Contract ends"],
             view.People.Select(p => (p.Id, new[] { p.Name, RoleNames.Name(p.Role), p.Rating.ToString(Invariant), p.Age.ToString(Invariant), p.Readiness.ToString(Invariant),
                 Amount(p.Salary), (p.CanRenew ? "▲ " : "") + "day " + p.ContractEnd })), Show, squadSelection, numeric: [2, 3, 4, 5], fit: [1, 6]));
-        var market = Card(left, "Free agents", "Who could we sign, and what would it cost?", "transfer");
+        var market = Card(left, "Free agents / Candidates", "Who could we sign, and who is under contract elsewhere?", "transfer");
+        var rivals = RivalPlayers();
+        market.AddChild(Segments("MarketTrack", "Market_", new[] { (FreeAgentsView, Figures.Count(view.Candidates.Length)), (UnderContractView, Figures.Count(rivals.Length)) },
+            squadMarket, name => { squadMarket = name; ShowSection(); }));
+        if (squadMarket == UnderContractView)
+            market.AddChild(Table("UnderContract", ["Player", "Role", "Age", "Rating (est.)", "Club"],
+                rivals.Select(x => (x.Player.Id, new[] { x.Player.Name, RoleNames.Name(x.Player.Role), x.Player.Age.ToString(Invariant), Band(x.Player.RatingEstimate), x.Club })),
+                Show, squadSelection, numeric: [2], fit: [1, 3, 4]));
         // The potential estimate is a column where the screen is roomy; on a compact screen it stays in the profile.
-        if (ShellLayout.Roomy(GetViewportRect().Size))
+        else if (ShellLayout.Roomy(GetViewportRect().Size))
             market.AddChild(Table("FreeAgents", ["Player", "Role", "Age", "Rating (est.)", "Potential (est.)", "Fee", "Wage/day"],
                 view.Candidates.Select(c => (c.Id, new[] { c.Name, RoleNames.Name(c.Role), c.Age.ToString(Invariant), Band(c.RatingEstimate), Band(c.PotentialEstimate),
                     Amount(c.Fee), Amount(c.Salary) })), Show, squadSelection, numeric: [5, 6], fit: [1, 2, 3, 4]));
@@ -296,6 +331,15 @@ public partial class GameShell
             var sign = ui.PrimaryButton("Sign player", () => Confirm("Sign player", $"Sign {candidate.Name} for {seasons.Selected + 1} season(s)? Pay {Currency.Format(candidate.Fee)} now and {Currency.PerDay(candidate.Salary)}. New signings start with reduced readiness.",
                 "Sign", () => Send(new SigningDecision(candidate.Id, seasons.Selected + 1))));
             sign.Name = "Sign"; profile.AddChild(sign);
+            return;
+        }
+        if (RivalPlayers().FirstOrDefault(x => x.Player.Id == id) is { Player: not null } rival)
+        {
+            var p = rival.Player;
+            profile.AddChild(SectionHeader.Create(ui, p.Name, $"{RoleNames.Name(p.Role)} · age {p.Age} · {rival.Club}"));
+            profile.AddChild(ConfidenceIndicator.Create(ui, InformationState.Estimated, "Rating " + p.RatingEstimate));
+            var status = Line(profile, $"Popularity {p.Popularity} · under contract with {rival.Club}", tone: ColorRole.TextSecondary); status.Name = "ContractStatus";
+            Line(profile, "Not available to sign. A player reaches the free-agent market when their club releases them or their contract ends.", tone: ColorRole.TextSecondary);
         }
     }
 
@@ -393,7 +437,7 @@ public partial class GameShell
             standings.Select(s => (s.TeamId, new[] { s.Place.ToString(Invariant), s.Name, s.Won.ToString(Invariant), s.Lost.ToString(Invariant),
                 (s.GamesWon - s.GamesLost).ToString("+#;−#;0", Invariant), s.Points.ToString(Invariant) })),
             id => { if (id == (leagueSelection ?? company?.TeamId)) return; leagueSelection = id; ShowSection(); }, leagueSelection ?? company?.TeamId,
-            primary: 1, numeric: [2, 3, 4, 5], fit: [0]));
+            primary: 1, numeric: [2, 3, 4, 5], fit: [0], crest: (1, AssetIds.Crest)));
         if (info is not null)
             Line(table, $"Top {info.PlayoffTeams} reach the playoffs. Level teams are separated by map difference, then head-to-head, then maps won.", TypographyRole.Annotation, ColorRole.TextSecondary);
 
@@ -567,7 +611,18 @@ public partial class GameShell
         }
         else Line(coach, "Renewal talks open near the end of the contract.", tone: ColorRole.TextSecondary);
         var market = Card(right, "Coach market", "Who could lead preparation instead?", "transfer");
-        coachSelection ??= view.CoachCandidates.FirstOrDefault()?.Id;
+        // Availability (reference 09_staff): the coaches the company may hire, and the rival head coaches, shown under
+        // contract with their club and never approachable. A rival coach's skill is not scouted, so none is shown.
+        var rivals = RivalCoaches();
+        market.AddChild(Segments("CoachMarketTrack", "Coaches_", new[] { (AvailableView, Figures.Count(view.CoachCandidates.Length)), (UnderContractView, Figures.Count(rivals.Length)) },
+            coachMarket, name => { coachMarket = name; ShowSection(); }));
+        if (coachMarket == UnderContractView)
+        {
+            market.AddChild(Table("CoachesUnderContract", ["Name", "Club"], rivals.Select(r => (r.CoachId, new[] { r.Coach, r.Name })), null, coachSelection, fit: [1]));
+            Line(market, "A head coach under contract with a rival cannot be approached.", TypographyRole.Annotation, ColorRole.TextSecondary);
+            return page;
+        }
+        if (!view.CoachCandidates.Any(c => c.Id == coachSelection)) coachSelection = view.CoachCandidates.FirstOrDefault()?.Id;
         market.AddChild(Table("CoachMarket", ["Name", "Skill (est.)", "Fee", "Wage/day", "Until"],
             view.CoachCandidates.Select(c => (c.Id, new[] { c.Name, Band(c.SkillEstimate), Amount(c.Fee), Amount(c.Salary), "day " + c.Deadline })), id => coachSelection = id, coachSelection, numeric: [2, 3], fit: [4]));
         var hire = ui.Button("Hire selected coach", () =>

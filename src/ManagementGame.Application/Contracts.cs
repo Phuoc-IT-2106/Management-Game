@@ -65,8 +65,10 @@ public sealed record LeagueNewsRow(string Id, int Day, string Kind, string Headl
 /// <summary>A rival's player as the company can scout them: handle, role, age, a rating band and fan following.</summary>
 public sealed record RivalPlayerRow(string Id, string Name, string Role, int Age, string RatingEstimate, int Popularity);
 /// <summary>A rival's public profile (rules v4 phase 5): its squad as scouted, its head coach, the posture it is believed to
-/// play and a band for its strength. Estimates narrow with the company's information and its head coach's analysis.</summary>
-public sealed record RivalProfile(string Id, string Name, string Coach, string Posture, string LevelEstimate, ImmutableArray<RivalPlayerRow> Players);
+/// play and a band for its strength. Estimates narrow with the company's information and its head coach's analysis.
+/// CoachId is the head coach's stable ID, so the coach can be shown where the company looks for coaches.</summary>
+public sealed record RivalProfile(string Id, string Name, string Coach, string Posture, string LevelEstimate, ImmutableArray<RivalPlayerRow> Players,
+    string CoachId = "");
 /// <summary>The league's format this season: teams, series per team in the regular season, best-of formats, playoff places,
 /// the key days (absolute) and the place prizes (champion first, minor units).</summary>
 public sealed record LeagueInfo(int Teams, int MatchesPerTeam, int RegularGames, int PlayoffTeams, int PlayoffGames, int FirstDay, int LastRegularDay,
