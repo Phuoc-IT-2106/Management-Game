@@ -82,13 +82,39 @@ and change the pinned `reports/calibration_2026.json`. Do not rerun it as part o
 Manually download the 2026 match CSV from the publisher's downloads page under terms appropriate to your use:
 https://master.d36liwrx5rvjnc.amplifyapp.com/tools/downloads
 
-Then:
+Save it as `data/import/oracles-elixir/2026_LoL_esports_match_data_from_OraclesElixir.csv` (git-ignored), then:
 
 ```powershell
-.\.venv\Scripts\python.exe import_oracles_elixir.py "C:\path\to\2026_LoL_esports_match_data_from_OraclesElixir.csv"
+.\.venv\Scripts\python.exe import_oracles_elixir.py        # validate, import (newest CSV in data/import/oracles-elixir)
+.\.venv\Scripts\python.exe reconcile_identities.py         # identity map, participation, reports/oracles_elixir_2026_stats.json
 ```
 
-Stores one raw `oracle_player_game_raw` row per `(gameid, participantid)` with exact CSV record JSON and CSV SHA256. It **does not** merge with a PandaScore player from shared handle, assign abilities, infer coach performance, or promise academy completeness.
+The import validates the file before writing anything. It rejects:
+- a file that is not UTF-8 CSV or is outside 1 byte to 1 GB;
+- missing required columns (`gameid`, `participantid`, `date`, `league`, `position`, `playername`, `teamname`);
+- unparseable dates;
+- a wrong reporting period (more than 5% of rows outside 2026).
+
+It keeps every row exactly as read (`oe_raw_rows`, content-addressed, so a newer download stores only changed rows)
+and one `oe_source_files` row per file version. Current tables come from the newest version:
+- `oe_player_games`: source fields;
+- `oe_player_game_stats`: statistics as published; NULL where the file has no column;
+- `oe_team_games`.
+
+The starter's `oracle_player_game_raw` table is still written for `report_2026.py`.
+
+`reconcile_identities.py` never links on a handle alone. An Oracle's Elixir identity maps to a PandaScore player only
+when all four agree:
+- the handle;
+- a team alias proven by roster overlap;
+- a registration window that contains the game date;
+- the role.
+
+The result is `xp_identity_map` (`HIGH_CONFIDENCE_MATCH` / `REVIEW_REQUIRED` / `UNMATCHED`, with a reason), with
+evidence per row in `xp_row_matches`. Only high-confidence identities write `xp_participation_2026`, which sets
+`ps_player_index_2026.match_participation_verified_2026`. The provider's current team is never used, and nothing
+assigns abilities, ratings, academy or reserve status. Details:
+[`reports/ORACLES_ELIXIR_2026_INTEGRATION.md`](reports/ORACLES_ELIXIR_2026_INTEGRATION.md).
 
 ## Automation with Windows Task Scheduler
 

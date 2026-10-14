@@ -1,0 +1,13 @@
+{
+ "status": "NO_SOURCE_FILE: no Oracle's Elixir CSV imported; no participation verified",
+ "pandascore_readiness": {
+  "registered_players_with_windows": 2331,
+  "registered_players_with_a_provider_name": 2331,
+  "registered_players_with_several_provider_names": 0,
+  "normalized_handles_shared_by_registered_players": 23,
+  "registered_players_on_shared_handles": 47,
+  "catalogue_handles_shared_by_several_players": 333,
+  "teams_on_2026_registrations": 363,
+  "stage_windows": 278
+ }
+}
