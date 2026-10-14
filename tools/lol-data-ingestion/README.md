@@ -37,6 +37,46 @@ Sample broader scan (may take time or hit plan limits):
 
 The entire PandaScore catalogue contains historical/inactive records; **do not** use its presence to set `active_as_of_2026_10_08 = true`. The starter deliberately does not infer roster/academy status. Establish those from timestamped roster and match evidence and separate `played_in_2026`, `on_active_roster_as_of`, `academy`, `substitute`, `retired`, and `unknown`.
 
+## Full 2026 collection (catalogue + competitions)
+
+The `full-2026` preset collects every league, team and player record the Free plan lists, and every series, stage
+and match that touches 2026 (past, running and upcoming). Each query is sorted by `id`, paged to `X-Total` and
+reconciled; the manifest is checkpointed after every page.
+
+```powershell
+.\.venv\Scripts\python.exe discover_api.py --probe full-2026                 # optional: 19 scope probes, raw kept
+.\.venv\Scripts\python.exe sync_pandascore.py --preset full-2026 --max-pages 200 --max-requests 270
+# Stopped (quota floor, budget, page cap: exit code 3)? Continue the same run; saved pages are not fetched again:
+.\.venv\Scripts\python.exe sync_pandascore.py --preset full-2026 --max-pages 200 --resume <RUN_ID>
+.\.venv\Scripts\python.exe normalize_pandascore.py --export                  # offline: tables + local CSV exports
+.\.venv\Scripts\python.exe collection_report.py                              # offline: aggregate completeness stats
+.\.venv\Scripts\python.exe cache_logos.py                                    # offline report; see "Logos" below
+```
+
+About 180 requests at 4 s each (about 14 minutes). Results: [`reports/PANDASCORE_FULL_COLLECTION_2026.md`](reports/PANDASCORE_FULL_COLLECTION_2026.md).
+
+**Staging tables** (`data/staging.sqlite3`, all rebuilt offline from the immutable raw runs):
+
+| Kind | Tables | Rule |
+|---|---|---|
+| Observations | `collection_runs`, `collection_queries`, `record_observations`, `record_payloads`, `tournament_registrations`, `team_membership_observations` | Append-only, keyed by run: a later run never overwrites what an earlier run saw |
+| Current | `ps_leagues`, `ps_series`, `ps_tournaments`, `ps_tournament_teams`, `ps_registrations`, `ps_matches`, `ps_match_games`, `ps_teams`, `ps_players`, `ps_image_refs`, `ps_player_index_2026` | Rebuilt each time from the latest copy of each record, with run, query, file and payload hash |
+| Starter | `provider_records`, `tournament_roster` | Unchanged |
+
+`record_payloads` holds every distinct raw payload once (by SHA-256), so every provider field stays reachable.
+`ps_player_index_2026` is dataset B (players on a 2026 stage roster); `ps_players` is dataset A (the whole
+catalogue, which says nothing about activity). Classification columns say `verified` only with the named evidence and
+`unknown` otherwise; individual match participation, academy and reserve status stay `unknown` (no source for them).
+
+**Logos.** `ps_image_refs` keeps each image URL exactly as supplied, with `value`/`null`/`empty`/`absent` states, and
+marks every URL `LICENSE_REVIEW_REQUIRED`: PandaScore's terms grant no rights in third-party logos. `cache_logos.py`
+fetches nothing until run with `--license-approved "<who, scope, date>"`; it then caches one logo per team and
+league in git-ignored `data/assets/{team,league}-logos/` (provider CDN hosts only, signature-checked PNG/JPEG/GIF/WebP,
+SHA-256, bounded retries). Never copy those files into the game, a content pack or the repository.
+
+**Calibration note.** `calibrate.py` reads every completed run, so rerunning it now would include the full-2026 run
+and change the pinned `reports/calibration_2026.json`. Do not rerun it as part of a collection.
+
 ## Historical match stats via Oracle's Elixir
 
 Manually download the 2026 match CSV from the publisher's downloads page under terms appropriate to your use:

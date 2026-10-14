@@ -1,0 +1,434 @@
+{
+ "format": "pandascore-full-collection-stats",
+ "version": 1,
+ "status": "AGGREGATE STATISTICS ONLY: no names, handles, person ids or team names",
+ "run_id": "20261013T035908Z",
+ "started_at": "2026-10-13T03:59:08.869669+00:00",
+ "finished_at": "2026-10-13T04:14:41.809403+00:00",
+ "run": {
+  "pages": 181,
+  "sha256_ok": 181,
+  "requests_in_manifest": 181,
+  "sessions": [
+   {
+    "started_at": "2026-10-13T03:59:08.873221+00:00",
+    "requests": 181,
+    "finished_at": "2026-10-13T04:14:41.809403+00:00"
+   }
+  ],
+  "status": "completed",
+  "stop_reason": null,
+  "rate_limit_remaining_first_last": [
+   980,
+   842
+  ]
+ },
+ "collections": {
+  "players": {
+   "queries": [
+    "players"
+   ],
+   "provider_total": 9915,
+   "collected_unique": 9915,
+   "rows_fetched": 9915,
+   "requests": 100,
+   "status": "COMPLETE",
+   "problems": []
+  },
+  "teams": {
+   "queries": [
+    "teams"
+   ],
+   "provider_total": 1948,
+   "collected_unique": 1948,
+   "rows_fetched": 1948,
+   "requests": 20,
+   "status": "COMPLETE",
+   "problems": []
+  },
+  "leagues": {
+   "queries": [
+    "leagues"
+   ],
+   "provider_total": 136,
+   "collected_unique": 136,
+   "rows_fetched": 136,
+   "requests": 2,
+   "status": "COMPLETE",
+   "problems": []
+  },
+  "series_2026": {
+   "queries": [
+    "series-begin-2026",
+    "series-from-2025",
+    "series-across-2026"
+   ],
+   "provider_total": 109,
+   "collected_unique": 109,
+   "rows_fetched": 109,
+   "requests": 4,
+   "status": "COMPLETE",
+   "problems": []
+  },
+  "series_year_label_2026": {
+   "queries": [
+    "series-year-2026"
+   ],
+   "provider_total": 106,
+   "collected_unique": 106,
+   "rows_fetched": 106,
+   "requests": 2,
+   "status": "COMPLETE",
+   "problems": []
+  },
+  "tournaments_2026": {
+   "queries": [
+    "tournaments-begin-2026",
+    "tournaments-from-2025",
+    "tournaments-across-2026"
+   ],
+   "provider_total": 279,
+   "collected_unique": 279,
+   "rows_fetched": 279,
+   "requests": 5,
+   "status": "COMPLETE",
+   "problems": []
+  },
+  "matches_2026": {
+   "queries": [
+    "matches-scheduled-2026"
+   ],
+   "provider_total": 3946,
+   "collected_unique": 3946,
+   "rows_fetched": 3946,
+   "requests": 40,
+   "status": "COMPLETE",
+   "problems": []
+  }
+ },
+ "checks": {
+  "matches-begin-2026-scheduled-before": {
+   "x_total": 0,
+   "requests": 1,
+   "ok": true
+  },
+  "matches-begin-2026-scheduled-after": {
+   "x_total": 0,
+   "requests": 1,
+   "ok": true
+  },
+  "series-running": {
+   "listed": 5,
+   "outside_scope": 0,
+   "requests": 1,
+   "complete": true,
+   "ok": true
+  },
+  "series-upcoming": {
+   "listed": 1,
+   "outside_scope": 0,
+   "requests": 1,
+   "complete": true,
+   "ok": true
+  },
+  "tournaments-running": {
+   "listed": 5,
+   "outside_scope": 0,
+   "requests": 1,
+   "complete": true,
+   "ok": true
+  },
+  "tournaments-upcoming": {
+   "listed": 3,
+   "outside_scope": 0,
+   "requests": 1,
+   "complete": true,
+   "ok": true
+  },
+  "matches-running": {
+   "listed": 0,
+   "outside_scope": 0,
+   "requests": 1,
+   "complete": true,
+   "ok": true
+  },
+  "matches-upcoming": {
+   "listed": 58,
+   "outside_scope": 0,
+   "requests": 1,
+   "complete": true,
+   "ok": true
+  }
+ },
+ "players": {
+  "total": 9915,
+  "in_latest_full_listing": 9915,
+  "only_in_earlier_runs": 0,
+  "with_handle": 9915,
+  "with_first_and_last_name": 8843,
+  "with_nationality": 8464,
+  "with_role": 9654,
+  "with_current_team": 2774,
+  "with_image_url": 5598,
+  "with_no_missing_tracked_field": 1297,
+  "missing_field_counts": {
+   "name": 0,
+   "slug": 0,
+   "first_name": 1043,
+   "last_name": 1072,
+   "nationality": 1451,
+   "role": 261,
+   "current_team": 7141,
+   "image_url": 4317
+  },
+  "role": {
+   "jun": 2062,
+   "sup": 1965,
+   "mid": 1932,
+   "adc": 1852,
+   "top": 1843,
+   "null": 261
+  },
+  "nationality_top15": {
+   "null": 1451,
+   "CN": 1109,
+   "KR": 745,
+   "BR": 435,
+   "TR": 383,
+   "FR": 354,
+   "PL": 307,
+   "ES": 304,
+   "US": 291,
+   "DE": 286,
+   "VN": 284,
+   "PT": 268,
+   "CZ": 234,
+   "TW": 219,
+   "JP": 191,
+   "other": 3054
+  },
+  "provider_active_flag": {
+   "1": 8512,
+   "0": 1403
+  },
+  "fields_not_returned_by_endpoint": [
+   "birthday",
+   "age",
+   "salary",
+   "contract",
+   "rating",
+   "potential"
+  ]
+ },
+ "player_index_2026": {
+  "players": 2331,
+  "in_provider_catalog": 2331,
+  "registered_in_2026": {
+   "verified": 2331
+  },
+  "current_roster_verified_as_of_set": 303,
+  "match_participation_verified_2026": {
+   "unknown": 2331
+  },
+  "academy_verified": {
+   "unknown": 2331
+  },
+  "reserve_verified": {
+   "unknown": 2331
+  },
+  "registered_stages_per_player": {
+   "5+": 817,
+   "1": 649,
+   "2": 412,
+   "3": 250,
+   "4": 203
+  },
+  "provider_current_team_agrees_with_current_roster": 270,
+  "registered_role": {
+   "jun": 496,
+   "sup": 462,
+   "mid": 460,
+   "top": 460,
+   "adc": 443,
+   "null": 10
+  }
+ },
+ "teams": {
+  "total": 1948,
+  "in_latest_full_listing": 1948,
+  "with_provider_roster": 736,
+  "without_provider_roster": 1212,
+  "provider_roster_size": {
+   "0": 1212,
+   "5": 150,
+   "1": 141,
+   "6": 112,
+   "2": 108,
+   "3": 89,
+   "4": 85,
+   "7": 35,
+   "8+": 16
+  },
+  "with_image_url": 1640,
+  "with_dark_mode_image_url": 174,
+  "with_location": 1347,
+  "appearing_in_2026_competitions": 363,
+  "appearing_in_2026_and_in_catalog": 363,
+  "cached_logos": 0
+ },
+ "competitions": {
+  "leagues": 136,
+  "series_by_relevance": {
+   "begins_in_2026": 108,
+   "outside_2026": 4,
+   "ends_in_2026": 1
+  },
+  "series_year_label_2026": 106,
+  "series_year_label_2026_outside_calendar_2026": 4,
+  "series_in_2026_with_other_year_label": {
+   "2027": 6,
+   "2025": 1
+  },
+  "tournaments_by_relevance": {
+   "begins_in_2026": 278,
+   "ends_in_2026": 1
+  },
+  "tournaments_2026_by_tier": {
+   "c": 113,
+   "d": 90,
+   "a": 50,
+   "b": 13,
+   "s": 13
+  },
+  "tournaments_2026_by_region": {
+   "WEU": 102,
+   "ASIA": 77,
+   "EEU": 42,
+   "SA": 24,
+   "NA": 21,
+   "ME": 11,
+   "OCE": 2
+  },
+  "tournaments_2026_by_type": {
+   "online": 185,
+   "offline": 74,
+   "online/offline": 20
+  },
+  "tournaments_2026_with_winner": 130,
+  "tournaments_2026_with_prizepool": 33,
+  "tournaments_2026_with_country": 179,
+  "tournaments_2026_without_teams": 1,
+  "tournament_team_roster_status": {
+   "players_listed": 1779
+  },
+  "registrations_2026": 9764,
+  "registered_players_2026": 2331,
+  "registered_teams_2026": 363,
+  "players_per_registered_team_stage": {
+   "5": 1247,
+   "6": 339,
+   "7": 124,
+   "8+": 69
+  },
+  "matches_by_relevance": {
+   "scheduled_in_2026": 3946
+  },
+  "matches_2026_by_status": {
+   "finished": 3850,
+   "not_started": 58,
+   "canceled": 38
+  },
+  "matches_2026_by_format": {
+   "best_of:3": 2064,
+   "best_of:1": 1092,
+   "best_of:5": 699,
+   "best_of:2": 91
+  },
+  "matches_2026_begin_at_null": 38,
+  "matches_2026_rescheduled": 2079,
+  "matches_2026_forfeit": 25,
+  "matches_2026_draw": 20,
+  "matches_2026_with_two_opponents": 3892,
+  "matches_2026_with_winner": 3855,
+  "matches_2026_detailed_stats_flag": {
+   "1": 3903,
+   "0": 43
+  },
+  "games_2026": 8850,
+  "games_2026_by_status": {
+   "finished": 8574,
+   "not_started": 276
+  }
+ },
+ "broken_references": {
+  "tournament_league_not_in_leagues": 0,
+  "tournament_serie_not_in_series": 0,
+  "series_league_not_in_leagues": 0,
+  "match_tournament_not_in_tournaments": 0,
+  "match_serie_not_in_series": 0,
+  "match_league_not_in_leagues": 0,
+  "match_opponent_not_in_teams": 0,
+  "registration_player_not_in_players": 0,
+  "registration_team_not_in_teams": 0,
+  "player_current_team_not_in_teams": 1,
+  "team_member_not_in_players": 0,
+  "tournaments_2026_missing_league_or_serie_id": 0
+ },
+ "provider_team_membership_latest_run": {
+  "team_players_links": 2773,
+  "player_current_team_links": 2774,
+  "links_in_both_directions": 2773
+ },
+ "images": {
+  "by_entity_field_state": {
+   "player:image_url:value": 5598,
+   "player:image_url:null": 4317,
+   "team:dark_mode_image_url:null": 1774,
+   "team:image_url:value": 1640,
+   "team:image_url:null": 308,
+   "team:dark_mode_image_url:value": 174,
+   "league:image_url:value": 118,
+   "league:image_url:null": 18
+  },
+  "hosts": {
+   "cdn-api.pandascore.co": 7530
+  },
+  "license_review_required": 7530,
+  "cache": {}
+ },
+ "registration_history": {
+  "previous_run": "20261009T022241Z",
+  "latest_run": "20261013T035908Z",
+  "stages_in_both": 277,
+  "rows_only_in_previous": 0,
+  "rows_only_in_latest": 16,
+  "note": "Registration rows that changed between observations of the same stage. Observation dates are not transfer dates."
+ },
+ "database": {
+  "sqlite_integrity_check": "ok",
+  "duplicate_observations": 0,
+  "observation_payloads_missing": 0,
+  "runs": [
+   {
+    "run_id": "20261008T161016Z",
+    "status": "completed",
+    "pages": 3
+   },
+   {
+    "run_id": "20261008T161546Z",
+    "status": "completed",
+    "pages": 3
+   },
+   {
+    "run_id": "20261009T022241Z",
+    "status": "completed",
+    "pages": 49
+   },
+   {
+    "run_id": "20261013T035908Z",
+    "status": "completed",
+    "pages": 181
+   }
+  ]
+ }
+}

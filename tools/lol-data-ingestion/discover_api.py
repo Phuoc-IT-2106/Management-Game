@@ -34,6 +34,56 @@ COLLECTIONS = {
     "matches_past": "/lol/matches/past",
 }
 ACADEMY_WORDS = ("academy", "youth", "challengers", "rookie", " ac", "junior")
+BEFORE_2026 = "1970-01-01T00:00:00Z,2025-12-31T23:59:59Z"
+AFTER_2026 = "2027-01-01T00:00:00Z,2099-12-31T23:59:59Z"
+
+
+def probe_full_2026():
+    """Scope probes for the full 2026 collection: do two range filters combine (AND), which match listing holds
+    upcoming matches, and which stages, series and matches touch 2026 without starting in it. per_page=1 where only
+    X-Total matters."""
+    one, hundred = {"page": 1, "per_page": 1}, {"page": 1, "per_page": 100}
+    return [
+        ("matches-all-begin-2026", "/lol/matches", {"range[begin_at]": YEAR_RANGE} | one),
+        ("matches-past-begin-2026", "/lol/matches/past", {"range[begin_at]": YEAR_RANGE} | one),
+        ("matches-all-scheduled-2026", "/lol/matches", {"range[scheduled_at]": YEAR_RANGE} | one),
+        ("matches-scheduled-2026-begin-before", "/lol/matches", {"range[scheduled_at]": YEAR_RANGE, "range[begin_at]": BEFORE_2026} | hundred),
+        ("matches-begin-2026-scheduled-before", "/lol/matches", {"range[begin_at]": YEAR_RANGE, "range[scheduled_at]": BEFORE_2026} | hundred),
+        ("matches-upcoming", "/lol/matches/upcoming", dict(hundred)),
+        ("matches-running", "/lol/matches/running", dict(hundred)),
+        ("tournaments-begin-and-end-2026", "/lol/tournaments", {"range[begin_at]": YEAR_RANGE, "range[end_at]": YEAR_RANGE} | one),
+        ("tournaments-begin-before-end-2026", "/lol/tournaments", {"range[begin_at]": BEFORE_2026, "range[end_at]": YEAR_RANGE} | hundred),
+        ("tournaments-span-2026", "/lol/tournaments", {"range[begin_at]": BEFORE_2026, "range[end_at]": AFTER_2026} | hundred),
+        ("tournaments-upcoming", "/lol/tournaments/upcoming", dict(hundred)),
+        ("tournaments-running", "/lol/tournaments/running", dict(hundred)),
+        ("series-begin-2026", "/lol/series", {"range[begin_at]": YEAR_RANGE} | one),
+        ("series-begin-before-end-2026", "/lol/series", {"range[begin_at]": BEFORE_2026, "range[end_at]": YEAR_RANGE} | hundred),
+        ("series-span-2026", "/lol/series", {"range[begin_at]": BEFORE_2026, "range[end_at]": AFTER_2026} | hundred),
+        ("series-running", "/lol/series/running", dict(hundred)),
+        ("series-upcoming", "/lol/series/upcoming", dict(hundred)),
+        ("players-sort-id", "/lol/players", {"sort": "id"} | one),
+        ("teams-sort-id", "/lol/teams", {"sort": "id"} | one),
+    ]
+
+
+def probe_rosters(limit=5):
+    """The per-stage roster endpoint for up to `limit` running or upcoming stages with teams, from the latest
+    completed full-2026 run, to compare with the expected_roster embedded in the stage listing."""
+    root = DATA_DIR / "raw" / "pandascore"
+    runs = [p for p in sorted(root.glob("*")) if (p / "manifest.json").exists()
+            and json.loads((p / "manifest.json").read_text(encoding="utf-8")).get("preset") == "full-2026"
+            and json.loads((p / "manifest.json").read_text(encoding="utf-8")).get("status") == "completed"]
+    if not runs:
+        raise SystemExit("No completed full-2026 run to pick stages from")
+    manifest = json.loads((runs[-1] / "manifest.json").read_text(encoding="utf-8"))
+    stages = []
+    for query in ("tournaments-running", "tournaments-upcoming"):
+        for page in manifest["queries"][query]["pages"]:
+            stages += [t["id"] for t in json.loads((runs[-1] / page["file"]).read_text(encoding="utf-8")) if t.get("teams")]
+    return [(f"rosters-{sid}", f"/tournaments/{sid}/rosters", {}) for sid in sorted(set(stages))[:limit]]
+
+
+PROBES = {"full-2026": probe_full_2026, "rosters": probe_rosters}
 
 
 def plan():
@@ -58,7 +108,7 @@ def pick_roster_tournament(tournaments):
     return candidates[0]["id"] if candidates else None
 
 
-def fetch(token):
+def fetch(token, steps=None, scope="BOUNDED API DISCOVERY (<= 2 pages per query); NOT a complete dataset"):
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = DATA_DIR / "raw" / "discovery" / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
@@ -66,7 +116,7 @@ def fetch(token):
     session.headers.update({"Authorization": f"Bearer {token}", "Accept": "application/json",
                             "User-Agent": "ManagementGame-ResearchIngestion/0.1"})
     manifest = {"run_id": run_id, "started_at": now_iso(), "status": "running", "source": "PandaScore",
-                "scope": "BOUNDED API DISCOVERY (<= 2 pages per query); NOT a complete dataset",
+                "scope": scope,
                 "max_requests": MAX_REQUESTS, "requests": []}
 
     def get(name, path, params):
@@ -91,7 +141,7 @@ def fetch(token):
         return response.status_code, data, response.headers
 
     try:
-        for name, path, params in plan():
+        for name, path, params in steps or plan():
             status, data, headers = get(name, path, params)
             if status == 429:
                 manifest["stopped_reason"] = "HTTP 429"
@@ -307,6 +357,7 @@ def analyze(run_dir, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--analyze", type=Path, metavar="RUN_DIR", help="offline: analyze a saved discovery run")
+    parser.add_argument("--probe", choices=list(PROBES), help="live: run a scope probe plan and keep its raw run; no analysis")
     parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent / "reports" / "api_discovery_2026_stats.json")
     args = parser.parse_args()
     if args.analyze:
@@ -316,6 +367,9 @@ def main():
     token = os.getenv("PANDASCORE_TOKEN", "").strip()
     if not token or token.startswith(PLACEHOLDER_PREFIX):
         parser.error("PANDASCORE_TOKEN missing. Put your own token in .env (see SETUP_VI.md)")
+    if args.probe:
+        fetch(token, PROBES[args.probe](), f"SCOPE PROBE {args.probe} (single pages); NOT a dataset")
+        return
     run_dir = fetch(token)
     analyze(run_dir, args.output)
 

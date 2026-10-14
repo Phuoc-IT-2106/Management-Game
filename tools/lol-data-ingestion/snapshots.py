@@ -33,20 +33,39 @@ def run_files(run: Path):
             yield collection, run / page["file"]
 
 
-def load_records(runs, collection):
-    """Records of one collection across runs, deduplicated by id: the copy with the latest modified_at wins (ties:
-    the later run). Returned sorted by id so every consumer iterates deterministically."""
+def run_pages(run: Path):
+    """(query, collection, page entry, file path) for every page of a run, from its manifest. Listing-mode runs name
+    the query after the collection; pages of older runs carry no fetched_at of their own."""
+    manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+    for query, entry in (manifest.get("queries") or {}).items():
+        for page in entry["pages"]:
+            yield query, entry["collection"], page, run / page["file"]
+    for collection, entry in (manifest.get("collections") or {}).items():
+        for page in entry["pages"]:
+            yield collection, collection, page, run / page["file"]
+
+
+def load_sourced(runs, collection):
+    """Like load_records, with where each chosen copy came from: (record, {run, query, file, observed_at})."""
     chosen = {}
     for order, run in enumerate(runs):
-        for name, file in run_files(run):
+        started = json.loads((run / "manifest.json").read_text(encoding="utf-8")).get("started_at")
+        for query, name, page, file in run_pages(run):
             if name != collection:
                 continue
             for record in json.loads(file.read_text(encoding="utf-8")):
                 key = record["id"]
                 rank = (record.get("modified_at") or "", order)
                 if key not in chosen or rank >= chosen[key][0]:
-                    chosen[key] = (rank, record)
-    return [chosen[key][1] for key in sorted(chosen)]
+                    chosen[key] = (rank, record, {"run": run.name, "query": query, "file": file.name,
+                                                  "observed_at": page.get("fetched_at") or started})
+    return [chosen[key][1:] for key in sorted(chosen)]
+
+
+def load_records(runs, collection):
+    """Records of one collection across runs, deduplicated by id: the copy with the latest modified_at wins (ties:
+    the later run). Returned sorted by id so every consumer iterates deterministically."""
+    return [record for record, _ in load_sourced(runs, collection)]
 
 
 def provenance(runs):
