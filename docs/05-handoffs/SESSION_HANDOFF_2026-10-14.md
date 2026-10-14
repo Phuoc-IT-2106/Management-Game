@@ -76,6 +76,23 @@ From `artifacts/recruit-measure-r2` (not tracked):
   `--license-approved`.
 - Do not rerun `calibrate.py`: `calibration_2026.json` is pinned by the content's SHA-256.
 
+### 3b. Data standard audit
+
+[DATA_STANDARD_AUDIT.md](../10-vertical-slice/DATA_STANDARD_AUDIT.md) lists what the model still needs before more content
+is built on it. It covers players, clubs, staff and rivals:
+- **P0, mechanical:**
+  - unique handles (4 duplicates in a 4-season save);
+  - a released player's market price;
+  - load-time invariants;
+  - golden formula tests;
+  - a data dictionary.
+- **P1, conventions:**
+  - one scale per attribute family;
+  - one rounding rule;
+  - coefficients into content;
+  - coach and company identity fields.
+- **P2, decisions:** the money scale and wage curve, rival condition and economy, staff roles, save compatibility.
+
 ### 4. Known limits
 
 - **Rivals strengthen over seasons.** Mean rival strength is about 74 at the start and about 77 later. It is bounded,
