@@ -1,0 +1,2355 @@
+{
+  "schema_version": 1,
+  "source_ref": "stage5-sponsor-instruments",
+  "source_head": "587b910d10b1752e0473ca6fb0e2037ae0824e63",
+  "generated_at": "2026-10-22",
+  "description": "Snapshot inventory. Bytes not transferred. Git blob SHA-1 is not a SHA-256 verification of uploaded content.",
+  "count": 293,
+  "total_bytes": 70298912,
+  "entries": [
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/followup-qg02-untouched-release.png",
+      "git_blob_sha": "02e4110a1985099a36c067e9b035682abacbe80b",
+      "bytes": 150859,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/followup-reuse-layout-1280-2.png",
+      "git_blob_sha": "d67ffb387adfb6e827dcaa6d4eb425e6be69201b",
+      "bytes": 160331,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/followup-reuse-smoke.png",
+      "git_blob_sha": "737d7e9234e336bef36a940d7cec2e0c5deef2d7",
+      "bytes": 18715,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/followup-reuse-sustained.png",
+      "git_blob_sha": "eb78a3ded58ea916fd076d3d44ab06f7fa46d7fb",
+      "bytes": 150904,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/qg01-render.png",
+      "git_blob_sha": "737d7e9234e336bef36a940d7cec2e0c5deef2d7",
+      "bytes": 18715,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/qg02-layout-1280-2.png",
+      "git_blob_sha": "d67ffb387adfb6e827dcaa6d4eb425e6be69201b",
+      "bytes": 160331,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/09-technical-foundation/qualification/evidence/qg02-render.png",
+      "git_blob_sha": "1d9251b86d53f655a35a10b23faa85b33fcc0096",
+      "bytes": 151253,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/affairs-1280x720.png",
+      "git_blob_sha": "8766f4176596888772b18a886a4a46f7eec88ce0",
+      "bytes": 145462,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/affairs-1920x1080.png",
+      "git_blob_sha": "af5c0714a5be7099fb85a3d7bfe19e87bc0ec0d4",
+      "bytes": 244639,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/branding-1280x720.png",
+      "git_blob_sha": "0121b49e4167d10d566a21bac495500b68998e52",
+      "bytes": 163752,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/branding-1920x1080.png",
+      "git_blob_sha": "cb4e9cafa7af9014cd904ce601058de0469001cf",
+      "bytes": 197884,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/competitive-1280x720.png",
+      "git_blob_sha": "bf496b9f2cb8ca3cdae009fb27f89f6519d50b50",
+      "bytes": 174101,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/competitive-1920x1080.png",
+      "git_blob_sha": "a5ffb280835f22a68461e64067005303612e9314",
+      "bytes": 207526,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/decision-1280x720.png",
+      "git_blob_sha": "6938a68e12d7a2c33b32e8da5b8167d418b45574",
+      "bytes": 114505,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/decision-1920x1080.png",
+      "git_blob_sha": "49c2e2c54d0b7db13617a7d2e75ff07c5a92a6d4",
+      "bytes": 120504,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/empty-1280x720.png",
+      "git_blob_sha": "887bb3ab7837819b3d7a24c793ee6dc7bb5eac2a",
+      "bytes": 147606,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/empty-1920x1080.png",
+      "git_blob_sha": "4d3974271a5819b1c2109e7263f549378fb1898f",
+      "bytes": 157371,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/list-1280x720.png",
+      "git_blob_sha": "16571ff5dbea667afb65ca8eddb2d29bb88926f6",
+      "bytes": 149733,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/list-1920x1080.png",
+      "git_blob_sha": "124a84830f7ec1c362e8de467a1a06e7f1bd7d27",
+      "bytes": 193642,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/long-name-1280x720.png",
+      "git_blob_sha": "93b8819e1913ad868c12ec029f413c271a406915",
+      "bytes": 174198,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/long-name-1920x1080.png",
+      "git_blob_sha": "6ede292636497a023360302e866e8fe3ef026ac7",
+      "bytes": 228428,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/missing-identity-1280x720.png",
+      "git_blob_sha": "06d7bf48ac99e51a3154ae6959c17d1cc233c3a8",
+      "bytes": 164590,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/missing-identity-1920x1080.png",
+      "git_blob_sha": "f3a725d80fb00e3fcbc13013deecfce2eac0d615",
+      "bytes": 198622,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/normal-1280x720.png",
+      "git_blob_sha": "9f43d2b604a69605cefccbfbe2b203eb12a115bb",
+      "bytes": 163813,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/normal-1920x1080.png",
+      "git_blob_sha": "7052b30981d485da30f2c462865fdae38e5383a4",
+      "bytes": 197961,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/quiet-1280x720.png",
+      "git_blob_sha": "4a2d97c5087c5fa8f39af0da0d4832d9826c4154",
+      "bytes": 159302,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/quiet-1920x1080.png",
+      "git_blob_sha": "bf9bcc40ae23872a39647e50de1a9605c2ce5aba",
+      "bytes": 198488,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/return-1280x720.png",
+      "git_blob_sha": "b7329947e3dc8fd9783888092d9008d751ce06aa",
+      "bytes": 172326,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/return-1920x1080.png",
+      "git_blob_sha": "5fbc56f66b238e81d54ff4cf579ca754f94202c0",
+      "bytes": 209568,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/sponsor-1280x720.png",
+      "git_blob_sha": "b7329947e3dc8fd9783888092d9008d751ce06aa",
+      "bytes": 172326,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/evidence/candidates/sponsor-1920x1080.png",
+      "git_blob_sha": "5fbc56f66b238e81d54ff4cf579ca754f94202c0",
+      "bytes": 209568,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-competitive-1280x720.png",
+      "git_blob_sha": "cfd626bc82a8056a9cc4496049da36985a59a22a",
+      "bytes": 147233,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-competitive-1920x1080.png",
+      "git_blob_sha": "e07abaad0f4f89c9a5305d0d1e91468654698e31",
+      "bytes": 154214,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-long-name-1280x720.png",
+      "git_blob_sha": "26ab315a558a28fa8f76684d5700c52018da70a4",
+      "bytes": 147501,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-long-name-1920x1080.png",
+      "git_blob_sha": "382cee8e64a16363cc7f5f50dfd93cbb10da0d3a",
+      "bytes": 155643,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-normal-1280x720.png",
+      "git_blob_sha": "6b9e52473fcde2c85a8abf94e03d19535b3f320c",
+      "bytes": 135048,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-normal-1920x1080.png",
+      "git_blob_sha": "66355c4dda576b1fcd0801d60fac5d874645ed13",
+      "bytes": 145684,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-quiet-1280x720.png",
+      "git_blob_sha": "cd2c41a4ff9bb4d17145e9f5a549f7003cc41fc0",
+      "bytes": 138163,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-quiet-1920x1080.png",
+      "git_blob_sha": "d7c962680d2de6b015736a7d6e28326ea62144b0",
+      "bytes": 151403,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-sponsor-1280x720.png",
+      "git_blob_sha": "761d6526a9921d6450b923f776d0afe2d60d99b5",
+      "bytes": 148888,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/list-sponsor-1920x1080.png",
+      "git_blob_sha": "62cab4559e2f14c857ff95dafc611d149879ddff",
+      "bytes": 156615,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-competitive-1280x720.png",
+      "git_blob_sha": "b9313fa4bacdb314879c4a7294defdc655675b1a",
+      "bytes": 164520,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-competitive-1920x1080.png",
+      "git_blob_sha": "28b07204f1fc6e09fe8526c54db13fe129d207aa",
+      "bytes": 170508,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-long-name-1280x720.png",
+      "git_blob_sha": "b22083b78c4c78aa265d8523733ea2f6d948079b",
+      "bytes": 160763,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-long-name-1920x1080.png",
+      "git_blob_sha": "974c2e08cea3718b8f112510167ba0c483e6887b",
+      "bytes": 167654,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-normal-1280x720.png",
+      "git_blob_sha": "cc1c92eaf9da945c08554089a9f379ebfea04cbc",
+      "bytes": 150588,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-normal-1920x1080.png",
+      "git_blob_sha": "b3feadb564715f05223de4cfb2838e5a5f393347",
+      "bytes": 158284,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-quiet-1280x720.png",
+      "git_blob_sha": "16351fc9a01826a4513cc7104e7c0842cc1b1517",
+      "bytes": 157906,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-quiet-1920x1080.png",
+      "git_blob_sha": "9e5f8493cd8ae6e207361b415ea2ca69b1d348b5",
+      "bytes": 164764,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-sponsor-1280x720.png",
+      "git_blob_sha": "12802bd11d7ebe3b399eef9b10d0a201b2d6ef18",
+      "bytes": 166255,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-operating-map/refinement/evidence/candidates/map-sponsor-1920x1080.png",
+      "git_blob_sha": "6e5333504fb146802e84a973650f7deee9689960",
+      "bytes": 173648,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-ui-demo/operating-field-evidence/company-field-1280x720.png",
+      "git_blob_sha": "e41b896fbe72ac6eef87ad9f015b2cf6793dfe9e",
+      "bytes": 126847,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/company-ui-demo/operating-field-evidence/company-field-1920x1080.png",
+      "git_blob_sha": "3e3c80923a860c54ff6e9a0943dbfafc9fe11ec3",
+      "bytes": 234594,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/evidence/dashboard.png",
+      "git_blob_sha": "a4885201daf88c42755804bb494f531287f9dac9",
+      "bytes": 98058,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-inbox-1280x720.png",
+      "git_blob_sha": "e4f368a22aa358df30ce15b21d4a20506f8001bf",
+      "bytes": 132819,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-inbox-1920x1080.png",
+      "git_blob_sha": "098cf2d6954ba9cf5cbfe8136810b4da68edf0ce",
+      "bytes": 156579,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-portal-1280x720.png",
+      "git_blob_sha": "cc01b9f876f17199a4ac157dce4f93824c3e5345",
+      "bytes": 248808,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-portal-1920x1080.png",
+      "git_blob_sha": "d394e2b6f60f0e0ece116971ffcd5f991586d662",
+      "bytes": 404126,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-portal-case-long-names-1280x720.png",
+      "git_blob_sha": "43af79dc0a87ff2e1bb45d18dc18cdbc9baf8283",
+      "bytes": 209280,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-portal-case-long-names-1920x1080.png",
+      "git_blob_sha": "833de819c62edba931d0c271582066b73ab7ac02",
+      "bytes": 351649,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-rail-collapsed-1280x720.png",
+      "git_blob_sha": "acd87d9d1735c910e69f5a40e375e0cfdee5ffb6",
+      "bytes": 236093,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-rail-collapsed-1920x1080.png",
+      "git_blob_sha": "197c922032e84887e8294fe70828c6a2f476b4f8",
+      "bytes": 391825,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-rail-states-1280x720.png",
+      "git_blob_sha": "3691d4ba05f9666d542f289a0d11443dd1da6f6d",
+      "bytes": 247569,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/before-rail-states-1920x1080.png",
+      "git_blob_sha": "e86a72f819636803653bb13ad0a96594239ce6b9",
+      "bytes": 402885,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/inbox-1280x720.png",
+      "git_blob_sha": "e5a96d1765398e4733f8bae3b10d661718fdb10a",
+      "bytes": 146279,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/inbox-1920x1080.png",
+      "git_blob_sha": "f6a2efab0196c755ff35bb456cc83b2fbb098a1b",
+      "bytes": 172650,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/portal-1280x720.png",
+      "git_blob_sha": "e4dfec9cf19c2bd29867aad44b31dee16294540b",
+      "bytes": 261706,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/portal-1920x1080.png",
+      "git_blob_sha": "a2d00017e534d50fafd65b6174ce791967189548",
+      "bytes": 418992,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/portal-case-long-names-1280x720.png",
+      "git_blob_sha": "84337d79dc93aab02d8dcf519a6fdc0b269515b3",
+      "bytes": 219738,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/portal-case-long-names-1920x1080.png",
+      "git_blob_sha": "66b01482b7dfa5896bb69835734959f96a2fbaf4",
+      "bytes": 365665,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-art-detail-1280x720.png",
+      "git_blob_sha": "cb5653cbd54377ff39da83cca7a2a53c064b3359",
+      "bytes": 22678,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-before-after-1280x720.png",
+      "git_blob_sha": "ea6a8b65d78696a60057bde6bab4db95b2bb234d",
+      "bytes": 125611,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-before-after-1920x1080.png",
+      "git_blob_sha": "3dec7ec5a90accd65bd9e1832ada07dc9dd41a35",
+      "bytes": 151650,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-collapsed-1280x720.png",
+      "git_blob_sha": "124aac94a4ae2d8c3475854ad7d9bce1cd4e756d",
+      "bytes": 249107,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-collapsed-1920x1080.png",
+      "git_blob_sha": "135f549a693cd6f07e8138f07c30565aa4740de5",
+      "bytes": 407740,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-states-1280x720.png",
+      "git_blob_sha": "32fc2c9b4fe7648c5b0c6f87a73f825c65816ed7",
+      "bytes": 260600,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/sidebar/rail-states-1920x1080.png",
+      "git_blob_sha": "804a1194b7a9cf876c35183a06982887c0e80b8e",
+      "bytes": 417616,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-commercial-1280x720.png",
+      "git_blob_sha": "6c3a7bc4e99579f30816e18df58789c014ed3d08",
+      "bytes": 188877,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-commercial-1920x1080.png",
+      "git_blob_sha": "e6a8ca1a011f9cdde6c3ba3327dd7d5e5c23a227",
+      "bytes": 221059,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-finance-1280x720.png",
+      "git_blob_sha": "682e46fb6df1d5e47fd4a86f07915dfcb7627341",
+      "bytes": 206974,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-finance-1920x1080.png",
+      "git_blob_sha": "eb1186d96469afa6c6ac5796a02cb113dad2c92c",
+      "bytes": 256982,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-portal-1280x720.png",
+      "git_blob_sha": "c86f9dd43c9784b10f3334ebaeb25723ef2b3224",
+      "bytes": 261676,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-portal-1920x1080.png",
+      "git_blob_sha": "3824554fac1457ab698bd1ea7c1c88eeffe65fb5",
+      "bytes": 419053,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-squad-1280x720.png",
+      "git_blob_sha": "f3cd2f11aeb4315a75628229c607e670718417ba",
+      "bytes": 198324,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-squad-1920x1080.png",
+      "git_blob_sha": "91fd7d3e4f3a09faa1574076a1d5b3ac86ff2dac",
+      "bytes": 224800,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-staff-1280x720.png",
+      "git_blob_sha": "ff027599852abd9e54cb21bd4d51207fa8a36eec",
+      "bytes": 145186,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/before-staff-1920x1080.png",
+      "git_blob_sha": "b446d686c89562c2e3b92fa3fc6c0ceb56a6f686",
+      "bytes": 176110,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/commercial-1280x720.png",
+      "git_blob_sha": "81537c0a376fe5fdf113261d2e5181cb2e73daa1",
+      "bytes": 203625,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/commercial-1920x1080.png",
+      "git_blob_sha": "12918ddae1c1ffb0f1c3d868d342a9332e4cf52b",
+      "bytes": 238488,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/finance-1280x720.png",
+      "git_blob_sha": "eb058207bbc09354f6b2ac812175bc4f43f280b6",
+      "bytes": 230981,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/finance-1920x1080.png",
+      "git_blob_sha": "c2d6df91200342771721447f457de3268e8513cc",
+      "bytes": 295735,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-1280x720.png",
+      "git_blob_sha": "0916d9ea18ab1d5d66d300a11b6d085980971191",
+      "bytes": 288737,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-1920x1080.png",
+      "git_blob_sha": "6074fffa60496811570b21919288394cea20ad50",
+      "bytes": 458713,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-case-distress-1280x720.png",
+      "git_blob_sha": "33bd636f84d769df1b2055c735e945732f6e9fca",
+      "bytes": 285770,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-case-distress-1920x1080.png",
+      "git_blob_sha": "a08df2dd28d806037b9ce2a84721f8e797b5e1f4",
+      "bytes": 470407,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-case-large-values-1280x720.png",
+      "git_blob_sha": "538f009d84a53a2e295bc2767e13845864f7eae3",
+      "bytes": 287526,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-case-long-names-1920x1080.png",
+      "git_blob_sha": "8ea689b299ef730a13430375de34f7a6ab41be89",
+      "bytes": 399649,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-case-no-decisions-1280x720.png",
+      "git_blob_sha": "e7a2c05d09fe186bc90a4ef918ef4f55d20902c6",
+      "bytes": 264685,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/portal-case-roster-shortfall-1280x720.png",
+      "git_blob_sha": "8143f6f065d6a3751b17cd2f65800a3acfba5480",
+      "bytes": 285020,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/squad-1280x720.png",
+      "git_blob_sha": "73ce82c8bd6302036ed7dbc726c946eaff062b61",
+      "bytes": 224006,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/squad-1920x1080.png",
+      "git_blob_sha": "383c1a0ae30d1e95852de592567c3d46ad3e25e7",
+      "bytes": 251340,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/staff-1280x720.png",
+      "git_blob_sha": "84c40b047746af3df4541d07a5b4d519b92b7a2c",
+      "bytes": 155998,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/staff-1920x1080.png",
+      "git_blob_sha": "83da1d68c2e666b5832e53ce2ab1c456d16f1d2d",
+      "bytes": 190416,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/topbar-before-after-1280x720.png",
+      "git_blob_sha": "b20c20c89e84466b05fa2d813b22498010944b0d",
+      "bytes": 48563,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/topbar-before-after-1920x1080.png",
+      "git_blob_sha": "89ea98a024711f2cf20d2dc104092bf504af9a28",
+      "bytes": 51700,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/topbar/topbar-cases.png",
+      "git_blob_sha": "27aa01fd909c5aae56eddade72540c897ffb0c71",
+      "bytes": 134004,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-1280x720.png",
+      "git_blob_sha": "4fd667db9041432b73b3cf8f8b0ab819dafb1aa9",
+      "bytes": 246904,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-1920x1080.png",
+      "git_blob_sha": "bb3c96d340643313df976bb871da598c089e350e",
+      "bytes": 370849,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-empty-transfers-1280x720.png",
+      "git_blob_sha": "83b104201e4667531f3b7a683b9f350848d88c9a",
+      "bytes": 242097,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-empty-transfers-1920x1080.png",
+      "git_blob_sha": "6fec6973fe6d8837a341fdcf4b7c2f75e1943d49",
+      "bytes": 365837,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-journeys-1280x720.png",
+      "git_blob_sha": "f48e6bbdb2f939530db84ef31da538e5f7e5ba3a",
+      "bytes": 278037,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-journeys-1920x1080.png",
+      "git_blob_sha": "7f964b550d71dbf413d56872cae5c6d5fdbc27e7",
+      "bytes": 424585,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-long-names-1280x720.png",
+      "git_blob_sha": "38c55bf4a62d8a027f5cedfaa71712d2b96e9b64",
+      "bytes": 295289,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-long-names-1920x1080.png",
+      "git_blob_sha": "fcd093a6661daf49aabcd73be49c5f28514cf040",
+      "bytes": 507607,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-many-transfers-1280x720.png",
+      "git_blob_sha": "8ae67d09a6379f04098d27602cae3b3af1c176c1",
+      "bytes": 279735,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-many-transfers-1920x1080.png",
+      "git_blob_sha": "6d11127eb123149d3d2581aba6e5999874a223c8",
+      "bytes": 451024,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-missing-art-1280x720.png",
+      "git_blob_sha": "82a06378bc34affe8fc5fd0dab6e3f69790a960d",
+      "bytes": 259457,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-missing-art-1920x1080.png",
+      "git_blob_sha": "e738e15d739a3b9e5097222a49f375b67f69e5cb",
+      "bytes": 373635,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-one-story-1280x720.png",
+      "git_blob_sha": "51eaebcbd2dcda0b1c5c9d539530d5f5b03ae2d5",
+      "bytes": 245753,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-one-story-1920x1080.png",
+      "git_blob_sha": "d296ce03534235b0f65a25839b1610afe71dcde1",
+      "bytes": 377347,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-return-1280x720.png",
+      "git_blob_sha": "d15fe531f4eff5eb95b238ab7e157ff43877f9f4",
+      "bytes": 259827,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-return-1920x1080.png",
+      "git_blob_sha": "8cfb7f1e73f5e724307df3490992b1d2555c04a9",
+      "bytes": 398297,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-roundup-1280x720.png",
+      "git_blob_sha": "e9a934e8bd8314b0ea7374bf294f4afc16f0b1d0",
+      "bytes": 258212,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-case-roundup-1920x1080.png",
+      "git_blob_sha": "5d9dffbd2c3e7690014fd08144ed9873144311e8",
+      "bytes": 398740,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-transfers-departures-1280x720.png",
+      "git_blob_sha": "9b99a8d083da2d5aa8443e8e5104184dccf38187",
+      "bytes": 232708,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-transfers-departures-1920x1080.png",
+      "git_blob_sha": "b2246f7efd420938e3dd2f52205888be5980fdc0",
+      "bytes": 376580,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-transfers-moves-1280x720.png",
+      "git_blob_sha": "05b4d2522026af2dd43ba284825eb9331a32e740",
+      "bytes": 273193,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-transfers-moves-1920x1080.png",
+      "git_blob_sha": "9284afa1f9bc34e86150cf76d8102a9e43fac823",
+      "bytes": 462076,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-transfers-reloaded-1280x720.png",
+      "git_blob_sha": "05b4d2522026af2dd43ba284825eb9331a32e740",
+      "bytes": 273193,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/portal-transfers-reloaded-1920x1080.png",
+      "git_blob_sha": "9284afa1f9bc34e86150cf76d8102a9e43fac823",
+      "bytes": 462076,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/squad-1280x720.png",
+      "git_blob_sha": "73ce82c8bd6302036ed7dbc726c946eaff062b61",
+      "bytes": 224006,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/squad-1920x1080.png",
+      "git_blob_sha": "383c1a0ae30d1e95852de592567c3d46ad3e25e7",
+      "bytes": 251340,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/squad-market-after-1280x720.png",
+      "git_blob_sha": "0c160f5e1a8998eba4f6d8a7af9a1d82cef9c4f8",
+      "bytes": 189445,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/staff-1280x720.png",
+      "git_blob_sha": "84c40b047746af3df4541d07a5b4d519b92b7a2c",
+      "bytes": 155998,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/staff-1920x1080.png",
+      "git_blob_sha": "83da1d68c2e666b5832e53ce2ab1c456d16f1d2d",
+      "bytes": 190416,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/staff-market-after-1280x720.png",
+      "git_blob_sha": "1661ced255d4413b33df7c585488f7f0de42f68f",
+      "bytes": 153661,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/transfer-news-before-after-1280x720.png",
+      "git_blob_sha": "bfce58faca37fd18830570463faac6b43a241779",
+      "bytes": 85739,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/transfer-news-v2/transfer-news-before-after-1920x1080.png",
+      "git_blob_sha": "bfb23d667ea5f039b281b3031626093b33473116",
+      "bytes": 141101,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-1280x720.png",
+      "git_blob_sha": "1d114fbf7e16a1c9ffcfed44b3866b8d35adc886",
+      "bytes": 228799,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-1920x1080.png",
+      "git_blob_sha": "439786ad2879e142cf614486823cae25a93c5deb",
+      "bytes": 393951,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-distress-1280x720.png",
+      "git_blob_sha": "cb518744f9632bb062d5c9ff30e66f5e3afe29e5",
+      "bytes": 223244,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-distress-1920x1080.png",
+      "git_blob_sha": "dc81ac678d77ce74ef5f33ab40f53119e7353489",
+      "bytes": 397952,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-empty-news-1280x720.png",
+      "git_blob_sha": "df455621a2f41af32801f0e92acd3a0487f81588",
+      "bytes": 200087,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-empty-transfers-1280x720.png",
+      "git_blob_sha": "57acf1ea0b2f2692e3ee2d584405c5a7cfcef045",
+      "bytes": 186097,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-fee-certainty-1280x720.png",
+      "git_blob_sha": "0df495ca6acc5ce74630b5103268aa4c0ca7660b",
+      "bytes": 222657,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-fee-certainty-1920x1080.png",
+      "git_blob_sha": "72a12fa5062285c02095b971b5e24b809d3d4627",
+      "bytes": 386955,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-long-names-1280x720.png",
+      "git_blob_sha": "8719f1c918384596f4936bc057bfc892d166a9f9",
+      "bytes": 204148,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-long-names-1920x1080.png",
+      "git_blob_sha": "22c81cad79bad4cf3fcd822de19338b82b08807d",
+      "bytes": 356825,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-many-decisions-1280x720.png",
+      "git_blob_sha": "babe8cb032e05f19eef24ce8ac44ae7ccfe9780e",
+      "bytes": 229080,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-many-decisions-1920x1080.png",
+      "git_blob_sha": "059a42528d979188fd4a9a08192c7705b68cf209",
+      "bytes": 389402,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-many-news-1280x720.png",
+      "git_blob_sha": "097949af88fe0a993a3d4067f3effb268d8c1ab1",
+      "bytes": 221920,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-many-transfers-1280x720.png",
+      "git_blob_sha": "ebb8adb8c182230ba9d0ede3228e58fa24cb63cb",
+      "bytes": 222307,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-many-transfers-1920x1080.png",
+      "git_blob_sha": "8649c3bb6dc254eee4611f87c8c43d633e4d8181",
+      "bytes": 386867,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-missing-art-1280x720.png",
+      "git_blob_sha": "15c2aac4cb4ef270ad972f83be222c0facf47f57",
+      "bytes": 208805,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-missing-art-1920x1080.png",
+      "git_blob_sha": "df1f8940f0b491de190aef0b59a2655f0eecd12d",
+      "bytes": 344462,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-no-decisions-1280x720.png",
+      "git_blob_sha": "18e4d8a5e08a2e28c7bafacfcfdc539446b975c4",
+      "bytes": 205936,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-no-match-1280x720.png",
+      "git_blob_sha": "b5cdad83b3e36607e386d52ad67f717439be912c",
+      "bytes": 202341,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-one-decision-1280x720.png",
+      "git_blob_sha": "41350fac7ae7fc4daa7e233e73b1ce01f09e7c96",
+      "bytes": 211551,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/portal-evidence/world-transfer/portal-case-warning-1280x720.png",
+      "git_blob_sha": "802ac2fa27d950f11753ff3a6dbd69f0f6dc3b8b",
+      "bytes": 222222,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-commercial-1280x720.png",
+      "git_blob_sha": "adca397bfddbd38b14dfccbf440ede4df68faddc",
+      "bytes": 166018,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-company-1280x720.png",
+      "git_blob_sha": "9a1d3ad53fca39b6477651291fe43eda02b025d3",
+      "bytes": 171727,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-competition-1280x720.png",
+      "git_blob_sha": "7cb352864f835aa2a3c21c050fccd1089e3ba5c6",
+      "bytes": 189839,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-finance-1280x720.png",
+      "git_blob_sha": "261be4fc552842ea461aaa42a0ac16ceabbee1cc",
+      "bytes": 166719,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-inbox-1280x720.png",
+      "git_blob_sha": "3b56672322881659f3b654b2ef7f4e56ba0ba4da",
+      "bytes": 152432,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-offer-1280x720.png",
+      "git_blob_sha": "31dd60e26eb08ea51be8bab93998ff7a5ef2dfd0",
+      "bytes": 192640,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-squad-1280x720.png",
+      "git_blob_sha": "359e1567dc2d72e277a13214020fa5ccf9751555",
+      "bytes": 175042,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-staff-1280x720.png",
+      "git_blob_sha": "af79dacc7928e8f35210fc80bc113f9a4f371135",
+      "bytes": 126500,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/before-start-1280x720.png",
+      "git_blob_sha": "b1cc4759e70ff5694f1dadb24ee854c90ffc4432",
+      "bytes": 46393,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/commercial-1280x720.png",
+      "git_blob_sha": "0e86e6f0ea6c296bbe97be7515e111a80e539fc0",
+      "bytes": 176486,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/company-1280x720.png",
+      "git_blob_sha": "ead41bc54da71aa09072bfe0f3ddbb54748d709a",
+      "bytes": 162763,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/competition-1280x720.png",
+      "git_blob_sha": "0535c83e8a74cc44ec50b10df8dcb571ae761e9f",
+      "bytes": 212091,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/competition-1920x1080.png",
+      "git_blob_sha": "a1882d5661d07bfe4032e5b2ae7d0f2d4f1e76dc",
+      "bytes": 264836,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/confirm-1280x720.png",
+      "git_blob_sha": "cee4afe0240fbca635f7544d1d9fe75f4b5361ef",
+      "bytes": 129030,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/confirm-1920x1080.png",
+      "git_blob_sha": "39b4640ac583e80dfeceae1dd985e3f740511d79",
+      "bytes": 153482,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/finance-1280x720.png",
+      "git_blob_sha": "17251b1c5b4e1ee50f6934737539264610010276",
+      "bytes": 176803,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/finance-1920x1080.png",
+      "git_blob_sha": "981cacc3d66de74a37a88721aa6df9e92eec7c28",
+      "bytes": 219731,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/inbox-1280x720.png",
+      "git_blob_sha": "2c0d6e9fd8a40bd58d5b514e35f63b1a61da6f0e",
+      "bytes": 134349,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/offer-1280x720.png",
+      "git_blob_sha": "16f6cdb9f518d4c7fae255eccb62ffd98dee9ec9",
+      "bytes": 195720,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/offer-1920x1080.png",
+      "git_blob_sha": "6da68aa88e34024063323fcd84a18039aa259fa3",
+      "bytes": 299375,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/portal-1280x720.png",
+      "git_blob_sha": "5a4559835c5eea7da41ac50e7b01d0c74d0c313f",
+      "bytes": 258243,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/squad-1280x720.png",
+      "git_blob_sha": "74d3e3df0ac116ae5c1e24b3a21991985e24a076",
+      "bytes": 185965,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/squad-1920x1080.png",
+      "git_blob_sha": "cf212a7d471d2529b447d65150fdd0c43cfcf516",
+      "bytes": 209675,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/staff-1280x720.png",
+      "git_blob_sha": "1b287c8249f31efc150324faa3ac90778371ad79",
+      "bytes": 133298,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/polish-standard/start-1280x720.png",
+      "git_blob_sha": "a51bf2e398216fc3e7ff6116dedd54eaee0a5e88",
+      "bytes": 52924,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/competition-1280x720.png",
+      "git_blob_sha": "4f4c6df8b35c8bd5c0527d28a2df7728594b8c60",
+      "bytes": 248483,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/competition-1920x1080.png",
+      "git_blob_sha": "98e10e5050095b2d40daa0d16d8980ff646ffd32",
+      "bytes": 365943,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/competition-league-1280x720.png",
+      "git_blob_sha": "628823d8913f3ba3c682482d48f2bacb63c6ff9c",
+      "bytes": 248254,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/competition-league-1920x1080.png",
+      "git_blob_sha": "8846516c35deab78e494927918bd249c00d98ec6",
+      "bytes": 333232,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/squad-under-contract-1280x720.png",
+      "git_blob_sha": "d5abd182f7295d8b3e0bdb43278319303c0adb0a",
+      "bytes": 221879,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/squad-under-contract-1920x1080.png",
+      "git_blob_sha": "0bd1442eeacbf83a07cd47233674b19ec5c6fb6d",
+      "bytes": 298226,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/staff-under-contract-1280x720.png",
+      "git_blob_sha": "1b05cd215e6d0e02db62ccf64830660b36fd1a97",
+      "bytes": 167067,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4-followups/staff-under-contract-1920x1080.png",
+      "git_blob_sha": "93017088ace88e472c53de00c26fde39a7deddb7",
+      "bytes": 198448,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/before-competition-1280x720.png",
+      "git_blob_sha": "fbba0b4c0602b2db29a761dfe07430b686a33e5c",
+      "bytes": 243137,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/before-portal-1280x720.png",
+      "git_blob_sha": "d48867919af10a6b901273928ecebac88ff5f63d",
+      "bytes": 247248,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/before-squad-1280x720.png",
+      "git_blob_sha": "c5a03150ea188129ee92e1e387ccdcfa64d6eeac",
+      "bytes": 218568,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/competition-1280x720.png",
+      "git_blob_sha": "4f4c6df8b35c8bd5c0527d28a2df7728594b8c60",
+      "bytes": 248483,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/competition-1920x1080.png",
+      "git_blob_sha": "82ab5fafef3d96df49f28d43d5263e28fade72e2",
+      "bytes": 352037,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/competition-league-1280x720.png",
+      "git_blob_sha": "954a71407ecb20fb5cffe37eb374756436efa614",
+      "bytes": 246324,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/competition-league-1920x1080.png",
+      "git_blob_sha": "7e00bab84886d04c01583367996099739173cb39",
+      "bytes": 331462,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/portal-1280x720.png",
+      "git_blob_sha": "dcf6711ba9e5ae374a3e021ae69dc603844d2bbc",
+      "bytes": 240824,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/portal-1920x1080.png",
+      "git_blob_sha": "9bb15d4a991b1c0b04d63f7070109a1bfa53d5b8",
+      "bytes": 375981,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/portal-transfers-departures-1280x720.png",
+      "git_blob_sha": "2c56f751be73b5855f79d31d1079aed08b25d326",
+      "bytes": 268154,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/portal-transfers-departures-1920x1080.png",
+      "git_blob_sha": "2db04d6726961a031fb3f05fccbc61ae642df3c3",
+      "bytes": 430968,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/squad-1280x720.png",
+      "git_blob_sha": "e7f65c8e16c2199d83d2055f9168f020582ab256",
+      "bytes": 239304,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/genre-shell/screen-evidence/rules-v4/squad-1920x1080.png",
+      "git_blob_sha": "c5421bc990b480fe2c308de2cdb9828a0f4b0d26",
+      "bytes": 351481,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/rules-v3/evidence/before-finance-1280x720.png",
+      "git_blob_sha": "cc2fffed5abb5c7779a04fde5a26181ac28317f8",
+      "bytes": 188783,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/rules-v3/evidence/finance-1280x720.png",
+      "git_blob_sha": "b8651cf6d450f6eafe6710a5a09448bec498cc27",
+      "bytes": 205826,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/rules-v3/evidence/finance-1920x1080.png",
+      "git_blob_sha": "d0c16c881a3e11d3953ebeedda7c97e517da1848",
+      "bytes": 255867,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/rules-v3/evidence/portal-case-roster-shortfall-1280x720.png",
+      "git_blob_sha": "921b6ffe904a8f219c12903b45188d0603e4bd97",
+      "bytes": 262788,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/rules-v3/evidence/portal-case-roster-shortfall-1920x1080.png",
+      "git_blob_sha": "8315c781af3c5f1e9e053a3f086dd2ce4114ebfb",
+      "bytes": 429378,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/confirmation-1280x720.png",
+      "git_blob_sha": "b51a865efe0ec71fba727031e44b80019dde8e0f",
+      "bytes": 187432,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/confirmation-1920x1080.png",
+      "git_blob_sha": "0c95a5888f5780407ee3f980a259609f3be5b7b1",
+      "bytes": 221207,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/long-1280x720.png",
+      "git_blob_sha": "43d50893069cb5b18fdace32b5c5d0ead879a4ad",
+      "bytes": 204044,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/review-1280x720.png",
+      "git_blob_sha": "e719101bdd792421a04db36c162722fecb15d2fa",
+      "bytes": 184374,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/review-1920x1080.png",
+      "git_blob_sha": "e7772501e67e31a78cd91bd0bf02aa8c2a7320bc",
+      "bytes": 199054,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/stale-1280x720.png",
+      "git_blob_sha": "e4c627ed268e1ae4d1db6a266553f5587cfbd881",
+      "bytes": 187470,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/acceptance/evidence/candidates/success-1280x720.png",
+      "git_blob_sha": "3580de6bcf9fba5981df52bbdd2bb5c28b73cc6a",
+      "bytes": 169833,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/confirmation-1280x720.png",
+      "git_blob_sha": "4389a543a01ae65be534cc858dc5d432c7129789",
+      "bytes": 187211,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/confirmation-1920x1080.png",
+      "git_blob_sha": "20b3b07f2e1222cfc36ca14ad6aa2a2bf221e769",
+      "bytes": 221044,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/long-1280x720.png",
+      "git_blob_sha": "43d50893069cb5b18fdace32b5c5d0ead879a4ad",
+      "bytes": 204044,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/review-1280x720.png",
+      "git_blob_sha": "dd31917a534957ba509bda58570da4b1879bbce5",
+      "bytes": 184172,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/review-1920x1080.png",
+      "git_blob_sha": "7cfd33d064ee9e3a8bb1a41417fc91327786a207",
+      "bytes": 198895,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/stale-1280x720.png",
+      "git_blob_sha": "f97868b01e05539f2dee944d6338ac38bea08397",
+      "bytes": 187267,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/sponsor-workspace/evidence/candidates/success-1280x720.png",
+      "git_blob_sha": "c11417de584d73e13130544c8c6fa0156cea355b",
+      "bytes": 169582,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/branding-neutral-Default-1-1920x1080-scroll0.5.png",
+      "git_blob_sha": "07111cd4a9ad50b9cee25b9fd63f34734f59db45",
+      "bytes": 139307,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/branding-neutral-Default-1-1920x1080-scroll0.png",
+      "git_blob_sha": "7a9b6ce2259b15040f9a66c01a05e0eb706cefbf",
+      "bytes": 136647,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/branding-neutral-Default-1-1920x1080-scroll1.png",
+      "git_blob_sha": "ed644853763d9b448ad04638a99a3fca826790d4",
+      "bytes": 140948,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/documents-neutral-Default-1-1920x1080-scroll0.5.png",
+      "git_blob_sha": "2f265012403230ef061cee3202e4c1749a3fe095",
+      "bytes": 152110,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/documents-neutral-Default-1-1920x1080-scroll0.png",
+      "git_blob_sha": "d00b8bd320bff107902e628bbe4238bf7de26dce",
+      "bytes": 132390,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/documents-neutral-Default-1-1920x1080-scroll1.png",
+      "git_blob_sha": "5815e0e838046f2bfbcb8a0ad92a62a943981dee",
+      "bytes": 166891,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/identity-bright-Compact-1-1920x1080-scroll0.png",
+      "git_blob_sha": "e24003044ea1494ae927bbf452a66bfcb85c14e7",
+      "bytes": 216888,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/identity-dark-Comfortable-1.5-1280x720-scroll0.png",
+      "git_blob_sha": "ff914d829473edd3eaa0aac792d412b92865d1bd",
+      "bytes": 79218,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/identity-identical-Default-1-1280x720-scroll1.png",
+      "git_blob_sha": "bf783791c62523e1c4c0c6ea1696f0a00cc901a2",
+      "bytes": 134422,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/identity-low-contrast-Default-1-2560x1440-scroll0.png",
+      "git_blob_sha": "50029a3bdbcd068a227fac3a6a6cd9365e34d62e",
+      "bytes": 227600,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/identity-missing-emblem-Default-1-1920x1080-scroll0.png",
+      "git_blob_sha": "c9dbd8a7896d67162ac101a2a0e530d4fc2352dd",
+      "bytes": 188867,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/identity-neutral-Default-1-1280x720-scroll0.png",
+      "git_blob_sha": "0d2590e7eea9eaacc6a8c99cc36f91074249fa0d",
+      "bytes": 108766,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/interaction-neutral-Default-1-1280x720-scroll1.png",
+      "git_blob_sha": "6402e71afd96bb05c46ce37d7a7a159156fd0b21",
+      "bytes": 92828,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-kit/evidence/candidates/interaction-warning-Default-1-1920x1080-scroll0.png",
+      "git_blob_sha": "dc894b39a1ae079a6926b3016605aabed9d467f4",
+      "bytes": 164532,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/01_portal_mockup.webp",
+      "git_blob_sha": "93740d3b22ffa49b6fd1da7ff702dfe14020fe96",
+      "bytes": 169970,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/02_news_mockup.webp",
+      "git_blob_sha": "12cfa8befbc2b2af62dd4d8ded245c6724fd9888",
+      "bytes": 254920,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/03_squad_mockup.webp",
+      "git_blob_sha": "aedba7c235949e106a561d86f8becd887731e0be",
+      "bytes": 162474,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/04_competition_mockup.webp",
+      "git_blob_sha": "f63bb7963826a53c3fb4944a8bdb1cee35202433",
+      "bytes": 191926,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/05_league_mockup.webp",
+      "git_blob_sha": "2b6e595a6751f723f71ba1daac8608830db9854a",
+      "bytes": 181044,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/06_training_mockup.webp",
+      "git_blob_sha": "93f3566913165f9dca0bf0cf43699e208dd40c16",
+      "bytes": 195528,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/07_commercial_mockup.webp",
+      "git_blob_sha": "2ce7b71abfae48922a9d296f0614695f784e3cc7",
+      "bytes": 181762,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/08_finance_mockup.webp",
+      "git_blob_sha": "e1176f73073a34f652113f6c1ac2c9d2f865948d",
+      "bytes": 179494,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/09_staff_mockup.webp",
+      "git_blob_sha": "b316a38ee6407763972637a84779abbc89ae49b6",
+      "bytes": 185558,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/10_company_mockup.webp",
+      "git_blob_sha": "4cde745e8138a18a033940ebce3d2e1629989095",
+      "bytes": 260510,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/generated-reference-set/11_portal_world_transfer_graphite_mockup.png",
+      "git_blob_sha": "8d16a6e26c799e0c375796c16e008d9e602b0368",
+      "bytes": 2303702,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-research/mockups/portal-world-transfer-v2/portal_world_transfer_graphite_reference_v1.webp",
+      "git_blob_sha": "0ab23366475aa464a1b86670eb145050859f2fd7",
+      "bytes": 160608,
+      "group": "mockup",
+      "destination_folder_id": "1xrOOaPsl3h1fODL0p8A3-trorBs-4Uwb",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/commercial-1280x720.png",
+      "git_blob_sha": "f58d8c856b687a5ffefaf971adb77164ce7d0238",
+      "bytes": 203558,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/company-1280x720.png",
+      "git_blob_sha": "d514cf679810ca455cc6244d8051bb417ef36ae6",
+      "bytes": 192549,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/competition-1280x720.png",
+      "git_blob_sha": "7eeaea87c93ec717752009712322a1ebfcad8852",
+      "bytes": 236354,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/competition-league-1280x720.png",
+      "git_blob_sha": "36b1eda35722a5f7cf2aa410723c796e58ffca5d",
+      "bytes": 244511,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/confirm-1280x720.png",
+      "git_blob_sha": "7da5c3a85f728984e1e488a041de1e307c757337",
+      "bytes": 150967,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/finance-1280x720.png",
+      "git_blob_sha": "6cc37e1445aa793f7507f8e81b4b3a0aa95ae7d7",
+      "bytes": 231907,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/inbox-1280x720.png",
+      "git_blob_sha": "4c84fac6f5af736f9e51fb9d770af93d03a3bc40",
+      "bytes": 158982,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/offer-1280x720.png",
+      "git_blob_sha": "3de82cf3c1ae8087348e81e307eb6de63d9ffcbd",
+      "bytes": 207376,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/portal-1280x720.png",
+      "git_blob_sha": "35428db0190dc0a634df15f963181f4c3e4ab2d6",
+      "bytes": 248474,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/portal-1920x1080.png",
+      "git_blob_sha": "191dd941fb579330bd94ce0ebb519e98993edcb8",
+      "bytes": 365162,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/portal-case-distress-1280x720.png",
+      "git_blob_sha": "14d51169c5144daebf3c8ce1c1281d0527229690",
+      "bytes": 246374,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/portal-case-long-names-1280x720.png",
+      "git_blob_sha": "4c59ba5d32880ade78c8641a67edce6d35c3f7d0",
+      "bytes": 293646,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/rail-collapsed-1280x720.png",
+      "git_blob_sha": "63200c1d979ba7cc7e5c7c4b79fe0cd8de314290",
+      "bytes": 232535,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/squad-1280x720.png",
+      "git_blob_sha": "b28b31d297c4cb167b5dfe7cd308eefa9524702f",
+      "bytes": 238536,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/squad-1920x1080.png",
+      "git_blob_sha": "29efc7e39de27371376f1024ce243d5fb7413c9d",
+      "bytes": 348751,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/staff-1280x720.png",
+      "git_blob_sha": "655b0fc166913c3dbc08acc644ab20caf7e88a78",
+      "bytes": 160391,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "docs/10-vertical-slice/ui-ux-foundation/audit-evidence-2026-10-22/start-1280x720.png",
+      "git_blob_sha": "097a53f6648ced54aea32d2e8313babd94d44588",
+      "bytes": 53733,
+      "group": "qa_documentation_evidence",
+      "destination_folder_id": "1wuKrz44ywnDwsQjKyqKDh7hPQbznCs5R",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_decision_contract_v1.png",
+      "git_blob_sha": "793660e90b4dddf6e9855abd5f4684e58160319c",
+      "bytes": 867032,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_decision_contract_v1.webp",
+      "git_blob_sha": "c85a43222c55b801f58eec4120f49622a30b8821",
+      "bytes": 57370,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_decision_match_preparation_v1.png",
+      "git_blob_sha": "722c799751d82b2717908683ea17ec7353c8d062",
+      "bytes": 905613,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_decision_match_preparation_v1.webp",
+      "git_blob_sha": "f702a6b31869e53d2b9d1d96bb55387f7cad9f38",
+      "bytes": 60974,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_decision_roster_move_v1.png",
+      "git_blob_sha": "628a200af78956f52cf0171b0649c271c63592d6",
+      "bytes": 474762,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_decision_roster_move_v1.webp",
+      "git_blob_sha": "02dac36713be4d7f016c72aa26b1fcb133b8158a",
+      "bytes": 29534,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_calendar_v1.png",
+      "git_blob_sha": "c007cee82f6be3c28fb794b2a9cc0e3d7d59195b",
+      "bytes": 558988,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_calendar_v1.webp",
+      "git_blob_sha": "ef760bfd44de228b2ee487ef4273394fbb97267e",
+      "bytes": 36844,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_commercial_v1.png",
+      "git_blob_sha": "c8b94c220d44846eceac315e363152d44e252dd3",
+      "bytes": 593592,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_commercial_v1.webp",
+      "git_blob_sha": "5b5cbe7b817c93879b8dbf56267583bfb7689466",
+      "bytes": 39278,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_company_v1.png",
+      "git_blob_sha": "4d7c37b5145da397cd46f337bdd6d99df495726a",
+      "bytes": 576559,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_company_v1.webp",
+      "git_blob_sha": "c97921962943a4482bf65279ef52c8c276a5f4a0",
+      "bytes": 33738,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_competition_v1.png",
+      "git_blob_sha": "198524ba1d44817143dac70bf83edbc43022041a",
+      "bytes": 433225,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_competition_v1.webp",
+      "git_blob_sha": "c04d7708a34278638a6848b30740feaf02d73b9a",
+      "bytes": 28210,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_finance_v1.png",
+      "git_blob_sha": "61e3359d52596c11bf48708cc6782b9fa6ef56d7",
+      "bytes": 701481,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_finance_v1.webp",
+      "git_blob_sha": "0a93eca8971594e72e96dd66d54dbafbe4a2b3cd",
+      "bytes": 34634,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_inbox_v1.png",
+      "git_blob_sha": "c1cf74f2178efd26e5fa76eb8c952c9d6a30cce7",
+      "bytes": 735286,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_inbox_v1.webp",
+      "git_blob_sha": "8719b5a13426645e7bfad86cc2665248751950de",
+      "bytes": 34092,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_portal_v1.png",
+      "git_blob_sha": "12ab55c67575d23e06f30f0e84381352665025f6",
+      "bytes": 692587,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_portal_v1.webp",
+      "git_blob_sha": "1d11bded97c381d1c85bee31661256e14f7300e9",
+      "bytes": 39968,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_squad_v1.png",
+      "git_blob_sha": "14e4f0494b25b2341ac8ce1466a032e455816cbc",
+      "bytes": 624577,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_squad_v1.webp",
+      "git_blob_sha": "4ace72bbd6547b40144ef1d4e2853248ad0c5b44",
+      "bytes": 42374,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_staff_v1.png",
+      "git_blob_sha": "3c1290cfa7ddbc58cf313b25bf780931e3ea35d6",
+      "bytes": 584214,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_module_staff_v1.webp",
+      "git_blob_sha": "2b50dd5893606e91ec975aaedbdc814bd771cc43",
+      "bytes": 33818,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_person_player_v1.png",
+      "git_blob_sha": "eb884d54a62072178a840d1dd155da629b358037",
+      "bytes": 577068,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    },
+    {
+      "source_path": "game/Client/Assets/UI/Semantic/icon_person_player_v1.webp",
+      "git_blob_sha": "821cc16e4e16f0651ee1dd8d8064d165c95b9021",
+      "bytes": 36278,
+      "group": "runtime_keep_git",
+      "destination_folder_id": "1KeVAaZae8F4tTd4LIoSXyH2VKN7lsbbg",
+      "migration_status": "NOT_TRANSFERRED"
+    }
+  ]
+}
