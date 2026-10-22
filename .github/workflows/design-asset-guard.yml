@@ -1,0 +1,37 @@
+name: Design Asset Git Guard
+
+on:
+  pull_request:
+    paths:
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.webp'
+      - '**/*.gif'
+      - '**/*.svg'
+      - '**/*.psd'
+      - '**/*.avif'
+      - '**/*.tiff'
+      - 'tools/design-library/git_asset_guard.py'
+      - '.github/workflows/design-asset-guard.yml'
+  workflow_dispatch:
+
+jobs:
+  block-new-design-binaries:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate new image files
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -n "$BASE_SHA" ]; then
+            python tools/design-library/git_asset_guard.py --base "$BASE_SHA"
+          else
+            echo 'No PR base: guard is configured; use pull request for enforcement.'
+          fi
