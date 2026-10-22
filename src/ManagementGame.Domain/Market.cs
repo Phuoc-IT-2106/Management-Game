@@ -163,7 +163,7 @@ public static class Market
     {
         var b = content.Balance; var next = w.NextId; var season = Seasons.Of(day, b);
         var players = w.Candidates.ToList();
-        Candidate Generate(string role) => Careers.Listing(Generator.Player(seed, content, $"person:g{++next:D5}", role, season), season, content);
+        Candidate Generate(string role) => Careers.Listing(Generator.Player(seed, content, $"person:g{++next:D5}", role, season, null, content.Generation.MarketShift), season, content);
         if (day == 1)
             while (players.Count < content.Lifecycle.PoolSize) players.Add(Generate(Roles.All[players.Count % Roles.All.Length]));
         foreach (var role in Roles.All.Where(r => !c.People.Any(p => p.Role == r) && !players.Any(x => x.Person.Role == r)).ToArray())

@@ -1,0 +1,156 @@
+{
+ "source": "Source: PandaScore",
+ "players": {
+  "total": 9915,
+  "with_url": 5598,
+  "cached": 5598,
+  "missing_url": 4317,
+  "failed": 0,
+  "invalid": 0,
+  "license_review_required": 0,
+  "statuses": {
+   "CACHED": 5598,
+   "MISSING_URL": 4317
+  },
+  "cached_coverage_percent": 56.46
+ },
+ "teams": {
+  "total": 1948,
+  "with_url": 1640,
+  "cached": 1640,
+  "missing_url": 308,
+  "failed": 0,
+  "invalid": 0,
+  "license_review_required": 0,
+  "statuses": {
+   "CACHED": 1640,
+   "MISSING_URL": 308
+  },
+  "cached_coverage_percent": 84.19
+ },
+ "dark_logos": {
+  "total": 1948,
+  "with_url": 174,
+  "cached": 174,
+  "missing_url": 1774,
+  "failed": 0,
+  "invalid": 0,
+  "license_review_required": 0,
+  "statuses": {
+   "MISSING_URL": 1774,
+   "CACHED": 174
+  },
+  "cached_coverage_percent": 8.93
+ },
+ "leagues": {
+  "total": 136,
+  "with_url": 118,
+  "cached": 118,
+  "missing_url": 18,
+  "failed": 0,
+  "invalid": 0,
+  "license_review_required": 0,
+  "statuses": {
+   "CACHED": 118,
+   "MISSING_URL": 18
+  },
+  "cached_coverage_percent": 86.76
+ },
+ "players_registered_2026": {
+  "total": 2331,
+  "with_url": 1126,
+  "cached": 1126,
+  "missing_url": 1205,
+  "failed": 0,
+  "invalid": 0,
+  "license_review_required": 0,
+  "statuses": {
+   "CACHED": 1126,
+   "MISSING_URL": 1205
+  },
+  "cached_coverage_percent": 48.31
+ },
+ "teams_competing_2026": {
+  "total": 363,
+  "with_url": 357,
+  "cached": 357,
+  "missing_url": 6,
+  "failed": 0,
+  "invalid": 0,
+  "license_review_required": 0,
+  "statuses": {
+   "CACHED": 357,
+   "MISSING_URL": 6
+  },
+  "cached_coverage_percent": 98.35
+ },
+ "associations": {
+  "player_mappings": 9915,
+  "team_mappings": 1948,
+  "valid_player_image_references": 5598,
+  "valid_team_logo_references": 1640,
+  "roster_rows": 9764,
+  "valid_roster_entity_links": 9764,
+  "roster_links_with_both_images_cached": 6444,
+  "roster_rows_missing_player_url": 3311,
+  "roster_rows_missing_team_url": 35,
+  "broken_references": {
+   "image_entities": 0,
+   "registration_tournaments": 0,
+   "registration_players": 0,
+   "registration_teams": 0,
+   "current_teams": 1,
+   "competition_teams": 0
+  },
+  "overlapping_registration_pairs": 190,
+  "overlapping_registration_players": 97,
+  "unknown_period_review_pairs": 0,
+  "historical_revision_reviews": 24,
+  "player_index_disagreement": 0,
+  "absent_image_reference_rows": 0
+ },
+ "verified_cache_files": 7530,
+ "verified_cache_bytes": 1292868384,
+ "cdn": {
+  "url_count": 7530,
+  "hosts": {
+   "cdn-api.pandascore.co": 7530
+  },
+  "path_extensions": {
+   ".png": 7460,
+   "no_extension": 70
+  }
+ },
+ "authorization": {
+  "references_with_recorded_approval": 7530,
+  "third_party_licence_inferred": false
+ },
+ "cached_formats": {
+  "png": 7528,
+  "webp": 2
+ },
+ "remaining_url_assets": 0,
+ "status": "PARTIAL",
+ "last_run": {
+  "candidates": 7530,
+  "requested": 0,
+  "http_requests": 0,
+  "response_bytes": 0,
+  "downloaded_bytes": 0,
+  "cached": 0,
+  "unchanged": 0,
+  "skipped_known": 7530,
+  "skipped_failed": 0,
+  "failed": 0,
+  "retries": 0,
+  "planned": 0,
+  "mode": "dry-run",
+  "started_at": "2026-10-14T08:55:04.175649+00:00",
+  "license_status": "LICENSE_REVIEW_REQUIRED",
+  "interrupted": false,
+  "batch_size": 100,
+  "workers": 1,
+  "request_delay_seconds": 1.0,
+  "duration_seconds": 106.312
+ }
+}

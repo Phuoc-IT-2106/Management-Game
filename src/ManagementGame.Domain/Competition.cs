@@ -11,9 +11,10 @@ public sealed record CompetitionInput(ulong Seed, Fixture Fixture, Plan Plan, Wo
 /// the logistic of the difference over <c>LogitScale</c> is the game win probability.</summary>
 public static class Competition
 {
-    /// <summary>Wider variance favours the underdog: the logistic flattens toward even. Consistency narrows it, an aggressive
-    /// posture widens it.</summary>
-    public static int Spread(Balance b, Posture posture, int meanConsistency) => Math.Max(1, b.Variance + (int)posture * 4 - (meanConsistency - 50) / 10);
+    /// <summary>Each game's variance (±points). Wider variance favours the underdog: the logistic flattens toward even. A
+    /// balanced posture plays at <c>Variance</c>; conservative is 4 narrower, aggressive 4 wider; a consistent lineup
+    /// narrows it (a point per 10 of mean consistency above 50).</summary>
+    public static int Spread(Balance b, Posture posture, int meanConsistency) => Math.Max(1, b.Variance + ((int)posture - 1) * 4 - (meanConsistency - 50) / 10);
 
     public static CompetitiveOutcome Resolve(CompetitionInput input)
     {
@@ -30,31 +31,34 @@ public static class Competition
             - x.RepeatedPosture * x.Rival.Coach.Analysis / 30;
         // Integration: 0..+4 from the lineup's mean familiarity.
         var familiarity = x.Familiarity / 25;
-        // Someone must make the calls: below 60 communication the team loses up to 3.
+        // Someone must make the calls: the lineup's best communicator, a point per 5 above or below 80 (−3..+2). 80 is about
+        // the median best communicator of a generated squad, so the term centres on zero.
         var caller = x.Lineup.Max(p => p.Mind.Communication);
-        var leadership = caller >= 60 ? 0 : -Math.Min(3, (60 - caller + 9) / 10);
+        var leadership = Math.Clamp((int)Numbers.Divide(caller - 80L, 5), -3, 2);
         // Style: an early-game lineup suits an aggressive meta, a teamfight lineup a conservative one (±3).
         var early = x.Lineup.Sum(p => p.Skills.EarlyGame - p.Skills.Teamfight) / n;
         var style = Math.Clamp(early * (x.Meta == Posture.Aggressive ? 1 : x.Meta == Posture.Conservative ? -1 : 0) / 4, -3, 3);
-        // Composure counts when the stakes are high (±2).
-        var composure = x.Fixture.Importance >= 2 ? Math.Clamp((x.Lineup.Sum(p => p.Mind.Composure) / n - 50) / 12, -2, 2) : 0;
+        // Composure counts when the stakes are high: a point per 4 of the lineup's mean composure above or below 60 (±3).
+        var composure = x.Fixture.Importance >= 2 ? Math.Clamp((int)Numbers.Divide(x.Lineup.Sum(p => (long)p.Mind.Composure) - 60L * n, 4L * n), -3, 3) : 0;
         var difference = baseValue - x.RivalStrength + prep + matchup + adaptation + familiarity + leadership + style + composure;
         var spread = Spread(b, x.Plan.Posture, x.Lineup.Sum(p => p.Mind.Consistency) / n);
-        var (won, lost, firstVariance) = Play(x.Seed, "competition", x.Fixture.Id, difference, spread, x.Fixture.Games, b.LogitScale);
+        var (won, lost, firstVariance) = Play(x.Seed, "competition", x.Fixture.Id, difference, spread, x.Fixture.Games, b.LogitScale, b.SeriesForm);
         var probability = Logistic.Series(Logistic.Probability(Logistic.Logit(difference, b.LogitScale)), x.Fixture.Games);
         return new CompetitiveOutcome("result:" + x.Fixture.Id, x.Fixture.Id, x.Fixture.Day, x.Rival.Id, won > lost, x.Plan.Posture,
             probability, baseValue, prep, matchup, adaptation, firstVariance, x.Fixture.Importance, x.Plan.CauseId,
             familiarity, style, composure, leadership, won, lost);
     }
 
-    /// <summary>Plays a best-of-<paramref name="games"/> series game by game, each with its own keyed variance and result
-    /// draw, until one side has won the majority. Returns games won and lost by the first side and game one's variance.</summary>
-    public static (int Won, int Lost, int FirstVariance) Play(ulong seed, string domain, string fixtureId, int difference, int spread, int games, int logitScale)
+    /// <summary>Plays a best-of-<paramref name="games"/> series game by game until one side has won the majority. The day's
+    /// form (one keyed draw within ±<paramref name="form"/>) is shared by every game; each game adds its own keyed variance
+    /// and result draw. Returns games won and lost by the first side and game one's match-day variance (form included).</summary>
+    public static (int Won, int Lost, int FirstVariance) Play(ulong seed, string domain, string fixtureId, int difference, int spread, int games, int logitScale, int form)
     {
         var need = games / 2 + 1; int won = 0, lost = 0, first = 0;
+        var day = form <= 0 ? 0 : KeyedRandom.Range(seed, domain, fixtureId, "form", form * 2 + 1) - form;
         for (var g = 1; won < need && lost < need; g++)
         {
-            var variance = KeyedRandom.Range(seed, domain, fixtureId, "variance:" + g, spread * 2 + 1) - spread;
+            var variance = day + KeyedRandom.Range(seed, domain, fixtureId, "variance:" + g, spread * 2 + 1) - spread;
             if (g == 1) first = variance;
             var probability = Logistic.Probability(Logistic.Logit(difference + variance, logitScale));
             if (KeyedRandom.Range(seed, domain, fixtureId, "result:" + g, 1_000_000) < probability) won++; else lost++;
@@ -67,7 +71,7 @@ public static class Competition
     {
         var b = content.Balance;
         var (won, lost, _) = Play(seed, "league", fixture.Id, Domain.Rivals.Strength(home, content) - Domain.Rivals.Strength(away, content),
-            Spread(b, Posture.Balanced, 50), fixture.Games, b.LogitScale);
+            Spread(b, Posture.Balanced, 50), fixture.Games, b.LogitScale, b.SeriesForm);
         return new LeagueResult("result:" + fixture.Id, fixture.Id, fixture.Day, home.Id, away.Id, won, lost);
     }
 }

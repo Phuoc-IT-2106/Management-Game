@@ -86,11 +86,12 @@ public static class ContentLoader
             && b.PlacePrizes.Length == b.RivalCount + 1 && b.PlacePrizes.All(x => x is >= 0 and <= 10_000_000)
             && b.FamiliarityPerDay is >= 0 and <= 20 && b.FamiliarityPerMatch is >= 0 and <= 50 && b.StartingFamiliarity is >= 0 and <= 100 && b.MatchFatigue is >= 0 and <= 30, "rules v4 league bounds");
         Require(b.FeeDaysMin is >= 1 and <= 365 && b.FeeDaysMax >= b.FeeDaysMin && b.FeeDaysMax <= 365 && b.FeePivot is >= 1 and <= 99 && b.FeeDaysPerPoint is >= 0 and <= 30, "transfer fee bounds");
+        Require(b.SeriesForm is >= 0 and <= 30, "series form bounds");
         bool Range(AttributeRange r, int min, int max) => r.Min >= min && r.Max <= max && r.Min <= r.Max;
         bool Unique(IEnumerable<string> values) { var array = values.ToArray(); return array.Distinct(StringComparer.Ordinal).Count() == array.Length; }
         var g = c.Generation;
         Require(Range(g.CoachSkill, 1, 100) && Range(g.CoachCapacity, 20, 1000) && Range(g.Rival, 6, 95) && Range(g.Mind, 1, 99) && Range(g.Personality, 1, 99)
-            && g.SkillJitter is >= 0 and <= 20 && g.SecondaryRoleChance is >= 0 and <= 10_000 && g.StartingShift is >= -20 and <= 20, "generation ranges");
+            && g.SkillJitter is >= 0 and <= 20 && g.SecondaryRoleChance is >= 0 and <= 10_000 && g.StartingShift is >= -20 and <= 20 && g.MarketShift is >= -20 and <= 20, "generation ranges");
         // Rules v4 player generation: ability bands, ages and age profiles, and archetypes covering every role.
         Require(g.AbilityBands.Length > 0 && g.AbilityBands.All(x => x.Value is >= 1 and <= 99 && x.Weight > 0) && Unique(g.AbilityBands.Select(x => x.Value.ToString())), "ability bands");
         Require(g.Ages.Length > 0 && g.Ages.All(x => x.Value is >= 14 and <= 40 && x.Weight > 0) && Unique(g.Ages.Select(x => x.Value.ToString())), "age weights");

@@ -163,7 +163,7 @@ def database_stats(db):
         "with_location": one(db, "SELECT count(*) FROM ps_teams WHERE coalesce(location, '') <> ''"),
         "appearing_in_2026_competitions": one(db, f"SELECT count(*) FROM ({team_2026})"),
         "appearing_in_2026_and_in_catalog": one(db, f"SELECT count(*) FROM ({team_2026}) x JOIN ps_teams t ON t.team_id = x.team_id"),
-        "cached_logos": one(db, "SELECT count(*) FROM image_cache WHERE entity_type='team' AND status IN ('cached','unchanged')") if has_cache else 0,
+        "cached_logos": one(db, "SELECT count(*) FROM image_cache WHERE entity_type='team' AND status IN ('CACHED','cached','unchanged')") if has_cache else 0,
     }
     competitions = {
         "leagues": one(db, "SELECT count(*) FROM ps_leagues"),
@@ -250,13 +250,117 @@ def database_stats(db):
             "registration_history": history, "database": integrity}
 
 
+def write_image_report(coverage, output):
+    """Aggregate-only companion to the local ID-bearing manifests. No CDN requests."""
+    from cache_logos import atomic_write, write_json
+    run = coverage["last_run"]
+    associations = coverage["associations"]
+    approved = coverage.get("authorization", {}).get("references_with_recorded_approval", 0)
+    lines = ["# PandaScore Image Asset Collection 2026", "", "Source: PandaScore.", "",
+             f"Status: **{coverage['status']}**. URL indexing is not a completed image collection.", "",
+             "## Coverage", "",
+             "| Scope | Entities | URLs | Verified cached | Missing URL | Failed | Invalid | Rights review |",
+             "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    for key, label in (("players", "Catalog players"), ("teams", "Regular team logos"),
+                       ("dark_logos", "Dark team logos"), ("leagues", "League logos"),
+                       ("players_registered_2026", "2026 registered players"),
+                       ("teams_competing_2026", "2026 competition teams (regular logo)")):
+        group = coverage[key]
+        lines.append(f"| {label} | " + " | ".join(f"{group[k]:,}" for k in
+                     ("total", "with_url", "cached", "missing_url", "failed", "invalid", "license_review_required")) + " |")
+    lines += ["", "Coverage uses stable provider IDs. Competition teams include stage teams and match opponents.",
+              "Cached means the original URL, entity-specific relative path, SHA-256, size, format, MIME and decoded image were validated.",
+              "Null paths are preserved; dark-logo selection can use only the same team's regular logo.", "",
+              "## Associations", "", "| Check | Count |", "| --- | ---: |"]
+    for key, value in associations.items():
+        if isinstance(value, dict):
+            lines.extend(f"| Broken reference: {k} | {v:,} |" for k, v in value.items())
+        else:
+            lines.append(f"| {key} | {value:,} |")
+    lines += ["", "Player portraits resolve by player ID; tournament logos resolve by registration team ID.",
+              "The provider's current team and append-only team/registration observations remain separate evidence.",
+              "Overlapping tournament periods under different teams are review flags, not asserted errors or transfer dates.",
+              "Unknown dates are flagged separately. No match participation, active contract, academy or reserve status is inferred.",
+              "No normalization or REST collection was rerun.", "", "## Download and integrity", "",
+              "| Metric (latest invocation) | Value |", "| --- | ---: |"]
+    for key in ("mode", "started_at", "duration_seconds", "candidates", "planned", "requested", "http_requests",
+                "response_bytes", "downloaded_bytes", "cached", "unchanged", "skipped_known", "skipped_failed",
+                "failed", "retries", "interrupted", "license_status"):
+        lines.append(f"| {key} | {run.get(key)} |")
+    lines += [f"| Verified cache files (all runs) | {coverage['verified_cache_files']:,} |",
+              f"| Verified cache bytes (all runs) | {coverage['verified_cache_bytes']:,} |",
+              f"| URL assets still uncached | {coverage['remaining_url_assets']:,} |", "",
+              "Invocation metrics are not cumulative; data/assets/runs/*.json preserves each checkpointed run.",
+              "The database commits every completed attempt. A stopped run resumes with the same command; verified hits and",
+              "recorded failures do not consume --limit. --retry-failed explicitly revisits failures with bounded retries.",
+              "Corrupt cached files and changed source URLs are eligible for refetch. --refresh only rechecks valid hits.", "",
+              "## Rights decision (reviewed 2026-10-14, Asia/Saigon)", "",
+              "[PandaScore terms, articles 6.2–6.5](https://www.pandascore.co/terms-and-condition) tie study/analysis use to the subscription,",
+              "restrict raw-data transfers, require attribution even internally, and require use to stop after termination.",
+              "The reviewed public terms do not establish this account's permission to archive player photographs or third-party marks.",
+              "Repository reports describe Free-plan access. A user execution approval is not an account-specific image grant.",
+              f"References with a recorded execution approval: {approved:,}. See licence notes in the ignored manifest/database.", "",
+              "- Internal research caching: execution may be authorized by a recorded user decision; external rights remain a separate question.",
+              "- Local visualization/prototyping: separately confirm permitted display and attribution.",
+              "- Public redistribution: not established; raw-data transfer restrictions apply.",
+              "- Commercial game distribution: not authorized by this work; requires separate applicable rights.", "",
+              "Required evidence: subscription/account terms or written provider/rightsholder confirmation covering bulk local caching",
+              "of portraits and regular/dark/league logos, internal users, retention, attribution and any display scope, followed by",
+              "a responsible approver's dated decision referencing that evidence. --license-approved records this decision; it does not create rights.",
+              ("Download execution has proceeded under the recorded user instruction. No provider/rightsholder licence is inferred."
+               if approved else "No execution approval is recorded; CDN downloads remain pending approval."), "",
+              "## CDN and validation", "",
+              "[Image optimization documentation](https://developers.pandascore.co/docs/image-optimization) describes original images and",
+              "800/200-pixel team variants on cdn.pandascore.co. Database URL observations:", "",
+              f"- Hosts: `{json.dumps(coverage['cdn']['hosts'], sort_keys=True)}`.",
+              f"- Path extensions: `{json.dumps(coverage['cdn']['path_extensions'], sort_keys=True)}`.",
+              "", "URL suffixes do not prove response MIME/format.",
+              f"Verified cached formats: `{json.dumps(coverage.get('cached_formats', {}), sort_keys=True)}`.",
+              "The downloader accepts validated PNG, JPEG, GIF and WebP",
+              "and preserves received bytes/format. It constructs no thumbnail or normalized URL.",
+              "HTTPS, host/redirect checks, timeouts, 8 MiB / 40-megapixel caps, per-request pacing, bounded retries, image signatures, MIME checks,",
+              "bounded decoding, atomic writes and SHA-256 checks apply. SVG and HTML are rejected.",
+              "[Pillow validation documentation](https://pillow.readthedocs.io/en/stable/reference/Image.html) informs verify/load and pixel safeguards.", "",
+              "## Outputs and execution", "",
+              "All paths below are relative to tools/lol-data-ingestion/; provider-level exports and bytes are Git-ignored.", "",
+              "- data/staging.sqlite3: existing image_cache table, additive migration; normalized source tables untouched.",
+              "- data/assets/image_manifest.json: unified identity, provenance, use status, download status and verified file metadata.",
+              "- data/assets/mapping/player_images.json", "- data/assets/mapping/team_images.json",
+              "- data/assets/mapping/roster_image_index_2026.json", "- data/assets/mapping/association_reviews_2026.json",
+              "- data/assets/mapping/historical_registration_reviews.json", "- data/assets/image_coverage.json",
+              "- data/assets/runs/*.json: invocation metrics and checkpoints.",
+              "- data/assets/players/, team-logos/, league-logos/: created only for approved successful downloads.",
+              "  Files are named after the entity: players/<nickname>.<ext>, team-logos/<team>.<ext> and <team>-dark.<ext>,",
+              "  league-logos/<league>.<ext>. Names shared by several entities of one kind carry __<provider id> on every",
+              "  member. Spaces become underscores; the provider ID stays in every manifest entry and mapping row.", "",
+              "```powershell", ".\\.venv\\Scripts\\python.exe cache_logos.py --dry-run --include-dark",
+              ".\\.venv\\Scripts\\python.exe collection_report.py --image-assets", "```", "",
+              "For an explicitly authorized run, pass the actual scoped decision and its evidence reference to --license-approved:", "",
+              "```powershell", ".\\.venv\\Scripts\\python.exe cache_logos.py --license-approved $approvalNote --pilot",
+              ".\\.venv\\Scripts\\python.exe cache_logos.py --license-approved $approvalNote --include-dark --limit 250 --batch-size 50",
+              "```", "",
+              "Repeat the bounded full command to advance through pending assets. Inspect the pilot manifest, mappings and integrity first.",
+              "Rebuild with --dry-run after collection for whole-cache validation. Never copy provider assets into production content.", ""]
+    atomic_write(output, "\n".join(lines).encode("utf-8"))
+    write_json(output.with_suffix(".json"), coverage)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--db", type=Path, default=DATA_DIR / "staging.sqlite3")
     parser.add_argument("--snapshot-root", type=Path, default=SNAPSHOT_ROOT)
     parser.add_argument("--run", help="full-2026 run id (default: the latest)")
     parser.add_argument("--output", type=Path, default=REPORTS / "pandascore_full_collection_2026_stats.json")
+    parser.add_argument("--image-assets", action="store_true", help="offline image integrity/mapping report; no raw REST recrawl")
+    parser.add_argument("--asset-dir", type=Path, default=DATA_DIR / "assets")
+    parser.add_argument("--image-report", type=Path, default=REPORTS / "PANDASCORE_IMAGE_ASSET_COLLECTION_2026.md")
     args = parser.parse_args()
+    if args.image_assets:
+        from cache_logos import run as image_run
+        summary = image_run(args.db, args.asset_dir, dry_run=True, include_dark=True)
+        write_image_report(summary["coverage"], args.image_report)
+        print(f"{summary['coverage']['status']}: wrote {args.image_report}")
+        return
     run = args.snapshot_root / args.run if args.run else latest_full_run(args.snapshot_root)
     manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
     scopes, checks, run_info = completeness(run, manifest)

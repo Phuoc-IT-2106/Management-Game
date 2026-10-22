@@ -76,6 +76,19 @@ From `artifacts/recruit-measure-r2` (not tracked):
   `--license-approved`.
 - Do not rerun `calibrate.py`: `calibration_2026.json` is pinned by the content's SHA-256.
 
+### 3a. Rating distributions (done 2026-10-14, not committed)
+
+See [DATA_STANDARD_AUDIT §4–6](../10-vertical-slice/DATA_STANDARD_AUDIT.md#4-rating-and-distribution-measurement-2026-10-14).
+Changes:
+- the day's form in series (real score mix);
+- continuous ability;
+- distinct skills;
+- a weaker open market;
+- bell-shaped mind with real effects;
+- coaches who differ, with wages that follow quality.
+
+Real players: proposed DEC-031, a locally built pack, blocked on the Oracle's Elixir CSV.
+
 ### 3b. Data standard audit
 
 [DATA_STANDARD_AUDIT.md](../10-vertical-slice/DATA_STANDARD_AUDIT.md) lists what the model still needs before more content
@@ -118,10 +131,10 @@ is built on it. It covers players, clubs, staff and rivals:
 
 | What | Command | Last result (2026-10-14, Debug) |
 |---|---|---|
-| Build, suites, headless | `build/Verify.ps1 -Configuration Debug -Evidence artifacts/<dir>` | Domain 15, Integration 369, UI 3, UiKit 222, OperatingMap 48, SponsorWorkspace 48; headless `86cd640e…` |
+| Build, suites, headless | `build/Verify.ps1 -Configuration Debug -Evidence artifacts/<dir>` | Domain 15, Integration 369, UI 3, UiKit 222, OperatingMap 48, SponsorWorkspace 48; headless `a789c421…` after the distribution changes (`86cd640e…` before) |
 | Shell (headless) | `build/Verify-Shell.ps1` | 3861 / 3901 |
 | Native kits | `build/Verify-UiKit.ps1`, `Verify-OperatingMap.ps1`, `Verify-SponsorWorkspace.ps1` | 24, 101, 31 |
-| Rules gates | `build/Measure-Rules.ps1 -Gate 2 -Output artifacts/<dir>` | `MEASURE_GATES_PASS 1..2`, about 10 minutes |
+| Rules gates | `build/Measure-Rules.ps1 -Gate 2 -Seeds 16 -Output artifacts/<dir>` | `MEASURE_GATES_PASS 1..2` with 16 seeds (about 20 minutes); with the default 8 seeds, multi-year progress is noisy (0.75) |
 | Data tooling | `tools/lol-data-ingestion/.venv/Scripts/python.exe -m unittest discover -s tests` | 47 |
 | Captures (interactive desktop, unsandboxed) | Godot in the foreground with the arguments of `build/Capture-Shell.ps1` | both sizes pass; Start-Process cuts runs short here |
 

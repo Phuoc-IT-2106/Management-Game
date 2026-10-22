@@ -48,7 +48,13 @@ public static class Pay
         var b = content.Balance; var rating = Ratings.Rating(p, content);
         return Player(p, season, content) * Math.Clamp(b.FeeDaysMin + Math.Max(0, rating - b.FeePivot) * b.FeeDaysPerPoint, b.FeeDaysMin, b.FeeDaysMax);
     }
-    public static long Coach(Coach coach) => (coach.Preparation + coach.Analysis + coach.Adaptability + coach.Development) * 4L + coach.Capacity * 2L;
+    /// <summary>What a head coach asks per day: the mean of the four skills squared over four (the player curve's shape, so a
+    /// better coach costs clearly more), plus twice the capacity.</summary>
+    public static long Coach(Coach coach)
+    {
+        var mean = Numbers.Divide(coach.Preparation + coach.Analysis + coach.Adaptability + (long)coach.Development, 4);
+        return Numbers.Divide(mean * mean, 4) + coach.Capacity * 2L;
+    }
     /// <summary>A renewing person asks for at least their current pay, scaled by the company's standing; loyalty lowers the
     /// premium (−10..+10 percentage points around neutral 50).</summary>
     public static long Demand(long current, long market, int reputation, int loyalty = 50) =>

@@ -23,6 +23,7 @@ is a noncanonical development fixture value.
 | DEC-028 | The player world (rules v4) | 2026-10-09 to 13 | [RULES_V4_PLAYER_WORLD](../10-vertical-slice/RULES_V4_PLAYER_WORLD.md) |
 | DEC-029 | Gate 1 reads reputation by partial correlation | 2026-10-13 | RULES_V4, phase 6, round 5 |
 | DEC-030 | The head coach recruits within the owner's limits | 2026-10-14 | RULES_V4, "After rules v4" |
+| DEC-031 | Real players and teams in the game, from a locally built pack | 2026-10-14 (decided, not built) | [DATA_STANDARD_AUDIT](../10-vertical-slice/DATA_STANDARD_AUDIT.md) §5 |
 
 ---
 
@@ -296,3 +297,54 @@ Affected Systems:
 - Competition screen
 - save schema
 - Headless measurement
+
+---
+
+### DEC-031 — Real Players and Teams in the Game, from a Locally Built Pack
+Date: 2026-10-14
+Status: Proposed
+
+Context:
+Rules v4 (DEC-028) used real data for aggregate calibration only, with no real person in the game. On 2026-10-14 the
+user decided that real players and teams should be in the game, with numbers that reflect their real ability.
+Generated (NPC) players must follow the same standard.
+
+Decision:
+- Real players and teams can enter a campaign through a **real-world pack**.
+- **How the pack is built:**
+  - on the user's own machine;
+  - from the user's own PandaScore key and their own Oracle's Elixir download;
+  - by the research tooling in `tools/lol-data-ingestion`.
+- **What the pack contains:**
+  - identities and rosters from PandaScore;
+  - per-player skills derived from game-level statistics (role-normalized, opponent-adjusted and shrunk by games played);
+  - team strength from Elo.
+- **Where the pack lives:** git-ignored `data/` only. It is never committed, never pushed and never redistributed:
+  - PandaScore's terms 6.3–6.4 forbid redistributing its data;
+  - Oracle's Elixir's terms must be read when the CSV is downloaded.
+- **Logos:** only after a licence decision (`cache_logos.py --license-approved`).
+- **Fields with no source stay authored or unknown:** communication, personality, contracts and wages.
+- **Generated players** are drawn from distributions fitted to the real pack, so a generated player is statistically
+  indistinguishable from a real one of the same role, tier and age.
+- The fictional world stays the default and the distributed content.
+
+Alternatives:
+- Keep the fictional world and use real per-player data only to fit the generator.
+- Ship real players in the distributed content. This needs name, likeness and data rights the project does not have.
+
+Reasoning:
+A local pack gives the user real players and teams. It keeps the repository and any build free of third-party data, and
+uses one rating standard for real and generated players alike.
+
+Consequences:
+- Blocked until the 2026 Oracle's Elixir CSV is downloaded; the import and identity reconciliation are ready.
+- Needs a content-pack format that CampaignFactory can load instead of generating a world. A pack is validated like
+  content and pinned by hash.
+- Cross-league strength needs international results or a per-league prior: the 2026 Elo is per league.
+- Name and likeness rights remain unresolved for any distribution. This decision covers local use only.
+
+Affected Systems:
+- data tooling
+- content packs and CampaignFactory
+- generation
+- save identity

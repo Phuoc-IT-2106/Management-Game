@@ -1,0 +1,101 @@
+{
+  "Version": "world-experiment 0.1 / dev2-exp-0.1",
+  "Status": "EXPERIMENT - not production content, not approved balance",
+  "Seed": 20261015,
+  "SeasonDays": 76,
+  "Population": {
+    "NpcCount": 4000,
+    "InitialOverallCap": 82,
+    "OverallFloor": 30,
+    "FreeAgentTargetPercent": 8,
+    "FreeAgentHardLimitPercent": 10,
+    "Profiles": [
+      { "Id": "PRO", "Weight": 650, "Tiers": [ { "Tier": "b", "Weight": 100 } ], "AgeTier": "b", "AgeMin": 18, "AgeMax": 32 },
+      { "Id": "SEMI", "Weight": 800, "Tiers": [ { "Tier": "c", "Weight": 100 } ], "AgeTier": "c", "AgeMin": 17, "AgeMax": 32 },
+      { "Id": "AMATEUR", "Weight": 1950, "Tiers": [ { "Tier": "d", "Weight": 60 }, { "Tier": "unknown", "Weight": 40 } ], "AgeTier": "d", "AgeMin": 16, "AgeMax": 33 },
+      { "Id": "PROSPECT", "Weight": 600, "Tiers": [ { "Tier": "c", "Weight": 40 }, { "Tier": "d", "Weight": 60 } ], "AgeTier": "", "AgeMin": 16, "AgeMax": 19 }
+    ],
+    "ProspectAges": [ { "Value": 16, "Weight": 18 }, { "Value": 17, "Weight": 30 }, { "Value": 18, "Weight": 30 }, { "Value": 19, "Weight": 22 } ],
+    "YoungShift": [ { "Value": 16, "Weight": -9 }, { "Value": 17, "Weight": -7 }, { "Value": 18, "Weight": -5 }, { "Value": 19, "Weight": -3 }, { "Value": 20, "Weight": -1 } ],
+    "HeadroomByAge": [ [16, 22.0], [17, 19.0], [18, 16.0], [19, 13.0], [20, 10.0], [21, 7.0], [22, 5.0], [23, 3.0], [24, 2.0], [25, 1.0], [26, 0.5], [27, 0.0] ],
+    "TalentQuantiles": [ [0.0, 0.2], [0.25, 0.6], [0.5, 1.0], [0.8, 1.45], [0.95, 2.0], [0.99, 2.6], [1.0, 3.2] ],
+    "CeilingSoftStart": 88, "CeilingSoftRoom": 11,
+    "LateBloomerPercent": 6,
+    "LateBloomerAges": [21, 27],
+    "LateBloomerExtra": [3, 9],
+    "LateBloomerPeak": [26.0, 29.0],
+    "PeakAge": [22.5, 27.0],
+    "Volatility": [0.6, 1.4],
+    "Trainability": [0.7, 1.3],
+    "Focus": [ { "Id": "ROLE", "Weight": 50 }, { "Id": "SPECIALIST", "Weight": 30 }, { "Id": "WEAKNESS", "Weight": 20 } ],
+    "HandleBlocklist": [ "fuck", "shit", "nazi", "rape", "cunt", "nigg", "fag", "dick", "cock", "porn", "sex", "hitler", "isis", "slut", "whore", "bitch", "anal", "kkk", "jihad", "pedo" ]
+  },
+  "World": {
+    "MaxSquad": 16,
+    "FictionalProLeagues": 6, "FictionalProTeamsPerLeague": 10, "FictionalProSquad": [7, 9],
+    "AcademySquad": [5, 7], "AcademySeniorRegistrationPercent": 15, "AcademySeniorRegistrationMax": 2,
+    "SemiProLeagues": 10, "SemiProTeamsPerLeague": 10, "SemiProSquad": [6, 8],
+    "AmateurSquad": [5, 7], "AmateurCircuitSize": 10,
+    "RealTeamNpcTargetSquad": 7, "RealTeamNpcMax": 2, "RealTeamNpcChancePercent": 40,
+    "RealPlayersOnFictionalTeams": false, "RealStarterPolicy": "STRICT", "StarterYouthWeight": 0.3,
+    "Strategies": {
+      "FictionalPro": [ 30, 40, 20, 10 ], "SemiPro": [ 20, 40, 30, 10 ], "Amateur": [ 10, 40, 30, 20 ], "Academy": [ 0, 20, 80, 0 ], "RealPro": [ 30, 45, 15, 10 ]
+    },
+    "CoachDevelopment": { "FictionalPro": [50, 90], "Academy": [45, 85], "SemiPro": [35, 75], "Amateur": [20, 60], "Real:a": [60, 92], "Real:b": [50, 85], "Real:c": [45, 80], "Real:d": [35, 70] },
+    "TeamNames": {
+      "Adjectives": [ "Amber", "Arctic", "Ashen", "Azure", "Black", "Blazing", "Bright", "Brass", "Cobalt", "Copper", "Crimson", "Crystal", "Dawn", "Distant", "Dusk", "Eastern", "Electric", "Emerald", "Feral", "Frozen", "Gilded", "Golden", "Granite", "Hidden", "Hollow", "Iron", "Ivory", "Jade", "Lunar", "Midnight", "Misty", "Neon", "Northern", "Obsidian", "Onyx", "Pale", "Quiet", "Rapid", "Red", "Restless", "Rising", "Royal", "Rust", "Scarlet", "Silent", "Silver", "Solar", "Southern", "Steel", "Stone", "Storm", "Swift", "Thunder", "Tidal", "Twin", "Velvet", "Violet", "Wild", "Winter", "Western" ],
+      "Nouns": [ "Anchors", "Arrows", "Badgers", "Bears", "Beacons", "Blades", "Bolts", "Comets", "Condors", "Coyotes", "Cranes", "Drakes", "Embers", "Falcons", "Ferrets", "Foxes", "Gales", "Geckos", "Golems", "Griffins", "Harbors", "Hawks", "Herons", "Hornets", "Hounds", "Ibises", "Jackals", "Kestrels", "Kites", "Krakens", "Lanterns", "Lynxes", "Mantises", "Marlins", "Monarchs", "Moths", "Orcas", "Otters", "Owls", "Panthers", "Pilots", "Pythons", "Ravens", "Rhinos", "Rooks", "Sabres", "Sentinels", "Sparrows", "Sparks", "Stags", "Tigers", "Titans", "Torches", "Vipers", "Voyagers", "Wardens", "Wasps", "Wolves", "Wyverns", "Yaks" ],
+      "Suffixes": [ "", "", "", "Esports", "Gaming", "Club", "GG", "Collective" ]
+    }
+  },
+  "Development": {
+    "Version": "dev2-exp-0.1",
+    "GrowthByAge": [ [16, 5.5], [17, 5.0], [18, 4.4], [19, 3.8], [20, 3.2], [21, 2.6], [22, 2.0], [23, 1.5], [24, 1.0], [25, 0.6], [26, 0.3], [27, 0.0] ],
+    "ReferencePeak": 24.5,
+    "HeadroomHalf": 4.0,
+    "OptimisticMultiplier": 1.7,
+    "CoachBase": 0.55, "CoachPerPoint": 0.009, "FreeAgentCoach": 25,
+    "Intensity": { "Low": 0.85, "Normal": 1.0, "High": 1.15 },
+    "IntensityReadiness": { "Low": 88, "Normal": 80, "High": 70 },
+    "ReadinessPerMatch": 0.05,
+    "PlayingBase": 0.8, "PlayingPerShare": 0.4,
+    "MoraleBase": 0.85, "MoralePerPoint": 0.003,
+    "ProfessionalismBase": 0.8, "ProfessionalismPerPoint": 0.004,
+    "EnvironmentRange": [0.35, 1.8],
+    "BreakthroughBase": 0.04, "BreakthroughAmbition": 0.03, "BreakthroughEnvironment": 0.04, "BreakthroughRange": [0.01, 0.12],
+    "BreakthroughMultiplier": 2.0, "BreakthroughJump": [2.0, 5.0], "BreakthroughMinGap": 6,
+    "PlateauBase": 0.16, "PlateauEnvironment": 0.08, "PlateauRange": [0.06, 0.30], "PlateauMultiplier": 0.15,
+    "SetbackChance": 0.05, "SetbackPoints": [0.5, 1.5],
+    "Noise": 0.8,
+    "DeclineStart": 27.0, "DeclineBase": 0.4, "DeclinePerYear": 0.45, "DeclineProfessionalism": 0.6, "DeclineRegularRelief": 0.9,
+    "DeclineSkillShares": [0.28, 0.24, 0.20, 0.12, 0.16],
+    "ExperiencePerSeason": 0.35, "ExperienceMatches": 40, "ExperienceSkillShares": [0.0, 0.1, 0.1, 0.5, 0.3],
+    "SpecialistBoost": 1.8, "OtherWhenFocused": 0.8, "RoomScale": 20.0, "RoomFloor": 0.1, "SkillCeilingProfile": 1.0
+  },
+  "Market": {
+    "ContractSeasons": { "FictionalPro": [1, 3], "Academy": [1, 3], "SemiPro": [1, 2], "Amateur": [1, 1], "RealPro": [1, 3] },
+    "RetirementByAge": [ [16, 150], [21, 300], [23, 600], [25, 1000], [27, 1600], [29, 2500], [31, 4000], [33, 6000], [35, 10000] ],
+    "RetirementLayer": { "RealPro": 0.6, "FictionalPro": 0.6, "Academy": 0.5, "SemiPro": 0.9, "Amateur": 1.2, "FreeAgent": 1.5 },
+    "RetirementPerFreeAgentSeason": 0.25,
+    "RetirementRatingPivot": 55, "RetirementRatingPercent": 1.0, "RetirementRatingRange": [0.5, 1.6],
+    "IntakeMode": "Replacement", "Intake": 480, "IntakeRange": [300, 600], "IntakeAges": [ { "Value": 16, "Weight": 35 }, { "Value": 17, "Weight": 40 }, { "Value": 18, "Weight": 25 } ],
+    "IntakeTiers": [ { "Tier": "d", "Weight": 60 }, { "Tier": "unknown", "Weight": 40 } ],
+    "ScoutingNoise": { "RealPro": 1.5, "FictionalPro": 2.0, "Academy": 3.0, "SemiPro": 3.0, "Amateur": 4.0 },
+    "UpgradeMargin": 4, "MaxUpgrades": 1,
+    "Rotation": { "Contend": 5, "Balanced": 10, "Develop": 20, "Conserve": 10 },
+    "AcademyGraduationAge": 21, "AcademyPromotionMinimum": 60,
+    "DismissalProfessionalism": 30, "DismissalBpPerPoint": 40,
+    "AmbitionDeparture": 65, "LayerCeiling": { "Amateur": 62, "SemiPro": 72, "Academy": 99, "FictionalPro": 99, "RealPro": 99 },
+    "BenchDepartureAmbition": 70, "BenchShare": 0.1,
+    "AspirationSemi": 65, "AspirationPro": 76, "AspirationPatienceSeasons": 2, "ReservationShare": 0.8, "ReservationDecayPerSeason": 0.35,
+    "DissolutionBp": { "Amateur": 200, "SemiPro": 80 }, "DebtDissolutionBp": 5000,
+    "UnemploymentWarningPercent": 12.0,
+    "ReleaseOverTarget": 1
+  },
+  "Economy": {
+    "Revenue": { "FictionalPro": 900000, "SemiPro": 260000, "Amateur": 45000, "Academy": 120000, "Real:a": 1500000, "Real:b": 650000, "Real:c": 300000, "Real:d": 120000 },
+    "WageFactor": { "FictionalPro": 1.0, "SemiPro": 0.4, "Amateur": 0.12, "Academy": 0.3, "Real:a": 1.6, "Real:b": 1.0, "Real:c": 0.6, "Real:d": 0.35 },
+    "FeeFactor": { "FictionalPro": 1.0, "SemiPro": 0.25, "Amateur": 0.05, "Academy": 0.3, "Real:a": 1.6, "Real:b": 1.0, "Real:c": 0.5, "Real:d": 0.25 },
+    "WageShare": 0.8, "StartingFunds": 0.5, "ChampionBonus": 0.25, "ReleaseShare": 0.5
+  }
+}

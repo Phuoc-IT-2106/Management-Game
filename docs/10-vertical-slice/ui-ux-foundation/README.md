@@ -60,8 +60,8 @@ locked features or implementation requirements.
 | Product structure | [Direction](COMPANY_UX_DIRECTION.md), [information architecture](INFORMATION_ARCHITECTURE.md), [module matrix](MODULE_LANDSCAPE.md) |
 | Interaction | [Principles](UX_PRINCIPLES.md), [interaction model](INTERACTION_MODEL.md), [information priority](INFORMATION_PRIORITY.md), [taxonomy](SCREEN_TAXONOMY.md) |
 | System design | [Design system](DESIGN_SYSTEM_FOUNDATION.md), [branding](PLAYER_BRANDING_RULES.md), [visual grammar](VISUAL_GRAMMAR.md), [components](COMPONENT_ARCHITECTURE.md) |
-| Delivery discipline | [Blueprint template](SCREEN_BLUEPRINT_TEMPLATE.md), [AI rules](AI_UI_IMPLEMENTATION_RULES.md), [art policy](ART_PRODUCTION_POLICY.md), [verification](UI_VERIFICATION_STRATEGY.md), [UI polish standard](UI_POLISH_STANDARD.md) |
-| Migration and review | [Current disposition](CURRENT_UI_DISPOSITION.md), [migration plan](PHASE5_UX_MIGRATION_PLAN.md), [questions](OPEN_QUESTIONS.md) |
+| Delivery discipline | [Blueprint template](SCREEN_BLUEPRINT_TEMPLATE.md), [AI rules](AI_UI_IMPLEMENTATION_RULES.md), [art policy](ART_PRODUCTION_POLICY.md), [verification](UI_VERIFICATION_STRATEGY.md), [UI polish standard](UI_POLISH_STANDARD.md), [AI anti-pattern rulebook](UI_AI_ANTIPATTERNS.md) (proposal, Vietnamese; used by the `ui-authenticity` skill) |
+| Migration and review | [Current disposition](CURRENT_UI_DISPOSITION.md), [migration plan](PHASE5_UX_MIGRATION_PLAN.md), [questions](OPEN_QUESTIONS.md), [UI/UX audit 2026-10-22](UI_UX_AUDIT_2026-10-22.md), [verification report](UI_UX_VERIFICATION_REPORT_2026-10-22.md), [remediation plan](UI_REMEDIATION_PLAN.md) (proposal) |
 
 Stage 1 created specifications only. The [Stage 2 UI Kit](../ui-kit/README.md)
 implements the explicitly authorized subset. No future division, full Company

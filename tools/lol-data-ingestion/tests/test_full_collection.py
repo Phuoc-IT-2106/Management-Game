@@ -302,7 +302,12 @@ class NormalizeTests(unittest.TestCase):
 
 # ---------- logo cache ----------
 
-PNG = b"\x89PNG\r\n\x1a\n" + b"\x00" * 32
+import io
+from PIL import Image
+
+_png_buffer = io.BytesIO()
+Image.new("RGB", (2, 2), "blue").save(_png_buffer, format="PNG")
+PNG = _png_buffer.getvalue()
 
 
 class ImageResponse:
@@ -372,12 +377,11 @@ class LogoCacheTests(unittest.TestCase):
             self.fetch({TEAM_URL: [ImageResponse(500)] * 4})
 
     def test_variants_only_for_documented_team_paths(self):
-        self.assertEqual(cache_logos.variant_url(TEAM_URL, "team", "image_url", "thumb"),
-                         "https://cdn-api.pandascore.co/images/team/image/7/thumb_t.png")
+        self.assertIsNone(cache_logos.variant_url(TEAM_URL, "team", "image_url", "thumb"))
         self.assertIsNone(cache_logos.variant_url("https://cdn-api.pandascore.co/images/league/image/3/l.png", "league", "image_url", "thumb"))
         self.assertIsNone(cache_logos.variant_url(TEAM_URL, "team", "dark_mode_image_url", "normal"))
 
-    def test_run_caches_by_id_then_skips_known_files(self):
+    def test_run_caches_by_name_then_skips_known_files(self):
         with tempfile.TemporaryDirectory() as d:
             db_path, assets = Path(d) / "db.sqlite3", Path(d) / "assets"
             db = sqlite3.connect(db_path)
@@ -385,18 +389,21 @@ class LogoCacheTests(unittest.TestCase):
             db.executemany("INSERT INTO ps_image_refs VALUES (?,?,?,?,?,?,?,?,?)",
                            [("team", "7", "image_url", "value", TEAM_URL, "cdn-api.pandascore.co", "LICENSE_REVIEW_REQUIRED", "R", None),
                             ("team", "8", "image_url", "null", None, None, None, "R", None)])
+            db.execute("CREATE TABLE ps_teams (team_id TEXT PRIMARY KEY, name TEXT)")
+            db.executemany("INSERT INTO ps_teams VALUES (?, ?)", [("7", "Seven Team"), ("8", "Eight Team")])
             db.commit()
             db.close()
             session = ImageSession({TEAM_URL: [ImageResponse(200, PNG, {"Content-Type": "image/png"}) for _ in range(2)]})
             summary = cache_logos.run(db_path, assets, "test approval", session=session, sleep=lambda s: None)
             self.assertEqual((summary["candidates"], summary["cached"]), (1, 1))
-            self.assertEqual((assets / "team-logos" / "7.png").read_bytes(), PNG)
+            self.assertEqual((assets / "team-logos" / "Seven_Team.png").read_bytes(), PNG)
             again = cache_logos.run(db_path, assets, "test approval", session=session, sleep=lambda s: None)
             self.assertEqual((again["requested"], again["skipped_known"]), (0, 1))
             refreshed = cache_logos.run(db_path, assets, "test approval", refresh=True, session=session, sleep=lambda s: None)
             self.assertEqual(refreshed["unchanged"], 1)
-            manifest = json.loads((assets / "logo_manifest.json").read_text(encoding="utf-8"))
-            self.assertEqual(manifest["entries"][0]["sha256"], hashlib.sha256(PNG).hexdigest())
+            manifest = json.loads((assets / "image_manifest.json").read_text(encoding="utf-8"))
+            cached = next(r for r in manifest["entries"] if r["entity_id"] == "7" and r["field"] == "image_url")
+            self.assertEqual(cached["sha256"], hashlib.sha256(PNG).hexdigest())
 
     def test_without_licence_approval_no_connection_is_opened(self):
         with tempfile.TemporaryDirectory() as d:
@@ -405,9 +412,10 @@ class LogoCacheTests(unittest.TestCase):
             db.execute(f"CREATE TABLE ps_image_refs ({norm.CURRENT_SCHEMA['ps_image_refs']})")
             db.close()
             with mock.patch.object(cache_logos.requests, "Session", side_effect=AssertionError("network")), \
-                    mock.patch.object(sys, "argv", ["cache_logos.py", "--db", str(db_path)]), mock.patch("sys.stdout"):
+                    mock.patch.object(sys, "argv", ["cache_logos.py", "--db", str(db_path), "--asset-dir", str(Path(d) / "assets")]), mock.patch("sys.stdout"):
                 self.assertEqual(cache_logos.main(), 0)
-            self.assertFalse((Path(d) / "assets").exists())
+            self.assertEqual(list((Path(d) / "assets").rglob("*.png")), [])
+            self.assertTrue((Path(d) / "assets" / "image_manifest.json").exists())
 
 
 if __name__ == "__main__":

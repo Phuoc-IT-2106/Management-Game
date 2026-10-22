@@ -14,7 +14,10 @@ Two layers:
       download stores only changed rows), with its file, row number and a duplicate marker;
     - current tables, rebuilt from the newest imported file: oe_player_games (source fields: game, player, team,
       league, date, position, champion, result, patch, duration), oe_player_game_stats (the statistics columns parsed
-      to numbers, NULL when the file has no such column or the cell is empty) and oe_team_games (team rows).
+      to numbers, NULL when the file has no such column or the cell is empty) and oe_team_games (team rows);
+    - several reporting years: every yearly file (2025, 2026, ...) is its own series of versions, and the current
+      tables union the newest version of each year, so importing 2026 never drops 2025. A (game, participant) key in
+      two years' files keeps the row dated inside its own file's year; both are listed in oe_key_collisions.
 Provider-scoped ids are kept as given (gameid, playerid "oe:player:...", teamid "oe:team:..."). No value is invented:
 a column the file lacks stays NULL and is listed in oe_source_files.missing_columns_json.
 """
@@ -269,15 +272,47 @@ def import_source(csv_path: Path, db_path: Path, target_year=TARGET_YEAR):
         db.close()
 
 
+def latest_per_year(db):
+    """(file SHA-256, header, reporting year) of the newest imported version of every reporting year, oldest year
+    first. A newer download of one year never replaces another year's file."""
+    return [(sha, json.loads(header), year) for sha, header, year in db.execute(
+        """SELECT f.file_sha256, f.columns_json, f.target_year FROM oe_source_files f
+           WHERE f.import_order = (SELECT max(g.import_order) FROM oe_source_files g WHERE g.target_year = f.target_year)
+           ORDER BY f.target_year""")]
+
+
 def rebuild_current(db, target_year=TARGET_YEAR):
-    """Current tables from the newest imported file: first occurrence of each (game, participant)."""
+    """Current tables: the newest version of each reporting year's file, unioned (first occurrence of each (game,
+    participant) within a file). A key found in two years' files keeps the row dated inside its own file's year, the
+    later year winning a tie, and both are listed in oe_key_collisions. target_year is kept for older callers."""
     for table, columns in CURRENT.items():
         db.execute(f"DROP TABLE IF EXISTS {table}")
         db.execute(f"CREATE TABLE {table} ({columns})")
-    latest = db.execute("SELECT file_sha256, columns_json FROM oe_source_files ORDER BY import_order DESC LIMIT 1").fetchone()
-    if latest is None:
-        return
-    file_sha, header = latest[0], json.loads(latest[1])
+    db.execute("DROP TABLE IF EXISTS oe_key_collisions")
+    db.execute("CREATE TABLE oe_key_collisions (game_id TEXT NOT NULL, participant_id INTEGER NOT NULL, kept_file TEXT NOT NULL, "
+               "dropped_file TEXT NOT NULL, reason TEXT NOT NULL)")
+    chosen = {}
+    for file_sha, header, year in latest_per_year(db):
+        for key, entry in file_rows(db, file_sha, header, year).items():
+            previous = chosen.get(key)
+            if previous is not None:
+                keep_new = entry[1] or not previous[1]
+                kept, dropped = (entry, previous) if keep_new else (previous, entry)
+                db.execute("INSERT INTO oe_key_collisions VALUES (?,?,?,?,?)",
+                           (*key, kept[0], dropped[0], "kept the row dated in its own file's year" if kept[1] else "neither row in its file's year; later year kept"))
+                if not keep_new:
+                    continue
+            chosen[key] = entry
+    players = [e[3] for e in chosen.values() if e[2] == "player"]
+    stats = [e[4] for e in chosen.values() if e[2] == "player"]
+    teams = [e[3] for e in chosen.values() if e[2] == "team"]
+    for table, rows in (("oe_player_games", players), ("oe_player_game_stats", stats), ("oe_team_games", teams)):
+        if rows:
+            db.executemany(f"INSERT INTO {table} VALUES ({','.join('?' * len(rows[0]))})", rows)
+
+
+def file_rows(db, file_sha, header, year):
+    """{(game, participant): (file, in its year, kind, row, stats row)} for the player and team rows of one file."""
     index = {c: i for i, c in enumerate(header)}
 
     def get(values, name):
@@ -291,26 +326,26 @@ def rebuild_current(db, target_year=TARGET_YEAR):
         except ValueError:
             return None
 
-    players, stats, teams = [], [], []
+    rows = {}
     for number_, kind, values_json in db.execute("""SELECT o.row_number, o.kind, r.values_json FROM oe_row_observations o
             JOIN oe_raw_rows r USING (row_sha256) WHERE o.file_sha256 = ? AND o.duplicate_of_row IS NULL
             AND o.kind IN ('player', 'team') ORDER BY o.row_number""", (file_sha,)):
         values = json.loads(values_json)
-        in_period = int(game_year(get(values, "date") or "") == target_year)
+        in_period = int(game_year(get(values, "date") or "") == year)
         game, participant = get(values, "gameid"), int(get(values, "participantid"))
         if kind == "team":
-            teams.append((file_sha, number_, game, participant, get(values, "league"), get(values, "date"), get(values, "side"),
-                          get(values, "teamname"), get(values, "teamid"), get(values, "result"), get(values, "gamelength"),
-                          get(values, "patch"), in_period))
+            rows[(game, participant)] = (file_sha, in_period, "team", (
+                file_sha, number_, game, participant, get(values, "league"), get(values, "date"), get(values, "side"),
+                get(values, "teamname"), get(values, "teamid"), get(values, "result"), get(values, "gamelength"),
+                get(values, "patch"), in_period), None)
             continue
         context = [get(values, c) for c in CONTEXT]
         context[list(CONTEXT).index("participantid")] = participant
         position = (get(values, "position") or "").strip().lower()
-        players.append((file_sha, number_, *context, in_period, int(position in PLAYER_POSITIONS)))
-        stats.append((game, participant, *[number(values, c) for c in STATS]))
-    for table, rows in (("oe_player_games", players), ("oe_player_game_stats", stats), ("oe_team_games", teams)):
-        if rows:
-            db.executemany(f"INSERT INTO {table} VALUES ({','.join('?' * len(rows[0]))})", rows)
+        rows[(game, participant)] = (file_sha, in_period, "player",
+                                     (file_sha, number_, *context, in_period, int(position in PLAYER_POSITIONS)),
+                                     (game, participant, *[number(values, c) for c in STATS]))
+    return rows
 
 
 def summary(db, file_sha):
@@ -330,23 +365,45 @@ def find_csv(import_dir: Path = IMPORT_DIR):
     return files[-1] if files else None
 
 
+def file_year(path: Path):
+    """The reporting year in an Oracle's Elixir file name ("2025_LoL_esports_match_data_from_OraclesElixir.csv")."""
+    head = path.name[:5]
+    return int(head[:4]) if len(head) == 5 and head[:4].isdigit() and head[4] == "_" else None
+
+
+def find_yearly(import_dir: Path = IMPORT_DIR, years=None):
+    """Every yearly CSV in the import folder and its snapshots/<stamp>/ folders, oldest first (snapshot stamp, then
+    modification time), so each year's newest download is imported last and becomes that year's current file."""
+    if not import_dir.is_dir():
+        return []
+    files = [p for p in import_dir.rglob("*.csv") if file_year(p) and (years is None or file_year(p) in years)]
+    return sorted(files, key=lambda p: (p.parent.name if p.parent != import_dir else "", p.stat().st_mtime))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("csv", type=Path, nargs="?", help=f"Path to a CSV you downloaded under applicable terms (default: newest in {IMPORT_DIR})")
+    parser.add_argument("csv", type=Path, nargs="?", help=f"Path to a CSV you downloaded under applicable terms (default: every yearly file under {IMPORT_DIR})")
     parser.add_argument("--db", type=Path, default=DATA_DIR / "staging.sqlite3")
-    parser.add_argument("--year", type=int, default=TARGET_YEAR)
+    parser.add_argument("--year", type=int, help="reporting year (default: from the file name; without a path, every year found)")
     parser.add_argument("--legacy-only", action="store_true", help="only the starter's oracle_player_game_raw table")
     args = parser.parse_args()
-    source = args.csv or find_csv()
-    if source is None:
-        print(f"No Oracle's Elixir CSV found. Download {args.year}_LoL_esports_match_data_from_OraclesElixir.csv from "
-              f"{OFFICIAL_SOURCE} and save it in {IMPORT_DIR}", file=sys.stderr)
+    if args.csv:
+        sources = [(args.csv, args.year or file_year(args.csv) or TARGET_YEAR)]
+    else:
+        sources = [(p, file_year(p)) for p in find_yearly(years=[args.year] if args.year else None)]
+    if not sources:
+        print(f"No Oracle's Elixir CSV found. Run fetch_oracles_elixir.py, or download "
+              f"<year>_LoL_esports_match_data_from_OraclesElixir.csv from {OFFICIAL_SOURCE} into {IMPORT_DIR}", file=sys.stderr)
         sys.exit(2)
-    if not args.legacy_only:
-        try:
-            result = import_source(source, args.db, args.year)
-        except ImportRejected as rejected:
-            print(f"REJECTED {source.name}: {rejected}. Nothing was written.", file=sys.stderr)
-            sys.exit(1)
-        print(json.dumps(result, indent=1))
-    import_csv(source, args.db)
+    rejected_any = False
+    for source, year in sources:
+        if not args.legacy_only:
+            try:
+                result = import_source(source, args.db, year)
+            except ImportRejected as rejected:
+                print(f"REJECTED {source.name}: {rejected}. Nothing was written.", file=sys.stderr)
+                rejected_any = True
+                continue
+            print(json.dumps({"year": year} | result, indent=1))
+        import_csv(source, args.db)
+    sys.exit(1 if rejected_any else 0)

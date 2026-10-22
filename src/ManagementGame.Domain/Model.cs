@@ -152,7 +152,11 @@ public sealed record Balance(int SeasonLength, int FirstMatchDay, int MatchInter
     int MatchFatigue,
     // Rules v4 transfer fees, in days of the asking wage: FeeDaysMin up to the FeePivot rating, FeeDaysPerPoint more for
     // every point above it, at most FeeDaysMax, so a strong squad takes seasons to buy (the user's decision, 2026-10-13).
-    int FeeDaysMin, int FeeDaysMax, int FeePivot, int FeeDaysPerPoint);
+    int FeeDaysMin, int FeeDaysMax, int FeePivot, int FeeDaysPerPoint,
+    // The day's form (2026-10-14): one draw of up to ±SeriesForm points shared by every game of a series, on top of each
+    // game's own variance, so the stronger side sweeps as often as in real best-of series (calibration_2026: Bo3 2–0 64%,
+    // Bo5 3–0 46%).
+    int SeriesForm = 0);
 public sealed record AttributeRange(int Min, int Max);
 /// <summary>A value with a draw weight (basis points or any positive integers).</summary>
 public sealed record WeightedValue(int Value, int Weight);
@@ -164,10 +168,13 @@ public sealed record AgeProfile(int MaxAge, int Shift, int HeadroomMin, int Head
 /// <summary>Player generation (rules v4). Abilities come from one shared band distribution for the starting roster, the
 /// market and rivals, shifted by age; an archetype of the role shapes the skills. The company's opening squad is shifted by
 /// <paramref name="StartingShift"/> more: a new organization starts as an underdog and has to build (the user's decision,
-/// 2026-10-13).</summary>
+/// 2026-10-13). The open market's opening pool is shifted by <paramref name="MarketShift"/>: free agents are the league's
+/// fringe, not better than contracted players (2026-10-14). Mind, personality and coach skills are bell-shaped within their
+/// ranges (the mean of two keyed draws).</summary>
 public sealed record Generation(ImmutableArray<WeightedValue> AbilityBands, int SkillJitter, ImmutableArray<Archetype> Archetypes,
     ImmutableArray<WeightedValue> Ages, ImmutableArray<AgeProfile> AgeProfiles, AttributeRange Mind, AttributeRange Personality,
-    int SecondaryRoleChance, AttributeRange CoachSkill, AttributeRange CoachCapacity, AttributeRange Rival, int StartingShift);
+    int SecondaryRoleChance, AttributeRange CoachSkill, AttributeRange CoachCapacity, AttributeRange Rival, int StartingShift,
+    int MarketShift = 0);
 /// <summary>The weight of each skill (Skills order, basis points summing to 10,000) in a role's rating.</summary>
 public sealed record RoleWeight(string Role, ImmutableArray<int> Weights);
 /// <summary>A nationality of generated people: its draw weight and name pools. FamilyFirst writes the family name first.</summary>

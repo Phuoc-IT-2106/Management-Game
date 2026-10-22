@@ -102,8 +102,9 @@ CURRENT_SCHEMA = {
     # Dataset B. registered_in_2026 = 'verified': listed on the expected roster of a stage that touches 2026.
     # current_roster_verified_as_of: the observation date of a stage roster listing the player while the stage had
     # not ended (running or upcoming when observed). match_participation_verified_2026 is 'verified' only for players
-    # in xp_participation_2026 (reconcile_identities.py: a high-confidence Oracle's Elixir identity with 2026 game
-    # rows) and 'unknown' otherwise. academy_verified and reserve_verified stay 'unknown': no source has them.
+    # in xp_participation_2026 or lpx_participation_2026 (reconcile_identities.py: a high-confidence Oracle's Elixir or
+    # Leaguepedia identity with 2026 game rows; evidence names the source) and 'unknown' otherwise. academy_verified and
+    # reserve_verified stay 'unknown': no source has them.
     "ps_player_index_2026": """player_id TEXT PRIMARY KEY, in_provider_catalog INTEGER NOT NULL,
         registered_in_2026 TEXT NOT NULL, registered_stages INTEGER NOT NULL, registered_team_ids TEXT NOT NULL,
         first_stage_begin_at TEXT, last_stage_end_at TEXT, match_participation_verified_2026 TEXT NOT NULL,
@@ -361,9 +362,11 @@ def build_player_index(db):
     """Dataset B, rebuilt: also run by reconcile_identities.py after it writes xp_participation_2026."""
     db.execute("DROP TABLE IF EXISTS ps_player_index_2026")
     db.execute(f"CREATE TABLE ps_player_index_2026 ({CURRENT_SCHEMA['ps_player_index_2026']})")
-    participation = {}
+    participation, lp_participation = {}, {}
     if db.execute("SELECT count(*) FROM sqlite_master WHERE name = 'xp_participation_2026'").fetchone()[0]:
         participation = {r[0]: r[1:] for r in db.execute("SELECT ps_player_id, games, source_file_sha256 FROM xp_participation_2026")}
+    if db.execute("SELECT count(*) FROM sqlite_master WHERE name = 'lpx_participation_2026'").fetchone()[0]:
+        lp_participation = {r[0]: r[1] for r in db.execute("SELECT ps_player_id, games FROM lpx_participation_2026")}
     stages = {r[0]: r[1:] for r in db.execute(
         "SELECT tournament_id, begin_at, end_at, relevance_2026 FROM ps_tournaments")}
     catalog = {r[0]: r[1:] for r in db.execute("SELECT player_id, current_team_id, provider_active_flag FROM ps_players")}
@@ -388,14 +391,15 @@ def build_player_index(db):
         e = evidence[player]
         current = max(e["current"]) if e["current"] else None
         team_now, active = catalog.get(player, (None, None))
-        played = participation.get(player)
+        played, lp_played = participation.get(player), lp_participation.get(player)
         rows.append((player, int(player in catalog), "verified", len(e["stages"]), ",".join(sorted(e["teams"], key=int)),
-                     min(e["begins"], default=None), max(e["ends"], default=None), "verified" if played else "unknown",
+                     min(e["begins"], default=None), max(e["ends"], default=None), "verified" if played or lp_played else "unknown",
                      current[0] if current else None, current[3] if current else None, "unknown", "unknown",
                      team_now, active,
                      f"expected_roster of {len(e['stages'])} stage(s) touching 2026"
                      + (f"; listed on stage {current[2]} not yet ended at observation" if current else "")
-                     + (f"; {played[0]} game(s) in Oracle's Elixir file {played[1][:12]} via a high-confidence identity" if played else "")))
+                     + (f"; {played[0]} game(s) in Oracle's Elixir file {played[1][:12]} via a high-confidence identity" if played else "")
+                     + (f"; {lp_played} game(s) in Leaguepedia scoreboards via a high-confidence identity" if lp_played else "")))
     insert(db, "ps_player_index_2026", rows)
 
 

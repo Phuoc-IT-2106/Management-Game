@@ -11,7 +11,10 @@ until a real file is imported. Synthetic data was never used for real players.
 |---|---|
 | Status | `NO_SOURCE_FILE` (see [`oracles_elixir_2026_stats.json`](oracles_elixir_2026_stats.json)) |
 | Checked | 2026-10-13 and 2026-10-14: `data/import/oracles-elixir/` is empty, and the user's Downloads folder has no Oracle's Elixir file (names only; no file was opened) |
-| Official source | https://master.d36liwrx5rvjnc.amplifyapp.com/tools/downloads (a JavaScript page: its links and terms could not be read automatically) |
+| Official source | https://master.d36liwrx5rvjnc.amplifyapp.com/tools/downloads. Update 2026-10-14: its JavaScript bundle names the public Google Drive folder ("Access files via Google Drive"), whose listing carries the 2014–2026 yearly files. The page states: free of charge for analysts, commentators and fans; game statistics are the property of Riot Games and their use must follow Riot's policies; files update once per day |
+| Download attempts | 2026-10-14, `fetch_oracles_elixir.py` (official page → bundle → folder listing → Drive download): 2025 and 2026 both `BLOCKED` with Drive's "Quota exceeded" page (too many anonymous downloads of these files recently). Five attempts between 11:23 and 14:28 UTC, all blocked; not worked around; logged in `data/import/oracles-elixir/snapshots/attempts.jsonl` |
+| Multi-year support | Added 2026-10-14: each reporting year keeps its own file versions and the current tables union the newest version of every year (2025 survives a 2026 import); tested on synthetic files (`tests/test_player_ratings.py`) |
+| Interim source | Leaguepedia scoreboards (independent source, `fetch_leaguepedia_stats.py`): see [`PLAYER_RATING_COVERAGE.md`](PLAYER_RATING_COVERAGE.md) |
 | Staging DB | `data/staging.sqlite3`: no `oe_*` or `xp_*` tables; `PRAGMA quick_check` ok; PandaScore tables and raw snapshots untouched |
 | Calibration | `calibrate.py` was not rerun; `calibration_2026.json` (pinned by content SHA-256) is unchanged |
 

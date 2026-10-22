@@ -1,0 +1,12 @@
+{
+  "Version": "decisions-exp-0.1",
+  "Status": "EXPERIMENT - decision verification variants, not production content, not approved balance",
+  "Checkpoints": [0, 1, 3, 5, 10, 20],
+  "Pathways": [
+    { "Id": "UNATTACHED_PROSPECT", "Weight": 50, "Profile": "PROSPECT", "AgeMin": 16, "AgeMax": 18 },
+    { "Id": "AMATEUR_SCENE", "Weight": 35, "Profile": "AMATEUR", "AgeMin": 18, "AgeMax": 23 },
+    { "Id": "SEMI_PRO_SCENE", "Weight": 15, "Profile": "SEMI", "AgeMin": 19, "AgeMax": 24 }
+  ],
+  "D1aCeilingSoftRoom": 14.0,
+  "D1aTail": [96.0, 45.0]
+}

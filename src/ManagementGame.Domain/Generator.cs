@@ -9,6 +9,10 @@ public static class Generator
 {
     public static int Roll(ulong seed, string domain, string key, string purpose, AttributeRange range) =>
         range.Min + KeyedRandom.Range(seed, domain, key, purpose, range.Max - range.Min + 1);
+    /// <summary>A bell-shaped value in the range: the mean of two keyed draws (a triangular distribution), so the middle of
+    /// the range is common and both ends are rare.</summary>
+    public static int Bell(ulong seed, string domain, string key, string purpose, AttributeRange range) =>
+        (int)Numbers.Divide(Roll(seed, domain, key, purpose, range) + (long)Roll(seed, domain, key, purpose + ":2", range), 2);
 
     public static T[] Shuffle<T>(ulong seed, string key, IReadOnlyList<T> items)
     {
@@ -66,7 +70,7 @@ public static class Generator
         var band = Weighted(seed, "player", id, "band", g.AbilityBands.OrderBy(b => b.Value).ToArray(), b => b.Weight).Value + profile.Shift + bandShift;
         var archetype = Weighted(seed, "player", id, "archetype", g.Archetypes.Where(a => a.Roles.Contains(role)).OrderBy(a => a.Id, StringComparer.Ordinal).ToArray(), a => a.Weight);
         int Skill(int i) => Math.Clamp(band + archetype.Offsets[i] + KeyedRandom.Range(seed, "player", id, "skill:" + i, g.SkillJitter * 2 + 1) - g.SkillJitter, 1, 99);
-        int Trait(string purpose, AttributeRange range, int offset = 0) => Math.Clamp(Roll(seed, "player", id, purpose, range) + offset, 1, 99);
+        int Trait(string purpose, AttributeRange range, int offset = 0) => Math.Clamp(Bell(seed, "player", id, purpose, range) + offset, 1, 99);
         var others = Roles.All.Where(r => r != role).ToArray();
         var secondary = KeyedRandom.Range(seed, "player", id, "secondary", 10_000) < g.SecondaryRoleChance
             ? others[KeyedRandom.Range(seed, "player", id, "secondary-role", others.Length)] : "";
@@ -85,7 +89,7 @@ public static class Generator
     public static Coach Coach(ulong seed, Content content, string id, int skillShift = 0)
     {
         var g = content.Generation;
-        int Skill(string purpose) => Math.Clamp(Roll(seed, "coach", id, purpose, g.CoachSkill) + skillShift, 1, 100);
+        int Skill(string purpose) => Math.Clamp(Bell(seed, "coach", id, purpose, g.CoachSkill) + skillShift, 1, 100);
         return new Coach(id, Identity(seed, content, id).Name, Skill("preparation"), Skill("analysis"), Skill("adaptability"),
             Math.Clamp(Roll(seed, "coach", id, "capacity", g.CoachCapacity) + skillShift, 20, 1000), Skill("development"));
     }

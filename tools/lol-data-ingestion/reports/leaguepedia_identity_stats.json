@@ -1,0 +1,3184 @@
+{
+ "status": "AGGREGATE STATISTICS ONLY: league names and counts; no person names, handles, person ids or team names",
+ "source": "leaguepedia",
+ "collection_windows": 92,
+ "incomplete_windows": 0,
+ "games_by_year": {
+  "2023": 14772,
+  "2024": 14577,
+  "2025": 14117,
+  "2026": 11877
+ },
+ "player_rows_by_year": {
+  "2023": 147720,
+  "2024": 145770,
+  "2025": 141170,
+  "2026": 118770
+ },
+ "rows_without_valid_seat": 0,
+ "duplicated_seats": 0,
+ "unique_player_pages": 10385,
+ "rows_without_canonical_page": 20148,
+ "identities_by_status": {
+  "HIGH_CONFIDENCE_MATCH": 4567,
+  "REVIEW_REQUIRED": 1333,
+  "UNMATCHED": 4485
+ },
+ "identities_by_kind_and_status": {
+  "lp_page:HIGH_CONFIDENCE_MATCH": 4567,
+  "lp_page:REVIEW_REQUIRED": 1333,
+  "lp_page:UNMATCHED": 4485
+ },
+ "rows_by_identity_status": {
+  "HIGH_CONFIDENCE_MATCH": 460369,
+  "REVIEW_REQUIRED": 36119,
+  "UNMATCHED": 56942
+ },
+ "high_by_reason": {
+  "dominant evidence: <n> of <n> supporting rows; real names agree or absent": 7,
+  "handle + team alias + registration window + role": 4560
+ },
+ "review_reasons": {
+  "evidence points to <n> provider players": 98,
+  "game date outside every registration window": 18,
+  "not registered for the mapped team": 107,
+  "provider player <n> claimed by <n> source person ids": 8,
+  "role differs from registration": 73,
+  "team alias not high-confidence": 1029
+ },
+ "unmatched_reasons": {
+  "no PandaScore name matches the identity's handles": 4485
+ },
+ "team_aliases_by_status": {
+  "HIGH_CONFIDENCE_MATCH": 1530,
+  "REVIEW_REQUIRED": 277,
+  "UNMATCHED": 1525
+ },
+ "team_aliases_by_year_and_status": {
+  "2023:HIGH_CONFIDENCE_MATCH": 413,
+  "2023:REVIEW_REQUIRED": 80,
+  "2023:UNMATCHED": 412,
+  "2024:HIGH_CONFIDENCE_MATCH": 392,
+  "2024:REVIEW_REQUIRED": 79,
+  "2024:UNMATCHED": 434,
+  "2025:HIGH_CONFIDENCE_MATCH": 359,
+  "2025:REVIEW_REQUIRED": 66,
+  "2025:UNMATCHED": 349,
+  "2026:HIGH_CONFIDENCE_MATCH": 366,
+  "2026:REVIEW_REQUIRED": 52,
+  "2026:UNMATCHED": 330
+ },
+ "matched_players_by_year": {
+  "2023": 3061,
+  "2024": 3049,
+  "2025": 2756,
+  "2026": 2432
+ },
+ "participation_verified_players": 2432,
+ "coverage_by_league_and_year": [
+  {
+   "league": "LoL Development League",
+   "year": "2025",
+   "rows": 9010,
+   "rows_high": 8335,
+   "rows_review": 565,
+   "rows_unmatched": 110
+  },
+  {
+   "league": "North American Challengers League",
+   "year": "2023",
+   "rows": 8640,
+   "rows_high": 6807,
+   "rows_review": 1027,
+   "rows_unmatched": 806
+  },
+  {
+   "league": "LoL Development League",
+   "year": "2023",
+   "rows": 8560,
+   "rows_high": 8361,
+   "rows_review": 199,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LoL Development League",
+   "year": "2024",
+   "rows": 8110,
+   "rows_high": 7761,
+   "rows_review": 267,
+   "rows_unmatched": 82
+  },
+  {
+   "league": "Tencent LoL Pro League",
+   "year": "2025",
+   "rows": 8050,
+   "rows_high": 8050,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Tencent LoL Pro League",
+   "year": "2023",
+   "rows": 7550,
+   "rows_high": 7550,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Tencent LoL Pro League",
+   "year": "2024",
+   "rows": 7170,
+   "rows_high": 7170,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Tencent LoL Pro League",
+   "year": "2026",
+   "rows": 6750,
+   "rows_high": 6750,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Prime League 1st Division",
+   "year": "2025",
+   "rows": 5960,
+   "rows_high": 4621,
+   "rows_review": 585,
+   "rows_unmatched": 754
+  },
+  {
+   "league": "LoL Champions Korea",
+   "year": "2025",
+   "rows": 5550,
+   "rows_high": 5550,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Challengers League",
+   "year": "2025",
+   "rows": 5420,
+   "rows_high": 5311,
+   "rows_review": 109,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "EMEA Masters",
+   "year": "2026",
+   "rows": 5150,
+   "rows_high": 5038,
+   "rows_review": 112,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Challengers League",
+   "year": "2024",
+   "rows": 5110,
+   "rows_high": 5094,
+   "rows_review": 16,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Challengers League",
+   "year": "2023",
+   "rows": 5050,
+   "rows_high": 5017,
+   "rows_review": 33,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LoL Champions Korea",
+   "year": "2026",
+   "rows": 5020,
+   "rows_high": 5020,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Challengers League",
+   "year": "2026",
+   "rows": 4910,
+   "rows_high": 4905,
+   "rows_review": 5,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Academy Series",
+   "year": "2025",
+   "rows": 4890,
+   "rows_high": 2650,
+   "rows_review": 629,
+   "rows_unmatched": 1611
+  },
+  {
+   "league": "LoL Champions Korea",
+   "year": "2023",
+   "rows": 4880,
+   "rows_high": 4880,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "North American Challengers League",
+   "year": "2024",
+   "rows": 4880,
+   "rows_high": 3924,
+   "rows_review": 420,
+   "rows_unmatched": 536
+  },
+  {
+   "league": "LoL Champions Korea",
+   "year": "2024",
+   "rows": 4820,
+   "rows_high": 4802,
+   "rows_review": 18,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Aegis Champion League",
+   "year": "2024",
+   "rows": 4700,
+   "rows_high": 1128,
+   "rows_review": 1054,
+   "rows_unmatched": 2518
+  },
+  {
+   "league": "LCK Academy Series",
+   "year": "2026",
+   "rows": 4620,
+   "rows_high": 1005,
+   "rows_review": 1331,
+   "rows_unmatched": 2284
+  },
+  {
+   "league": "Prime League 1st Division",
+   "year": "2026",
+   "rows": 4500,
+   "rows_high": 3359,
+   "rows_review": 609,
+   "rows_unmatched": 532
+  },
+  {
+   "league": "Aegis Champion League",
+   "year": "2023",
+   "rows": 4440,
+   "rows_high": 1326,
+   "rows_review": 674,
+   "rows_unmatched": 2440
+  },
+  {
+   "league": "EMEA Masters",
+   "year": "2025",
+   "rows": 4410,
+   "rows_high": 4354,
+   "rows_review": 53,
+   "rows_unmatched": 3
+  },
+  {
+   "league": "Pacific Challengers League",
+   "year": "2024",
+   "rows": 4250,
+   "rows_high": 2159,
+   "rows_review": 1151,
+   "rows_unmatched": 940
+  },
+  {
+   "league": "EMEA Masters",
+   "year": "2024",
+   "rows": 3990,
+   "rows_high": 3892,
+   "rows_review": 81,
+   "rows_unmatched": 17
+  },
+  {
+   "league": "LoL EMEA Championship",
+   "year": "2026",
+   "rows": 3830,
+   "rows_high": 3830,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LoL Japan League",
+   "year": "2025",
+   "rows": 3740,
+   "rows_high": 3098,
+   "rows_review": 429,
+   "rows_unmatched": 213
+  },
+  {
+   "league": "LoL Japan League",
+   "year": "2026",
+   "rows": 3630,
+   "rows_high": 2779,
+   "rows_review": 388,
+   "rows_unmatched": 463
+  },
+  {
+   "league": "Vietnam Championship Series",
+   "year": "2023",
+   "rows": 3620,
+   "rows_high": 3246,
+   "rows_review": 76,
+   "rows_unmatched": 298
+  },
+  {
+   "league": "Arabian League",
+   "year": "2026",
+   "rows": 3500,
+   "rows_high": 3392,
+   "rows_review": 68,
+   "rows_unmatched": 40
+  },
+  {
+   "league": "Prime League Pro Division",
+   "year": "2026",
+   "rows": 3220,
+   "rows_high": 3149,
+   "rows_review": 50,
+   "rows_unmatched": 21
+  },
+  {
+   "league": "La Ligue Française",
+   "year": "2025",
+   "rows": 3180,
+   "rows_high": 3148,
+   "rows_review": 32,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LoL EMEA Championship",
+   "year": "2025",
+   "rows": 3080,
+   "rows_high": 3080,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Pacific Championship Series",
+   "year": "2025",
+   "rows": 3050,
+   "rows_high": 2759,
+   "rows_review": 221,
+   "rows_unmatched": 70
+  },
+  {
+   "league": "Prime League Pro Division",
+   "year": "2025",
+   "rows": 3030,
+   "rows_high": 2951,
+   "rows_review": 76,
+   "rows_unmatched": 3
+  },
+  {
+   "league": "Elite Series: League of Legends",
+   "year": "2023",
+   "rows": 3020,
+   "rows_high": 2196,
+   "rows_review": 373,
+   "rows_unmatched": 451
+  },
+  {
+   "league": "Asia Masters",
+   "year": "2025",
+   "rows": 3000,
+   "rows_high": 2871,
+   "rows_review": 102,
+   "rows_unmatched": 27
+  },
+  {
+   "league": "Circuito Desafiante",
+   "year": "2025",
+   "rows": 3000,
+   "rows_high": 2888,
+   "rows_review": 59,
+   "rows_unmatched": 53
+  },
+  {
+   "league": "Circuit Brazilian League of Legends",
+   "year": "2026",
+   "rows": 2990,
+   "rows_high": 2983,
+   "rows_review": 7,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Pacific Championship Series",
+   "year": "2024",
+   "rows": 2970,
+   "rows_high": 2957,
+   "rows_review": 8,
+   "rows_unmatched": 5
+  },
+  {
+   "league": "Arabian League",
+   "year": "2025",
+   "rows": 2940,
+   "rows_high": 2878,
+   "rows_review": 21,
+   "rows_unmatched": 41
+  },
+  {
+   "league": "Elite Series: League of Legends",
+   "year": "2024",
+   "rows": 2940,
+   "rows_high": 2222,
+   "rows_review": 346,
+   "rows_unmatched": 372
+  },
+  {
+   "league": "LoL EMEA Championship",
+   "year": "2024",
+   "rows": 2940,
+   "rows_high": 2940,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Pacific Championship Series",
+   "year": "2023",
+   "rows": 2930,
+   "rows_high": 2813,
+   "rows_review": 42,
+   "rows_unmatched": 75
+  },
+  {
+   "league": "League of Legends Championship Pacific",
+   "year": "2025",
+   "rows": 2910,
+   "rows_high": 2905,
+   "rows_review": 5,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Academy Series",
+   "year": "2024",
+   "rows": 2890,
+   "rows_high": 1599,
+   "rows_review": 619,
+   "rows_unmatched": 672
+  },
+  {
+   "league": "LoL EMEA Championship",
+   "year": "2023",
+   "rows": 2880,
+   "rows_high": 2880,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "League of Legends Championship Pacific",
+   "year": "2026",
+   "rows": 2830,
+   "rows_high": 2784,
+   "rows_review": 18,
+   "rows_unmatched": 28
+  },
+  {
+   "league": "League of Legends Championship Series",
+   "year": "2026",
+   "rows": 2830,
+   "rows_high": 2816,
+   "rows_review": 14,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCK Academy Series",
+   "year": "2023",
+   "rows": 2810,
+   "rows_high": 1635,
+   "rows_review": 666,
+   "rows_unmatched": 509
+  },
+  {
+   "league": "North American Challengers League",
+   "year": "2026",
+   "rows": 2810,
+   "rows_high": 2655,
+   "rows_review": 98,
+   "rows_unmatched": 57
+  },
+  {
+   "league": "LIT",
+   "year": "2026",
+   "rows": 2800,
+   "rows_high": 2228,
+   "rows_review": 205,
+   "rows_unmatched": 367
+  },
+  {
+   "league": "Circuit Brazilian League of Legends Academy",
+   "year": "2024",
+   "rows": 2760,
+   "rows_high": 2705,
+   "rows_review": 55,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "EMEA Masters",
+   "year": "2023",
+   "rows": 2760,
+   "rows_high": 2685,
+   "rows_review": 30,
+   "rows_unmatched": 45
+  },
+  {
+   "league": "North American Challengers League",
+   "year": "2025",
+   "rows": 2760,
+   "rows_high": 2621,
+   "rows_review": 115,
+   "rows_unmatched": 24
+  },
+  {
+   "league": "La Ligue Française",
+   "year": "2026",
+   "rows": 2750,
+   "rows_high": 2656,
+   "rows_review": 59,
+   "rows_unmatched": 35
+  },
+  {
+   "league": "Greek Legends League 2nd Division",
+   "year": "2023",
+   "rows": 2720,
+   "rows_high": 1368,
+   "rows_review": 401,
+   "rows_unmatched": 951
+  },
+  {
+   "league": "Prime League 1st Division",
+   "year": "2023",
+   "rows": 2680,
+   "rows_high": 1809,
+   "rows_review": 592,
+   "rows_unmatched": 279
+  },
+  {
+   "league": "LVP SuperLiga",
+   "year": "2025",
+   "rows": 2640,
+   "rows_high": 2488,
+   "rows_review": 114,
+   "rows_unmatched": 38
+  },
+  {
+   "league": "League of Legends Championship Series",
+   "year": "2023",
+   "rows": 2640,
+   "rows_high": 2629,
+   "rows_review": 11,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Circuit Brazilian League of Legends",
+   "year": "2024",
+   "rows": 2630,
+   "rows_high": 2630,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Northern League of Legends Championship 2nd Division",
+   "year": "2024",
+   "rows": 2590,
+   "rows_high": 1663,
+   "rows_review": 265,
+   "rows_unmatched": 662
+  },
+  {
+   "league": "Circuito Desafiante",
+   "year": "2026",
+   "rows": 2580,
+   "rows_high": 2210,
+   "rows_review": 72,
+   "rows_unmatched": 298
+  },
+  {
+   "league": "LoL Japan League",
+   "year": "2023",
+   "rows": 2580,
+   "rows_high": 2487,
+   "rows_review": 93,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "TransIP Road Of Legends",
+   "year": "2026",
+   "rows": 2580,
+   "rows_high": 2482,
+   "rows_review": 57,
+   "rows_unmatched": 41
+  },
+  {
+   "league": "Northern League of Legends Championship",
+   "year": "2025",
+   "rows": 2510,
+   "rows_high": 2338,
+   "rows_review": 53,
+   "rows_unmatched": 119
+  },
+  {
+   "league": "La Ligue Française Division 2",
+   "year": "2023",
+   "rows": 2490,
+   "rows_high": 2367,
+   "rows_review": 103,
+   "rows_unmatched": 20
+  },
+  {
+   "league": "Circuit Brazilian League of Legends Academy",
+   "year": "2023",
+   "rows": 2480,
+   "rows_high": 2430,
+   "rows_review": 50,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Prime League 1st Division",
+   "year": "2024",
+   "rows": 2480,
+   "rows_high": 1985,
+   "rows_review": 274,
+   "rows_unmatched": 221
+  },
+  {
+   "league": "Vietnam Championship Series",
+   "year": "2024",
+   "rows": 2480,
+   "rows_high": 2345,
+   "rows_review": 47,
+   "rows_unmatched": 88
+  },
+  {
+   "league": "LVP SuperLiga",
+   "year": "2023",
+   "rows": 2470,
+   "rows_high": 2430,
+   "rows_review": 18,
+   "rows_unmatched": 22
+  },
+  {
+   "league": "Ultraliga",
+   "year": "2023",
+   "rows": 2450,
+   "rows_high": 2313,
+   "rows_review": 31,
+   "rows_unmatched": 106
+  },
+  {
+   "league": "Greek Legends League 2nd Division",
+   "year": "2024",
+   "rows": 2440,
+   "rows_high": 1533,
+   "rows_review": 291,
+   "rows_unmatched": 616
+  },
+  {
+   "league": "Circuit Brazilian League of Legends",
+   "year": "2023",
+   "rows": 2420,
+   "rows_high": 2420,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LVP SuperLiga",
+   "year": "2024",
+   "rows": 2420,
+   "rows_high": 2391,
+   "rows_review": 18,
+   "rows_unmatched": 11
+  },
+  {
+   "league": "La Ligue Française",
+   "year": "2023",
+   "rows": 2420,
+   "rows_high": 2377,
+   "rows_review": 43,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Prime League Pro Division",
+   "year": "2023",
+   "rows": 2420,
+   "rows_high": 2400,
+   "rows_review": 20,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Prime League Pro Division",
+   "year": "2024",
+   "rows": 2410,
+   "rows_high": 2401,
+   "rows_review": 9,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Rift Legends",
+   "year": "2025",
+   "rows": 2410,
+   "rows_high": 2359,
+   "rows_review": 49,
+   "rows_unmatched": 2
+  },
+  {
+   "league": "Turkish Championship League",
+   "year": "2025",
+   "rows": 2400,
+   "rows_high": 2400,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Hellenic Challengers Cup",
+   "year": "2026",
+   "rows": 2390,
+   "rows_high": 1058,
+   "rows_review": 283,
+   "rows_unmatched": 1049
+  },
+  {
+   "league": "La Ligue Française",
+   "year": "2024",
+   "rows": 2370,
+   "rows_high": 2319,
+   "rows_review": 40,
+   "rows_unmatched": 11
+  },
+  {
+   "league": "Hellenic Legends League",
+   "year": "2026",
+   "rows": 2350,
+   "rows_high": 2264,
+   "rows_review": 48,
+   "rows_unmatched": 38
+  },
+  {
+   "league": "La Ligue Française Division 2",
+   "year": "2024",
+   "rows": 2350,
+   "rows_high": 2192,
+   "rows_review": 75,
+   "rows_unmatched": 83
+  },
+  {
+   "league": "La Ligue Française Division 2",
+   "year": "2025",
+   "rows": 2330,
+   "rows_high": 2186,
+   "rows_review": 125,
+   "rows_unmatched": 19
+  },
+  {
+   "league": "Esports World Cup",
+   "year": "2026",
+   "rows": 2320,
+   "rows_high": 2314,
+   "rows_review": 0,
+   "rows_unmatched": 6
+  },
+  {
+   "league": "Ultraliga 2nd Division",
+   "year": "2023",
+   "rows": 2320,
+   "rows_high": 1411,
+   "rows_review": 254,
+   "rows_unmatched": 655
+  },
+  {
+   "league": "LVP SuperLiga 2nd Division",
+   "year": "2023",
+   "rows": 2300,
+   "rows_high": 2222,
+   "rows_review": 78,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "TCL Division 2",
+   "year": "2024",
+   "rows": 2270,
+   "rows_high": 1586,
+   "rows_review": 125,
+   "rows_unmatched": 559
+  },
+  {
+   "league": "Ultraliga 2nd Division",
+   "year": "2024",
+   "rows": 2240,
+   "rows_high": 1450,
+   "rows_review": 269,
+   "rows_unmatched": 521
+  },
+  {
+   "league": "Hellenic Legends League",
+   "year": "2025",
+   "rows": 2230,
+   "rows_high": 2105,
+   "rows_review": 114,
+   "rows_unmatched": 11
+  },
+  {
+   "league": "League of Legends Championship of The Americas South",
+   "year": "2025",
+   "rows": 2220,
+   "rows_high": 2220,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Turkish Championship League",
+   "year": "2026",
+   "rows": 2190,
+   "rows_high": 2137,
+   "rows_review": 9,
+   "rows_unmatched": 44
+  },
+  {
+   "league": "League of Legends Championship of The Americas North",
+   "year": "2025",
+   "rows": 2140,
+   "rows_high": 2133,
+   "rows_review": 7,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Esports Balkan League",
+   "year": "2026",
+   "rows": 2130,
+   "rows_high": 1977,
+   "rows_review": 143,
+   "rows_unmatched": 10
+  },
+  {
+   "league": "Liga Latinoamerica",
+   "year": "2024",
+   "rows": 2130,
+   "rows_high": 2045,
+   "rows_review": 30,
+   "rows_unmatched": 55
+  },
+  {
+   "league": "Rift Legends",
+   "year": "2026",
+   "rows": 2110,
+   "rows_high": 2059,
+   "rows_review": 51,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Northern League of Legends Championship",
+   "year": "2026",
+   "rows": 2100,
+   "rows_high": 1986,
+   "rows_review": 102,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "TransIP Road Of Legends",
+   "year": "2025",
+   "rows": 2100,
+   "rows_high": 1927,
+   "rows_review": 150,
+   "rows_unmatched": 23
+  },
+  {
+   "league": "Northern League of Legends Championship",
+   "year": "2024",
+   "rows": 2090,
+   "rows_high": 1904,
+   "rows_review": 71,
+   "rows_unmatched": 115
+  },
+  {
+   "league": "Liga Española de League of Legends",
+   "year": "2026",
+   "rows": 2080,
+   "rows_high": 1950,
+   "rows_review": 130,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Hitpoint Challengers",
+   "year": "2026",
+   "rows": 2010,
+   "rows_high": 1116,
+   "rows_review": 197,
+   "rows_unmatched": 697
+  },
+  {
+   "league": "Legend Cup",
+   "year": "2025",
+   "rows": 2010,
+   "rows_high": 1327,
+   "rows_review": 580,
+   "rows_unmatched": 103
+  },
+  {
+   "league": "Liga Nexo",
+   "year": "2024",
+   "rows": 2010,
+   "rows_high": 1319,
+   "rows_review": 413,
+   "rows_unmatched": 278
+  },
+  {
+   "league": "PG Nationals",
+   "year": "2023",
+   "rows": 2010,
+   "rows_high": 1823,
+   "rows_review": 54,
+   "rows_unmatched": 133
+  },
+  {
+   "league": "Hitpoint Challengers",
+   "year": "2025",
+   "rows": 2000,
+   "rows_high": 1677,
+   "rows_review": 173,
+   "rows_unmatched": 150
+  },
+  {
+   "league": "Legend Cup",
+   "year": "2024",
+   "rows": 1960,
+   "rows_high": 1880,
+   "rows_review": 0,
+   "rows_unmatched": 80
+  },
+  {
+   "league": "Liga Latinoamerica",
+   "year": "2023",
+   "rows": 1930,
+   "rows_high": 1902,
+   "rows_review": 0,
+   "rows_unmatched": 28
+  },
+  {
+   "league": "League of Legends Championship Series",
+   "year": "2024",
+   "rows": 1920,
+   "rows_high": 1920,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Esports Balkan League",
+   "year": "2025",
+   "rows": 1910,
+   "rows_high": 1833,
+   "rows_review": 57,
+   "rows_unmatched": 20
+  },
+  {
+   "league": "Hitpoint Masters",
+   "year": "2025",
+   "rows": 1900,
+   "rows_high": 1818,
+   "rows_review": 70,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "Liga Regional Sur",
+   "year": "2026",
+   "rows": 1870,
+   "rows_high": 1746,
+   "rows_review": 61,
+   "rows_unmatched": 63
+  },
+  {
+   "league": "Northern League of Legends Championship 2nd Division",
+   "year": "2023",
+   "rows": 1840,
+   "rows_high": 1036,
+   "rows_review": 300,
+   "rows_unmatched": 504
+  },
+  {
+   "league": "Elite Series 2nd Division",
+   "year": "2023",
+   "rows": 1820,
+   "rows_high": 885,
+   "rows_review": 249,
+   "rows_unmatched": 686
+  },
+  {
+   "league": "Esports Nations Cup",
+   "year": "2026",
+   "rows": 1810,
+   "rows_high": 1087,
+   "rows_review": 176,
+   "rows_unmatched": 547
+  },
+  {
+   "league": "Liga Nexo",
+   "year": "2023",
+   "rows": 1810,
+   "rows_high": 1087,
+   "rows_review": 410,
+   "rows_unmatched": 313
+  },
+  {
+   "league": "Turkish Championship League",
+   "year": "2024",
+   "rows": 1810,
+   "rows_high": 1800,
+   "rows_review": 9,
+   "rows_unmatched": 1
+  },
+  {
+   "league": "Turkish Championship League",
+   "year": "2023",
+   "rows": 1800,
+   "rows_high": 1795,
+   "rows_review": 5,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Asia Masters Elite Invitational Tournament",
+   "year": "2026",
+   "rows": 1760,
+   "rows_high": 1347,
+   "rows_review": 362,
+   "rows_unmatched": 51
+  },
+  {
+   "league": "Benelux Ascend Series",
+   "year": "2026",
+   "rows": 1760,
+   "rows_high": 597,
+   "rows_review": 223,
+   "rows_unmatched": 940
+  },
+  {
+   "league": "Hitpoint Masters 3rd Division",
+   "year": "2025",
+   "rows": 1760,
+   "rows_high": 981,
+   "rows_review": 313,
+   "rows_unmatched": 466
+  },
+  {
+   "league": "Liga Regional Norte",
+   "year": "2026",
+   "rows": 1760,
+   "rows_high": 1674,
+   "rows_review": 29,
+   "rows_unmatched": 57
+  },
+  {
+   "league": "Hitpoint Masters",
+   "year": "2026",
+   "rows": 1740,
+   "rows_high": 1610,
+   "rows_review": 128,
+   "rows_unmatched": 2
+  },
+  {
+   "league": "Hitpoint Masters 3rd Division",
+   "year": "2024",
+   "rows": 1740,
+   "rows_high": 959,
+   "rows_review": 156,
+   "rows_unmatched": 625
+  },
+  {
+   "league": "Kings Lendas",
+   "year": "2025",
+   "rows": 1740,
+   "rows_high": 1400,
+   "rows_review": 286,
+   "rows_unmatched": 54
+  },
+  {
+   "league": "Arabian League",
+   "year": "2023",
+   "rows": 1730,
+   "rows_high": 1629,
+   "rows_review": 55,
+   "rows_unmatched": 46
+  },
+  {
+   "league": "League of Legends Thailand Series",
+   "year": "2025",
+   "rows": 1720,
+   "rows_high": 317,
+   "rows_review": 365,
+   "rows_unmatched": 1038
+  },
+  {
+   "league": "LPLOL 2nd Division",
+   "year": "2023",
+   "rows": 1680,
+   "rows_high": 966,
+   "rows_review": 359,
+   "rows_unmatched": 355
+  },
+  {
+   "league": "Greek Legends League",
+   "year": "2023",
+   "rows": 1650,
+   "rows_high": 1569,
+   "rows_review": 36,
+   "rows_unmatched": 45
+  },
+  {
+   "league": "Elite Series 2nd Division",
+   "year": "2024",
+   "rows": 1630,
+   "rows_high": 806,
+   "rows_review": 375,
+   "rows_unmatched": 449
+  },
+  {
+   "league": "Hitpoint Masters",
+   "year": "2023",
+   "rows": 1620,
+   "rows_high": 1600,
+   "rows_review": 20,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Liga Portuguesa",
+   "year": "2026",
+   "rows": 1620,
+   "rows_high": 1447,
+   "rows_review": 125,
+   "rows_unmatched": 48
+  },
+  {
+   "league": "Liga Portuguesa",
+   "year": "2023",
+   "rows": 1600,
+   "rows_high": 1462,
+   "rows_review": 107,
+   "rows_unmatched": 31
+  },
+  {
+   "league": "Liga Portuguesa",
+   "year": "2025",
+   "rows": 1600,
+   "rows_high": 1438,
+   "rows_review": 135,
+   "rows_unmatched": 27
+  },
+  {
+   "league": "Esports Balkan League",
+   "year": "2023",
+   "rows": 1590,
+   "rows_high": 1417,
+   "rows_review": 27,
+   "rows_unmatched": 146
+  },
+  {
+   "league": "Ultraliga",
+   "year": "2024",
+   "rows": 1590,
+   "rows_high": 1547,
+   "rows_review": 24,
+   "rows_unmatched": 19
+  },
+  {
+   "league": "Northern League of Legends Championship",
+   "year": "2023",
+   "rows": 1570,
+   "rows_high": 1512,
+   "rows_review": 15,
+   "rows_unmatched": 43
+  },
+  {
+   "league": "Hitpoint Masters",
+   "year": "2024",
+   "rows": 1560,
+   "rows_high": 1474,
+   "rows_review": 57,
+   "rows_unmatched": 29
+  },
+  {
+   "league": "LoL Circuit Oceania",
+   "year": "2024",
+   "rows": 1560,
+   "rows_high": 1420,
+   "rows_review": 94,
+   "rows_unmatched": 46
+  },
+  {
+   "league": "Prime Pokal",
+   "year": "2023",
+   "rows": 1560,
+   "rows_high": 1059,
+   "rows_review": 140,
+   "rows_unmatched": 361
+  },
+  {
+   "league": "Vietnam Championship Series",
+   "year": "2026",
+   "rows": 1560,
+   "rows_high": 1332,
+   "rows_review": 228,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Hitpoint Challengers",
+   "year": "2024",
+   "rows": 1550,
+   "rows_high": 1074,
+   "rows_review": 211,
+   "rows_unmatched": 265
+  },
+  {
+   "league": "Greek Legends League",
+   "year": "2024",
+   "rows": 1540,
+   "rows_high": 1453,
+   "rows_review": 42,
+   "rows_unmatched": 45
+  },
+  {
+   "league": "Liga Nexo",
+   "year": "2025",
+   "rows": 1540,
+   "rows_high": 935,
+   "rows_review": 480,
+   "rows_unmatched": 125
+  },
+  {
+   "league": "Liga Portuguesa",
+   "year": "2024",
+   "rows": 1540,
+   "rows_high": 1311,
+   "rows_review": 195,
+   "rows_unmatched": 34
+  },
+  {
+   "league": "Arabian League",
+   "year": "2024",
+   "rows": 1530,
+   "rows_high": 1465,
+   "rows_review": 47,
+   "rows_unmatched": 18
+  },
+  {
+   "league": "Nexus Tour",
+   "year": "2024",
+   "rows": 1530,
+   "rows_high": 924,
+   "rows_review": 183,
+   "rows_unmatched": 423
+  },
+  {
+   "league": "European Pro League",
+   "year": "2024",
+   "rows": 1510,
+   "rows_high": 1462,
+   "rows_review": 48,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LVP SuperLiga 2nd Division",
+   "year": "2024",
+   "rows": 1510,
+   "rows_high": 1334,
+   "rows_review": 154,
+   "rows_unmatched": 22
+  },
+  {
+   "league": "Liga Regional Norte",
+   "year": "2025",
+   "rows": 1510,
+   "rows_high": 1365,
+   "rows_review": 75,
+   "rows_unmatched": 70
+  },
+  {
+   "league": "PG Proving Grounds",
+   "year": "2023",
+   "rows": 1500,
+   "rows_high": 826,
+   "rows_review": 213,
+   "rows_unmatched": 461
+  },
+  {
+   "league": "LIT",
+   "year": "2024",
+   "rows": 1490,
+   "rows_high": 1398,
+   "rows_review": 69,
+   "rows_unmatched": 23
+  },
+  {
+   "league": "Nexus League",
+   "year": "2026",
+   "rows": 1490,
+   "rows_high": 1284,
+   "rows_review": 97,
+   "rows_unmatched": 109
+  },
+  {
+   "league": "LoL Japan League",
+   "year": "2024",
+   "rows": 1480,
+   "rows_high": 1425,
+   "rows_review": 51,
+   "rows_unmatched": 4
+  },
+  {
+   "league": "Liga Regional Sur",
+   "year": "2025",
+   "rows": 1450,
+   "rows_high": 1401,
+   "rows_review": 10,
+   "rows_unmatched": 39
+  },
+  {
+   "league": "Esports Balkan League",
+   "year": "2024",
+   "rows": 1420,
+   "rows_high": 1375,
+   "rows_review": 45,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Vietnam Championship Series",
+   "year": "2025",
+   "rows": 1420,
+   "rows_high": 1178,
+   "rows_review": 143,
+   "rows_unmatched": 99
+  },
+  {
+   "league": "Hitpoint Challengers",
+   "year": "2023",
+   "rows": 1410,
+   "rows_high": 906,
+   "rows_review": 261,
+   "rows_unmatched": 243
+  },
+  {
+   "league": "Arabian League 2nd Division",
+   "year": "2024",
+   "rows": 1400,
+   "rows_high": 1019,
+   "rows_review": 176,
+   "rows_unmatched": 205
+  },
+  {
+   "league": "LoL Circuit Oceania",
+   "year": "2023",
+   "rows": 1400,
+   "rows_high": 1321,
+   "rows_review": 35,
+   "rows_unmatched": 44
+  },
+  {
+   "league": "LIT",
+   "year": "2025",
+   "rows": 1390,
+   "rows_high": 1277,
+   "rows_review": 113,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Nexus Tour",
+   "year": "2025",
+   "rows": 1390,
+   "rows_high": 893,
+   "rows_review": 119,
+   "rows_unmatched": 378
+  },
+  {
+   "league": "Prime Pokal",
+   "year": "2024",
+   "rows": 1340,
+   "rows_high": 1031,
+   "rows_review": 102,
+   "rows_unmatched": 207
+  },
+  {
+   "league": "World Championship",
+   "year": "2024",
+   "rows": 1320,
+   "rows_high": 1320,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Hellenic Challengers Cup",
+   "year": "2025",
+   "rows": 1310,
+   "rows_high": 788,
+   "rows_review": 146,
+   "rows_unmatched": 376
+  },
+  {
+   "league": "Arabian League 2nd Division",
+   "year": "2023",
+   "rows": 1300,
+   "rows_high": 576,
+   "rows_review": 202,
+   "rows_unmatched": 522
+  },
+  {
+   "league": "LPLOL 2nd Division",
+   "year": "2024",
+   "rows": 1290,
+   "rows_high": 883,
+   "rows_review": 245,
+   "rows_unmatched": 162
+  },
+  {
+   "league": "World Championship",
+   "year": "2023",
+   "rows": 1220,
+   "rows_high": 1210,
+   "rows_review": 0,
+   "rows_unmatched": 10
+  },
+  {
+   "league": "University Esports Masters",
+   "year": "2023",
+   "rows": 1210,
+   "rows_high": 344,
+   "rows_review": 213,
+   "rows_unmatched": 653
+  },
+  {
+   "league": "Liga Regional Sur",
+   "year": "2023",
+   "rows": 1190,
+   "rows_high": 954,
+   "rows_review": 178,
+   "rows_unmatched": 58
+  },
+  {
+   "league": "Liga Regional Norte",
+   "year": "2023",
+   "rows": 1160,
+   "rows_high": 896,
+   "rows_review": 148,
+   "rows_unmatched": 116
+  },
+  {
+   "league": "Blooming Talents League",
+   "year": "2024",
+   "rows": 1150,
+   "rows_high": 549,
+   "rows_review": 153,
+   "rows_unmatched": 448
+  },
+  {
+   "league": "Hitpoint Winter",
+   "year": "2025",
+   "rows": 1140,
+   "rows_high": 1044,
+   "rows_review": 96,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "TCL Division 2",
+   "year": "2023",
+   "rows": 1100,
+   "rows_high": 947,
+   "rows_review": 38,
+   "rows_unmatched": 115
+  },
+  {
+   "league": "Icelandic Esports League",
+   "year": "2025",
+   "rows": 1090,
+   "rows_high": 2,
+   "rows_review": 92,
+   "rows_unmatched": 996
+  },
+  {
+   "league": "Nexus Tour",
+   "year": "2026",
+   "rows": 1090,
+   "rows_high": 436,
+   "rows_review": 60,
+   "rows_unmatched": 594
+  },
+  {
+   "league": "Pacific Challengers League",
+   "year": "2023",
+   "rows": 1090,
+   "rows_high": 513,
+   "rows_review": 285,
+   "rows_unmatched": 292
+  },
+  {
+   "league": "TCL Season Cup",
+   "year": "2024",
+   "rows": 1070,
+   "rows_high": 991,
+   "rows_review": 35,
+   "rows_unmatched": 44
+  },
+  {
+   "league": "Arabian League 2nd Division",
+   "year": "2026",
+   "rows": 1040,
+   "rows_high": 393,
+   "rows_review": 130,
+   "rows_unmatched": 517
+  },
+  {
+   "league": "Streamers Clash",
+   "year": "2025",
+   "rows": 1040,
+   "rows_high": 147,
+   "rows_review": 115,
+   "rows_unmatched": 778
+  },
+  {
+   "league": "Hitpoint Winter",
+   "year": "2026",
+   "rows": 1030,
+   "rows_high": 965,
+   "rows_review": 65,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Liga Regional Sur",
+   "year": "2024",
+   "rows": 1020,
+   "rows_high": 872,
+   "rows_review": 117,
+   "rows_unmatched": 31
+  },
+  {
+   "league": "Benelux Ascend Series",
+   "year": "2025",
+   "rows": 1000,
+   "rows_high": 422,
+   "rows_review": 118,
+   "rows_unmatched": 460
+  },
+  {
+   "league": "Equal Esports Cup",
+   "year": "2023",
+   "rows": 990,
+   "rows_high": 530,
+   "rows_review": 95,
+   "rows_unmatched": 365
+  },
+  {
+   "league": "Icelandic Esports League",
+   "year": "2026",
+   "rows": 980,
+   "rows_high": 0,
+   "rows_review": 114,
+   "rows_unmatched": 866
+  },
+  {
+   "league": "World Championship",
+   "year": "2025",
+   "rows": 960,
+   "rows_high": 960,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LJL Academy League",
+   "year": "2023",
+   "rows": 920,
+   "rows_high": 721,
+   "rows_review": 137,
+   "rows_unmatched": 62
+  },
+  {
+   "league": "Elite Series Amateur Circuit",
+   "year": "2023",
+   "rows": 910,
+   "rows_high": 268,
+   "rows_review": 57,
+   "rows_unmatched": 585
+  },
+  {
+   "league": "Liga Regional Norte",
+   "year": "2024",
+   "rows": 910,
+   "rows_high": 708,
+   "rows_review": 119,
+   "rows_unmatched": 83
+  },
+  {
+   "league": "Claro Stars League",
+   "year": "2023",
+   "rows": 900,
+   "rows_high": 166,
+   "rows_review": 273,
+   "rows_unmatched": 461
+  },
+  {
+   "league": "Kings Lendas",
+   "year": "2026",
+   "rows": 900,
+   "rows_high": 698,
+   "rows_review": 60,
+   "rows_unmatched": 142
+  },
+  {
+   "league": "Demacia Cup",
+   "year": "2025",
+   "rows": 890,
+   "rows_high": 890,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Golden League",
+   "year": "2023",
+   "rows": 890,
+   "rows_high": 313,
+   "rows_review": 206,
+   "rows_unmatched": 371
+  },
+  {
+   "league": "Hitpoint Winter",
+   "year": "2024",
+   "rows": 880,
+   "rows_high": 822,
+   "rows_review": 58,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Volcano League",
+   "year": "2023",
+   "rows": 880,
+   "rows_high": 66,
+   "rows_review": 151,
+   "rows_unmatched": 663
+  },
+  {
+   "league": "LCP Oceanic Promotion Qualifier",
+   "year": "2025",
+   "rows": 870,
+   "rows_high": 311,
+   "rows_review": 49,
+   "rows_unmatched": 510
+  },
+  {
+   "league": "European Pro League",
+   "year": "2023",
+   "rows": 860,
+   "rows_high": 842,
+   "rows_review": 0,
+   "rows_unmatched": 18
+  },
+  {
+   "league": "LVP División de Honor",
+   "year": "2023",
+   "rows": 860,
+   "rows_high": 826,
+   "rows_review": 19,
+   "rows_unmatched": 15
+  },
+  {
+   "league": "Liga Master Flow",
+   "year": "2023",
+   "rows": 860,
+   "rows_high": 849,
+   "rows_review": 11,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Pacific Championship Series",
+   "year": "2026",
+   "rows": 860,
+   "rows_high": 578,
+   "rows_review": 73,
+   "rows_unmatched": 209
+  },
+  {
+   "league": "World Star Challengers Invitational",
+   "year": "2026",
+   "rows": 850,
+   "rows_high": 827,
+   "rows_review": 23,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "University Esports Masters",
+   "year": "2024",
+   "rows": 820,
+   "rows_high": 225,
+   "rows_review": 60,
+   "rows_unmatched": 535
+  },
+  {
+   "league": "Mid-Season Invitational",
+   "year": "2025",
+   "rows": 800,
+   "rows_high": 800,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Mid-Season Invitational",
+   "year": "2024",
+   "rows": 780,
+   "rows_high": 780,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "University Esports Masters",
+   "year": "2025",
+   "rows": 780,
+   "rows_high": 292,
+   "rows_review": 43,
+   "rows_unmatched": 445
+  },
+  {
+   "league": "Drututt Ultimate Showdown",
+   "year": "2023",
+   "rows": 770,
+   "rows_high": 597,
+   "rows_review": 59,
+   "rows_unmatched": 114
+  },
+  {
+   "league": "NLC Aurora Open",
+   "year": "2024",
+   "rows": 770,
+   "rows_high": 598,
+   "rows_review": 81,
+   "rows_unmatched": 91
+  },
+  {
+   "league": "Asia Star Challengers Invitational",
+   "year": "2023",
+   "rows": 760,
+   "rows_high": 726,
+   "rows_review": 25,
+   "rows_unmatched": 9
+  },
+  {
+   "league": "Equal Esports Cup",
+   "year": "2025",
+   "rows": 760,
+   "rows_high": 560,
+   "rows_review": 117,
+   "rows_unmatched": 83
+  },
+  {
+   "league": "Mid-Season Invitational",
+   "year": "2023",
+   "rows": 760,
+   "rows_high": 760,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Iberian Cup",
+   "year": "2023",
+   "rows": 730,
+   "rows_high": 701,
+   "rows_review": 29,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "NLC Aurora Open",
+   "year": "2023",
+   "rows": 730,
+   "rows_high": 534,
+   "rows_review": 61,
+   "rows_unmatched": 135
+  },
+  {
+   "league": "Prime Pokal",
+   "year": "2025",
+   "rows": 730,
+   "rows_high": 629,
+   "rows_review": 42,
+   "rows_unmatched": 59
+  },
+  {
+   "league": "Coupe de France",
+   "year": "2023",
+   "rows": 720,
+   "rows_high": 705,
+   "rows_review": 15,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Mid-Season Invitational",
+   "year": "2026",
+   "rows": 710,
+   "rows_high": 710,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Coupe de France",
+   "year": "2024",
+   "rows": 690,
+   "rows_high": 655,
+   "rows_review": 30,
+   "rows_unmatched": 5
+  },
+  {
+   "league": "Iberian Cup",
+   "year": "2024",
+   "rows": 680,
+   "rows_high": 611,
+   "rows_review": 69,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Breeze of Glory",
+   "year": "2025",
+   "rows": 660,
+   "rows_high": 177,
+   "rows_review": 56,
+   "rows_unmatched": 427
+  },
+  {
+   "league": "Infinity Winter",
+   "year": "2025",
+   "rows": 660,
+   "rows_high": 538,
+   "rows_review": 39,
+   "rows_unmatched": 83
+  },
+  {
+   "league": "Oceanic Developmental Tournament",
+   "year": "2024",
+   "rows": 660,
+   "rows_high": 111,
+   "rows_review": 90,
+   "rows_unmatched": 459
+  },
+  {
+   "league": "T-esports Championship",
+   "year": "2025",
+   "rows": 660,
+   "rows_high": 600,
+   "rows_review": 12,
+   "rows_unmatched": 48
+  },
+  {
+   "league": "Equal Esports Cup",
+   "year": "2026",
+   "rows": 640,
+   "rows_high": 615,
+   "rows_review": 25,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Asia Masters",
+   "year": "2026",
+   "rows": 630,
+   "rows_high": 589,
+   "rows_review": 41,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "KeSPA Cup",
+   "year": "2026",
+   "rows": 610,
+   "rows_high": 610,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Hitpoint Winter",
+   "year": "2023",
+   "rows": 600,
+   "rows_high": 482,
+   "rows_review": 61,
+   "rows_unmatched": 57
+  },
+  {
+   "league": "League of Legends Caster & Host Championship",
+   "year": "2024",
+   "rows": 600,
+   "rows_high": 148,
+   "rows_review": 83,
+   "rows_unmatched": 369
+  },
+  {
+   "league": "Liga de Honor Entel",
+   "year": "2023",
+   "rows": 590,
+   "rows_high": 184,
+   "rows_review": 334,
+   "rows_unmatched": 72
+  },
+  {
+   "league": "Demacia Cup Global Invitational",
+   "year": "2026",
+   "rows": 580,
+   "rows_high": 573,
+   "rows_review": 0,
+   "rows_unmatched": 7
+  },
+  {
+   "league": "Equal Esports Cup",
+   "year": "2024",
+   "rows": 570,
+   "rows_high": 395,
+   "rows_review": 57,
+   "rows_unmatched": 118
+  },
+  {
+   "league": "KeSPA Cup",
+   "year": "2025",
+   "rows": 560,
+   "rows_high": 556,
+   "rows_review": 4,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "League of Legends Caster & Host Championship",
+   "year": "2023",
+   "rows": 560,
+   "rows_high": 104,
+   "rows_review": 114,
+   "rows_unmatched": 342
+  },
+  {
+   "league": "Z10 Scouting Grounds",
+   "year": "2024",
+   "rows": 560,
+   "rows_high": 550,
+   "rows_review": 3,
+   "rows_unmatched": 7
+  },
+  {
+   "league": "4 Nations",
+   "year": "2025",
+   "rows": 550,
+   "rows_high": 252,
+   "rows_review": 59,
+   "rows_unmatched": 239
+  },
+  {
+   "league": "Ignis Cup",
+   "year": "2024",
+   "rows": 550,
+   "rows_high": 456,
+   "rows_review": 73,
+   "rows_unmatched": 21
+  },
+  {
+   "league": "NNO Prime",
+   "year": "2024",
+   "rows": 530,
+   "rows_high": 468,
+   "rows_review": 44,
+   "rows_unmatched": 18
+  },
+  {
+   "league": "Circuito Tormenta",
+   "year": "2025",
+   "rows": 500,
+   "rows_high": 376,
+   "rows_review": 112,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "KeSPA Cup",
+   "year": "2024",
+   "rows": 500,
+   "rows_high": 500,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Asian Games 2018",
+   "year": "2026",
+   "rows": 490,
+   "rows_high": 334,
+   "rows_review": 55,
+   "rows_unmatched": 101
+  },
+  {
+   "league": "Elite Series Amateur Circuit",
+   "year": "2024",
+   "rows": 490,
+   "rows_high": 152,
+   "rows_review": 99,
+   "rows_unmatched": 239
+  },
+  {
+   "league": "Streamers Clash",
+   "year": "2026",
+   "rows": 490,
+   "rows_high": 100,
+   "rows_review": 49,
+   "rows_unmatched": 341
+  },
+  {
+   "league": "Blooming Talents League",
+   "year": "2025",
+   "rows": 460,
+   "rows_high": 272,
+   "rows_review": 35,
+   "rows_unmatched": 153
+  },
+  {
+   "league": "First Stand",
+   "year": "2026",
+   "rows": 450,
+   "rows_high": 450,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "CELOL 2026",
+   "year": "2026",
+   "rows": 440,
+   "rows_high": 36,
+   "rows_review": 64,
+   "rows_unmatched": 340
+  },
+  {
+   "league": "GLL20 ProAm",
+   "year": "2023",
+   "rows": 440,
+   "rows_high": 335,
+   "rows_review": 30,
+   "rows_unmatched": 75
+  },
+  {
+   "league": "University Esports Masters",
+   "year": "2026",
+   "rows": 440,
+   "rows_high": 110,
+   "rows_review": 32,
+   "rows_unmatched": 298
+  },
+  {
+   "league": "Circuito Tormenta",
+   "year": "2023",
+   "rows": 430,
+   "rows_high": 301,
+   "rows_review": 106,
+   "rows_unmatched": 23
+  },
+  {
+   "league": "KeG Championship",
+   "year": "2024",
+   "rows": 430,
+   "rows_high": 119,
+   "rows_review": 102,
+   "rows_unmatched": 209
+  },
+  {
+   "league": "League Impact Series",
+   "year": "2026",
+   "rows": 430,
+   "rows_high": 37,
+   "rows_review": 69,
+   "rows_unmatched": 324
+  },
+  {
+   "league": "GAMEON Revival",
+   "year": "2025",
+   "rows": 420,
+   "rows_high": 417,
+   "rows_review": 3,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Ignis Cup",
+   "year": "2023",
+   "rows": 420,
+   "rows_high": 359,
+   "rows_review": 50,
+   "rows_unmatched": 11
+  },
+  {
+   "league": "League of Legends Asia Invitational",
+   "year": "2025",
+   "rows": 420,
+   "rows_high": 420,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Demacia Cup",
+   "year": "2023",
+   "rows": 410,
+   "rows_high": 400,
+   "rows_review": 7,
+   "rows_unmatched": 3
+  },
+  {
+   "league": "Elements League",
+   "year": "2023",
+   "rows": 410,
+   "rows_high": 391,
+   "rows_review": 19,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Comedy Central Winter Snowdown",
+   "year": "2026",
+   "rows": 400,
+   "rows_high": 390,
+   "rows_review": 6,
+   "rows_unmatched": 4
+  },
+  {
+   "league": "League of Legends Championship of The Americas",
+   "year": "2025",
+   "rows": 400,
+   "rows_high": 400,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Circuito Tormenta",
+   "year": "2024",
+   "rows": 390,
+   "rows_high": 233,
+   "rows_review": 98,
+   "rows_unmatched": 59
+  },
+  {
+   "league": "LPLOL ProAm",
+   "year": "2023",
+   "rows": 390,
+   "rows_high": 283,
+   "rows_review": 74,
+   "rows_unmatched": 33
+  },
+  {
+   "league": "Streamers Clash",
+   "year": "2024",
+   "rows": 390,
+   "rows_high": 40,
+   "rows_review": 49,
+   "rows_unmatched": 301
+  },
+  {
+   "league": "GLL20 ProAm",
+   "year": "2024",
+   "rows": 380,
+   "rows_high": 325,
+   "rows_review": 9,
+   "rows_unmatched": 46
+  },
+  {
+   "league": "Ultraliga Super Puchar",
+   "year": "2024",
+   "rows": 380,
+   "rows_high": 342,
+   "rows_review": 34,
+   "rows_unmatched": 4
+  },
+  {
+   "league": "Baltic Playground",
+   "year": "2023",
+   "rows": 370,
+   "rows_high": 70,
+   "rows_review": 71,
+   "rows_unmatched": 229
+  },
+  {
+   "league": "Blooming Talents League",
+   "year": "2023",
+   "rows": 370,
+   "rows_high": 164,
+   "rows_review": 50,
+   "rows_unmatched": 156
+  },
+  {
+   "league": "League of Legends Game Changers",
+   "year": "2025",
+   "rows": 370,
+   "rows_high": 349,
+   "rows_review": 21,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Mastercard Nexus Tour",
+   "year": "2023",
+   "rows": 370,
+   "rows_high": 230,
+   "rows_review": 51,
+   "rows_unmatched": 89
+  },
+  {
+   "league": "National Electronic Sports Tournament",
+   "year": "2024",
+   "rows": 370,
+   "rows_high": 356,
+   "rows_review": 12,
+   "rows_unmatched": 2
+  },
+  {
+   "league": "Spring Dawn Tournament",
+   "year": "2026",
+   "rows": 370,
+   "rows_high": 338,
+   "rows_review": 24,
+   "rows_unmatched": 8
+  },
+  {
+   "league": "KeG Championship",
+   "year": "2025",
+   "rows": 360,
+   "rows_high": 101,
+   "rows_review": 58,
+   "rows_unmatched": 201
+  },
+  {
+   "league": "Sigma Cup",
+   "year": "2024",
+   "rows": 360,
+   "rows_high": 352,
+   "rows_review": 8,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Americas Challengers",
+   "year": "2024",
+   "rows": 350,
+   "rows_high": 349,
+   "rows_review": 1,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "First Stand",
+   "year": "2025",
+   "rows": 350,
+   "rows_high": 350,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "League of Legends Caster & Host Championship",
+   "year": "2025",
+   "rows": 340,
+   "rows_high": 109,
+   "rows_review": 68,
+   "rows_unmatched": 163
+  },
+  {
+   "league": "Ultraliga Super Puchar",
+   "year": "2023",
+   "rows": 340,
+   "rows_high": 321,
+   "rows_review": 14,
+   "rows_unmatched": 5
+  },
+  {
+   "league": "EBL2021 Pro-Am",
+   "year": "2023",
+   "rows": 330,
+   "rows_high": 263,
+   "rows_review": 6,
+   "rows_unmatched": 61
+  },
+  {
+   "league": "Esports World Cup",
+   "year": "2025",
+   "rows": 330,
+   "rows_high": 330,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "RIFT SUMMIT",
+   "year": "2025",
+   "rows": 330,
+   "rows_high": 317,
+   "rows_review": 13,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Superdome",
+   "year": "2023",
+   "rows": 330,
+   "rows_high": 307,
+   "rows_review": 14,
+   "rows_unmatched": 9
+  },
+  {
+   "league": "A1 eSports League Austria Season 2",
+   "year": "2025",
+   "rows": 320,
+   "rows_high": 277,
+   "rows_review": 23,
+   "rows_unmatched": 20
+  },
+  {
+   "league": "NNO Prime",
+   "year": "2025",
+   "rows": 320,
+   "rows_high": 320,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Gamergy",
+   "year": "2024",
+   "rows": 310,
+   "rows_high": 113,
+   "rows_review": 80,
+   "rows_unmatched": 117
+  },
+  {
+   "league": "Road to LES",
+   "year": "2026",
+   "rows": 310,
+   "rows_high": 214,
+   "rows_review": 52,
+   "rows_unmatched": 44
+  },
+  {
+   "league": "HRingurinn",
+   "year": "2025",
+   "rows": 290,
+   "rows_high": 0,
+   "rows_review": 14,
+   "rows_unmatched": 276
+  },
+  {
+   "league": "LCP Wildcard League",
+   "year": "2026",
+   "rows": 290,
+   "rows_high": 247,
+   "rows_review": 43,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "MängudeÖÖ",
+   "year": "2026",
+   "rows": 290,
+   "rows_high": 26,
+   "rows_review": 35,
+   "rows_unmatched": 229
+  },
+  {
+   "league": "Oceanic Developmental Tournament",
+   "year": "2023",
+   "rows": 290,
+   "rows_high": 99,
+   "rows_review": 39,
+   "rows_unmatched": 152
+  },
+  {
+   "league": "Red Bull Team 5",
+   "year": "2025",
+   "rows": 290,
+   "rows_high": 207,
+   "rows_review": 57,
+   "rows_unmatched": 26
+  },
+  {
+   "league": "Svenska Onlineligan",
+   "year": "2024",
+   "rows": 290,
+   "rows_high": 99,
+   "rows_review": 58,
+   "rows_unmatched": 133
+  },
+  {
+   "league": "Defiance",
+   "year": "2024",
+   "rows": 280,
+   "rows_high": 4,
+   "rows_review": 37,
+   "rows_unmatched": 239
+  },
+  {
+   "league": "Iberian Cup",
+   "year": "2025",
+   "rows": 280,
+   "rows_high": 259,
+   "rows_review": 21,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "LCP Wildcard League",
+   "year": "2025",
+   "rows": 280,
+   "rows_high": 132,
+   "rows_review": 78,
+   "rows_unmatched": 70
+  },
+  {
+   "league": "Svenska Onlineligan",
+   "year": "2025",
+   "rows": 280,
+   "rows_high": 136,
+   "rows_review": 37,
+   "rows_unmatched": 107
+  },
+  {
+   "league": "Asian Games 2018",
+   "year": "2023",
+   "rows": 270,
+   "rows_high": 242,
+   "rows_review": 16,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "EBL2021 Pro-Am",
+   "year": "2024",
+   "rows": 250,
+   "rows_high": 250,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "TipiLAN",
+   "year": "2026",
+   "rows": 250,
+   "rows_high": 50,
+   "rows_review": 50,
+   "rows_unmatched": 150
+  },
+  {
+   "league": "Dino Cup",
+   "year": "2024",
+   "rows": 240,
+   "rows_high": 67,
+   "rows_review": 34,
+   "rows_unmatched": 139
+  },
+  {
+   "league": "Granada Gaming",
+   "year": "2023",
+   "rows": 240,
+   "rows_high": 87,
+   "rows_review": 78,
+   "rows_unmatched": 75
+  },
+  {
+   "league": "Storm Takeover",
+   "year": "2024",
+   "rows": 240,
+   "rows_high": 171,
+   "rows_review": 21,
+   "rows_unmatched": 48
+  },
+  {
+   "league": "WSCI-LPL Regional Qualifier",
+   "year": "2026",
+   "rows": 240,
+   "rows_high": 189,
+   "rows_review": 24,
+   "rows_unmatched": 27
+  },
+  {
+   "league": "Áhugamannadeildin",
+   "year": "2025",
+   "rows": 240,
+   "rows_high": 1,
+   "rows_review": 17,
+   "rows_unmatched": 222
+  },
+  {
+   "league": "LCS Game Changers",
+   "year": "2023",
+   "rows": 230,
+   "rows_high": 15,
+   "rows_review": 12,
+   "rows_unmatched": 203
+  },
+  {
+   "league": "League of Legends School Championship",
+   "year": "2023",
+   "rows": 220,
+   "rows_high": 112,
+   "rows_review": 50,
+   "rows_unmatched": 58
+  },
+  {
+   "league": "Sigma Cup",
+   "year": "2023",
+   "rows": 210,
+   "rows_high": 203,
+   "rows_review": 4,
+   "rows_unmatched": 3
+  },
+  {
+   "league": "VININE",
+   "year": "2024",
+   "rows": 210,
+   "rows_high": 146,
+   "rows_review": 18,
+   "rows_unmatched": 46
+  },
+  {
+   "league": "Whiteers Cup",
+   "year": "2024",
+   "rows": 210,
+   "rows_high": 65,
+   "rows_review": 31,
+   "rows_unmatched": 114
+  },
+  {
+   "league": "League Championship Denmark",
+   "year": "2025",
+   "rows": 200,
+   "rows_high": 71,
+   "rows_review": 43,
+   "rows_unmatched": 86
+  },
+  {
+   "league": "Oceanic Forge Tournament",
+   "year": "2024",
+   "rows": 200,
+   "rows_high": 117,
+   "rows_review": 22,
+   "rows_unmatched": 61
+  },
+  {
+   "league": "Americas Cup",
+   "year": "2026",
+   "rows": 190,
+   "rows_high": 190,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "CBOLÃO",
+   "year": "2024",
+   "rows": 190,
+   "rows_high": 142,
+   "rows_review": 13,
+   "rows_unmatched": 35
+  },
+  {
+   "league": "Empyrean Cup",
+   "year": "2023",
+   "rows": 190,
+   "rows_high": 32,
+   "rows_review": 33,
+   "rows_unmatched": 125
+  },
+  {
+   "league": "Esports World Cup",
+   "year": "2024",
+   "rows": 190,
+   "rows_high": 190,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "FicZone",
+   "year": "2024",
+   "rows": 190,
+   "rows_high": 86,
+   "rows_review": 56,
+   "rows_unmatched": 48
+  },
+  {
+   "league": "Granada Gaming",
+   "year": "2025",
+   "rows": 190,
+   "rows_high": 116,
+   "rows_review": 23,
+   "rows_unmatched": 51
+  },
+  {
+   "league": "KeG League",
+   "year": "2024",
+   "rows": 190,
+   "rows_high": 68,
+   "rows_review": 57,
+   "rows_unmatched": 65
+  },
+  {
+   "league": "Liga Republika",
+   "year": "2024",
+   "rows": 190,
+   "rows_high": 72,
+   "rows_review": 33,
+   "rows_unmatched": 85
+  },
+  {
+   "league": "4 Nations",
+   "year": "2024",
+   "rows": 180,
+   "rows_high": 67,
+   "rows_review": 17,
+   "rows_unmatched": 96
+  },
+  {
+   "league": "A1 Gaming League",
+   "year": "2024",
+   "rows": 180,
+   "rows_high": 121,
+   "rows_review": 28,
+   "rows_unmatched": 31
+  },
+  {
+   "league": "Demacia Cup",
+   "year": "2024",
+   "rows": 180,
+   "rows_high": 180,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "FLASH Oceania",
+   "year": "2026",
+   "rows": 180,
+   "rows_high": 141,
+   "rows_review": 25,
+   "rows_unmatched": 14
+  },
+  {
+   "league": "POST Esports Masters",
+   "year": "2024",
+   "rows": 180,
+   "rows_high": 18,
+   "rows_review": 16,
+   "rows_unmatched": 146
+  },
+  {
+   "league": "League of Legends Game Changers",
+   "year": "2026",
+   "rows": 170,
+   "rows_high": 152,
+   "rows_review": 18,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Coupe des Étoiles",
+   "year": "2024",
+   "rows": 160,
+   "rows_high": 124,
+   "rows_review": 9,
+   "rows_unmatched": 27
+  },
+  {
+   "league": "Vietnam Rising Star",
+   "year": "2024",
+   "rows": 160,
+   "rows_high": 57,
+   "rows_review": 56,
+   "rows_unmatched": 47
+  },
+  {
+   "league": "Road to Vietnam Championship Series",
+   "year": "2025",
+   "rows": 150,
+   "rows_high": 25,
+   "rows_review": 29,
+   "rows_unmatched": 96
+  },
+  {
+   "league": "Academic Esports World Tournament Sydney",
+   "year": "2026",
+   "rows": 140,
+   "rows_high": 23,
+   "rows_review": 10,
+   "rows_unmatched": 107
+  },
+  {
+   "league": "Copa Naciones",
+   "year": "2023",
+   "rows": 140,
+   "rows_high": 88,
+   "rows_review": 10,
+   "rows_unmatched": 42
+  },
+  {
+   "league": "Coupe des Étoiles",
+   "year": "2023",
+   "rows": 130,
+   "rows_high": 81,
+   "rows_review": 8,
+   "rows_unmatched": 41
+  },
+  {
+   "league": "Esports Championships Asia",
+   "year": "2025",
+   "rows": 130,
+   "rows_high": 114,
+   "rows_review": 16,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "KeG Championship",
+   "year": "2026",
+   "rows": 130,
+   "rows_high": 10,
+   "rows_review": 21,
+   "rows_unmatched": 99
+  },
+  {
+   "league": "Gyeonggi International Esports Festival",
+   "year": "2025",
+   "rows": 120,
+   "rows_high": 42,
+   "rows_review": 20,
+   "rows_unmatched": 58
+  },
+  {
+   "league": "World Championship",
+   "year": "2026",
+   "rows": 120,
+   "rows_high": 120,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "BaseStack",
+   "year": "2025",
+   "rows": 110,
+   "rows_high": 78,
+   "rows_review": 0,
+   "rows_unmatched": 32
+  },
+  {
+   "league": "League of Legends Influencer FESTA KOREA",
+   "year": "2024",
+   "rows": 110,
+   "rows_high": 0,
+   "rows_review": 39,
+   "rows_unmatched": 71
+  },
+  {
+   "league": "Bulgarian Challengers League",
+   "year": "2025",
+   "rows": 100,
+   "rows_high": 70,
+   "rows_review": 14,
+   "rows_unmatched": 16
+  },
+  {
+   "league": "Finnish Pro League",
+   "year": "2026",
+   "rows": 100,
+   "rows_high": 8,
+   "rows_review": 0,
+   "rows_unmatched": 92
+  },
+  {
+   "league": "GIRLGAMER Esports Festival",
+   "year": "2023",
+   "rows": 100,
+   "rows_high": 48,
+   "rows_review": 20,
+   "rows_unmatched": 32
+  },
+  {
+   "league": "LEC Fan Clash",
+   "year": "2025",
+   "rows": 100,
+   "rows_high": 92,
+   "rows_review": 8,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "City Heroes Championship",
+   "year": "2026",
+   "rows": 90,
+   "rows_high": 12,
+   "rows_review": 24,
+   "rows_unmatched": 54
+  },
+  {
+   "league": "Demacia Cup",
+   "year": "2026",
+   "rows": 90,
+   "rows_high": 90,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Meet at Rift Invitational",
+   "year": "2023",
+   "rows": 90,
+   "rows_high": 69,
+   "rows_review": 9,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "CineLeague",
+   "year": "2025",
+   "rows": 80,
+   "rows_high": 63,
+   "rows_review": 5,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "Finnish Pro League",
+   "year": "2024",
+   "rows": 80,
+   "rows_high": 20,
+   "rows_review": 8,
+   "rows_unmatched": 52
+  },
+  {
+   "league": "Finnish Pro League",
+   "year": "2025",
+   "rows": 80,
+   "rows_high": 48,
+   "rows_review": 0,
+   "rows_unmatched": 32
+  },
+  {
+   "league": "LOL DK Ligaen",
+   "year": "2026",
+   "rows": 80,
+   "rows_high": 72,
+   "rows_review": 0,
+   "rows_unmatched": 8
+  },
+  {
+   "league": "League Championship Denmark",
+   "year": "2024",
+   "rows": 80,
+   "rows_high": 28,
+   "rows_review": 30,
+   "rows_unmatched": 22
+  },
+  {
+   "league": "T1 Napoli Comicon",
+   "year": "2023",
+   "rows": 80,
+   "rows_high": 43,
+   "rows_review": 19,
+   "rows_unmatched": 18
+  },
+  {
+   "league": "(none)",
+   "year": "2024",
+   "rows": 70,
+   "rows_high": 28,
+   "rows_review": 16,
+   "rows_unmatched": 26
+  },
+  {
+   "league": "Esports Series Madrid",
+   "year": "2026",
+   "rows": 70,
+   "rows_high": 36,
+   "rows_review": 17,
+   "rows_unmatched": 17
+  },
+  {
+   "league": "KOREA Pre Evaluation for Asian Games",
+   "year": "2026",
+   "rows": 70,
+   "rows_high": 70,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Nova Series",
+   "year": "2025",
+   "rows": 70,
+   "rows_high": 70,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Red Bull League of Its Own",
+   "year": "2023",
+   "rows": 70,
+   "rows_high": 70,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Esports Series Madrid",
+   "year": "2025",
+   "rows": 60,
+   "rows_high": 36,
+   "rows_review": 15,
+   "rows_unmatched": 9
+  },
+  {
+   "league": "GG VASARA",
+   "year": "2025",
+   "rows": 60,
+   "rows_high": 16,
+   "rows_review": 12,
+   "rows_unmatched": 32
+  },
+  {
+   "league": "LPL All-Star 2022",
+   "year": "2023",
+   "rows": 60,
+   "rows_high": 60,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Road to Arabian League",
+   "year": "2025",
+   "rows": 60,
+   "rows_high": 42,
+   "rows_review": 12,
+   "rows_unmatched": 6
+  },
+  {
+   "league": "Comic Con Baltics",
+   "year": "2026",
+   "rows": 50,
+   "rows_high": 30,
+   "rows_review": 10,
+   "rows_unmatched": 10
+  },
+  {
+   "league": "Esports Series Madrid",
+   "year": "2023",
+   "rows": 50,
+   "rows_high": 26,
+   "rows_review": 20,
+   "rows_unmatched": 4
+  },
+  {
+   "league": "Liga Valkyria",
+   "year": "2025",
+   "rows": 50,
+   "rows_high": 17,
+   "rows_review": 11,
+   "rows_unmatched": 22
+  },
+  {
+   "league": "Odyssey Cup",
+   "year": "2025",
+   "rows": 50,
+   "rows_high": 24,
+   "rows_review": 4,
+   "rows_unmatched": 22
+  },
+  {
+   "league": "Střet vyvolávačů",
+   "year": "2025",
+   "rows": 50,
+   "rows_high": 50,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Good Game-ligaen",
+   "year": "2024",
+   "rows": 40,
+   "rows_high": 24,
+   "rows_review": 0,
+   "rows_unmatched": 16
+  },
+  {
+   "league": "KOREA Pre Evaluation for Asian Games",
+   "year": "2023",
+   "rows": 40,
+   "rows_high": 38,
+   "rows_review": 0,
+   "rows_unmatched": 2
+  },
+  {
+   "league": "Komplettligaen",
+   "year": "2026",
+   "rows": 40,
+   "rows_high": 28,
+   "rows_review": 0,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "RIVALS LEAGUE",
+   "year": "2026",
+   "rows": 40,
+   "rows_high": 20,
+   "rows_review": 8,
+   "rows_unmatched": 12
+  },
+  {
+   "league": "Copa Aliança",
+   "year": "2025",
+   "rows": 30,
+   "rows_high": 3,
+   "rows_review": 6,
+   "rows_unmatched": 21
+  },
+  {
+   "league": "Duelo de Reyes",
+   "year": "2023",
+   "rows": 30,
+   "rows_high": 30,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "MAGAMERS",
+   "year": "2026",
+   "rows": 30,
+   "rows_high": 6,
+   "rows_review": 5,
+   "rows_unmatched": 19
+  },
+  {
+   "league": "Málaga Open",
+   "year": "2023",
+   "rows": 30,
+   "rows_high": 12,
+   "rows_review": 9,
+   "rows_unmatched": 9
+  },
+  {
+   "league": "TRIFORC3 TOURNAMENT",
+   "year": "2025",
+   "rows": 30,
+   "rows_high": 27,
+   "rows_review": 3,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Toledo Matsuri",
+   "year": "2024",
+   "rows": 30,
+   "rows_high": 18,
+   "rows_review": 9,
+   "rows_unmatched": 3
+  },
+  {
+   "league": "Toledo Matsuri",
+   "year": "2025",
+   "rows": 30,
+   "rows_high": 21,
+   "rows_review": 6,
+   "rows_unmatched": 3
+  },
+  {
+   "league": "Alicante Digital Gaming",
+   "year": "2023",
+   "rows": 20,
+   "rows_high": 10,
+   "rows_review": 4,
+   "rows_unmatched": 6
+  },
+  {
+   "league": "Copa Aliança",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 2,
+   "rows_review": 0,
+   "rows_unmatched": 18
+  },
+  {
+   "league": "Esports Series Madrid",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 6,
+   "rows_review": 8,
+   "rows_unmatched": 6
+  },
+  {
+   "league": "Extregames",
+   "year": "2025",
+   "rows": 20,
+   "rows_high": 20,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "GIRLGAMER Esports Festival",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 0,
+   "rows_review": 2,
+   "rows_unmatched": 18
+  },
+  {
+   "league": "Gamegune",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 12,
+   "rows_review": 8,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Liga Valkyria",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 2,
+   "rows_review": 2,
+   "rows_unmatched": 16
+  },
+  {
+   "league": "Nexus Tour and Gamers Assembly",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 14,
+   "rows_review": 4,
+   "rows_unmatched": 2
+  },
+  {
+   "league": "Nexus Tour and Gamers Assembly",
+   "year": "2025",
+   "rows": 20,
+   "rows_high": 14,
+   "rows_review": 0,
+   "rows_unmatched": 6
+  },
+  {
+   "league": "Play Córdoba Generation Cup",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 8,
+   "rows_review": 6,
+   "rows_unmatched": 6
+  },
+  {
+   "league": "Play Córdoba Generation Cup",
+   "year": "2026",
+   "rows": 20,
+   "rows_high": 20,
+   "rows_review": 0,
+   "rows_unmatched": 0
+  },
+  {
+   "league": "Play Marbella Generation Cup",
+   "year": "2025",
+   "rows": 20,
+   "rows_high": 8,
+   "rows_review": 4,
+   "rows_unmatched": 8
+  },
+  {
+   "league": "STAGE:0 eSPORTS High-School Championship",
+   "year": "2025",
+   "rows": 20,
+   "rows_high": 0,
+   "rows_review": 0,
+   "rows_unmatched": 20
+  },
+  {
+   "league": "SheRivals",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 14,
+   "rows_review": 2,
+   "rows_unmatched": 4
+  },
+  {
+   "league": "Sweet Victory",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 10,
+   "rows_review": 6,
+   "rows_unmatched": 4
+  },
+  {
+   "league": "Swisscom Hero Cup",
+   "year": "2024",
+   "rows": 20,
+   "rows_high": 14,
+   "rows_review": 4,
+   "rows_unmatched": 2
+  },
+  {
+   "league": "Ignis Academy",
+   "year": "2023",
+   "rows": 10,
+   "rows_high": 9,
+   "rows_review": 1,
+   "rows_unmatched": 0
+  }
+ ]
+}

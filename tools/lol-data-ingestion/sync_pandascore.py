@@ -11,6 +11,8 @@ Two modes:
                         core-2026  the 2026 calibration crawl (leagues, 2026 series, stages and past matches);
                         full-2026  every league, team and player record, plus every series, stage and match that
                                    touches 2026 (past and upcoming), with running/upcoming listings as cross-checks.
+                        registrations-2025  2025 series and stage rosters (identity evidence for 2025 games).
+                        registrations-2023-2024  the same for 2023 and 2024.
 Preset runs write their manifest after every page, so a stopped run (quota floor, request budget, error) can be
 continued with --resume RUN_ID: finished queries are skipped and a stopped query continues at its next page.
 """
@@ -48,6 +50,11 @@ MIN_REMAINING = 50
 YEAR_2026 = "2026-01-01T00:00:00Z,2026-12-31T23:59:59Z"
 BEFORE_2026 = "1970-01-01T00:00:00Z,2025-12-31T23:59:59Z"
 AFTER_2026 = "2027-01-01T00:00:00Z,2099-12-31T23:59:59Z"
+YEAR_2025 = "2025-01-01T00:00:00Z,2025-12-31T23:59:59Z"
+BEFORE_2025 = "1970-01-01T00:00:00Z,2024-12-31T23:59:59Z"
+YEAR_2023 = "2023-01-01T00:00:00Z,2023-12-31T23:59:59Z"
+YEAR_2024 = "2024-01-01T00:00:00Z,2024-12-31T23:59:59Z"
+BEFORE_2023 = "1970-01-01T00:00:00Z,2022-12-31T23:59:59Z"
 # Each query: (query name, storage collection, query parameters[, path]). Windows are fixed; sorting is ascending and
 # total. The path defaults to the collection's listing in COLLECTIONS. Two range filters combine as AND (scope probe
 # 2026-10-13: begin before 2026 AND end in 2026 returned 1 stage, not the union).
@@ -89,6 +96,21 @@ PRESETS = {
         # The whole catalogue, whatever the year: presence here says nothing about activity in 2026.
         ("teams", "teams", {"sort": "id"}),
         ("players", "players", {"sort": "id"}),
+    ],
+    # 2025 stage rosters for cross-year identity evidence only (player ratings 2025-2026): stages and series that
+    # start in 2025 or start earlier and end in it. Tournament listings carry expected_roster; no statistics endpoint.
+    "registrations-2025": [
+        ("series-begin-2025", "series", {"range[begin_at]": YEAR_2025, "sort": "id"}),
+        ("tournaments-begin-2025", "tournaments", {"range[begin_at]": YEAR_2025, "sort": "id"}),
+        ("tournaments-from-2024", "tournaments", {"range[begin_at]": BEFORE_2025, "range[end_at]": YEAR_2025, "sort": "id"}),
+    ],
+    # 2023 and 2024 stage rosters, for the 2023-2026 rating window (identity evidence only, like registrations-2025).
+    "registrations-2023-2024": [
+        ("series-begin-2023", "series", {"range[begin_at]": YEAR_2023, "sort": "id"}),
+        ("series-begin-2024", "series", {"range[begin_at]": YEAR_2024, "sort": "id"}),
+        ("tournaments-begin-2023", "tournaments", {"range[begin_at]": YEAR_2023, "sort": "id"}),
+        ("tournaments-begin-2024", "tournaments", {"range[begin_at]": YEAR_2024, "sort": "id"}),
+        ("tournaments-from-2022", "tournaments", {"range[begin_at]": BEFORE_2023, "range[end_at]": YEAR_2023, "sort": "id"}),
     ],
 }
 

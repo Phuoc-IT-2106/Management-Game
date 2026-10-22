@@ -65,3 +65,11 @@ Player Data v0.2 and current rules/content/save v3 boundaries.
 [Gameplay data review](GAMEPLAY_DATA_REVIEW.md) (2026-10-09) audits what the current player, coach, team and rival numbers
 actually do, and proposes a decision-led attribute set. It also covers formulas, and a data strategy where real API data
 calibrates a generated NPC world. PROPOSAL only; the role model and data use need Director decisions.
+
+## World experiment — potential, real rosters and a 4,000-NPC world
+
+[World experiment](world-experiment/README.md) (2026-10-15) is an isolated research build: dynamic potential and
+training, verified real-team rosters, and a 4,000-NPC labour market with a free-agent pool below 10%. It is EXPERIMENT
+only: production code, content, rules and saves are unchanged, and the integration needs Director decisions
+([review](world-experiment/HYBRID_WORLD_INTEGRATION_REVIEW.md); four of them verified in
+[HYBRID_WORLD_DECISION_VERIFICATION](world-experiment/HYBRID_WORLD_DECISION_VERIFICATION.md)).

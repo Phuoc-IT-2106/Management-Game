@@ -117,3 +117,146 @@ decision. "Decision" marks items that need the user or the Director.
 
 None of this changes accepted decisions. C3, C4, E1 and any change to generation change the headless hash and the
 balance, so each should end with `build/Measure-Rules.ps1 -Gate 2`.
+
+---
+
+## 4. Rating and distribution measurement (2026-10-14)
+
+**Method.** A throwaway probe (not in the repository) generated 12 worlds at the start, then played 6 of them for five
+seasons with a delegating owner. It dumped every player, coach and organization, with 3,137 player records and 1,305
+league series between rivals. Real references come from
+[calibration_2026.md](../../tools/lol-data-ingestion/reports/calibration_2026.md).
+
+### 4.1 What matches real data
+
+| Measure | Model | Real 2026 | Verdict |
+|---|---|---|---|
+| Team spread inside a league | Rival strength SD 5.3 points, about 0.59 logits at 9 points per logit | Team Elo SD about 108, about 0.62 logits | matches |
+| Top vs bottom of a league | top-bottom spread 11–18 points; a 12–14 point favourite wins 92% of Bo3 | 351 Elo, 88% per series | close |
+| Ages | mean 23.5, 17–31 | peak 22–23, 16–37 | matches (calibrated) |
+| World drift over five seasons | rival players 68.9 → 70.0, market about 70, rival strength 76.1 → 76.9, age 23.5 → 22.4 | — | stable |
+
+### 4.2 What does not
+
+| # | Finding | Measured | Why it matters | Fix |
+|---|---|---|---|---|
+| R1 | **Ability comes from four authored bands** (60/70/78/88, weights 25/50/23/2%). The distribution is lumpy: peaks at 60–65, 70–73 and 78–81, with dips at 66–67 and 74–77. Nothing in it comes from real data. | rating mean 68.6, SD 8.0, 47–92 | Ratings cluster instead of separating players by ability | A continuous quantile table per tier, calibrated from per-player real data (§5) |
+| R2 | **The five skills are nearly one number.** Each skill is band + archetype offset + jitter ±4. Skills correlate 0.51–0.81. A player's skills spread SD 4.7 around their mean, and the role rating correlates 0.991 with the plain mean of the skills. | correlation matrix, within-player SD | Role weights barely matter. A great laner and a great teamfighter differ only by the archetype's ±8. | Draw skills from a calibrated covariance (role profile + independent part); derive archetypes by clustering real profiles |
+| R3 | **Free agents are better than contracted players** at the start: market mean 70.1, rival players 68.1, company 66.8 (the underdog shift is intended). | means by group | In a real league the open market is mostly fringe and young players | Generate the market from a lower tier band |
+| R4 | **Potential carries no information after 21.** Headroom is 0.4–1.6 points from age 21, and potential correlates 0.97 with rating. | age table | Real players improve until about 23–24; scouting potential matters only for teenagers | Calibrate headroom by age from real rating trajectories, when per-player data exists |
+| R5 | **Mind attributes are uniform and inert.** Consistency, composure and communication are uniform 35–85 and independent of everything. No squad ever triggers the communication penalty (0 of 96). Composure gives 0 to +1 in big matches; consistency moves spread by −1 to +2. | distributions, effect sizes | Three attributes shown in the profile barely act; uniform draws give as many 35s as 85s | Bell-shaped draws. Real proxies: consistency from game-to-game variance, composure from playoff vs regular performance. Effect sizes large enough to matter (measure them) |
+| R6 | **Coaches barely differ.** Each skill is uniform 58–80 and independent. Across that range, analysis narrows estimates by about 2 points, the meta-work multiplier moves 1.08 → 1.30, the adaptation term +0.8 and growth +4% → +15%. The coach wage is almost flat ($11.34–14.06 a day, SD $0.57). | coach table | Hiring a better coach changes little and costs almost the same | A wider, bell-shaped skill range; a wage that follows quality; effect sizes checked like players' |
+| R7 | **Series are too even.** Bo3 2–0 is 54% (real 64%). Bo5 is 3–0 20% (real 46%), 3–1 47% (29%) and 3–2 33% (25%). | 1,305 series | Games in a series are independent draws. Real series share the day's form, so the better side sweeps more often | A series-level shared draw (form on the day) plus a smaller per-game variance, tuned to the real score mix at the same favourite win rate |
+| R8 | **Popularity is rating.** It correlates 0.91 with rating, has a maximum of 70 at the start, and nobody reaches the star threshold of 80. | distribution | Star sponsorship never works at the start; popularity adds nothing that rating does not | Real proxy: following and region (unavailable on the Free plan); otherwise a separate draw correlated with rating, not determined by it |
+| R9 | **Leagues cannot be compared.** Real Elo was computed per league, so the tier medians are all about 1500 (A 1505, C 1502, D 1503). | calibration report | Real teams from different leagues cannot be placed on one scale | Use international events (MSI, Worlds) or a prior per league, before any cross-league rating |
+| R10 | **Rival strength adds a flat Edge of 6.** A rival with the same players as the company is 6 points stronger. Rival readiness and form are ignored, and the company's are applied. | `Rivals.Strength`, `Competition.Resolve` | The asymmetry is hidden from the player | Document it, or replace Edge with the rival coach's preparation through the same formula |
+
+## 5. Real players with true-to-ability numbers: what it takes
+
+**Decision (2026-10-14).** The user decided that real players and teams enter the game. This is recorded as proposed
+[DEC-031](../01-governance/PROPOSED_DECISIONS.md): a pack built locally from the user's own data, kept in git-ignored
+`data/`, never committed or redistributed.
+
+**Current state.** Rules v4 decided aggregate calibration only, with no real person in the game. The PandaScore Free plan
+has no per-player statistics. So no real player can carry numbers that reflect their ability today, and the generator
+is not calibrated per player either. Only ages, team spread, formats, roster sizes and turnover come from real data.
+
+**Pipeline that would do it** (research side, `tools/lol-data-ingestion`):
+1. **Source.** Oracle's Elixir 2026 game-level player rows. The import and the identity reconciliation are built and
+   wait for the CSV. Participation verified by reconciliation decides who counts.
+2. **Per-player metrics, role-normalized**:
+   - lane: gold, CS and XP difference at 10 and 15 minutes;
+   - damage per minute and damage share;
+   - kill participation and deaths share;
+   - vision score per minute;
+   - first-blood involvement;
+   - the number of distinct champions and their results.
+
+   Each metric becomes a z-score within the role and league.
+3. **Opponent and league adjustment.** Weight by opponent team Elo. Link leagues through international events (R9).
+4. **Shrinkage.** Shrink toward the role's mean by games played (empirical Bayes), so a player with 6 games does not
+   outrank one with 60.
+5. **Mapping to the game's skills**:
+   - mechanics: damage and solo outcomes;
+   - early game: the lane differences;
+   - teamfight: kill participation, damage share and deaths;
+   - macro: vision and objectives;
+   - champion pool: breadth with results;
+   - consistency: the inverse of game-to-game variance;
+   - composure: playoff vs regular performance.
+
+   Communication stays unobservable, so it is unknown or authored. Percentiles become the 1–99 scale.
+6. **Validation.** Team strength rebuilt from five player ratings must predict real series about as well as Elo (Brier
+   0.22), and the rating spread inside a league must match the team spread.
+7. **NPC compliance.** Fit the generator to what step 5 produces, so a generated player is statistically
+   indistinguishable from a real one of the same role, tier and age:
+   - the quantile table per tier and role (R1);
+   - the skill covariance (R2);
+   - archetypes as clusters;
+   - headroom by age (R4);
+   - mind distributions (R5).
+
+   A test then compares generated and real distributions (per-quantile difference, correlation matrices).
+
+**Constraints.**
+- Real names, handles and likeness in the game need rights the project does not have.
+- PandaScore terms forbid redistributing its data. Oracle's Elixir's terms must be read when the CSV is downloaded.
+- The safe use is aggregate:
+  - fit the generator from real per-player numbers;
+  - keep any per-player table in git-ignored `data/`, never in content or saves.
+
+## 6. Changes made on 2026-10-14 (the fixes that need no per-player data)
+
+The user decided:
+- real players and teams in the game from a locally built pack (DEC-031, proposed; §5);
+- to fix now what needs no per-player data, with authored values to be replaced once the Oracle's Elixir CSV arrives.
+
+| # | Change | Where |
+|---|---|---|
+| R7 | **The day's form.** One keyed draw within ±`SeriesForm` (12) is shared by every game of a series, on top of each game's own variance. `Variance` 8 → 4, around which posture moves ±4. `LogitScale` 900 → 700. These values were tuned in a replay of 1,305 simulated series to the real score mix and favourite win rate. | `Competition.Play`, `Competition.Spread`; content `Balance` |
+| R1 | **Continuous ability.** The four bands become 41 values (52–92) with normal weights, keeping the old mean and SD (69.7, 6.8). | content `Generation.AbilityBands` |
+| R2 | **Distinct skills.** `SkillJitter` 4 → 7, archetype offsets ×1.5. | content |
+| R3 | **A weaker open market.** `Generation.MarketShift` −2 for the opening pool and for emergency listings. | `Market.Refresh`, content |
+| R5 | **Mind that acts.** Mind and personality are bell-shaped (the mean of two keyed draws). Leadership is graded: the best communicator, a point per 5 above or below 80 (−3..+2), instead of a penalty no squad ever met. Composure in big matches: a point per 4 of the lineup's mean above or below 60 (±3). Consistency now narrows a smaller base variance. | `Generator.Bell`, `Competition.Resolve` |
+| R6 | **Coaches that differ.** Coach skills are bell-shaped in 45–92 (was uniform 58–80). The wage follows quality: the mean skill squared over four, plus twice the capacity. | `Generator.Coach`, `Pay.Coach`, content |
+
+**Measured after the change** (same probe):
+
+| Measure | Before | After | Real 2026 |
+|---|---|---|---|
+| Rating distribution | lumpy, peaks at 60–65 / 70–73 / 78–81 | one smooth peak, mean 68.4, SD 7.9 | — (per-player data pending) |
+| Skill correlations | 0.51–0.81 | 0.15–0.59 | — |
+| A player's skill spread (SD around their mean) | 4.7 | 7.2 | — |
+| Market vs rival players (start) | 70.1 vs 68.1 | 68.8 vs 68.3 | market at or below contracted |
+| Mind SD (consistency) | 15.0, uniform | 10.6, bell-shaped | — |
+| Leadership term across squads | always 0 | −3..+2, centred on 0 | — |
+| Coach skill SD, coach wage range | 6.8; $11.34–14.06 | about 10; $9.46–18.72 | — |
+| Bo3 2–0 | 54% | 65% | 64% |
+| Bo5 3–0 / 3–1 / 3–2 | 20 / 47 / 33% | 41 / 32 / 27% (41 series) | 46 / 29 / 25% |
+| Favourite with a 12–17 point gap wins Bo3 | 92–96% | 84–93% | 88% (top vs bottom) |
+| Rival strength spread per league | 11–18 | 11–15 | ≈ 14 (calibrated) |
+| World drift over five seasons | stable | stable | — |
+
+**Gates** (`build/Measure-Rules.ps1 -Gate 2`, artifacts `dist-measure-r1` and `dist-measure-r1-16`):
+
+| Seeds | Gates 1–2 | Multi-year progress (places by season) | Player value | Market depth | Financial pressure | Outcome diversity |
+|---|---|---|---|---|---|---|
+| 8 (default) | gate 2 **open** | 0.75 (2.3, 1.5, 2.3, 1.3, 1.5) | 15.3 | 100% | 1.9% | 0.87 |
+| 16 | **pass** | 1.38 (2.6, 1.6, 1.7, 1.5, 1.3) | 13.1 | 100% | 5.6% | 0.66 |
+
+With 8 seeds, multi-year progress turns on one noisy season. With 16 seeds the gates pass, so the rules were not changed
+to chase the 8-seed figure.
+
+**(Decision)** Should the gate standard become 16 seeds? About 20 minutes instead of 10.
+
+Outcome diversity fell: the balanced owner wins the league on 14 of 16 seeds. That is part of the open economy and
+difficulty question (handoff item 2).
+
+Verification after the change:
+- Integration 369 (`e196d247…`);
+- shell 3861 / 3901;
+- native kits 24 / 101 / 31;
+- headless `a789c421…`.
+
+Not committed yet.
+

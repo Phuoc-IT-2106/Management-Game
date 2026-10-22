@@ -152,8 +152,8 @@ Check(def.Nationalities.All(n => Math.Abs(nationalityShare.GetValueOrDefault(n.I
 var starts = Enumerable.Range(1, 8).Select(seed => New((ulong)seed).Capture()).ToArray();
 var rosterMean = starts.SelectMany(s => s.Company.People).Average(p => Ratings.Rating(p, def));
 var marketMean = starts.SelectMany(s => s.World.Candidates).Average(x => Ratings.Rating(x.Person, def));
-Check(Math.Abs(rosterMean - (marketMean + def.Generation.StartingShift)) <= 3,
-    $"the starting roster is the market's distribution shifted only by the underdog start ({rosterMean:0.0} vs {marketMean:0.0} {def.Generation.StartingShift:+#;-#;0})");
+Check(Math.Abs(rosterMean - (marketMean + def.Generation.StartingShift - def.Generation.MarketShift)) <= 3,
+    $"the starting roster and the opening market share one distribution, shifted only by the underdog start and the market shift ({rosterMean:0.0} vs {marketMean:0.0}, {def.Generation.StartingShift:+#;-#;0} vs {def.Generation.MarketShift:+#;-#;0})");
 // Rating: role weights times skills (basis points), scaled by proficiency; a secondary role at 80%, others not at all.
 var probe = sample.First(p => p.SecondaryRole.Length > 0);
 var probeWeights = def.RoleWeights.Single(w => w.Role == probe.Role).Weights;
@@ -637,13 +637,15 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     && Logistic.Series(600_000, 1) == 600_000 && Logistic.Series(600_000, 3) == 648_000 && Logistic.Series(600_000, 5) == 682_560,
     "a best-of series is exact integer arithmetic: even at even odds, symmetric, monotonic, and it amplifies the favourite");
 {
-    var even = Enumerable.Range(0, 4000).Select(i => Competition.Play(99, "test", "series:" + i, 0, 1, 3, b.LogitScale)).ToArray();
-    var favourite = Enumerable.Range(0, 2000).Select(i => Competition.Play(99, "test", "favourite:" + i, 14, 1, 3, b.LogitScale)).ToArray();
-    var bestOfFive = Enumerable.Range(0, 2000).Select(i => Competition.Play(99, "test", "five:" + i, 0, 1, 5, b.LogitScale)).ToArray();
+    var even = Enumerable.Range(0, 4000).Select(i => Competition.Play(99, "test", "series:" + i, 0, 1, 3, b.LogitScale, b.SeriesForm)).ToArray();
+    var favourite = Enumerable.Range(0, 2000).Select(i => Competition.Play(99, "test", "favourite:" + i, 14, 1, 3, b.LogitScale, b.SeriesForm)).ToArray();
+    var bestOfFive = Enumerable.Range(0, 2000).Select(i => Competition.Play(99, "test", "five:" + i, 0, 1, 5, b.LogitScale, b.SeriesForm)).ToArray();
+    var independent = Enumerable.Range(0, 4000).Select(i => Competition.Play(99, "test", "series:" + i, 0, 1, 3, b.LogitScale, 0)).ToArray();
+    double Sweeps((int Won, int Lost, int FirstVariance)[] series) => series.Count(x => Math.Min(x.Won, x.Lost) == 0) / (double)series.Length;
     Check(even.All(x => Math.Max(x.Won, x.Lost) == 2 && Math.Min(x.Won, x.Lost) < 2) && bestOfFive.All(x => Math.Max(x.Won, x.Lost) == 3 && Math.Min(x.Won, x.Lost) < 3)
-        && Math.Abs(even.Count(x => x.Won > x.Lost) / 4000.0 - 0.5) < 0.03 && Math.Abs(even.Count(x => x.Won + x.Lost == 2) / 4000.0 - 0.5) < 0.03
+        && Math.Abs(even.Count(x => x.Won > x.Lost) / 4000.0 - 0.5) < 0.03 && Math.Abs(Sweeps(independent) - 0.5) < 0.03 && Sweeps(even) is > 0.56 and < 0.70
         && favourite.Count(x => x.Won > x.Lost) / 2000.0 > 0.85,
-        "series stop at the majority: even sides split wins and sweeps about half the time; a 14-point favourite wins most best-of-threes");
+        "series stop at the majority: even sides split wins; the day's form, shared by the games, makes sweeps more common than independent games; a 14-point favourite wins most best-of-threes");
 }
 // The regular season: a seeded double round robin of the company and its rivals.
 {
@@ -980,14 +982,21 @@ Check(new[] { 3, 5 }.All(n => Logistic.Series(500_000, n) == 500_000
     var moves = afterEnd5.World.Moves.Where(m => m.Day == close).ToArray();
     Check(afterEnd5.World.Rivals.All(r => Rivals.Lineup(r, world).Length == Roles.All.Length && r.People.Length >= b.MinimumRoster && r.Funds >= 0),
         "after the season end every rival still covers all five roles, with funds that never go negative");
-    Check(moves.Where(m => m.Reason == MoveReason.Signed && rivalIds.Contains(m.Destination!)).All(m => m.Origin is null
-            && afterEnd5.World.Rivals.Single(r => r.Id == m.Destination).People.Any(p => p.Id == m.PersonId) && !afterEnd5.World.Candidates.Any(x => x.Person.Id == m.PersonId))
-        && moves.Where(m => m.Reason == MoveReason.Transferred).All(m => rivalIds.Contains(m.Origin!) && rivalIds.Contains(m.Destination!)
-            && afterEnd5.World.Rivals.Single(r => r.Id == m.Destination).People.Any(p => p.Id == m.PersonId) && afterEnd5.World.Rivals.Single(r => r.Id == m.Origin).People.All(p => p.Id != m.PersonId))
-        && moves.Where(m => m.Reason is MoveReason.ContractEnded or MoveReason.Released && rivalIds.Contains(m.Origin!)).All(m => m.Destination is null
-            && afterEnd5.World.Candidates.Any(x => x.Person.Id == m.PersonId))
-        && moves.Where(m => m.Reason == MoveReason.Retired && m.Origin is not null && rivalIds.Contains(m.Origin)).All(m =>
-            afterEnd5.World.Rivals.All(r => r.People.All(p => p.Id != m.PersonId)) && afterEnd5.World.Candidates.All(x => x.Person.Id != m.PersonId)),
+    // Each rival move goes in the direction its reason allows, and every person ends where their last move of the day put
+    // them: a player who left one rival may be signed by another the same day.
+    var rivalMoves = moves.Where(m => m.Origin is { } o && rivalIds.Contains(o) || m.Destination is { } d && rivalIds.Contains(d)).ToArray();
+    bool Directed(Move m) => m.Reason switch
+    {
+        MoveReason.Signed => m.Origin is null && rivalIds.Contains(m.Destination!),
+        MoveReason.Transferred => rivalIds.Contains(m.Origin!) && rivalIds.Contains(m.Destination!) && m.Origin != m.Destination,
+        MoveReason.ContractEnded or MoveReason.Released or MoveReason.Retired => rivalIds.Contains(m.Origin!) && m.Destination is null,
+        _ => true
+    };
+    bool Ends(Move m) => m.Reason == MoveReason.Retired
+        ? afterEnd5.World.Rivals.All(r => r.People.All(p => p.Id != m.PersonId)) && afterEnd5.World.Candidates.All(x => x.Person.Id != m.PersonId)
+        : m.Destination is null ? afterEnd5.World.Candidates.Any(x => x.Person.Id == m.PersonId)
+        : afterEnd5.World.Rivals.Single(r => r.Id == m.Destination).People.Any(p => p.Id == m.PersonId);
+    Check(rivalMoves.Length > 0 && rivalMoves.All(Directed) && rivalMoves.GroupBy(m => m.PersonId).All(g => Ends(g.Last())),
         "rival moves go where they say: signings from the market, transfers between rivals, departures to the market, retirements out of the game");
     Check(moves.Any(m => m.Origin is not null && rivalIds.Contains(m.Origin) || m.Destination is not null && rivalIds.Contains(m.Destination)),
         "rivals reshape their squads at season end");
