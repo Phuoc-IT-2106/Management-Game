@@ -1,0 +1,28 @@
+name: Design Library Tool Tests
+
+on:
+  push:
+    paths:
+      - 'tools/design-library/**'
+      - 'docs/design/**'
+      - '.github/workflows/design-library-tests.yml'
+  pull_request:
+    paths:
+      - 'tools/design-library/**'
+      - 'docs/design/**'
+      - '.github/workflows/design-library-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python compile
+        run: |
+          python -m py_compile tools/design-library/asset_sync.py
+          python -m py_compile tools/design-library/git_asset_guard.py
+      - name: Offline unit tests
+        run: python -m unittest discover -s tools/design-library/tests -v
